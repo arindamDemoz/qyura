@@ -195,8 +195,9 @@ abstract class REST_Controller extends MX_Controller
      */
     public function __construct($config = 'rest')
     {
+        $this->config->set_item('csrf_protection', FALSE);
         parent::__construct();
-
+        
         // Start the timer for how long the request takes
         $this->_start_rtime = microtime(TRUE);
 
@@ -317,6 +318,8 @@ abstract class REST_Controller extends MX_Controller
             if ($this->config->item('rest_ip_whitelist_enabled')) {
                 $this->_check_whitelist_auth();
             }
+            
+            
         }
     }
 
@@ -334,7 +337,7 @@ abstract class REST_Controller extends MX_Controller
         if (config_item('rest_enable_logging')) {
             $this->_log_access_time();
         }
-
+        $this->config->set_item('csrf_protection', TRUE);
     }
 
     /**
