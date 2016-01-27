@@ -27,13 +27,17 @@
     private $joins          = array();
     private $columns        = array();
     private $where          = array();
+    private $loadwhere      = array();
+    
     private $or_where       = array();
     private $where_in       = array();
+    private $where_not_in   = array();
     private $like           = array();
     private $filter         = array();
     private $add_columns    = array();
     private $edit_columns   = array();
     private $unset_columns  = array();
+    private $having = array();
 
     /**
     * Copies an instance of CI
@@ -141,9 +145,17 @@
       $this->ci->db->where($key_condition, $val, $backtick_protect);
       return $this;
     }
+    
+    public function loadwhere($key_condition, $val = NULL, $backtick_protect = TRUE)
+    {
+      $this->loadwhere[] = array($key_condition, $val, $backtick_protect);
+      $this->ci->db->where($key_condition, $val, $backtick_protect);
+      return $this;
+    }
+    
+    
 
-
-    public function date_range($startDate = false,$endDate = false){
+        public function date_range($startDate = false,$endDate = false){
                   /* date range filtartion */
         $startDate = strtotime($startDate);
         $endDate = strtotime($endDate);
@@ -192,6 +204,13 @@
       return $this;
     }
 
+    
+    public function where_not_in($key_condition, $val = NULL, $backtick_protect = TRUE)
+    {
+      $this->where_not_in[] = array($key_condition, $val, $backtick_protect);
+      $this->ci->db->where_not_in($key_condition, $val, $backtick_protect);
+      return $this;
+    }
     /**
     * Generates the WHERE portion of the query
     *
@@ -200,9 +219,17 @@
     * @param bool $backtick_protect
     * @return mixed
     */
-    public function filter($key_condition, $val = NULL, $backtick_protect = TRUE)
+    
+    /**
+    * Generates the HAVING portion of the query
+    *
+    * @param mixed $column name
+    * @return mixed
+    */
+    
+    public function having($havingArray)
     {
-      $this->filter[] = array($key_condition, $val, $backtick_protect);
+      $this->ci->db->having($havingArray);
       return $this;
     }
 
@@ -289,8 +316,11 @@
       $iStart = $this->ci->input->post('start');
       $iLength = $this->ci->input->post('length');
 
+      //if($iLength != '' && $iLength != '-1')
+       // $this->ci->db->limit($iLength, ($iStart)? $iStart : 0);
+      
       if($iLength != '' && $iLength != '-1')
-        $this->ci->db->limit($iLength, ($iStart)? $iStart : 0);
+        $this->ci->db->limit($iLength);
     }
 
     /**
@@ -328,17 +358,32 @@
       $sSearch = $this->ci->db->escape_like_str(trim($search['value']));
       $columns = array_values(array_diff($this->columns, $this->unset_columns));
 
-      if($sSearch != '')
-        for($i = 0; $i < count($mColArray); $i++)
-          if($mColArray[$i]['searchable'] == 'true' )
+      
+      
+      if($sSearch != ''){
+          
+        for($i = 0; $i < count($mColArray); $i++){
+           
+          if($mColArray[$i]['searchable'] == true ){
+              
             if($this->check_cType())
+            {
               $sWhere .= $this->select[$mColArray[$i]['data']] . " LIKE '%" . $sSearch . "%' OR ";
+            }
             else
+            {
               $sWhere .= $this->select[$this->columns[$i]] . " LIKE '%" . $sSearch . "%' OR ";
-
+              
+            }
+            
+          }
+            
+        }  
+      }
+             
 
       $sWhere = substr_replace($sWhere, '', -3);
-
+      
       if($sWhere != '')
         $this->ci->db->where('(' . $sWhere . ')');
 
@@ -372,11 +417,13 @@
       $aaData = array();
       $rResult = $this->get_display_result();
 
-      if($output == 'json')
+      if($output == 'json' || $output == 'raw')
       {
         $iTotal = $this->get_total_results();
         $iFilteredTotal = $this->get_total_results(TRUE);
       }
+      
+      
 
       foreach($rResult->result_array() as $row_key => $row_val)
       {
@@ -398,6 +445,19 @@
         if(!$this->check_cType())
           $aaData[$row_key] = array_values($aaData[$row_key]);
 
+      }
+      
+      if($output == 'raw')
+      {
+           $sOutput = array
+        (
+          'draw'                => intval($this->ci->input->post('draw')),
+          'recordsTotal'        => $iTotal,
+          'recordsFiltered'     => $iFilteredTotal,
+          'data'                => $aaData
+        );
+       
+        return $sOutput;
       }
 
       if($output == 'json')
@@ -434,10 +494,23 @@
 
       foreach($this->where as $val)
         $this->ci->db->where($val[0], $val[1], $val[2]);
+      
+      foreach($this->where as $val)
+        $this->ci->db->where($val[0], $val[1], $val[2]);
+      
+      foreach($this->loadwhere as $val)
+      {
+          
+          //$this->ci->db->where($val[0], $val[1], $val[2]);
+      }
+        
 
       foreach($this->or_where as $val)
         $this->ci->db->or_where($val[0], $val[1], $val[2]);
         
+      foreach($this->where_not_in as $val)
+        $this->ci->db->where_not_in($val[0], $val[1], $val[2]);
+      
       foreach($this->where_in as $val)
         $this->ci->db->where_in($val[0], $val[1], $val[2]);
 

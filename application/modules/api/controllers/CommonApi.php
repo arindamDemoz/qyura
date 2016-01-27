@@ -7,7 +7,7 @@ class CommonApi extends MyRest {
     function __construct() {
         // Construct our parent class
         parent::__construct();
-        $this->methods['hospital_get']['limit'] = 500; //500 requests per hour per user/key
+        //$this->methods['hospital_post']['limit'] = 1; //500 requests per hour per user/key
         // $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
         // $this->methods['user_delete']['limit'] = 50; //50 requests per hour per user/key
     }
@@ -24,11 +24,16 @@ class CommonApi extends MyRest {
             'regex' => false
         );
 
-        
+        $aoClumns = array("hospital_id",
+            "hospital_address",
+            "hospital_name" ,
+            "creationTime" ,
+            "modifyTime" ,
+            "distance");
         for ($i = 0; $i < 5; $i++) {
             $_POST['columns'][] = array
                 (
-                'data' => '',
+                'data' => $aoClumns[$i],
                 'name' => '',
                 'searchable' => true,
                 'orderable' => true,
@@ -52,7 +57,7 @@ class CommonApi extends MyRest {
 
         // last updated date 16/01/2016
         $lastUpdatedDate = isset($_POST['lastUpdatedDate']) ? $_POST['lastUpdatedDate'] : '1452951625';
-        $notIn = isset($_POST['notIn']) ? $_POST['notIn'] : '';
+            $notIn = isset($_POST['notIn']) ? $_POST['notIn'] : '';
 
         $notIn = explode(',', $notIn);
 
@@ -71,14 +76,18 @@ class CommonApi extends MyRest {
         $this->datatables->where_not_in('hospital_id', $notIn);
 
         $response = $this->datatables->generate();
-        $response = (array)json_decode($data['result']);
+        $response = (array)json_decode($response);
         $option = array('table'=>'hospital','select'=>'hospital_id');
         $deleted = $this->singleDelList($option);
         $response['hospital_deleted']= $deleted;
         
         if (!empty($response['data'])) {
+            $response['msg']= 'success';
+            $response['status']= TRUE;
             $this->response($response, 200); // 200 being the HTTP response code
         } else {
+            $response['msg']= 'fail';
+             $response['status']= FALSE;
             $this->response(array('error' => 'Hospital could not be found'), 404);
         }
     }
