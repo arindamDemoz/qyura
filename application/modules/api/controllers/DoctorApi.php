@@ -9,6 +9,7 @@ class DoctorApi extends MyRest {
     function __construct() {
         // Construct our parent class
         parent::__construct();
+        $this->load->helper('common_helper');
     }
 
     function doctorlist_post() {
@@ -35,18 +36,25 @@ class DoctorApi extends MyRest {
             $notIn = explode(',', $notIn);
 
             
-            $aoClumns = array("id","name","dob","imUrl","rating","speciality","consFee");
+            $aoClumns = array("id","name","exp","imUrl","rating", "consFee", "speciality","degree", "lat", "long");
 
-            $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_lName,  qyura_doctors.doctors_lName) AS name, qyura_doctors.doctors_dob dob, qyura_doctors.doctors_img imUrl, (
+            $this->db->select('qyura_users.users_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( qyura_doctors.doctors_lat ) ) * cos( radians( qyura_doctors.doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( qyura_doctors.doctors_lat ) ) )
-                ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_deleted as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat')
+                ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, qyura_degree.degree_SName as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
+
                     ->from('qyura_users')
                     ->join('qyura_doctors', 'qyura_users.users_id=qyura_doctors.doctors_userId', 'left')
+
                     ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_userId=qyura_users.users_id', 'left')
+
+                    ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_users.users_id', 'left')
+
                     ->join('qyura_degree', 'qyura_doctorAcademic.doctorAcademic_degreeId=qyura_degree.degree_id', 'left')
+
                     ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
+
                     ->where(array('qyura_doctors.doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
-                    ->having(array('distance <' => 5))
+                    ->having(array('distance <' => 10))
                     ->where_not_in('qyura_doctors.doctors_id', $notIn);
 
             $response = $this->db->get()->result();
@@ -58,17 +66,18 @@ class DoctorApi extends MyRest {
                     $finalTemp = array();
                     $finalTemp[] = isset($row->id) ? $row->id : "";
                     $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->dob) ? $row->dob : "";
+                    $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
                     $finalTemp[] = isset($row->imUrl) ? base_url().'assets/doctorsImages/'.$row->imUrl : "";
                     $finalTemp[] = isset($row->rating) ? $row->rating : "";
-                    $finalTemp[] = isset($row->specialityCat) ? $row->specialityCat : "";
                     $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
+                    $finalTemp[] = isset($row->specialityCat) ? $row->specialityCat : "";
+                    $finalTemp[] = isset($row->degree) ? $row->degree : "";
+                    $finalTemp[] = isset($row->lat) ? $row->lat : "";
+                    $finalTemp[] = isset($row->long) ? $row->long : "";
                     $finalResult[] = $finalTemp;
                     
                 }
             }
-
-
 
             if (!empty($finalResult)) {
                 $finalResult['msg'] = 'success';
@@ -76,7 +85,7 @@ class DoctorApi extends MyRest {
                 $finalResult['colName'] = $aoClumns;
                 $this->response($finalResult, 200); // 200 being the HTTP response code
             } else {
-               $response['msg'] = 'doctor not found!';
+                $response['msg'] = 'Doctor  does not exist in this specialty!';
                 $response['status'] = 0;
                 $this->response($response, 404);
             }

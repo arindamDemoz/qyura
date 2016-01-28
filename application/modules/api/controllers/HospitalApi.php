@@ -103,9 +103,9 @@ class HospitalApi extends MyRest {
             $response['colName'] = $aoClumns;
             $this->response($response, 200); // 200 being the HTTP response code
         } else {
-            $response['msg']= 'fail';
-             $response['status']= FALSE;
-            $this->response(array('error' => 'Hospital could not be found'), 404);
+           $response['msg'] = 'No Hospital  is available at this range!';
+           $response['status'] = 0;
+           $this->response($response, 404);
         }
     }
 }
