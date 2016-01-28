@@ -27,8 +27,6 @@ class BloodCatApi extends MyRest {
     }
     
     function bloodBankList_post(){
-      
-        print_r($_POST);
      
             $this->load->library('form_validation');
             
@@ -37,8 +35,7 @@ class BloodCatApi extends MyRest {
             $this->form_validation->set_rules('long','Long','xss_clean|decimal');
            
              if($this->form_validation->run() == FALSE) {
-                echo validation_errors();
-                 echo $message = 'something wrong';die();
+                 $message = 'something wrong';
                   $response =  array('status'=>FALSE,'message'=>$message);
                   $this->response($response, 400);
              }else {
@@ -77,7 +74,7 @@ class BloodCatApi extends MyRest {
 
             $notIn = explode(',', $notIn);
 
-            if ($_POST['start'])
+            if (isset($_POST['start']))
                 $con = array('bloodBank_id >' => $_POST['start']);
             else
                 $con = array();
@@ -108,7 +105,7 @@ class BloodCatApi extends MyRest {
             } else {
                 $response['msg']= 'fail';
                  $response['status']= FALSE;
-                $this->response(array('error' => 'Bloodbank could not be found'), 404);
+                $this->response($response, 401);
             }
     
           }
