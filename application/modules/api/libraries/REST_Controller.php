@@ -209,6 +209,9 @@ abstract class REST_Controller extends MX_Controller {
         // This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
         $this->load->library('format');
 
+        
+        //rest language
+        $this->lang->load("restAPI","english");
         // init objects
         $this->response = new stdClass();
         $this->rest = new stdClass();
