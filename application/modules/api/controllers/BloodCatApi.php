@@ -48,7 +48,7 @@ class BloodCatApi extends MyRest {
              'value' => isset($_POST['search_value']) ? $_POST['search_value'] : '',
                 'regex' => false
             );
-                 $aoClumns = array("id","bloodBank_name","bloodBank_add","lat","long","bloodBank_photo","distance","bloodBank_mblNo");
+                 $aoClumns = array("id","bloodBank_name","bloodBank_add","lat","long","bloodBank_photo","bloodBank_mblNo","distance");
            for ($i = 0; $i < 5; $i++) {
                $_POST['columns'][] = array
                    (
@@ -80,7 +80,7 @@ class BloodCatApi extends MyRest {
                 $con = array();
 
             $this->datatables
-                    ->select('bloodBank_id, bloodBank_name, bloodBank_add,bloodBank_lat,bloodBank_long,modifyTime,bloodBank_photo,bloodBank_mblNo (
+                    ->select('bloodBank_id, bloodBank_name, bloodBank_add,bloodBank_lat,bloodBank_long,modifyTime,bloodBank_photo,bloodBank_mblNo,(
                     6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( bloodBank_lat ) ) * cos( radians( bloodBank_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( bloodBank_lat ) ) )
                     ) AS distance')
                     ->from('qyura_bloodBank')
