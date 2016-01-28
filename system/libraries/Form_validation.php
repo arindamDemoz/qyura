@@ -117,6 +117,9 @@ class CI_Form_validation {
 	 * @var array
 	 */
 	public $validation_data	= array();
+        
+        protected $_api_error_prefix		= '';
+	protected $_api_error_suffix		= '';
 
 	/**
 	 * Initialize Form_Validation class
@@ -403,6 +406,48 @@ class CI_Form_validation {
 		return $str;
 	}
 
+        
+        /**
+	 * Error String
+	 *
+	 * Returns the error messages as a string, wrapped in the error delimiters
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @return	str
+	 */
+	public function api_error_string($prefix = '', $suffix = '')
+	{
+            
+		// No errrors, validation passes!
+		if (count($this->_error_array) === 0)
+		{
+			return '';
+		}
+
+		if ($prefix == '')
+		{
+			$prefix = $this->_api_error_prefix;
+		}
+
+		if ($suffix == '')
+		{
+			$suffix = $this->_api_error_suffix;
+		}
+
+		// Generate the error string
+		$str = '';
+		foreach ($this->_error_array as $val)
+		{
+			if ($val != '')
+			{
+				$str .= $prefix.$val.$suffix."\n";
+			}
+		}
+
+		return $str;
+	}
 	// --------------------------------------------------------------------
 
 	/**
