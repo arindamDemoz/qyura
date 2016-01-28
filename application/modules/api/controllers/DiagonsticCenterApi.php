@@ -2,17 +2,18 @@
 
 require APPPATH . 'modules/api/controllers/MyRest.php';
 
-class HospitalApi extends MyRest {
+class DiagonsticCenterApi extends MyRest {
 
     function __construct() {
         // Construct our parent class
         parent::__construct();
+        //echo 'hemant'; die();
         //$this->methods['hospital_post']['limit'] = 1; //500 requests per hour per user/key
         // $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
         // $this->methods['user_delete']['limit'] = 50; //50 requests per hour per user/key
     }
 
-    function hospitallist_post() {
+    function diagonsticlist_post() {
 
          $this->form_validation->set_rules('draw','Draw','xss_clean|numeric');
          $this->form_validation->set_rules('length','Length','required|xss_clean|numeric');
@@ -43,7 +44,7 @@ class HospitalApi extends MyRest {
             'regex' => false
         );
 
-        $aoClumns = array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","distance","specialities");
+        $aoClumns = array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","distance","diaCat");
         for ($i = 0; $i < 5; $i++) {
             $_POST['columns'][] = array
                 (
@@ -70,32 +71,32 @@ class HospitalApi extends MyRest {
         $notIn = explode(',', $notIn);
 
         if ($_POST['start'])
-            $con = array('hospital_id >' => $_POST['start']);
+            $con = array('diagnostic_id >' => $_POST['start']);
         else
             $con = array();
 
         $this->datatables
-                ->select('hospital_id, hospital_deleted as fav, hospital_deleted as rat, hospital_address,hospital_name,hospital_phn,hospital_lat,hospital_long,qyura_hospital.modifyTime, hospital_img, (
-                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( hospital_lat ) ) * cos( radians( hospital_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( hospital_lat ) ) )
-                ) AS distance, Group_concat(qyura_specialities.specialities_name order by specialities_name) as specialities')
-                ->from('qyura_hospital')
+                ->select('diagnostic_id, diagnostic_deleted as fav, diagnostic_deleted as rat, diagnostic_address,diagnostic_name,diagnostic_phn,diagnostic_lat,diagnostic_long,qyura_diagnostic.modifyTime, diagnostic_img, (
+                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( diagnostic_lat ) ) * cos( radians( diagnostic_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( diagnostic_lat ) ) )
+                ) AS distance, Group_concat(qyura_diagnosticsCat.diagnosticsCat_catName order by diagnosticsCat_catName) as diaCat')
+                ->from('qyura_diagnostic')
                 ->loadwhere($con)
-                ->join('qyura_hospitalSpecialities', 'qyura_hospitalSpecialities.hospitalSpecialities_hosUsersId=qyura_hospital.hospital_id','left')
-                ->join('qyura_specialities', 'qyura_specialities.specialities_id=qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId','left')
-                ->where('qyura_hospital.hospital_deleted = 0')
-                ->group_by('qyura_hospital.hospital_id')
-                ->having(array('distance <' => 100));
-        $this->datatables->where_not_in('hospital_id', $notIn);
-        $this->datatables->edit_column('hospital_img', base_url().'assets/hospitalsImages/$1', 'hospital_img');
+                ->join('qyura_diagnostics', 'qyura_diagnostics.diagnostics_name=qyura_diagnostic.diagnostic_id','left')
+                ->join('qyura_diagnosticsCat', 'qyura_diagnosticsCat.diagnosticsCat_catId=qyura_diagnostics.diagnostics_diagnosticsCatCatId','left')
+                ->where('qyura_diagnostic.diagnostic_deleted = 0')
+                ->group_by('qyura_diagnostic.diagnostic_id')
+                ->having(array('distance <' => 5));
+        $this->datatables->where_not_in('diagnostic_id', $notIn);
+        $this->datatables->edit_column('diagnostic_img', base_url().'assets/diagnosticsImage/$1', 'diagnostic_img');
 
         $response = $this->datatables->generate();
        // echo $this->db->last_query(); die();
          $response = (array)json_decode($response);
        // echo '</pre>';
       //  print_r($response); die();
-        $option = array('table'=>'hospital','select'=>'hospital_id');
+        $option = array('table'=>'diagnostic','select'=>'diagnostic_id');
         $deleted = $this->singleDelList($option);
-        $response['hospital_deleted']= $deleted;
+        $response['diagnostic_deleted']= $deleted;
         
         if (!empty($response['data'])) {
             $response['msg']= 'success';
@@ -105,29 +106,10 @@ class HospitalApi extends MyRest {
         } else {
             $response['msg']= 'fail';
              $response['status']= FALSE;
-            $this->response(array('error' => 'Hospital could not be found'), 404);
+            $this->response(array('error' => 'Diagnostic could not be found'), 404);
         }
     }
 }
-
-  function hospitaldetail_post() {
-     $this->form_validation->set_rules('hospitalId','Hospital Id','xss_clean|numeric');
-      if($this->form_validation->run() == FALSE)
-      { 
-        // setup the input
-         $message = 'something wrong';
-         $response =  array('status'=>FALSE,'message'=>$message);
-         $this->response($response, 400);
-      }
-      else 
-      {  
-        $hId = isset($_POST['hospitalId']) ? $_POST['hospitalId'] : '';
-        $this->datatables
-        ->select('hospital_deleted as review, hospital_deleted as ambulance, ')
-        ->where();
-      }
-
-  }
 
 
 }
