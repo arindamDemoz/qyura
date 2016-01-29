@@ -80,8 +80,10 @@ class HospitalApi extends MyRest {
                 ) AS distance, Group_concat(qyura_specialities.specialities_name order by specialities_name) as specialities')
                 ->from('qyura_hospital')
                 ->loadwhere($con)
+                
                 ->join('qyura_hospitalSpecialities', 'qyura_hospitalSpecialities.hospitalSpecialities_hosUsersId=qyura_hospital.hospital_id','left')
                 ->join('qyura_specialities', 'qyura_specialities.specialities_id=qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId','left')
+                
                 ->where('qyura_hospital.hospital_deleted = 0')
                 ->group_by('qyura_hospital.hospital_id')
                 ->having(array('distance <' => 100));
@@ -110,24 +112,6 @@ class HospitalApi extends MyRest {
     }
 }
 
-  function hospitaldetail_post() {
-     $this->form_validation->set_rules('hospitalId','Hospital Id','xss_clean|numeric');
-      if($this->form_validation->run() == FALSE)
-      { 
-        // setup the input
-         $message = 'something wrong';
-         $response =  array('status'=>FALSE,'message'=>$message);
-         $this->response($response, 400);
-      }
-      else 
-      {  
-        $hId = isset($_POST['hospitalId']) ? $_POST['hospitalId'] : '';
-        $this->datatables
-        ->select('hospital_deleted as review, hospital_deleted as ambulance, ')
-        ->where();
-      }
-
-  }
 
 
 }
