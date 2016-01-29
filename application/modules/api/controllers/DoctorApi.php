@@ -22,8 +22,8 @@ class DoctorApi extends MyRest {
 
         if ($this->form_validation->run() == FALSE) {
             // setup the input
-            $message = 'something wrong';
-            $response = array('status' => FALSE, 'message' => $message);
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'msg' => $message);
             $this->response($response, 400);
         } else {
 
@@ -32,7 +32,7 @@ class DoctorApi extends MyRest {
             $long = isset($_POST['long']) ? $_POST['long'] : '';       // $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
             $specialitycatid = isset($_POST['specialitycatid']) ? $_POST['specialitycatid'] : '';
 
-            $notIn = isset($_POST['notIn']) ? $_POST['notIn'] : '';
+            $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
             $notIn = explode(',', $notIn);
 
             
@@ -54,12 +54,15 @@ class DoctorApi extends MyRest {
 
                     ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
 
-                    ->where(array('qyura_doctors.doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
-                    ->having(array('distance <' => 10))
+                    ->where(array('users_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
+                    
+                    ->having(array('distance <' => USER_DISTANCE))
                     
                     ->where_not_in('qyura_users.users_id', $notIn)
                     
                     ->order_by('distance' , 'ASC')
+                    
+                    ->group_by('users_id')
                     
                     ->limit(DATA_LIMIT);
 
