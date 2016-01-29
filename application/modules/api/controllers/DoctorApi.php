@@ -63,10 +63,11 @@ class DoctorApi extends MyRest {
             $finalResult = array();
             if (!empty($response)) {                
                 foreach ($response as $row) {
+                    
                     $finalTemp = array();
                     $finalTemp[] = isset($row->id) ? $row->id : "";
                     $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
+                    //$finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
                     $finalTemp[] = isset($row->imUrl) ? base_url().'assets/doctorsImages/'.$row->imUrl : "";
                     $finalTemp[] = isset($row->rating) ? $row->rating : "";
                     $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
@@ -79,17 +80,75 @@ class DoctorApi extends MyRest {
                 }
             }
 
+     // $finalResult = $this->jsonify($finalResult);
+      
+            
             if (!empty($finalResult)) {
-                $finalResult['msg'] = 'success';
-                $finalResult['status'] = TRUE;
-                $finalResult['colName'] = $aoClumns;
-                $this->response($finalResult, 200); // 200 being the HTTP response code
+                $response1['msg'] = 'Doctor  does not exist in this specialty!';
+                $response1['status'] = 0;
+                $response1['data'] = $finalResult;
+                
+                $this->response($response1, 200); // 200 being the HTTP response code
             } else {
-                $response['msg'] = 'Doctor  does not exist in this specialty!';
-                $response['status'] = 0;
-                $this->response($response, 404);
+                $response1['msg'] = 'Doctor  does not exist in this specialty!';
+                $response1['status'] = 0;
+                $this->response($response1, 404);
             }
         }
+    }
+    
+    private function jsonify($result = FALSE)
+    {
+      if(is_null($result))
+        return 'null';
+
+      if($result === FALSE)
+        return 'false';
+
+      if($result === TRUE)
+        return 'true';
+
+      if(is_scalar($result))
+      {
+        if(is_float($result))
+          return floatval(str_replace(',', '.', strval($result)));
+
+        if(is_string($result))
+        {
+          static $jsonReplaces = array(array('\\', '/', '\n', '\t', '\r', '\b', '\f', '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
+          return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $result) . '"';
+        }
+        else
+          return $result;
+      }
+
+      $isList = TRUE;
+
+      for($i = 0, reset($result); $i < count($result); $i++, next($result))
+      {
+        if(key($result) !== $i)
+        {
+          $isList = FALSE;
+          break;
+        }
+      }
+
+      $json = array();
+
+      if($isList)
+      {
+        foreach($result as $value)
+          $json[] = $this->jsonify($value);
+
+        return '[' . join(',', $json) . ']';
+      }
+      else
+      {
+        foreach($result as $key => $value)
+          $json[] = $this->jsonify($key) . ':' . $this->jsonify($value);
+
+        return '{' . join(',', $json) . '}';
+      }
     }
 
 }
