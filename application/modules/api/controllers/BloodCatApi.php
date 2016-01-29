@@ -30,7 +30,7 @@ class BloodCatApi extends MyRest {
      
             $this->load->library('form_validation');
             
-            $this->form_validation->set_rules('userId','User Id','xss_clean|numeric');
+            $this->form_validation->set_rules('bloodCat_id','Blood category Id','xss_clean|numeric');
             $this->form_validation->set_rules('lat','Lat','xss_clean|decimal');
             $this->form_validation->set_rules('long','Long','xss_clean|decimal');
            
@@ -48,7 +48,7 @@ class BloodCatApi extends MyRest {
              'value' => isset($_POST['search_value']) ? $_POST['search_value'] : '',
                 'regex' => false
             );
-                 $aoClumns = array("id","bloodBank_name","bloodBank_add","lat","long","bloodBank_photo","bloodBank_mblNo","distance");
+                 $aoClumns = array("bloodBank_id","bloodBank_name","bloodBank_add","lat","long","bloodBank_photo","bloodBank_mblNo");
            for ($i = 0; $i < 5; $i++) {
                $_POST['columns'][] = array
                    (
@@ -66,7 +66,7 @@ class BloodCatApi extends MyRest {
 
             $lat = isset($_POST['lat']) ? $_POST['lat'] : '';
             $long = isset($_POST['long']) ? $_POST['long'] : '';
-            $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+            $userId = isset($_POST['bloodCat_id']) ? $_POST['bloodCat_id'] : '';
 
             // last updated date 16/01/2016
             $lastUpdatedDate = isset($_POST['lastUpdatedDate']) ? $_POST['lastUpdatedDate'] : '1452951625';
@@ -78,32 +78,54 @@ class BloodCatApi extends MyRest {
                 $con = array('bloodBank_id >' => $_POST['start']);
             else
                 $con = array();
-
-            $this->datatables
-                    ->select('bloodBank_id, bloodBank_name, bloodBank_add,bloodBank_lat,bloodBank_long,modifyTime,bloodBank_photo,bloodBank_mblNo,(
+            $where = array('quera_bloodCatBank.bloodCats_id='=> $_POST["bloodCat_id"],'qyura_bloodBank.bloodBank_deleted'=>0,
+                'quera_bloodCatBank.bloodCat-Bank_deleted'=>0);
+            $this->db
+                    ->select('`qyura_bloodBank`.`bloodBank_id`, `qyura_bloodBank`.`bloodBank_name`, `qyura_bloodBank`.`bloodBank_add`,`qyura_bloodBank`.`bloodBank_lat`,`qyura_bloodBank`.`bloodBank_long`,
+                    `qyura_bloodBank`.`bloodBank_photo`,
+                        `qyura_bloodBank`.`bloodBank_mblNo`,(
                     6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( bloodBank_lat ) ) * cos( radians( bloodBank_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( bloodBank_lat ) ) )
                     ) AS distance')
                     ->from('qyura_bloodBank')
-                    ->loadwhere($con)
-                    ->where('qyura_bloodBank.bloodBank_deleted = 0')
-                    ->having(array('distance <' => 100));
-            $this->datatables->where_not_in('bloodBank_id', $notIn);
-            $this->datatables->edit_column('bloodBank_photo', base_url().'assets/BloodBank/$1', 'bloodBank_photo');
-
-            $response = $this->datatables->generate();
-          //echo $this->db->last_query(); die();
-             $response = (array)json_decode($response);
+                    ->join('quera_bloodCatBank', 'quera_bloodCatBank.bloodBank_id=qyura_bloodBank.bloodBank_id','left')
+                    ->join('qyura_bloodCat', 'qyura_bloodCat.bloodCat_id=quera_bloodCatBank.bloodCats_id','left')
+                   ->where($where)
+                    ->having(array('distance <=' => 5));
+            $this->db->where_not_in('qyura_bloodBank.bloodBank_id', $notIn);
+           //$this->datatables->edit_column('qyura_bloodBank.bloodBank_photo', base_url().'assets/BloodBank/$1', 'bloodBank_photo');
+            $data = $this->db->get()->result();
+           //echo $this->db->last_query(); die();
+            $array_data=array();
+            
+            $response = '';
+            foreach ($data as $row){
+                
+                    $array_data[] =   isset($row->bloodBank_id) ? $row->bloodBank_id : "";
+                    $array_data[] = isset($row->bloodBank_name) ? $row->bloodBank_name : "";
+                    $array_data[] = isset($row->bloodBank_add) ? $row->bloodBank_add : "";
+                     $array_data[] = isset($row->bloodBank_lat) ? $row->bloodBank_lat : "";
+                    $array_data[] = isset($row->bloodBank_long) ? $row->bloodBank_long : "";
+                    $array_data[] = isset($row->bloodBank_photo) ? base_url().'assets/BloodBank/'.$row->bloodBank_photo : "";
+                       
+                    $array_data[] = isset($row->bloodBank_mblNo) ? $row->bloodBank_mblNo : "";
+                     $array_data[] = isset($row->distance) ? $row->distance : ""; 
+                     $finalResult[]= $array_data;
+                     $array_data='';
+            }
+            
+          
             $option = array('table'=>'bloodBank','select'=>'bloodBank_id');
             $deleted = $this->singleDelList($option);
             $response['bloodBank_deleted']= $deleted;
 
-            if (!empty($response['data'])) {
-                $response['msg']= 'success';
-                $response['status']= TRUE;
-                $response['colName'] = $aoClumns;
-                $this->response($response, 200); // 200 being the HTTP response code
+            if (!empty($finalResult)) {
+                $response1['msg']= 'success';
+                $response1['status']= TRUE;
+                $response1['data'] = $finalResult;
+                $response1['colName'] = $aoClumns;
+                $this->response($response1, 200); // 200 being the HTTP response code
             } else {
-                $response['msg']= 'fail';
+                $response['msg']= 'No Blood bank is available at this range. ';
                  $response['status']= FALSE;
                 $this->response($response, 401);
             }
