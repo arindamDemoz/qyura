@@ -22,8 +22,8 @@ class DoctorApi extends MyRest {
 
         if ($this->form_validation->run() == FALSE) {
             // setup the input
-            $message = 'something wrong';
-            $response = array('status' => FALSE, 'message' => $message);
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'msg' => $message);
             $this->response($response, 400);
         } else {
 
@@ -32,7 +32,7 @@ class DoctorApi extends MyRest {
             $long = isset($_POST['long']) ? $_POST['long'] : '';       // $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
             $specialitycatid = isset($_POST['specialitycatid']) ? $_POST['specialitycatid'] : '';
 
-            $notIn = isset($_POST['notIn']) ? $_POST['notIn'] : '';
+            $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
             $notIn = explode(',', $notIn);
 
             
@@ -43,6 +43,7 @@ class DoctorApi extends MyRest {
                 ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, qyura_degree.degree_SName as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
 
                     ->from('qyura_users')
+                    
                     ->join('qyura_doctors', 'qyura_users.users_id=qyura_doctors.doctors_userId', 'left')
 
                     ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_userId=qyura_users.users_id', 'left')
@@ -53,21 +54,29 @@ class DoctorApi extends MyRest {
 
                     ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
 
-                    ->where(array('qyura_doctors.doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
-                    ->having(array('distance <' => 10))
-                    ->where_not_in('qyura_doctors.doctors_id', $notIn);
+                    ->where(array('users_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
+                    
+                    ->having(array('distance <' => USER_DISTANCE))
+                    
+                    ->where_not_in('qyura_users.users_id', $notIn)
+                    
+                    ->order_by('distance' , 'ASC')
+                    
+                    ->group_by('users_id')
+                    
+                    ->limit(DATA_LIMIT);
 
             $response = $this->db->get()->result();
+            //echo $this->db->last_query(); die();
 
             //  print_r($response); die();
             $finalResult = array();
             if (!empty($response)) {                
                 foreach ($response as $row) {
-                    
                     $finalTemp = array();
                     $finalTemp[] = isset($row->id) ? $row->id : "";
                     $finalTemp[] = isset($row->name) ? $row->name : "";
-                    //$finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
+                    $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
                     $finalTemp[] = isset($row->imUrl) ? base_url().'assets/doctorsImages/'.$row->imUrl : "";
                     $finalTemp[] = isset($row->rating) ? $row->rating : "";
                     $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
@@ -80,75 +89,18 @@ class DoctorApi extends MyRest {
                 }
             }
 
-     // $finalResult = $this->jsonify($finalResult);
-      
-            
             if (!empty($finalResult)) {
-                $response1['msg'] = 'Doctor  does not exist in this specialty!';
-                $response1['status'] = 0;
-                $response1['data'] = $finalResult;
-                
-                $this->response($response1, 200); // 200 being the HTTP response code
+                $finalStatus['msg'] = 'success';
+                $finalStatus['status'] = TRUE;
+                $finalStatus['colName'] = $aoClumns;
+                $finalStatus['data'] = $finalResult;
+                $this->response($finalStatus, 200); // 200 being the HTTP response code
             } else {
-                $response1['msg'] = 'Doctor  does not exist in this specialty!';
-                $response1['status'] = 0;
-                $this->response($response1, 404);
+                $finalStatus['msg'] = 'Doctor  does not exist in this specialty!';
+                $finalStatus['status'] = FALSE;
+                $this->response($finalStatus, 404);
             }
         }
-    }
-    
-    private function jsonify($result = FALSE)
-    {
-      if(is_null($result))
-        return 'null';
-
-      if($result === FALSE)
-        return 'false';
-
-      if($result === TRUE)
-        return 'true';
-
-      if(is_scalar($result))
-      {
-        if(is_float($result))
-          return floatval(str_replace(',', '.', strval($result)));
-
-        if(is_string($result))
-        {
-          static $jsonReplaces = array(array('\\', '/', '\n', '\t', '\r', '\b', '\f', '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
-          return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $result) . '"';
-        }
-        else
-          return $result;
-      }
-
-      $isList = TRUE;
-
-      for($i = 0, reset($result); $i < count($result); $i++, next($result))
-      {
-        if(key($result) !== $i)
-        {
-          $isList = FALSE;
-          break;
-        }
-      }
-
-      $json = array();
-
-      if($isList)
-      {
-        foreach($result as $value)
-          $json[] = $this->jsonify($value);
-
-        return '[' . join(',', $json) . ']';
-      }
-      else
-      {
-        foreach($result as $key => $value)
-          $json[] = $this->jsonify($key) . ':' . $this->jsonify($value);
-
-        return '{' . join(',', $json) . '}';
-      }
     }
 
 }
