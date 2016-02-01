@@ -21,11 +21,11 @@ class Hospital_model extends CI_Model
         return $this->db->get()->row();
     }
     
-    function diagnosticsCat_Details ($hospitalId,$limit=4) {
+    function getDiagnosticsCat ($hospitalId,$limit=4) {
          $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_DiagnosticDiagCatTest.DiagCatTest_id');
         $this->db->from('qyura_hospitalDiagCatTest');
-        $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_DiagnosticDiagCatTest.DiagCatTest_diagCatId','left');
-        $this->db->where(array('qyura_DiagnosticDiagCatTest.DiagCatTest_DiagnosticId'=>$diagnosticId,'qyura_DiagnosticDiagCatTest.DiagCatTest_deleted'=>0));
+        $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
+        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
         if($limit)
             $this->db->limit($limit);
         
@@ -87,6 +87,11 @@ class Hospital_model extends CI_Model
         if($limit)
         $this->db->limit($limit);
         return $this->db->get()->result();
+    }
+    
+    public function getHospitalAwards()
+    {
+        
     }
     
     
