@@ -27,42 +27,40 @@ class HospitalApi extends MyRest {
 
 
             $lat = isset($_POST['lat']) ? $_POST['lat'] : '';
-            $long = isset($_POST['long']) ? $_POST['long'] : '';       // $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+            $long = isset($_POST['long']) ? $_POST['long'] : '';      
             $specialitycatid = isset($_POST['specialitycatid']) ? $_POST['specialitycatid'] : '';
+            $search = isset($_POST['q']) ? $_POST['q'] : '';
 
             $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
             $notIn = explode(',', $notIn);
 
-            
             $aoClumns = array("id","name","exp","imUrl","rating", "consFee", "speciality","degree", "lat", "long");
-
-            $this->db->select('qyura_users.users_id as id, hospital_deleted as fav, hospital_deleted as rat, hospital_address as adr ,hospital_name name, hospital_phn phn, hospital_lat lat, hospital_long long, qyura_hospital.modifyTime upTm, hospital_img imUrl, (
+            
+             $this->db->select('hospital_id as id, hospital_deleted as fav, hospital_deleted as rat, hospital_address as adr ,hospital_name name, hospital_phn phn, hospital_lat lat, hospital_long long, qyura_hospital.modifyTime upTm, hospital_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( hospital_lat ) ) * cos( radians( hospital_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( hospital_lat ) ) )
                 ) AS distance, Group_concat(qyura_specialities.specialities_name order by specialities_name) as specialities')
 
-                    ->from('qyura_users')
-                    
-                    ->join('qyura_hospital', 'qyura_users.users_id=qyura_hospital.hospital_id', 'inner')
+                    ->from('qyura_hospital')
 
-                    ->join('qyura_hospitalSpecialities', 'qyura_hospitalSpecialities.hospitalSpecialities_hosUsersId=qyura_users.users_id','left')
+                    ->join('qyura_hospitalSpecialities', 'qyura_hospitalSpecialities.hospitalSpecialities_hospitalId=qyura_hospital.hospital_id','left')
                     
                     ->join('qyura_specialities', 'qyura_specialities.specialities_id=qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId','left')
 
-                    ->where(array('users_deleted' => 0))
+                    ->where(array('hospital_deleted' => 0))
                     
                     ->having(array('distance <' => USER_DISTANCE))
                     
-                    ->where_not_in('qyura_users.users_id', $notIn)
+                    ->where_not_in('qyura_hospital.hospital_id', $notIn)
                     
                     ->order_by('distance' , 'ASC')
                     
-                    ->group_by('users_id')
+                    ->group_by('hospital_id')
                     
                     ->limit(DATA_LIMIT);
 
 
            $response = $this->db->get()->result();
-          //  echo $this->db->last_query(); die();
+          // echo $this->db->last_query(); die();
            $aoClumns = array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","specialities");
              
             $finalResult = array();
