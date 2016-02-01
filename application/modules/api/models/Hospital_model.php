@@ -15,14 +15,14 @@ class Hospital_model extends CI_Model
     
     public function getHosDetails($hospitalId)
     {
-        $this->db->select('hospital_id, hospital_address, hospital_name, hospital_phn, hospital_lat, hospital_long, modifyTime, hospital_img');
+        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_phn, hospital_lat, hospital_long, modifyTime, hospital_img');
         $this->db->from('qyura_hospital');
         $this->db->where(array('hospital_id'=>$hospitalId,'hospital_deleted'=>0));
         return $this->db->get()->row();
     }
     
     function getDiagnosticsCat ($hospitalId,$limit=4) {
-         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_DiagnosticDiagCatTest.DiagCatTest_id');
+         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId');
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
         $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
@@ -78,20 +78,68 @@ class Hospital_model extends CI_Model
        return '';
     }
     
-    public function getHosDoctors($hospitalId,$limit=4)
+    public function getHosDoctors($hospitalId,$hospitalUsersId,$limit=4)
     {
-        $this->db->select('doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee');
+        $this->db->select('doctors_id,doctors_userId,doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee');
         $this->db->from('qyura_usersRoles');
         $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
-        $this->db->where(array('qyura_usersRoles.usersRoles_parentId'=>$hospitalId,'qyura_usersRoles.usersRoles_roleId'=>ROLE_DOCTORE));
+        $this->db->where(array('qyura_usersRoles.usersRoles_parentId'=>$hospitalUsersId,'qyura_usersRoles.usersRoles_roleId'=>ROLE_DOCTORE));
+        if($limit)
+        $this->db->limit($limit);
+        $doctors = $this->db->get()->result();
+        
+        $doctorResult = array();
+        if(!empty($doctors)){
+            foreach($doctors as $doctor)
+            {
+                $doctorTemp = array();
+                $doctorTemp['doctors_id'] = $doctor->doctors_id;
+                $doctorTemp['userId'] = $doctor->doctors_userId;
+                $doctorTemp['img'] = $doctor->doctors_img;
+                $doctorTemp['fName'] = $doctor->doctors_fName;
+                $doctorTemp['lName'] = $doctor->doctors_lName;
+                $doctorTemp['addr'] = $doctor->doctor_addr;
+                $doctorTemp['phn'] = $doctor->doctors_phn;
+                $doctorTemp['mobile'] = $doctor->doctors_mobile;
+                $doctorTemp['Src27'] = $doctor->doctors_27Src;
+                $doctorTemp['consultaionFee'] = $doctor->doctors_consultaionFee;
+                $doctorTemp['parents'] = $this->getDoctorsRole($doctor->doctors_userId);
+                $doctorResult[] = $doctorTemp;
+            }
+            return $doctorResult;
+        }
+        
+        return $doctorResult;
+    }
+    
+    public function getDoctorsRole($userId)
+    {
+        $this->db->select('qyura_doctors.doctors_id,qyura_usersRoles.usersRoles_userId,qyura_usersRoles.usersRoles_roleId,qyura_usersRoles.usersRoles_parentId');
+        $this->db->from('qyura_usersRoles');
+        $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
+        $this->db->where(array('qyura_usersRoles.usersRoles_userId'=>$userId,'qyura_usersRoles.usersRoles_deleted'=>0));
+        return $this->db->get()->result();
+    }
+    
+    public function getHosInsurance($hospitalId,$limit=4)
+    {
+        $this->db->select('insurance_Name,insurance_id,insurance_img,qyura_insurance.modifyTime');
+        $this->db->from('qyura_hospitalInsurance');
+        $this->db->join('qyura_insurance','qyura_insurance.insurance_id=qyura_hospitalInsurance.hospitalInsurance_insuranceId','left');
+        $this->db->where(array('qyura_hospitalInsurance.hospitalInsurance_hospitalId'=>$hospitalId,'qyura_hospitalInsurance.hospitalInsurance_deleted'=>0));
         if($limit)
         $this->db->limit($limit);
         return $this->db->get()->result();
     }
     
-    public function getHospitalAwards()
+    public function getHosAwards($hospitalId,$limit=3)
     {
-        
+        $this->db->select('hospitalAwards_id,hospitalAwards_awardsName,modifyTime');
+        $this->db->from('qyura_hospitalAwards');
+        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$hospitalId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
+        if($limit)
+        $this->db->limit($limit);
+        return $this->db->get()->result();
     }
     
     

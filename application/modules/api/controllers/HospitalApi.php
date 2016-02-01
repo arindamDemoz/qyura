@@ -104,6 +104,7 @@ class HospitalApi extends MyRest {
     
     function hospitaldetail_post() {
      $this->form_validation->set_rules('hospitalId','Hospital Id','xss_clean|numeric|required|trim');
+     
       if($this->form_validation->run($this) == FALSE)
       { 
         // setup the input
@@ -123,17 +124,19 @@ class HospitalApi extends MyRest {
             
             $response['specialities'] = $specialities =  $this->hospital_model->getHosSpecialities($hospitalId);
             
-            $response['reviewCount'] = $reviewCount =  $this->hospital_model->getHosHelthPkg($hospitalId);
+            $response['hosHelthPkg'] = $reviewCount =  $this->hospital_model->getHosHelthPkg($hospitalId);
             
             $response['reviewCount'] = $reviewCount = $this->hospital_model->getHosReviewCount($hospitalId);
             
             $response['rating'] = $this->hospital_model->getHosAvgRating($hospitalId);
             
-            $response['hosDoctors'] = $hosDoctors = $this->hospital_model->getHosDoctors($hospitalId);
+            $response['hosDoctors'] = $hosDoctors = $this->hospital_model->getHosDoctors($hospitalId,$hospitalDetails->hospital_usersId);
             
             $response['hosDiagnosticsCat'] = $hosDiagnostics = $this->hospital_model->getDiagnosticsCat($hospitalId);
             
-            $response['awards'] = array();
+            $response['awards'] = $hosAwards = $this->hospital_model->getHosAwards($hospitalId);
+            
+            $response['osInsurance'] = $osInsurance = $this->hospital_model->getHosInsurance($hospitalId);
             
             $response['status'] = TRUE;
             $response['msg'] = 'success';
