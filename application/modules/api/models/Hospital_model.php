@@ -21,6 +21,17 @@ class Hospital_model extends CI_Model
         return $this->db->get()->row();
     }
     
+    function diagnosticsCat_Details ($hospitalId,$limit=4) {
+         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_DiagnosticDiagCatTest.DiagCatTest_id');
+        $this->db->from('qyura_hospitalDiagCatTest');
+        $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_DiagnosticDiagCatTest.DiagCatTest_diagCatId','left');
+        $this->db->where(array('qyura_DiagnosticDiagCatTest.DiagCatTest_DiagnosticId'=>$diagnosticId,'qyura_DiagnosticDiagCatTest.DiagCatTest_deleted'=>0));
+        if($limit)
+            $this->db->limit($limit);
+        
+        return $this->db->get()->result();
+    }
+    
     public function getHosServices($hospitalId,$limit=3)
     {
         $this->db->select('qyura_services.services_name,qyura_services.services_deleted,qyura_services.modifyTime,qyura_services.services_id');
