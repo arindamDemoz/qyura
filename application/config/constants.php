@@ -86,3 +86,10 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 defined('DATA_LIMIT')      OR define('DATA_LIMIT', 5); // highest automatically-assigned error code
 defined('USER_DISTANCE')      OR define('USER_DISTANCE', 5); // highest automatically-assigned error code
+
+defined('ROLE_HOSPITAL')      OR define('ROLE_HOSPITAL', 1); // highest automatically-assigned error code
+defined('ROLE_BLOODBANK')      OR define('ROLE_BLOODBANK', 2); // highest automatically-assigned error code
+defined('ROLE_DIAGNOSTICS')      OR define('ROLE_DIAGNOSTICS', 3); // highest automatically-assigned error code
+defined('ROLE_DOCTORE')      OR define('ROLE_DOCTORE', 4); // highest automatically-assigned error code
+defined('ROLE_PHARMACY')      OR define('ROLE_PHARMACY', 5); // highest automatically-assigned error code
+
