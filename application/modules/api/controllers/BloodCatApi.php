@@ -1,5 +1,4 @@
 <?php
-
 require APPPATH . 'modules/api/controllers/MyRest.php';
 
 class BloodCatApi extends MyRest {
@@ -20,9 +19,7 @@ class BloodCatApi extends MyRest {
 
         $response = $this->datatables->generate();
 
-        //echo $this->datatables->last_query(); die();
         $response = (array) json_decode($response);
-        // print_r($response);exit;
         $this->response($response, 200);
     }
 
@@ -89,7 +86,6 @@ class BloodCatApi extends MyRest {
                     ->from('qyura_bloodBank')
                     ->join('qyura_bloodCatBank', 'qyura_bloodCatBank.bloodBank_id = qyura_bloodBank.bloodBank_id', 'left')
                     ->join('qyura_bloodCat', 'qyura_bloodCat.bloodCat_id = qyura_bloodCatBank.bloodCats_id', 'left')
-                   // ->join('qyura_users', 'qyura_users.users_id = qyura_bloodBank.users_id', 'inner')
                     ->where($where)
                     ->having(array('distance <=' => USER_DISTANCE));
             $this->db->where_not_in('qyura_bloodBank.bloodBank_id', $notIn)
