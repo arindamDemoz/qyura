@@ -38,31 +38,29 @@ class DoctorApi extends MyRest {
             
             $aoClumns = array("id","name","exp","imUrl","rating", "consFee", "speciality","degree", "lat", "long");
 
-            $this->db->select('qyura_users.users_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
-                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( qyura_doctors.doctors_lat ) ) * cos( radians( qyura_doctors.doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( qyura_doctors.doctors_lat ) ) )
+            $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
+                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( doctors_lat ) ) * cos( radians( doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( doctors_lat ) ) )
                 ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, qyura_degree.degree_SName as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
 
-                    ->from('qyura_users')
-                    
-                    ->join('qyura_doctors', 'qyura_users.users_id=qyura_doctors.doctors_userId', 'left')
+                    ->from('qyura_doctors')
 
-                    ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_userId=qyura_users.users_id', 'left')
+                    ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_doctorsId=qyura_doctors.doctors_id', 'left')
 
-                    ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_users.users_id', 'left')
+                    ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left')
 
                     ->join('qyura_degree', 'qyura_doctorAcademic.doctorAcademic_degreeId=qyura_degree.degree_id', 'left')
 
                     ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
 
-                    ->where(array('users_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
+                    ->where(array('doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
                     
                     ->having(array('distance <' => USER_DISTANCE))
                     
-                    ->where_not_in('qyura_users.users_id', $notIn)
+                    ->where_not_in('doctors_id', $notIn)
                     
                     ->order_by('distance' , 'ASC')
                     
-                    ->group_by('users_id')
+                    ->group_by('doctors_id')
                     
                     ->limit(DATA_LIMIT);
 
