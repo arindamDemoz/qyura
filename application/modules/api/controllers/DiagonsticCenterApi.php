@@ -108,7 +108,7 @@ class DiagonsticCenterApi extends MyRest {
       {  
         $diagonsticId = $this->input->post('diagonsticId');
         $diagonsticDetails = $this->diagonsticCenter_models->diagonstic_Details($diagonsticId);
-        
+       // print_r($diagonsticDetails);exit;
         if($diagonsticDetails)
         {
             $response['diagonsticDetails'] = $diagonsticDetails;
@@ -127,7 +127,7 @@ class DiagonsticCenterApi extends MyRest {
             
             $response['DiagnosticsCat'] = $hosDiagnostics = $this->diagonsticCenter_models->getDiagnosticsCat($diagonsticId);
             
-            $response['awards'] = $hosAwards = $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
+           // $response['awards'] = $hosAwards = $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
             
            // $response['osInsurance'] = $osInsurance = $this->hospital_model->getHosInsurance($diagonsticId);
             

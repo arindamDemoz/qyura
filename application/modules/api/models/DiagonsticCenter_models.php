@@ -7,10 +7,10 @@ class DiagonsticCenter_models extends CI_Model {
     
     function diagonstic_Details ($diaUsrId) {
         
-        $this->db->select('diagnostic_id,diagnostic_address, diagnostic_lat, diagnostic_long, diagnostic_aboutUs, diagnostic_mblNo, diagnostic_img');
+        $this->db->select('diagnostic_id,diagnostic_usersId,diagnostic_address, diagnostic_lat, diagnostic_long, diagnostic_aboutUs, diagnostic_mblNo, diagnostic_img');
         $this->db->from('qyura_diagnostic');
         $this->db->where(array('diagnostic_id'=>$diaUsrId,'diagnostic_deleted'=>0));
-        return $this->db->get()->result();
+        return $this->db->get()->row();
         
     }
     
@@ -123,22 +123,22 @@ class DiagonsticCenter_models extends CI_Model {
          $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId');
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
-        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
+        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$diagonsticId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
         if($limit)
             $this->db->limit($limit);
         
         return $this->db->get()->result();
     }
     
-    public function getDiagnosticsds($hospitalId,$limit=3)
+    /*public function getDiagnosticsds($diagonsticId,$limit=3)
     {
         $this->db->select('hospitalAwards_id,hospitalAwards_awardsName,modifyTime');
         $this->db->from('qyura_hospitalAwards');
-        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$hospitalId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
+        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$diagonsticId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
         if($limit)
         $this->db->limit($limit);
         return $this->db->get()->result();
-    }
+    }*/
     
     public function getDoctorsRole($userId)
     {
