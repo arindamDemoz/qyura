@@ -33,23 +33,21 @@ class PharmacyApi extends MyRest {
 
 
 
-            $this->db->select('qyura_users.users_id as id, pharmacy_name name, pharmacy_address adr, pharmacy_img imUrl, (
+            $this->db->select('qyura_pharmacy.pharmacy_id as id, pharmacy_name name, pharmacy_address adr, pharmacy_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( pharmacy_lat ) ) * cos( radians( pharmacy_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( pharmacy_lat ) ) )
                 ) AS distance, pharmacy_phn phn, pharmacy_lat lat, pharmacy_long long')
-
-                    ->from('qyura_users')
                     
-                    ->join('qyura_pharmacy', 'qyura_users.users_id=qyura_pharmacy.pharmacy_id', 'inner')
+                    ->from('qyura_pharmacy')
 
-                    ->where(array('users_deleted' => 0))
+                    ->where(array('qyura_pharmacy.pharmacy_deleted' => 0))
                     
                     ->having(array('distance <' => USER_DISTANCE))
                     
-                    ->where_not_in('qyura_users.users_id', $notIn)
+                    ->where_not_in('qyura_pharmacy.pharmacy_id', $notIn)
                     
                     ->order_by('distance' , 'ASC')
                     
-                    ->group_by('users_id')
+                    ->group_by('pharmacy_id')
                     
                     ->limit(DATA_LIMIT);
 

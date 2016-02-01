@@ -34,32 +34,30 @@ class DiagonsticCenterApi extends MyRest {
 
 
 
-                $this->db->select('qyura_users.users_id as id, diagnostic_deleted as fav, diagnostic_deleted as rat, diagnostic_address adr,diagnostic_name name,diagnostic_phn phn, diagnostic_lat lat, diagnostic_long long, qyura_diagnostic.modifyTime upTm, diagnostic_img imUrl, (
+                $this->db->select('qyura_diagnostic.diagnostic_id as id, diagnostic_deleted as fav, diagnostic_deleted as rat, diagnostic_address adr,diagnostic_name name,diagnostic_phn phn, diagnostic_lat lat, diagnostic_long long, qyura_diagnostic.modifyTime upTm, diagnostic_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( diagnostic_lat ) ) * cos( radians( diagnostic_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( diagnostic_lat ) ) )
                 ) AS distance, Group_concat(qyura_diagnosticsCat.diagnosticsCat_catName order by diagnosticsCat_catName) as diaCat')
 
-                    ->from('qyura_users')
-                    
-                    ->join('qyura_diagnostic', 'qyura_users.users_id=qyura_diagnostic.diagnostic_usersId', 'inner')
+                    ->from('qyura_diagnostic')
 
-                    ->join('qyura_diagnosticsHasCat', 'qyura_diagnosticsHasCat.diagnosticsHasCat_diagnosticUserId=qyura_users.users_id','left')
+                    ->join('qyura_diagnosticsHasCat', 'qyura_diagnosticsHasCat.diagnosticsHasCat_diagnosticId=qyura_diagnostic.diagnostic_id','left')
                     
                     ->join('qyura_diagnosticsCat', 'qyura_diagnosticsCat.diagnosticsCat_catId=qyura_diagnosticsHasCat.diagnosticsHasCat_diagnosticsCatId','left')
 
-                    ->where(array('users_deleted' => 0))
+                    ->where(array('diagnostic_deleted' => 0))
                     
                     ->having(array('distance <' => USER_DISTANCE))
                     
-                    ->where_not_in('qyura_users.users_id', $notIn)
+                    ->where_not_in('diagnostic_id', $notIn)
                     
                     ->order_by('distance' , 'ASC')
                     
-                    ->group_by('users_id')
+                    ->group_by('diagnostic_id   ')
                     
                     ->limit(DATA_LIMIT);
 
             $response = $this->db->get()->result();
-           // echo $this->db->last_query(); die();
+            //echo $this->db->last_query(); die();
             $aoClumns = array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","diaCat");
             //  print_r($response); die();
             $finalResult = array();
