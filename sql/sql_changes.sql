@@ -76,4 +76,15 @@ CREATE TABLE `qyura_diagnosticSpecialities` (
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 
+ALTER TABLE `qyura_healthPackageIncludes`
+	ADD COLUMN `healthPackage_diagnosticCategoryId` INT(11) UNSIGNED NOT NULL AFTER `healthPackageIncludes_healthPackageId`;
+
+ALTER TABLE `qyura_healthPackage`
+	CHANGE COLUMN `healthPackage_Miname` `healthPackage_Miname` INT(11) UNSIGNED NOT NULL AFTER `healthPackage_cityId`;
+ALTER TABLE `qyura_healthPackage`
+	CHANGE COLUMN `healthPackage_Miname` `healthPackage_MIuserId` INT(11) UNSIGNED NOT NULL AFTER `healthPackage_cityId`;
+
+
+ALTER TABLE `qyura_usersRoles`
+	ADD COLUMN `usersRoles_parentId` INT(11) UNSIGNED NOT NULL AFTER `usersRoles_roleId`;
 
