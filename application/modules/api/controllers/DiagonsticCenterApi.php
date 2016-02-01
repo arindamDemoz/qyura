@@ -10,6 +10,7 @@ class DiagonsticCenterApi extends MyRest {
         // Construct our parent class
         parent::__construct();
         $this->load->helper('common_helper');
+        $this->load->model('diagonsticCenter_models');
     }
 
     function diagonsticlist_post() {
@@ -94,4 +95,54 @@ class DiagonsticCenterApi extends MyRest {
         }
     }
 
+
+      function diagonsticdetail_post() {
+     $this->form_validation->set_rules('diagonsticId','Diagonstic Id','xss_clean|numeric|required|trim');
+      if($this->form_validation->run($this) == FALSE)
+      { 
+        // setup the input
+         $response =  array('status'=>FALSE,'message'=>$this->validation_post_warning());
+         $this->response($response, 400);
+      }
+      else 
+      {  
+        $diagonsticId = $this->input->post('diagonsticId');
+        $diagonsticDetails = $this->diagonsticCenter_models->diagonstic_Details($diagonsticId);
+        
+        if($diagonsticDetails)
+        {
+            $response['diagonsticDetails'] = $diagonsticDetails;
+            
+            $response['services'] = $services =  $this->diagonsticCenter_models->diagnosticServices_Details($diagonsticId);
+            
+            $response['specialities'] = $specialities =  $this->diagonsticCenter_models->diagnosticSpecialities_Details($diagonsticId);
+            
+            $response['reviewCount'] = $reviewCount =  $this->diagonsticCenter_models->getDiagnosticsPkg($diagonsticId);
+            
+            $response['reviewCount'] = $reviewCount = $this->diagonsticCenter_models->getDiagnosticsReviewCount($diagonsticId);
+            
+           $response['rating'] = $this->diagonsticCenter_models->getDiagnosticsAvgRating($diagonsticId);
+            
+            $response['diagDoctors'] = $hosDoctors = $this->diagonsticCenter_models->getDiagnosticsDoctors($diagonsticId,$diagonsticDetails->diagnostic_usersId);
+            
+            $response['DiagnosticsCat'] = $hosDiagnostics = $this->diagonsticCenter_models->getDiagnosticsCat($diagonsticId);
+            
+            $response['awards'] = $hosAwards = $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
+            
+           // $response['osInsurance'] = $osInsurance = $this->hospital_model->getHosInsurance($diagonsticId);
+            
+            $response['status'] = TRUE;
+            $response['msg'] = 'success';
+            $this->response($response, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $response['status'] = TRUE;
+            $response['msg'] = 'No Diagonstic  is available at this Id';
+            $this->response($response, 400); // 200 being the HTTP response code
+        }
+        
+      }
+    }  
+    
 }
