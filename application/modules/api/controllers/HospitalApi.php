@@ -131,6 +131,10 @@ class HospitalApi extends MyRest {
             
             $response['hosDoctors'] = $hosDoctors = $this->hospital_model->getHosDoctors($hospitalId);
             
+            $response['hosDiagnosticsCat'] = $hosDiagnostics = $this->hospital_model->getDiagnosticsCat($hospitalId);
+            
+            $response['awards'] = array();
+            
             $response['status'] = TRUE;
             $response['msg'] = 'success';
             $this->response($response, 200); // 200 being the HTTP response code
