@@ -15,10 +15,18 @@ class Hospital_model extends CI_Model
     
     public function getHosDetails($hospitalId)
     {
-        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_phn, hospital_lat, hospital_long, modifyTime, hospital_img');
+        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_phn, hospital_lat, hospital_long, modifyTime');
         $this->db->from('qyura_hospital');
         $this->db->where(array('hospital_id'=>$hospitalId,'hospital_deleted'=>0));
         return $this->db->get()->row();
+    }
+    
+    public function getHosGallery($hospitalId)
+    {
+        $this->db->select('hospitalImages_id, hospitalImages_ImagesName');
+        $this->db->from('qyura_hospitalImages');
+        $this->db->where(array('hospitalImages_hospitalId'=>$hospitalId,'hospitalImages_deleted'=>0));
+        return $this->db->get()->result();
     }
     
     function getDiagnosticsCat ($hospitalId,$limit=4) {
@@ -26,6 +34,7 @@ class Hospital_model extends CI_Model
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
         $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
+         $this->db->group_by('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId');
         if($limit)
             $this->db->limit($limit);
         
@@ -80,7 +89,7 @@ class Hospital_model extends CI_Model
     
     public function getHosDoctors($hospitalId,$hospitalUsersId,$limit=4)
     {
-        $this->db->select('doctors_id,doctors_userId,doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee');
+        $this->db->select('doctors_id,doctors_userId,CONCAT("assets/doctorsImages","/",doctors_img) as doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee');
         $this->db->from('qyura_usersRoles');
         $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
         $this->db->where(array('qyura_usersRoles.usersRoles_parentId'=>$hospitalUsersId,'qyura_usersRoles.usersRoles_roleId'=>ROLE_DOCTORE));
