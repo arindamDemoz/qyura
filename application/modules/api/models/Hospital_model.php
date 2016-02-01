@@ -33,7 +33,7 @@ class Hospital_model extends CI_Model
          $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId');
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
-        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
+        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_hospitalId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
          $this->db->group_by('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId');
         if($limit)
             $this->db->limit($limit);
