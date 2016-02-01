@@ -23,7 +23,7 @@ class Hospital_model extends CI_Model
     
     public function getHosGallery($hospitalId)
     {
-        $this->db->select('hospitalImages_id, hospitalImages_ImagesName');
+        $this->db->select('hospitalImages_id, CONCAT("assets/hospitalsImages","/",hospitalImages_ImagesName) as hosImage');
         $this->db->from('qyura_hospitalImages');
         $this->db->where(array('hospitalImages_hospitalId'=>$hospitalId,'hospitalImages_deleted'=>0));
         return $this->db->get()->result();
