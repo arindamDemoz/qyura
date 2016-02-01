@@ -12,6 +12,7 @@ class HospitalApi extends MyRest {
         $this->load->model(array('hospital_model'));
     }
 
+    
     function hospitallist_post() {
 
 
