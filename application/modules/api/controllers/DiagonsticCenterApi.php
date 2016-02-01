@@ -113,7 +113,7 @@ class DiagonsticCenterApi extends MyRest {
         {
             $response['diagonsticDetails'] = $diagonsticDetails;
             
-            $response['services'] = $services =  $this->diagonsticCenter_models->diagnosticServices_Details($diagonsticId);
+            $response['services']  =  $this->diagonsticCenter_models->diagnosticServices_Details($diagonsticId);
             
             $response['specialities'] = $specialities =  $this->diagonsticCenter_models->diagnosticSpecialities_Details($diagonsticId);
             
@@ -123,11 +123,11 @@ class DiagonsticCenterApi extends MyRest {
             
            $response['rating'] = $this->diagonsticCenter_models->getDiagnosticsAvgRating($diagonsticId);
             
-            $response['diagDoctors'] = $hosDoctors = $this->diagonsticCenter_models->getDiagnosticsDoctors($diagonsticId,$diagonsticDetails->diagnostic_usersId);
-            
+            $response['diagDoctors'] = $this->diagonsticCenter_models->getDiagnosticsDoctors($diagonsticId,$diagonsticDetails->diagnostic_usersId);
+          
             $response['DiagnosticsCat'] = $hosDiagnostics = $this->diagonsticCenter_models->getDiagnosticsCat($diagonsticId);
             
-           // $response['awards'] = $hosAwards = $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
+            $response['awards'] =  $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
             
            // $response['osInsurance'] = $osInsurance = $this->hospital_model->getHosInsurance($diagonsticId);
             

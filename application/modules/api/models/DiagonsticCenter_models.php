@@ -70,6 +70,7 @@ class DiagonsticCenter_models extends CI_Model {
         if($limit)
         $this->db->limit($limit);
         $doctors = $this->db->get()->result();
+        //$this->db->last_query();exit;
         
         $doctorResult = array();
         if(!empty($doctors)){
@@ -130,15 +131,15 @@ class DiagonsticCenter_models extends CI_Model {
         return $this->db->get()->result();
     }
     
-    /*public function getDiagnosticsds($diagonsticId,$limit=3)
+    public function getDiagnosticsds($diagonsticId,$limit=3)
     {
-        $this->db->select('hospitalAwards_id,hospitalAwards_awardsName,modifyTime');
-        $this->db->from('qyura_hospitalAwards');
-        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$diagonsticId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
+        $this->db->select('diagnosticAwards_diagnosticId,diagnosticAwards_awardsName,modifyTime');
+        $this->db->from('qyura_diagnosticAwards');
+        $this->db->where(array('qyura_diagnosticAwards.diagnosticAwards_diagnosticId'=>$diagonsticId,'qyura_diagnosticAwards.diagnosticAwards_deleted'=>0));
         if($limit)
         $this->db->limit($limit);
         return $this->db->get()->result();
-    }*/
+    }
     
     public function getDoctorsRole($userId)
     {
