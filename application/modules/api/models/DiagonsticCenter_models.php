@@ -7,20 +7,32 @@ class DiagonsticCenter_models extends CI_Model {
     
     function diagonstic_Details ($diaUsrId) {
         
-        $this->db->select('diagnostic_id,diagnostic_usersId,diagnostic_address, diagnostic_lat, diagnostic_long, diagnostic_aboutUs, diagnostic_mblNo, diagnostic_img');
+        $this->db->select('diagnostic_id,diagnostic_usersId,diagnostic_address, diagnostic_lat, diagnostic_long, diagnostic_aboutUs, diagnostic_mblNo, CONCAT("assets/diagnosticsImage","/",diagnostic_img) as img');
         $this->db->from('qyura_diagnostic');
         $this->db->where(array('diagnostic_id'=>$diaUsrId,'diagnostic_deleted'=>0));
         return $this->db->get()->row();
         
     }
     
-    function diagnosticsHasCat_Details (){
-        
+     public function getHosAwards($hospitalId,$limit=3)
+    {
+        $this->db->select('awards_awardsName name,hospitalAwards_awardYear year');
+        $this->db->from('qyura_hospitalAwards');
+        $this->db->join('qyura_awards', 'qyura_awards.awards_id = qyura_hospitalAwards.hospitalAwards_awardsId', 'left');
+        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$hospitalId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0, 'qyura_awards.awards_deleted'  => 0));
+        if($limit)
+        $this->db->limit($limit);
+        return $this->db->get()->result();
     }
     
-    function diagnosticsCatTag_Details () {
-        
+     public function getDiagonGallery($diagnosticId)
+    {
+        $this->db->select('diagonsticImages_id id, CONCAT("assets/diagnosticsImage","/",diagonsticImages_ImagesName) as img');
+        $this->db->from('qyura_diagonsticsImages');
+        $this->db->where(array('diagonsticImages_diagonsticId'=>$diagnosticId,'diagonsticImages_deleted'=>0));
+        return $this->db->get()->result();
     }
+    
     function diagnosticsCat_Details ($diagnosticId,$limit=4) {
          $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_DiagnosticDiagCatTest.DiagCatTest_id');
         $this->db->from('qyura_DiagnosticDiagCatTest');
@@ -63,7 +75,7 @@ class DiagonsticCenter_models extends CI_Model {
     
     public function getDiagnosticsDoctors($diagnosticId,$diagnosticUsersId,$limit=4)
     {
-        $this->db->select('doctors_id,doctors_userId,doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee,doctors_lat,doctors_long');
+        $this->db->select('doctors_id,doctors_userId,CONCAT("assets/doctorsImages","/",doctors_img) as img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee,doctors_lat,doctors_long');
         $this->db->from('qyura_usersRoles');
         $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
         $this->db->where(array('qyura_usersRoles.usersRoles_parentId'=>$diagnosticId,'qyura_usersRoles.usersRoles_roleId'=>ROLE_DOCTORE));
@@ -79,7 +91,7 @@ class DiagonsticCenter_models extends CI_Model {
                 $doctorTemp = array();
                 $doctorTemp['doctors_id'] = $doctor->doctors_id;
                 $doctorTemp['userId'] = $doctor->doctors_userId;
-                $doctorTemp['img'] = $doctor->doctors_img;
+                $doctorTemp['img'] = $doctor->img;
                 $doctorTemp['fName'] = $doctor->doctors_fName;
                 $doctorTemp['lName'] = $doctor->doctors_lName;
                 $doctorTemp['addr'] = $doctor->doctor_addr;
@@ -121,7 +133,7 @@ class DiagonsticCenter_models extends CI_Model {
     }
     
     function getDiagnosticsCat ($diagonsticId,$limit=4) {
-         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId');
+         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId, CONCAT("assets/diagnosticsCatImages","/",qyura_diagnosticsCat.diagnosticsCat_catImage) as image');
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
         $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId'=>$diagonsticId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
