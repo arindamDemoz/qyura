@@ -10,6 +10,7 @@ class DoctorApi extends MyRest {
         // Construct our parent class
         parent::__construct();
         $this->load->helper('common_helper');
+        $this->load->model(array('doctors_model'));
     }
 
     function doctorlist_post() {
@@ -40,10 +41,12 @@ class DoctorApi extends MyRest {
 
             $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( doctors_lat ) ) * cos( radians( doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( doctors_lat ) ) )
-                ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, qyura_degree.degree_SName as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
+                ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, Group_concat(qyura_degree.degree_SName) as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
 
                     ->from('qyura_doctors')
-
+                    
+                    ->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId=qyura_doctors.doctors_userId','left')
+                    
                     ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_doctorsId=qyura_doctors.doctors_id', 'left')
 
                     ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left')
@@ -52,7 +55,7 @@ class DoctorApi extends MyRest {
 
                     ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
 
-                    ->where(array('doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid))
+                    ->where(array('doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid,'usersRoles_roleId' => ROLE_DOCTORE, 'usersRoles_parentId'=> 0))
                     
                     ->having(array('distance <' => USER_DISTANCE))
                     
@@ -65,7 +68,7 @@ class DoctorApi extends MyRest {
                     ->limit(DATA_LIMIT);
 
             $response = $this->db->get()->result();
-            //echo $this->db->last_query(); die();
+           // echo $this->db->last_query(); die();
 
             //  print_r($response); die();
             $finalResult = array();
@@ -100,5 +103,46 @@ class DoctorApi extends MyRest {
             }
         }
     }
+    
+    
+   function doctordetail_post() {
+     $this->form_validation->set_rules('doctorId','DoctorId Id','xss_clean|numeric|required|trim');
+      if($this->form_validation->run($this) == FALSE)
+      { 
+        // setup the input
+         $response =  array('status'=>FALSE,'message'=>$this->validation_post_warning());
+         $this->response($response, 400);
+      }
+      else 
+      {  
+        $doctorId = $this->input->post('doctorId');
+        $doctorsDetails = $this->doctors_model->getDoctorsDetails($doctorId);
+        if($doctorsDetails)
+        {
+             $response['docDetails'] = $doctorsDetails;
+            
+             $response['services'] = $services =  $this->doctors_model->getDoctorServices($doctorId);
+            
+             $response['reviewCount'] = $reviewCount =  $this->doctors_model->getDoctorNumReviews($doctorsDetails['userId']);
+           
+             $response['getDoctorReviews'] = $this->doctors_model->getDoctorReviews($doctorsDetails['userId']);
+            
+            
+            $response['hosDiagonDetail'] = $hosDiagonDetail = $this->doctors_model->getHosDiagonDetail($doctorsDetails['userId']);
+          
+            $response['status'] = TRUE;
+            $response['msg'] = 'success';
+            $this->response($response, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $response['status'] = false;
+            $response['msg'] = 'No Hospital  is available at this Id';
+            $this->response($response, 400); // 200 being the HTTP response code
+        }
+        
+      }
+
+  } 
 
 }

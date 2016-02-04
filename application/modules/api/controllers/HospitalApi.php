@@ -12,7 +12,6 @@ class HospitalApi extends MyRest {
         $this->load->model(array('hospital_model'));
     }
 
-    
     function hospitallist_post() {
 
 
@@ -122,6 +121,8 @@ class HospitalApi extends MyRest {
             $response['hosDetails'] = $hospitalDetails;
             
             $response['hosGallary'] = $gallary =  $this->hospital_model->getHosGallery($hospitalId);
+
+            $response['isAmbulance'] = $isAmbulance =  $this->hospital_model->isAmbulance(1);
             
             $response['services'] = $services =  $this->hospital_model->getHosServices($hospitalId);
             

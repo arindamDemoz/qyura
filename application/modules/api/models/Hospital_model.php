@@ -15,10 +15,18 @@ class Hospital_model extends CI_Model
     
     public function getHosDetails($hospitalId)
     {
-        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_phn, hospital_lat, hospital_long, modifyTime');
+        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_aboutUs, hospital_phn, hospital_lat, hospital_long, modifyTime');
         $this->db->from('qyura_hospital');
         $this->db->where(array('hospital_id'=>$hospitalId,'hospital_deleted'=>0));
         return $this->db->get()->row();
+    }
+
+    public function isAmbulance($hospitalId){
+        $sql = "SELECT COUNT('ambulance_id') as id
+                FROM `qyura_ambulance`
+                WHERE `ambulance_deleted` = '0' and `ambulance_usersId` = $hospitalId "; 
+        $query = $this->db->query($sql)->row();
+        if($query->id){ return 1; }else{ return 0; }
     }
     
     public function getHosGallery($hospitalId)
@@ -30,7 +38,7 @@ class Hospital_model extends CI_Model
     }
     
     function getDiagnosticsCat ($hospitalId,$limit=4) {
-         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId');
+         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId, CONCAT("assets/diagnosticsCatImages","/",qyura_diagnosticsCat.diagnosticsCat_catImage) as image');
         $this->db->from('qyura_hospitalDiagCatTest');
         $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
         $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_hospitalId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
@@ -132,7 +140,7 @@ class Hospital_model extends CI_Model
     
     public function getHosInsurance($hospitalId,$limit=4)
     {
-        $this->db->select('insurance_Name,insurance_id,insurance_img,qyura_insurance.modifyTime');
+        $this->db->select('insurance_Name,insurance_id,CONCAT("assets/insuranceImages","/",insurance_img)insurance_img,qyura_insurance.modifyTime');
         $this->db->from('qyura_hospitalInsurance');
         $this->db->join('qyura_insurance','qyura_insurance.insurance_id=qyura_hospitalInsurance.hospitalInsurance_insuranceId','left');
         $this->db->where(array('qyura_hospitalInsurance.hospitalInsurance_hospitalId'=>$hospitalId,'qyura_hospitalInsurance.hospitalInsurance_deleted'=>0));
@@ -143,8 +151,9 @@ class Hospital_model extends CI_Model
     
     public function getHosAwards($hospitalId,$limit=3)
     {
-        $this->db->select('hospitalAwards_id,hospitalAwards_awardsName,modifyTime');
+        $this->db->select('awards_awardsName name,hospitalAwards_awardYear year,qyura_hospitalAwards.modifyTime');
         $this->db->from('qyura_hospitalAwards');
+        $this->db->join('qyura_awards','qyura_awards.awards_id = qyura_hospitalAwards.hospitalAwards_hospitalId');
         $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$hospitalId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
         if($limit)
         $this->db->limit($limit);
