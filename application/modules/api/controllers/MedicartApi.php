@@ -10,9 +10,6 @@ class MedicartApi extends MyRest {
         // Construct our parent class
         parent::__construct();
         $this->load->model(array('medicart_model'));
-        //$this->methods['hospital_post']['limit'] = 1; //500 requests per hour per user/key
-        // $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
-        // $this->methods['user_delete']['limit'] = 50; //50 requests per hour per user/key
     }
 
     function list_post() {
@@ -41,7 +38,7 @@ class MedicartApi extends MyRest {
 
             $option['notIn'] = explode(',', $notIn);
             
-            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "actualPrice", "discountPrice", "medicartOffer_deleted", "modifyTime","by", "lat", "long");
+            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "description","startDate", "endDate", "actualPrice", "discountPrice",   "medicartOffer_deleted", "modifyTime","by", "lat", "long");
 
             $medList = $this->medicart_model->getMedlists($option);
             
@@ -58,10 +55,10 @@ class MedicartApi extends MyRest {
                         $finalTemp[] = isset($row->medicartOffer_offerCategory) ? $row->medicartOffer_offerCategory : "";
                         $finalTemp[] = isset($row->medicartOffer_title) ? $row->medicartOffer_title : "";
                         $finalTemp[] = isset($row->medicartOffer_image) ? $row->medicartOffer_image : "";
-                        //$finalTemp[] = isset($row->medicartOffer_description) ? $row->medicartOffer_allowBooking : "";
+                        $finalTemp[] = isset($row->medicartOffer_description) ? $row->medicartOffer_description : "";
                         //$finalTemp[] = isset($row->medicartOffer_maximumBooking) ? $row->medicartOffer_maximumBooking : "";
-                        //$finalTemp[] = isset($row->medicartOffer_startDate) ? $row->medicartOffer_startDate : "";
-                        //$finalTemp[] = isset($row->medicartOffer_endDate) ? $row->medicartOffer_endDate : "";
+                        $finalTemp[] = isset($row->medicartOffer_startDate) ? $row->medicartOffer_startDate : "";
+                        $finalTemp[] = isset($row->medicartOffer_endDate) ? $row->medicartOffer_endDate : "";
                         //$finalTemp[] = isset($row->medicartOffer_discount) ? $row->medicartOffer_discount : "";
                         //$finalTemp[] = isset($row->medicartOffer_ageDiscount) ? $row->medicartOffer_ageDiscount : "";
                         $finalTemp[] = isset($row->medicartOffer_actualPrice) ? $row->medicartOffer_actualPrice : "";
