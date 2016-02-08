@@ -1169,13 +1169,39 @@ class CI_Form_validation {
 	 * @param	string	$field
 	 * @return	bool
 	 */
+//	public function is_unique($str, $field)
+//	{
+//		sscanf($field, '%[^.].%[^.]', $table, $field);
+//		return isset($this->CI->db)
+//			? ($this->CI->db->limit(1)->get_where($table, array($field => $str))->num_rows() === 0)
+//			: FALSE;
+//	}
+        
+        /**
+	 * Match one field to another
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	field
+	 * @return	bool
+	 */
 	public function is_unique($str, $field)
 	{
-		sscanf($field, '%[^.].%[^.]', $table, $field);
-		return isset($this->CI->db)
-			? ($this->CI->db->limit(1)->get_where($table, array($field => $str))->num_rows() === 0)
-			: FALSE;
-	}
+            $fields = explode(",", $field);
+            
+            list($table, $field)=explode('.', $fields[0]);
+            $where = array();
+            if(isset($fields[1]) && $fields[1] != NULL){
+                $del = explode("=", $fields[1]);
+                $where =array($field => $str,$del[0]=>$del[1] );
+            }else{
+                $where =array($field => $str);
+            }
+            $this->CI->db->limit(1)->where($where);
+            $query = $this->CI->db->get($table);
+         //   echo $this->CI->db->last_query();
+            return $query->num_rows() === 0;
+        }
 
 	// --------------------------------------------------------------------
 
