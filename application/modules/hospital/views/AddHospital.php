@@ -364,8 +364,13 @@
                         </div>
                     </div>
                     <div class="map_canvas"></div>
-                    <form class="cmxform form-horizontal tasi-form" id="hospitalForm" name="hospitalForm" method="post" action="<?php echo site_url(); ?>hospital/SaveHospital" novalidate="novalidate" enctype="multipart/form-data" >
+                    <form class="cmxform form-horizontal tasi-form" id="hospitalForm" name="hospitalForm" method="post" action="<?php echo site_url(); ?>/hospital/SaveHospital" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="countPnone" name="countPnone" value="1" />
+                        <input type="hidden" id="countbloodBank_phn" name="countbloodBank_phn" value="1" />
+                        <input type="hidden" id="countPharmacy_phn" name="countPharmacy_phn" value="1" />
+                       <input type="hidden" id="countAmbulance_phn" name="countAmbulance_phn" value="1" />
+                       <input type="hidden" id="serviceName" name="serviceName" value="1" />
+                       <input type="text" id="StateId" name="StateId" value="" />
                         <!-- Left Section Start -->
                         <section class="col-md-6 detailbox">
                             <div class="bg-white mi-form-section">
@@ -401,7 +406,7 @@
                                         <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Hospital Logo :</label>
                                         <div class="col-md-8 col-sm-8 text-right">
                                             <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                            <input type="file" style="display:none;" class="no-display" id="file-input" name="hospital_photo">
+                                            <input type="file" style="display:none;" class="no-display" id="file-input" name="hospital_img">
                                             
                                             
                                             <!--<div class="row">
@@ -449,7 +454,7 @@
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10">
                                                     <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" data-size="4" onchange ="fetchCity(this.value)">
 
-                                                        <option value=" ">Select State</option>
+                                                        <option value="">Select State</option>
                                                        <?php foreach($allStates as $key=>$val) {?>
                                                         <option value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
                                                          <?php }?>
@@ -475,6 +480,7 @@
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10"> 
                                                     <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" />
                                                     <label class="error" style="display:none;" id="error-hospital_zip"> please enter a zip code</label>
+<label class="error" style="display:none;" id="error-hospital_zip_check">Please enter numeric digits only!</label>
                                                     <label class="error" > <?php echo form_error("hospital_zip"); ?></label>
                                                 </div>
                                             </aside>
@@ -495,14 +501,14 @@
                                             <aside class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-3 col-sm-4 col-xs-12 m-t-xs-10" id="multiPreNumber">
                                                     <select class="selectpicker" data-width="100%" name="pre_number[]" id="multiPreNumber1">
-                                                        <option>+91</option>
-                                                        <option>+1</option>
+                                                        <option value ='91'>+91</option>
+                                                        <option value ='1'>+1</option>
                                                     </select>
 
                                                 </div>
                                                 <div class="col-lg-7 col-md-6 col-sm-7 col-xs-10 m-t-xs-10" id="multiPhoneNumber">
                                                     <input type="text" class="form-control" name="hospital_phn[]" id="hospital_phn1" placeholder="9837000123" maxlength="10" />
-                                                    <label class="error" style="display:none;" id="error-hospital_phn"> please enter a phone no.s</label>
+                                                    <label class="error" style="display:none;" id="error-hospital_phn"> please enter a valid phone number</label>
                                                     <label class="error" > <?php echo form_error("hospital_phn"); ?></label>
                                                 </div>
                                                 <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10"><a href="javascript:void(0)" onclick="countPhoneNumber()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a></div>
@@ -511,11 +517,31 @@
                                             <p class="m-t-10">* If it is landline, include Std code with number </p>
                                         </div>
                                     </article>
+
+                                    <article class="form-group m-lr-0">
+                                        <label for="cname" class="control-label col-md-4  col-sm-4">Hospital Services:</label>
+                                        <div class="col-md-8 col-sm-8">
+                                            <aside class="row">
+                                                
+                                                <div class="col-lg-10 col-md-10 col-sm-7 col-xs-10 m-t-xs-10" id="multiserviceName">
+                                                    <input type="text" class="form-control" name="hospitalServices_serviceName[]" id="hospitalServices_serviceName1" placeholder="Give Your Service Name" maxlength="30" />
+                                                    <label class="error" style="display:none;" id="error-hospitalServices_serviceName"> please enter a hospital service Name without Numeric value</label>
+                                                    <label class="error" > <?php echo form_error("hospitalServices_serviceName"); ?></label>
+                                                </div>
+                                                <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10"><a href="javascript:void(0)" onclick="countserviceName()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a></div>
+
+                                            </aside>
+                                           
+                                        </div>
+                                    </article>
+                                   
+
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-4  col-sm-4">Contact Person :</label>
                                         <div class="col-md-8 col-sm-8">
                                             <input class="form-control" id="hospital_cntPrsn" name="hospital_cntPrsn" type="text" required="">
                                             <label class="error" style="display:none;" id="error-hospital_cntPrsn"> please enter the name of a contact person</label>
+   <label class="error" style="display:none;" id="error-hospital_cntPrsn_check">please enter characters only!</label>
                                             <label class="error" > <?php echo form_error("hospital_cntPrsn"); ?></label>
                                         </div>
                                     </article>
@@ -524,6 +550,7 @@
                                         <div class="col-md-8 col-sm-8">
                                             <input class="form-control" id="hospital_dsgn" name="hospital_dsgn" type="text" required="">
                                             <label class="error" style="display:none;" id="error-hospital_dsgn"> please enter a designation</label>
+<label class="error" style="display:none;" id="error-hospital_dsgn_check">please enter only charcters!</label>
                                             <label class="error" > <?php echo form_error("hospital_dsgn"); ?></label>
                                         </div>
                                     </article>
@@ -539,6 +566,9 @@
                                             <label class="error" > <?php echo form_error("hospital_mmbrTyp"); ?></label>
                                         </div>
                                     </article>
+                                    
+                                    <!-- Extra Check box section -->
+                                    
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-12">Do you also provide following in same campus ? </label>
                                         <div class="col-md-12 ">
@@ -548,7 +578,7 @@
                                                 <label class="control-label col-md-4 col-xs-9" for="cname">Bloodbank </label>
                                                 <div class="col-md-8 col-xs-3">
                                                     <aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="bloodbank">
+                                                        <input type="checkbox" id="bloodbank" name="bloodbank_chk" value="1">
                                                         <label>
 
                                                         </label>
@@ -560,44 +590,49 @@
                                                 <article class="form-group m-lr-0 ">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Name : </label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
+                                                        <input class="form-control" id="bloodBank_name" name="bloodBank_name" type="text" required="" maxlength="30">
                                                     </div>
                                                 </article>
                                                 <article class="form-group m-lr-0 ">
                                                     <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
                                                     <div class="col-md-8 col-sm-8 text-right">
-                                                        <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                        <input type="file" style="display:none;" class="no-display" id="file-input">
+                                                        <label for="file-input2"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
+                                                        <input type="file" style="display:none;" class="no-display" id="file-input2" name="bloodBank_photo">
                                                     </div>
                                                 </article>
+                                                
                                                 <article class="form-group m-lr-0">
                                                     <label for="cname" class="control-label col-md-4 col-sm-4">Phone:</label>
                                                     <div class="col-md-8 col-sm-8">
                                                         <aside class="row">
-                                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                <select class="selectpicker" data-width="100%">
-                                                                    <option>+91</option>
-                                                                    <option>+1</option>
+                                                            <div class="col-md-3 col-sm-3 col-xs-12" id="multiBloodbnkPreNumber">
+                                                                <select class="selectpicker" data-width="100%" id="preblbankNo1" name="preblbankNo[]">
+                                                                    <option value='91'>+91</option>
+                                                                    <option value ='1'>+1</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10">
-                                                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="9837000123" />
+                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="multiBloodbnkPhoneNumber">
+                                                                <input type="text" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn1" placeholder="9837000123" maxlength="10" />
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
                                                             </div>
-                                                            <i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i>
+                                                            <a href="javascript:void(0)" onclick="countBloodPhoneNumber()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a>
 
                                                         </aside>
                                                         <p class="m-t-10">* If it is landline, include Std code with number </p>
                                                     </div>
                                                 </article>
+
+
+
+
                                             </section>
 
                                             <article class="clearfix">
                                                 <label class="control-label col-md-4 col-xs-9" for="cname">Pharmacy </label>
                                                 <div class="col-md-8 col-xs-3">
                                                     <aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="pharmacy">
+                                                        <input type="checkbox" id="pharmacy" name="pharmacy_chk" value="1">
                                                         <label>
 
                                                         </label>
@@ -608,32 +643,32 @@
                                                 <article class="form-group m-lr-0 ">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Name : </label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
+                                                        <input class="form-control" id="pharmacy_name" name="pharmacy_name" type="text" required="" maxlength="30">
                                                     </div>
                                                 </article>
                                                 <article class="form-group m-lr-0 ">
                                                     <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
                                                     <div class="col-md-8 col-sm-8 text-right">
-                                                        <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                        <input type="file" style="display:none;" class="no-display" id="file-input">
+                                                        <label for="file-input3"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
+                                                        <input type="file" style="display:none;" class="no-display" id="file-input3" name="pharmacy_img">
                                                     </div>
                                                 </article>
                                                 <article class="form-group m-lr-0">
                                                     <label for="cname" class="control-label col-md-4 col-sm-4">Phone:</label>
                                                     <div class="col-md-8 col-sm-8">
                                                         <aside class="row">
-                                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                <select class="selectpicker" data-width="100%">
-                                                                    <option>+91</option>
-                                                                    <option>+1</option>
+                                                            <div class="col-md-3 col-sm-3 col-xs-12" id="multipharmacyPreNumber">
+                                                                <select class="selectpicker" data-width="100%" name="prePharmacy[]" id="prePharmacy1">
+                                                                    <option value='91'>+91</option>
+                                                                    <option value='1'>+1</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10">
-                                                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="9837000123" />
+                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="multipharmacyNumber" >
+                                                                <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" maxlength="10"/>
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
                                                             </div>
-                                                            <i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i>
+                                                            <a href="javascript:void(0)" onclick="countPharmacyPhoneNumber()"> <i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i><a>
 
                                                         </aside>
                                                         <p class="m-t-10">* If it is landline, include Std code with number </p>
@@ -645,7 +680,7 @@
                                                 <label class="control-label col-md-4 col-xs-9" for="cname">Ambulance </label>
                                                 <div class="col-md-8 col-xs-3">
                                                     <aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="ambulance">
+                                                        <input type="checkbox" id="ambulance" name="ambulance_chk" value="1">
                                                         <label>
 
                                                         </label>
@@ -656,15 +691,15 @@
                                                 <article class="form-group m-lr-0 ">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Name : </label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
+                                                        <input class="form-control" id="ambulance_name" name="ambulance_name" type="text" required="" maxlength="30">
                                                     </div>
                                                 </article>
                                                 <article class="form-group m-lr-0 ">
                                                     <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
                                                     <div class="col-md-8 col-sm-8 text-right">
                                                     
-                                                      <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                        <input type="file" style="display:none;" class="no-display" id="file-input">
+                                                      <label for="file-input4"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
+                                                        <input type="file" style="display:none;" class="no-display" id="file-input4" name='ambulance_img'>
                                                         
                                                  
                                                     </div>
@@ -673,18 +708,18 @@
                                                     <label for="cname" class="control-label col-md-4 col-sm-4">Phone:</label>
                                                     <div class="col-md-8 col-sm-8">
                                                         <aside class="row">
-                                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                <select class="selectpicker" data-width="100%">
-                                                                    <option>+91</option>
-                                                                    <option>+1</option>
+                                                            <div class="col-md-3 col-sm-3 col-xs-12" id="preAmbulance_name">
+                                                                <select class="selectpicker" data-width="100%" name="preAmbulance[]" id="preAmbulance1">
+                                                                    <option value='91'>+91</option>
+                                                                    <option value='1'>+1</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10">
-                                                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="9837000123" />
+                                                            <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="phoneAmbulance">
+                                                                <input type="text" class="form-control" name="ambulance_phn[]" id="ambulance_phn1" placeholder="9837000123" maxlength="10"/>
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
                                                             </div>
-                                                            <i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i>
+                                                            <a href="javascript:void(0)" onclick="countAmbulancePhoneNumber()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a>
 
                                                         </aside>
                                                         <p class="m-t-10">* If it is landline, include Std code with number </p>
@@ -697,7 +732,7 @@
                                                 <label class="control-label col-md-4 col-xs-9" for="cname">24/7 Doctor on Call</label>
                                                 <div class="col-md-8 col-xs-3">
                                                     <aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="checkbox3">
+                                                        <input type="checkbox" id="isEmergency" name="isEmergency" value="1">
                                                         <label>
 
                                                         </label>
@@ -708,7 +743,7 @@
                                         </div>
                                     </article>
 
-
+                                     <!-- End Extra check box section -->   
 
                                 </div>
                                 <!-- .form -->
@@ -825,6 +860,7 @@
                                         <div class="col-md-8 col-sm-8">
                                             <input type="text" class="form-control" id="hospital_mblNo" name="hospital_mblNo" placeholder="8880007755" maxlength="10" />
                                             <label class="error" style="display:none;" id="error-hospital_mblNo"> please enter your mobile number</label>
+                                        <label class="error" style="display:none;" id="error-hospital_mblNo_check">please enter digits only!</label>
                                             <label class="error" > <?php echo form_error("hospital_mblNo"); ?></label>
 
                                         </div>
@@ -834,7 +870,7 @@
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Enter Password :</label>
                                         <div class="col-md-8 col-sm-8">
                                             <input type="password" class="form-control" id="users_password" name="users_password" placeholder=" " />
-                                            <label class="error" style="display:none;" id="error-users_password"> please enter the password</label>
+                                            <label class="error" style="display:none;" id="error-users_password"> please enter password and shoul be 6 chracter</label>
                                             <label class="error" > <?php echo form_error("users_password"); ?></label>
                                         </div>
                                     </article>
@@ -844,6 +880,7 @@
                                         <div class="col-md-8 col-sm-8">
                                             <input type="password" class="form-control" id="cnfPassword" name="cnfPassword" placeholder=" " />
                                             <label class="error" style="display:none;" id="error-cnfPassword"> please enter the password</label>
+ <label class="error" style="display:none;" id="error-cnfPassword_check">Passwords do not match!</label>
                                              <label class="error" > <?php echo form_error("cnfPassword"); ?></label>
                                         </div>
                                     </article>
@@ -991,6 +1028,10 @@
     <script>
         var urls = "<?php echo base_url()?>";
          var j = 1;
+         var k = 1;
+         var l =1;
+         var n= 1;
+         var m =1;
         function fetchCity(stateId) {           
            $.ajax({
                url : urls + 'hospital/fetchCity',
@@ -999,119 +1040,240 @@
               success:function(datas){
                   $('#hospital_cityId').html(datas);
                   $('#hospital_cityId').selectpicker('refresh');
+                  $('#StateId').val(stateId);
               }
            });
            
         }
         function countPhoneNumber(){
-        //alert(j);
         if(j==10)
             return false;
       j = parseInt(j)+parseInt(1); 
       $('#countPnone').val(j);
-      $('#multiPhoneNumber').append('<input type=text class=form-control name=hospital_phn[] placeholder=9837000123 id=hospital_phn'+j + ' />');
+      $('#multiPhoneNumber').append('<input type=text class=form-control name=hospital_phn[] placeholder=9837000123 maxlength="10" id=hospital_phn'+j + ' />');
      $('#multiPreNumber').append('<select class=selectpicker data-width=100% name=pre_number[] id=multiPreNumber'+j+'><option>+91</option><option>+1</option></select>');
       $('#multiPreNumber'+j).selectpicker('refresh');
    }
- 
+       function countBloodPhoneNumber(){
+        if(k==10)
+            return false;
+      k = parseInt(k)+parseInt(1); 
+      $('#countbloodBank_phn').val(k);
+      $('#multiBloodbnkPhoneNumber').append('<input type=text class=form-control name=bloodBank_phn[] placeholder=9837000123 maxlength="10" id=bloodBank_phn'+k + ' />' );
+     $('#multiBloodbnkPreNumber').append('<select class=selectpicker data-width=100% name=preblbankNo[] id=preblbankNo'+k+'><option>+91</option><option>+1</option></select>');
+      $('#preblbankNo'+k).selectpicker('refresh');
+      
+   }
+
+   function countPharmacyPhoneNumber(){
+       if(l==10)
+            return false;
+      l = parseInt(l)+parseInt(1); 
+      $('#countPharmacy_phn').val(l);
+      $('#multipharmacyNumber').append('<input type=text class=form-control name=pharmacy_phn[] placeholder=9837000123 maxlength="10" id=pharmacy_phn'+l + ' />' );
+     $('#multipharmacyPreNumber').append('<select class=selectpicker data-width=100% name=prePharmacy[] id=prePharmacy'+l+'><option>+91</option><option>+1</option></select>');
+      $('#prePharmacy'+l).selectpicker('refresh');
+   }
+   
+   function countAmbulancePhoneNumber(){
+       if(n==10)
+            return false;
+      n = parseInt(n)+parseInt(1); 
+      $('#countAmbulance_phn').val(n);
+      $('#phoneAmbulance').append('<input type=text class=form-control name=ambulance_phn[] placeholder=9837000123 maxlength="10" id=ambulance_phn'+n + ' />' );
+     $('#preAmbulance_name').append('<select class=selectpicker data-width=100% name=preAmbulance[] id=preAmbulance'+n+'><option>+91</option><option>+1</option></select>');
+      $('#preAmbulance'+n).selectpicker('refresh');
+   }
+   
+   function countserviceName(){
+        if(m==10)
+            return false;
+      m = parseInt(m)+parseInt(1); 
+      $('#serviceName').val(m);
+      $('#multiserviceName').append('<input type=text class=form-control name=hospitalServices_serviceName[] placeholder="Give Your Service Name" maxlength="30" id=hospitalServices_serviceName'+m + ' />' );
+   }
+   function bbname(){
+       var bbankname = $('#bloodBank_name').val();
+       var bbanknamecheck =/^[a-zA-Z ]*$/;
+    if(!bbanknamecheck.test(bbankname)){
+    $('#bloodBank_name').addClass('error');
+    $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
+    // $('#bloodBank_name').focus();
+    }
+}
+function bbphone(){
+    var bbphcheck=/^[0-9]+$/;
+    var bbankname=$.trim($('#bloodBank_name').val());
+   if(!$.isNumeric(bbankname)){
+                
+                $('#bloodBank_name').addClass('error');
+                $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
+                // $('bloodBank_name').focus();
+            } 
+}
+function phname(){
+        var pharname = $.trim($('#pharmacy_name').val());
+        var pharnamecheck =/^[a-zA-Z ]*$/;
+        if(!pharnamecheck.test(pharname)){
+        $('#pharmacy_name').addClass('error');
+        $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
+        // $('#pharmacy_name').focus();
+}
+}
+function phphone(){
+    var pharname=$.trim($('#pharmacy_name').val());
+    var phphonecheck=/^[0-9]+$/;
+ if(!$.isNumeric(pharname)){
+                
+                $('#pharmacy_name').addClass('error');
+                $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_zip').focus();
+            } 
+}
+function amname(){
+        var amname =$.trim($('#ambulance_name').val());
+        var amnamecheck =/^[a-zA-Z ]*$/;
+        if(!amnamecheck.test(amname)){
+        $('#ambulance_name').addClass('error');
+        $('#error-ambulance_name').fadeIn().delay(3000).fadeOut('slow');
+        // $('#pharmacy_name').focus();
+}
+}
+function amphone(){
+    var amname=$.trim($('#ambulance_name').val());
+    var amphonecheck=/^[0-9]+$/;
+ if(!$.isNumeric(amname)){
+                
+                $('#ambulance_name').addClass('error');
+                $('#error-ambulance_name').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_zip').focus();
+            } 
+}
     function validationHospital(){
-        
-        var emails = $('#users_email').val();
+         //$("form[name='hospitalForm']").submit();
        
-    // console.log(typeof $('#hospital_zip').val());
-     var myzip = $('#hospital_zip').val();
-     console.log(myzip == '' || typeof myzip == 'string' || typeof myzip == 'undefined');
-     
-       //debugger;
-        if(emails !=''){
-              check_email(emails);
-              return false;
-            }
+        var check= new RegExp("^[a-zA-Z\s]+$");
+        var numcheck=/^[0-9]+$/;
+        var emails = $.trim($('#users_email').val());
+        var cpname = $.trim($('#hospital_cntPrsn').val());
+        var dsgn = $.trim($('#hospital_dsgn').val());
+        var hsname =$.trim($('#hospitalServices_serviceName1').val());
+        var pswd = $.trim($("#users_password").val());
+        var cnfpswd = $.trim($("#cnfpassword").val());
+        var mbl= $.trim($('#hospital_mblNo').val());
+        var phn= $.trim($('#hospital_phn1').val());
+        var myzip = $.trim($('#hospital_zip').val());
+        var cityId =$.trim($('#hospital_cityId').val());
+        var stateIds = $.trim($('#StateId').val());
+        var hospital_mblNo = $.trim($('#hospital_mblNo').val());
+       // alert(stateIds.length);
+       //console.log( stateIds == '' || typeof stateIds == 'string' || typeof stateIds == 'undefined');
+    //debugger;
+   
             if($('#hospital_name').val()==''){
                 $('#hospital_name').addClass('error');
-                $('#error-hospital_name').fadeIn();
+                $('#error-hospital_name').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_name').focus();
             }
            else if($('#hospital_type').val()==''){
                 $('#hospital_type').addClass('error');
-                $('#error-hospital_type').fadeIn();
+                $('#error-hospital_type').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_type').focus();
             }
-             else if($('#hospital_countryId').val()==' '){
+             else if($.trim($('#hospital_countryId').val()) == ''){
                 $('#hospital_countryId').addClass('error');
-                $('#error-hospital_countryId').fadeIn();
+                $('#error-hospital_countryId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_countryId').focus();
             }
-            else if($("input[name='hospital_stateId']").val()==' '){
-                console.log("in state");
+           else if(!$.isNumeric(stateIds)){
+               // console.log("in state");
                 $('#hospital_stateId').addClass('error');
-                $('#error-hospital_stateId').fadeIn();
+                $('#error-hospital_stateId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_stateId').focus();
             }
-            else if($('#hospital_cityId').val()==' '){
+            else if(!$.isNumeric(cityId)){
                 $('#hospital_cityId').addClass('error');
-                $('#error-hospital_cityId').fadeIn();
+                $('#error-hospital_cityId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_cityId').focus();
             }
-            else if(myzip == '' || typeof myzip == 'string' || typeof myzip == 'undefined'){
+           
+            else if(!$.isNumeric(myzip)){
                 
-                console.log(myzip.length);
                 $('#hospital_zip').addClass('error');
-                $('#error-hospital_zip').fadeIn();
-               // $('#hospital_zip').focus();
-            }
+                $('#error-hospital_zip').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_zip').focus();
+            } 
+
             else if($("input[name='hospital_address']" ).val()==''){
                 $('#hospital_address').addClass('error');
-                $('#error-hospital_address').fadeIn();
+                $('#error-hospital_address').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_address').focus();
             }
-            else if($('#hospital_phn').val()==''){
-                $('#hospital_phn').addClass('error');
-                $('#error-hospital_phn').fadeIn();
-               // $('#hospital_phn').focus();
+            
+            else if(!$.isNumeric(phn)){
+                $('#hospital_phn1').addClass('error');
+                $('#error-hospital_phn').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_phn').focus();
             }
-            else if($('#hospital_cntPrsn').val()==''){
+            
+            else if(!check.test(hsname)){
+                //alert("i am here");
+                $('#hospitalServices_serviceName1').addClass('error');
+                $('#error-hospitalServices_serviceName').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospitalServices_serviceName1').focus();
+            }
+           
+            else if(!check.test(cpname)){
                 $('#hospital_cntPrsn').addClass('error');
-                $('#error-hospital_cntPrsn').fadeIn();
-               // $('#hospital_cntPrsn').focus();
+                $('#error-hospital_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_cntPrsn').focus();
             }
-            else if($('#hospital_dsgn').val()==''){
+            else if(!check.test(dsgn)){
                 $('#hospital_dsgn').addClass('error');
-                $('#error-hospital_dsgn').fadeIn();
+                $('#error-hospital_dsgn').fadeIn().delay(3000).fadeOut('slow');
+               
                // $('#hospital_dsgn').focus();
             }
             else if($('#hospital_mmbrTyp').val()==''){
                 $('#hospital_mmbrTyp').addClass('error');
-                $('#error-hospital_mmbrTyp').fadeIn();
+                $('#error-hospital_mmbrTyp').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_mmbrType').focus();
             }
             else if($('#users_email').val()==''){
                 $('#users_email').addClass('error');
-                $('#error-users_email').fadeIn();
+                $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_email').focus();
             }
            
-            else if($('#hospital_mblNo').val()==''){
+            else if(hospital_mblNo == ''){
                 $('#hospital_mblNo').addClass('error');
-                $('#error-hospital_mblNo').fadeIn();
+                $('#error-hospital_mblNo').fadeIn().delay(3000).fadeOut('slow');
+                
                // $('#hospital_mblNo').focus();
             }
-            else if($('#users_password').val()==''){
+            else if(!($.isNumeric(hospital_mblNo))){
+                $('#hospital_mblNo').addClass('error');
+                $('#error-hospital_mblNo').fadeIn().delay(3000).fadeOut('slow');
+                
+               // $('#hospital_mblNo').focus();
+            }
+            else if($('#users_password').val()=='' || pswd.length < 6){
                 $('#users_password').addClass('error');
-                $('#error-users_password').fadeIn();
+                $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_password').focus();
             }
-            else if($('#cnfPassword').val()==''){
+            else if($('#cnfPassword').val()=='' || pswd!= cnfpswd){
                 $('#cnfPassword').addClass('error');
-                $('#error-cnfPassword').fadeIn();
+                $('#error-cnfPassword').fadeIn().delay(3000).fadeOut('slow');
+                
                // $('#cnfpassword').focus();
             }
-           
-            else if(emails !=''){
-              check_email();
+            
+               //debugger;
+        if(emails !=''){
+              check_email(emails);
               return false;
             }
-            
             return false;
             
         }
@@ -1122,7 +1284,7 @@
                     if (!filter.test(email)){
                         
                        $('#users_email').addClass('error');
-                         $('#error-users_email').fadeIn();
+                         $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');;
                         // $('#users_email').focus();
 
                     }
@@ -1140,7 +1302,7 @@
               }
               else {
                     $('#users_email').addClass('error');
-                $('#error-users_email_check').fadeIn();
+                $('#error-users_email_check').delay(3000).fadeOut('slow');;
                // $('#users_email').focus();
                return false;
               }
