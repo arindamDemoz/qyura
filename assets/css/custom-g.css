@@ -367,3 +367,18 @@ input::-webkit-input-placeholder {
 
 /*search*/
 
+.diag-detail ul {border:1px solid #EEEEEE; padding:0;}
+.diag-detail ul li{ list-style-type: none; 
+   border-bottom: 1px solid #EEEEEE;
+   padding: 10px 5px;
+   }
+
+
+   /*08/02/2016*/
+
+   input[type="button"], input[type="reset"], input[type="submit"] {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    cursor: pointer;
+}
+
