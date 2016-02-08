@@ -4,7 +4,7 @@ if(!defined('BASEPATH'))
     exit('No direct script access allowed');
 }
 
-class Hospital_model extends CI_Model
+class Medicart_model extends CI_Model
 {
     
     public function __construct()
@@ -13,153 +13,85 @@ class Hospital_model extends CI_Model
 	
     }
     
-    public function getHosDetails($hospitalId)
+    
+    public function getMedlists($option)
     {
-        $this->db->select('hospital_id, hospital_usersId, hospital_address, hospital_name, hospital_aboutUs, hospital_phn, hospital_lat, hospital_long, modifyTime');
-        $this->db->from('qyura_hospital');
-        $this->db->where(array('hospital_id'=>$hospitalId,'hospital_deleted'=>0));
+        $lat        =   '';
+        $long      =   '';
+        $search    =   ''; 
+        $notin       =   '';
+        
+        extract($option);
+        $nowDt      =   time();
+        
+        $con = array(
+                        'qyura_diagnostic.diagnostic_deleted'=>0,
+                        'qyura_users.users_deleted'=>0,
+                        'qyura_medicartOffer.medicartOffer_deleted'=>0,
+                        'qyura_offerCat.offerCat_deleted'=>0,
+                        'qyura_medicartOffer.medicartOffer_endDate >'=>$nowDt
+                    );
+        
+        $this->db->select('qyura_medicartOffer.medicartOffer_id,'
+                . 'qyura_medicartOffer.medicartOffer_MIId,qyura_medicartOffer.medicartOffer_offerCategory,'
+                . 'qyura_medicartOffer.medicartOffer_title,CONCAT("assets/Medicart","/",qyura_medicartOffer.medicartOffer_image) as medicartOffer_image,'
+                . 'qyura_medicartOffer.medicartOffer_description,qyura_medicartOffer.medicartOffer_allowBooking,'
+                . 'qyura_medicartOffer.medicartOffer_maximumBooking,qyura_medicartOffer.medicartOffer_startDate,'
+                . 'qyura_medicartOffer.medicartOffer_endDate,qyura_medicartOffer.medicartOffer_discount,'
+                . 'qyura_medicartOffer.medicartOffer_ageDiscount,qyura_medicartOffer.medicartOffer_actualPrice,'
+                . 'qyura_medicartOffer.medicartOffer_discountPrice,qyura_medicartOffer.medicartOffer_deleted,'
+                . 'qyura_medicartOffer.modifyTime,qyura_hospital.hospital_name,qyura_diagnostic.diagnostic_name,
+                   qyura_diagnostic.diagnostic_lat,qyura_diagnostic.diagnostic_long,qyura_hospital.hospital_lat,qyura_hospital.hospital_long,
+                (6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( qyura_hospital.hospital_lat ) ) * cos( radians( qyura_hospital.hospital_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( qyura_hospital.hospital_lat ) ) )
+                ) AS hosDistance,
+                (6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( qyura_diagnostic.diagnostic_lat ) ) * cos( radians( qyura_diagnostic.diagnostic_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( qyura_diagnostic.diagnostic_lat ) ) )
+                ) AS diagDistance')
+        ->from('qyura_medicartOffer')
+        ->join('qyura_offerCat','qyura_offerCat.offerCat_id=qyura_medicartOffer.medicartOffer_offerCategory','left')
+        ->join('qyura_users','qyura_users.users_id=qyura_medicartOffer.medicartOffer_MIId','left')
+        ->join('qyura_hospital','qyura_hospital.hospital_usersId=qyura_users.users_id','left')   
+        ->join('qyura_diagnostic','qyura_diagnostic.diagnostic_usersId=qyura_users.users_id','left') 
+        ->where($con)
+        ->or_where(array('qyura_diagnostic.diagnostic_deleted'=>0,'qyura_hospital.hospital_deleted'=>0))
+        ->where_not_in('qyura_medicartOffer.medicartOffer_id', $notIn)
+        ->or_having(array('hosDistance <' => USER_DISTANCE,'diagDistance <'=> USER_DISTANCE))
+        ->group_by('qyura_medicartOffer.medicartOffer_id')
+        ->limit(DATA_LIMIT);
+        return $this->db->get()->result();
+    }
+    
+    public function getMedDetail($medicartOffer_id)
+    {
+        $nowDt = time();
+        $con = array(
+                        'qyura_diagnostic.diagnostic_deleted'=>0,
+                        'qyura_users.users_deleted'=>0,
+                        'qyura_medicartOffer.medicartOffer_deleted'=>0,
+                        'qyura_offerCat.offerCat_deleted'=>0,
+                        'qyura_medicartOffer.medicartOffer_endDate >'=>$nowDt,
+                        'qyura_medicartOffer.medicartOffer_id' => $medicartOffer_id
+                    );
+        
+        $this->db->select('qyura_medicartOffer.medicartOffer_id,'
+                . 'qyura_medicartOffer.medicartOffer_MIId,qyura_medicartOffer.medicartOffer_offerCategory,'
+                . 'qyura_medicartOffer.medicartOffer_title,CONCAT("assets/Medicart","/",qyura_medicartOffer.medicartOffer_image) as medicartOffer_image,'
+                . 'qyura_medicartOffer.medicartOffer_description,qyura_medicartOffer.medicartOffer_allowBooking,'
+                . 'qyura_medicartOffer.medicartOffer_maximumBooking,qyura_medicartOffer.medicartOffer_startDate,'
+                . 'qyura_medicartOffer.medicartOffer_endDate,qyura_medicartOffer.medicartOffer_discount,'
+                . 'qyura_medicartOffer.medicartOffer_ageDiscount,qyura_medicartOffer.medicartOffer_actualPrice,'
+                . 'qyura_medicartOffer.medicartOffer_discountPrice,qyura_medicartOffer.medicartOffer_deleted,'
+                . 'qyura_medicartOffer.modifyTime,qyura_hospital.hospital_name,qyura_diagnostic.diagnostic_name')
+        ->from('qyura_medicartOffer')
+        ->join('qyura_offerCat','qyura_offerCat.offerCat_id=qyura_medicartOffer.medicartOffer_offerCategory','left')
+        ->join('qyura_users','qyura_users.users_id=qyura_medicartOffer.medicartOffer_MIId','left')
+        ->join('qyura_hospital','qyura_hospital.hospital_usersId=qyura_users.users_id','left')   
+        ->join('qyura_diagnostic','qyura_diagnostic.diagnostic_usersId=qyura_users.users_id','left') 
+        ->where($con)
+        ->or_where(array('qyura_diagnostic.diagnostic_deleted'=>0,'qyura_hospital.hospital_deleted'=>0))
+        ->limit(1);
         return $this->db->get()->row();
     }
+    
 
-    public function isAmbulance($hospitalId){
-        $sql = "SELECT COUNT('ambulance_id') as id
-                FROM `qyura_ambulance`
-                WHERE `ambulance_deleted` = '0' and `ambulance_usersId` = $hospitalId "; 
-        $query = $this->db->query($sql)->row();
-        if($query->id){ return 1; }else{ return 0; }
-    }
-    
-    public function getHosGallery($hospitalId)
-    {
-        $this->db->select('hospitalImages_id, CONCAT("assets/hospitalsImages","/",hospitalImages_ImagesName) as hosImage');
-        $this->db->from('qyura_hospitalImages');
-        $this->db->where(array('hospitalImages_hospitalId'=>$hospitalId,'hospitalImages_deleted'=>0));
-        return $this->db->get()->result();
-    }
-    
-    function getDiagnosticsCat ($hospitalId,$limit=4) {
-         $this->db->select('qyura_diagnosticsCat.diagnosticsCat_catName AS diagnosticsCatName,qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagTestId, CONCAT("assets/diagnosticsCatImages","/",qyura_diagnosticsCat.diagnosticsCat_catImage) as image');
-        $this->db->from('qyura_hospitalDiagCatTest');
-        $this->db->join('qyura_diagnosticsCat','qyura_diagnosticsCat.diagnosticsCat_catId = qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId','left');
-        $this->db->where(array('qyura_hospitalDiagCatTest.hospitalDiagCatTest_hospitalId'=>$hospitalId,'qyura_hospitalDiagCatTest.hospitalDiagCatTest_deleted'=>0));
-         $this->db->group_by('qyura_hospitalDiagCatTest.hospitalDiagCatTest_diagCatId');
-        if($limit)
-            $this->db->limit($limit);
-        
-        return $this->db->get()->result();
-    }
-    
-    public function getHosServices($hospitalId,$limit=3)
-    {
-        $this->db->select('qyura_services.services_name,qyura_services.services_deleted,qyura_services.modifyTime,qyura_services.services_id');
-        $this->db->from('qyura_services');
-        $this->db->join('qyura_hospitalServices','qyura_hospitalServices.hospitalServices_servicesId=qyura_services.services_id','left');
-        $this->db->where(array('qyura_hospitalServices.hospitalServices_hospitalId'=>$hospitalId,'qyura_services.services_deleted'=>'0'));
-        if($limit)
-        $this->db->limit($limit);
-        return $this->db->get()->result();
-    }
-    
-    public function getHosSpecialities($hospitalId,$limit=3)
-    {
-        $this->db->select('qyura_specialities.specialities_name,qyura_specialities.specialities_id,qyura_specialities.specialities_specialitiesCatId,qyura_specialities.modifyTime,qyura_specialities.specialities_deleted');
-        $this->db->from('qyura_specialities');
-        $this->db->join('qyura_hospitalSpecialities','qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId=qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId','left');
-        $this->db->where(array('qyura_hospitalSpecialities.hospitalSpecialities_hospitalId'=>$hospitalId,'qyura_hospitalSpecialities.hospitalSpecialities_deleted'=>0,'qyura_specialities.specialities_deleted'=>0));
-        if($limit)
-        $this->db->limit($limit);
-        return $this->db->get()->result();
-    }
-    
-    public function getHosHelthPkg($hospitalId)
-    {
-        $this->db->select('healthPackage_id,healthPackage_packageTitle,healthPackage_packageId,healthPackage_packageTitle,healthPackage_expiryDateStatus,healthPackage_date,healthPackage_bestPrice,healthPackage_discountedPrice,healthPackage_description,healthPackage_deleted,modifyTime');
-        $this->db->from('qyura_healthPackage');
-        $this->db->where(array('healthPackage_MIuserId'=>$hospitalId,'healthPackage_deleted'=>0));
-        return $this->db->get()->result();
-    }
-    
-    public function getHosReviewCount()
-    {
-        $sql = "SELECT COUNT('reviews_id') as reviews
-                FROM `qyura_reviews`
-                WHERE `reviews_deleted` = '0' and `reviews_userId` = '1' "; 
-        $query = $this->db->query($sql)->row();
-        return $query->reviews;
-        
-    }
-    
-    
-    public function getHosAvgRating()
-    {
-       return '';
-    }
-    
-    public function getHosDoctors($hospitalId,$hospitalUsersId,$limit=4)
-    {
-        $this->db->select('doctors_id,doctors_userId,CONCAT("assets/doctorsImages","/",doctors_img) as doctors_img,doctors_fName,doctors_lName,doctor_addr,doctors_phn,doctors_mobile,doctors_27Src,doctors_consultaionFee');
-        $this->db->from('qyura_usersRoles');
-        $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
-        $this->db->where(array('qyura_usersRoles.usersRoles_parentId'=>$hospitalUsersId,'qyura_usersRoles.usersRoles_roleId'=>ROLE_DOCTORE));
-        if($limit)
-        $this->db->limit($limit);
-        $doctors = $this->db->get()->result();
-        
-        $doctorResult = array();
-        if(!empty($doctors)){
-            foreach($doctors as $doctor)
-            {
-                $doctorTemp = array();
-                $doctorTemp['doctors_id'] = $doctor->doctors_id;
-                $doctorTemp['userId'] = $doctor->doctors_userId;
-                $doctorTemp['img'] = $doctor->doctors_img;
-                $doctorTemp['fName'] = $doctor->doctors_fName;
-                $doctorTemp['lName'] = $doctor->doctors_lName;
-                $doctorTemp['addr'] = $doctor->doctor_addr;
-                $doctorTemp['phn'] = $doctor->doctors_phn;
-                $doctorTemp['mobile'] = $doctor->doctors_mobile;
-                $doctorTemp['Src27'] = $doctor->doctors_27Src;
-                $doctorTemp['consultaionFee'] = $doctor->doctors_consultaionFee;
-                $doctorTemp['parents'] = $this->getDoctorsRole($doctor->doctors_userId);
-                $doctorResult[] = $doctorTemp;
-            }
-            return $doctorResult;
-        }
-        
-        return $doctorResult;
-    }
-    
-    public function getDoctorsRole($userId)
-    {
-        $this->db->select('qyura_doctors.doctors_id,qyura_usersRoles.usersRoles_userId,qyura_usersRoles.usersRoles_roleId,qyura_usersRoles.usersRoles_parentId');
-        $this->db->from('qyura_usersRoles');
-        $this->db->join('qyura_doctors','qyura_doctors.doctors_userId=qyura_usersRoles.usersRoles_userId','left');
-        $this->db->where(array('qyura_usersRoles.usersRoles_userId'=>$userId,'qyura_usersRoles.usersRoles_deleted'=>0));
-        return $this->db->get()->result();
-    }
-    
-    public function getHosInsurance($hospitalId,$limit=4)
-    {
-        $this->db->select('insurance_Name,insurance_id,CONCAT("assets/insuranceImages","/",insurance_img)insurance_img,qyura_insurance.modifyTime');
-        $this->db->from('qyura_hospitalInsurance');
-        $this->db->join('qyura_insurance','qyura_insurance.insurance_id=qyura_hospitalInsurance.hospitalInsurance_insuranceId','left');
-        $this->db->where(array('qyura_hospitalInsurance.hospitalInsurance_hospitalId'=>$hospitalId,'qyura_hospitalInsurance.hospitalInsurance_deleted'=>0));
-        if($limit)
-        $this->db->limit($limit);
-        return $this->db->get()->result();
-    }
-    
-    public function getHosAwards($hospitalId,$limit=3)
-    {
-        $this->db->select('awards_awardsName name,hospitalAwards_awardYear year,qyura_hospitalAwards.modifyTime');
-        $this->db->from('qyura_hospitalAwards');
-        $this->db->join('qyura_awards','qyura_awards.awards_id = qyura_hospitalAwards.hospitalAwards_hospitalId');
-        $this->db->where(array('qyura_hospitalAwards.hospitalAwards_hospitalId'=>$hospitalId,'qyura_hospitalAwards.hospitalAwards_deleted'=>0));
-        if($limit)
-        $this->db->limit($limit);
-        return $this->db->get()->result();
-    }
-    
-    
 }
 ?>
