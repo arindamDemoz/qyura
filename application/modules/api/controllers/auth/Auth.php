@@ -21,8 +21,10 @@ class Auth extends MyRest {
         $this->form_validation->set_rules('mobileNo', 'mobileNo', 'required|min_length[10]|max_length[10]|numeric');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[4]|max_length[10]');
 
-        $logintype = $this->input->post('logintype');
+        $logintype = (int)$this->input->post('logintype');
 
+        $additional_data = array('users_logintype'=>$logintype);
+        
         if ($logintype) {
             $this->form_validation->set_rules('socialId', 'Social Id', 'trim|required|is_unique[qyura_userSocial.userSocial_socialId,userSocial_deleted=0]');
             $this->form_validation->set_rules('image', 'Image', 'trim|required');
@@ -32,33 +34,32 @@ class Auth extends MyRest {
         }
 
         if ($this->form_validation->run() == true) {
-            
-        } else {
-            $message = $this->validation_post_warning();
-            $response = array('status' => FALSE, 'message' => $message);
-            $this->response($response, 400);
-        }
-
-        if ($this->form_validation->run() == true) {
             $email = strtolower($this->input->post('email'));
             $password = $this->input->post('password');
             $username = explode('@', $email);
             $username = $username[0];
         }
-        if ($this->form_validation->run() == true && $user_id = $this->Ion_auth_api->register($username, $password, $email, $additional_data)) {
+         else {
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'message' => $message);
+            $this->response($response, 400);
+        }
+        if ($this->form_validation->run() == true && $users = $this->ion_auth_api->register($username, $password, $email, $additional_data)) {
             //check to see if we are creating the user
             //redirect them back to the admin page
             $profData = array(
                 'patientDetails_patientName'=>$this->input->post('name'),
-                'patientDetails_usersId'=>$user_id
+                'patientDetails_usersId'=>$users['id'],
+                'creationTime' => time()
             );
-            $this->Ion_auth_api->setPatientProf($profData);
-            $response = array('status' => TRUE, 'message' => $this->Ion_auth_api->messages());
+            $this->ion_auth_api->setPatientProf($profData);
+            
+            $response = array('status' => TRUE, 'message' => 'Thank You! Please check your email to activate your account');
             $this->response($response, 400);
         } else {
             //display the create user form
             //set the flash data error message if there is one
-            $message = (validation_errors() ? validation_errors() : ($this->Ion_auth_api->errors() ? $this->Ion_auth_api->errors() : $this->session->flashdata('message')));
+            $message = (validation_errors() ? validation_errors() : ($this->ion_auth_api->errors() ? $this->ion_auth_api->errors() : $this->session->flashdata('message')));
             $response = array('status' => FALSE, 'message' => $message);
             $this->response($response, 400);
         }
@@ -67,25 +68,25 @@ class Auth extends MyRest {
     //activate the user
     function activate($id, $code = false) {
         if ($code !== false) {
-            $activation = $this->Ion_auth_api->activate($id, $code);
-        } else if ($this->Ion_auth_api->is_admin()) {
-            $activation = $this->Ion_auth_api->activate($id);
+            $activation = $this->ion_auth_api->activate($id, $code);
+        } else if ($this->ion_auth_api->is_admin()) {
+            $activation = $this->ion_auth_api->activate($id);
         }
 
         if ($activation) {
             //redirect them to the auth page
-            $this->session->set_flashdata('message', $this->Ion_auth_api->messages());
+            $this->session->set_flashdata('message', $this->ion_auth_api->messages());
             redirect("auth", 'refresh');
         } else {
             //redirect them to the forgot password page
-            $this->session->set_flashdata('message', $this->Ion_auth_api->errors());
+            $this->session->set_flashdata('message', $this->ion_auth_api->errors());
             redirect("auth/forgot_password", 'refresh');
         }
     }
 
     //deactivate the user
     function deactivate($id = NULL) {
-        if (!$this->Ion_auth_api->logged_in() || !$this->Ion_auth_api->is_admin()) {
+        if (!$this->ion_auth_api->logged_in() || !$this->ion_auth_api->is_admin()) {
             //redirect them to the home page because they must be an administrator to view this
             return show_error('You must be an administrator to view this page.');
         }
@@ -94,12 +95,12 @@ class Auth extends MyRest {
 
         $this->load->library('form_validation');
         $this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
-        $this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
+        $this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_users_id_label'), 'required|alpha_numeric');
 
         if ($this->form_validation->run() == FALSE) {
             // insert csrf check
             $this->data['csrf'] = $this->_get_csrf_nonce();
-            $this->data['user'] = $this->Ion_auth_api->user($id)->row();
+            $this->data['user'] = $this->ion_auth_api->user($id)->row();
 
             $this->_render_page('auth/deactivate_user', $this->data);
         } else {
@@ -111,8 +112,8 @@ class Auth extends MyRest {
                 }
 
                 // do we have the right userlevel?
-                if ($this->Ion_auth_api->logged_in() && $this->Ion_auth_api->is_admin()) {
-                    $this->Ion_auth_api->deactivate($id);
+                if ($this->ion_auth_api->logged_in() && $this->ion_auth_api->is_admin()) {
+                    $this->ion_auth_api->deactivate($id);
                 }
             }
 
@@ -126,7 +127,7 @@ class Auth extends MyRest {
         
         $this->data['title'] = "Create User";
 
-        if (!$this->Ion_auth_api->logged_in() || !$this->Ion_auth_api->is_admin()) {
+        if (!$this->ion_auth_api->logged_in() || !$this->ion_auth_api->is_admin()) {
             redirect('auth', 'refresh');
         }
 
@@ -154,15 +155,15 @@ class Auth extends MyRest {
             );
         }
         
-        if ($this->form_validation->run() == true && $this->Ion_auth_api->register($username, $password, $email, $additional_data)) {
+        if ($this->form_validation->run() == true && $this->ion_auth_api->register($username, $password, $email, $additional_data)) {
             //check to see if we are creating the user
             //redirect them back to the admin page
-            $this->session->set_flashdata('message', $this->Ion_auth_api->messages());
+            $this->session->set_flashdata('message', $this->ion_auth_api->messages());
             redirect("auth", 'refresh');
         } else {
             //display the create user form
             //set the flash data error message if there is one
-            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->Ion_auth_api->errors() ? $this->Ion_auth_api->errors() : $this->session->flashdata('message')));
+            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth_api->errors() ? $this->ion_auth_api->errors() : $this->session->flashdata('message')));
 
             $this->data['first_name'] = array(
                 'name' => 'first_name',

@@ -375,7 +375,8 @@ class Ion_auth_api
 
         public function setPatientProf($profData)
         {
-            
+            $patientId  = $this->auth_model->setPatientProf($profData);
+            return $patientId;
         }
 	/**
 	 * logout
@@ -388,7 +389,7 @@ class Ion_auth_api
 		$this->auth_model->trigger_events('logout');
 
 		$identity = $this->config->item('identity', 'auth_conf_api');
-                $this->session->unset_userdata( array($identity => '', 'id' => '', 'user_id' => '') );
+                $this->session->unset_userdata( array($identity => '', 'id' => '', 'users_id' => '') );
 
 		//delete the remember me cookies if they exist
 		if (get_cookie($this->config->item('identity_cookie_name', 'auth_conf_api')))
@@ -436,12 +437,12 @@ class Ion_auth_api
 	 * @return integer
 	 * @author jrmadsen67
 	 **/
-	public function get_user_id()
+	public function get_users_id()
 	{
-		$user_id = $this->session->userdata('user_id');
-		if (!empty($user_id))
+		$users_id = $this->session->userdata('users_id');
+		if (!empty($users_id))
 		{
-			return $user_id;
+			return $users_id;
 		}
 		return null;
 	}
@@ -476,7 +477,7 @@ class Ion_auth_api
 	{
 		$this->auth_model->trigger_events('in_group');
 
-		$id || $id = $this->session->userdata('user_id');
+		$id || $id = $this->session->userdata('users_id');
 
 		if (!is_array($check_group))
 		{
