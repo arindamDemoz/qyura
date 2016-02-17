@@ -892,6 +892,7 @@ if ( ! function_exists('api_validation_errors'))
 {
 	function api_validation_errors($prefix = '', $suffix = '')
 	{
+            
 		if (FALSE === ($OBJ =& _get_validation_object()))
 		{
 			return '';
@@ -1017,7 +1018,7 @@ if ( ! function_exists('_get_validation_object'))
 		// We set this as a variable since we're returning by reference.
 		$return = FALSE;
 
-		if (FALSE !== ($object = $CI->load->is_loaded('Form_validation')))
+		if (FALSE !== ($object = $CI->load->is_loaded('BF_Form_validation')))
 		{
 			if ( ! isset($CI->$object) OR ! is_object($CI->$object))
 			{

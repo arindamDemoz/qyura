@@ -213,13 +213,19 @@ if ( ! function_exists('random_string'))
 			case 'numeric':
 			case 'nozero':
 			case 'alpha':
+                        case 'alnumnew':    
 				switch ($type)
 				{
 					case 'alpha':
 						$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 						break;
+                                        
 					case 'alnum':
 						$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+						break;
+                                            
+                                        case 'alnumnew':
+						$pool = '123456789abcdefghkmnpqrstuvwxyzABCDEFGHKMNPQRSTUVWXYZ';
 						break;
 					case 'numeric':
 						$pool = '0123456789';
