@@ -32,6 +32,7 @@ $config['tables']['groups']          = 'qyura_roles';
 $config['tables']['users_groups']    = 'qyura_usersRoles';
 $config['tables']['login_attempts']  = 'login_attempts';
 $config['tables']['patient']         = 'qyura_patientDetails';
+$config['tables']['userSocial']      = 'qyura_userSocial';
 $config['tables']['diagnostic']      = 'qyura_diagnostic';
 $config['tables']['doctors']         = 'qyura_doctors';
 $config['tables']['hospital']        = 'qyura_hospital';
@@ -46,6 +47,11 @@ $config['tables']['pharmacy']        = 'qyura_pharmacy';
 $config['join']['users']  = 'usersRoles_userId';
 $config['join']['groups'] = 'usersRoles_roleId';
 
+
+$config['join']['users_id']  = 'users_id';
+$config['join']['roles_id']  = 'roles_id';
+$config['join']['patient']  = 'patientDetails_usersId';
+$config['join']['userSocial']  = 'userSocial_usersId';
 
 /*
  | -------------------------------------------------------------------------
@@ -88,15 +94,20 @@ $config['salt_prefix']    = version_compare(PHP_VERSION, '5.3.7', '<') ? '$2a$' 
  | The controller should check this function and act
  | appropriately. If this variable set to 0, there is no maximum.
  */
-$config['site_title']                 = "Example.com";       // Site Title, example.com
-$config['admin_email']                = "admin@example.com"; // Admin Email, admin@example.com
+
+$config['otp_time_in_min']            = 20; 
+$config['site_title']                 = "Qyura ";       // Site Title, example.com
+$config['admin_email']                = "mahi889@gmail.com"; // Admin Email, admin@example.com
 $config['default_group']              = 'Patient';           // Default group, use name
 $config['admin_group']                = 'Admin';             // Default administrators group, use name
 $config['identity']                   = 'users_email';             // A database column which is used to login with
-$config['min_password_length']        = 8;                   // Minimum Required Length of Password
-$config['max_password_length']        = 20;                  // Maximum Allowed Length of Password
+$config['identity_mobile']            = 'users_mobile';             // A database column which is used to login with
+
+$config['min_password_length']        = 4;                   // Minimum Required Length of Password
+$config['max_password_length']        = 10;                  // Maximum Allowed Length of Password
 $config['email_activation']           = TRUE;               // Email Activation for registration
 $config['manual_activation']          = FALSE;               // Manual Activation for registration
+$config['manual_otp_activation']      = FALSE;               // Manual otp Activation for registration
 $config['remember_users']             = TRUE;                // Allow users to be remembered and enable auto-login
 $config['user_expire']                = 86500;               // How long to remember the user (seconds). Set to zero for no expiration
 $config['user_extend_on_login']       = FALSE;               // Extend the users cookies every time they auto-login
@@ -124,7 +135,7 @@ $config['identity_cookie_name'] = 'identity';
  | 	  'file' = Use the default CI config or use from a config file
  | 	  array  = Manually set your email config settings
  */
-$config['use_ci_email'] = FALSE; // Send Email using the builtin CI email class, if false it will return the code and the identity
+$config['use_ci_email'] = TRUE; // Send Email using the builtin CI email class, if false it will return the code and the identity
 $config['email_config'] = array(
 	'mailtype' => 'html',
 );
@@ -136,7 +147,7 @@ $config['email_config'] = array(
  | Folder where email templates are stored.
  | Default: auth/
  */
-$config['email_templates'] = 'auth/email/';
+$config['email_templates'] = 'api/email/';
 
 /*
  | -------------------------------------------------------------------------
@@ -153,6 +164,10 @@ $config['email_activate'] = 'activate.tpl.php';
  | Default: forgot_password.tpl.php
  */
 $config['email_forgot_password'] = 'forgot_password.tpl.php';
+
+$config['email_forgot_password_api'] = 'forgot_password.api.tpl.php';
+
+$config['email_new_password_api'] = 'new_password.api.tpl.php';
 
 /*
  | -------------------------------------------------------------------------
@@ -183,9 +198,9 @@ $config['store_salt']  = FALSE;
  */
 $config['delimiters_source']       = 'config'; 	// "config" = use the settings defined here, "form_validation" = use the settings defined in CI's form validation library
 $config['message_start_delimiter'] = ''; 	// Message start delimiter
-$config['message_end_delimiter']   = ' /n '; 	// Message end delimiter
+$config['message_end_delimiter']   = ' \n '; 	// Message end delimiter
 $config['error_start_delimiter']   = '';		// Error message start delimiter
-$config['error_end_delimiter']     = ' /n ';	// Error message end delimiter
+$config['error_end_delimiter']     = ' \n ';	// Error message end delimiter
 
 /* End of file ion_auth.php */
 /* Location: ./application/config/ion_auth.php */

@@ -18,6 +18,7 @@
 $lang['account_creation_successful'] 	  	 = 'Account Successfully Created';
 $lang['account_creation_unsuccessful'] 	 	 = 'Unable to Create Account';
 $lang['account_creation_duplicate_email'] 	 = 'Email Already Used or Invalid';
+$lang['account_creation_duplicate_mobile'] 	 = 'Mobile No Already Used or Invalid';
 $lang['account_creation_duplicate_username'] = 'Username Already Used or Invalid';
 $lang['account_creation_missing_default_group'] = 'Default group is not set';
 $lang['account_creation_invalid_default_group'] = 'Invalid default group name set';
@@ -26,27 +27,47 @@ $lang['account_creation_invalid_default_group'] = 'Invalid default group name se
 // Password
 $lang['password_change_successful'] 	 	 = 'Password Successfully Changed';
 $lang['password_change_unsuccessful'] 	  	 = 'Unable to Change Password';
-$lang['forgot_password_successful'] 	 	 = 'Password Reset Email Sent';
+$lang['forgot_password_successful'] 	 	 = 'Password Reset SMS & Email Sent';
 $lang['forgot_password_unsuccessful'] 	 	 = 'Unable to Reset Password';
+$lang['forgot_password_active_unsuccessful'] 	 = 'This account has not been activated. Please check your email for the activation instructions.';
 
 // Activation
 $lang['activate_successful'] 		  	     = 'Account Activated';
+$lang['otp_activate_successful'] 		     = 'Account Activated By OTP';
 $lang['activate_unsuccessful'] 		 	     = 'Unable to Activate Account';
+$lang['otp_activate_unsuccessful'] 		     = 'Unable to Activate Account By OTP';
+$lang['otp_expired']                                 = 'Unable to Activate Account By OTP Because OTP is expired';
 $lang['deactivate_successful'] 		  	     = 'Account De-Activated';
+//$lang['otp_successful'] 		  	     = 'Account OTP Created';
+$lang['otp_successful'] 		  	     = 'OTP has been sent on your mobile no';
 $lang['deactivate_unsuccessful'] 	  	     = 'Unable to De-Activate Account';
+
+$lang['otp_unsuccessful']                            = 'Unable to create OTP';
+
+$lang['otp_message']                                = 'Qyura OTP code: %s';
+
+$lang['mobile_forgot_password']                     = 'Qyura your password is: %s';
+
+
 $lang['activation_email_successful'] 	  	 = 'Activation Email Sent';
 $lang['activation_email_unsuccessful']   	 = 'Unable to Send Activation Email';
 
 // Login / Logout
-$lang['login_successful'] 		  	         = 'Logged In Successfully';
-$lang['login_unsuccessful'] 		  	     = 'Incorrect Login';
+$lang['login_successful'] 		  	         = 'You have successfully logged in';
+$lang['login_unsuccessful'] 		  	     = 'Please provide the correct login detail';
 $lang['login_unsuccessful_not_active'] 		 = 'Account is inactive';
+$lang['login_unsuccessful_not_active_custom'] 		 = "We've sent an email to '{replace}' Open it up to activate your account";
+
+$lang['login_unsuccessful_not_active_otp_custom'] 		 = "We've sent OTP an SMS to '{replace}' Open it up to activate your account";
+
 $lang['login_timeout']                       = 'Temporarily Locked Out.  Try again later.';
 $lang['logout_successful'] 		 	         = 'Logged Out Successfully';
 
 // Account Changes
 $lang['update_successful'] 		 	         = 'Account Information Successfully Updated';
+$lang['update_patient_successful'] 		 	         = 'Patient Information Successfully Updated';
 $lang['update_unsuccessful'] 		 	     = 'Unable to Update Account Information';
+$lang['update_patient_unsuccessful'] 		 	     = 'Unable to Update Patient Information';
 $lang['delete_successful']               = 'User Deleted';
 $lang['delete_unsuccessful']           = 'Unable to Delete User';
 

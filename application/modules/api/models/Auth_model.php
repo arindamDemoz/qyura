@@ -44,6 +44,14 @@ class Auth_model extends CI_Model {
      * @var string
      * */
     public $activation_code;
+    
+    
+    /**
+     * otp code
+     *
+     * @var string
+     * */
+    public $activationCode;
 
     /**
      * forgotten password key
@@ -72,6 +80,13 @@ class Auth_model extends CI_Model {
      * @var array
      * */
     public $_ion_where = array();
+    
+    /**
+     * or_where
+     *
+     * @var array
+     * */
+    public $_ion_or_where = array();
 
     /**
      * Select
@@ -184,6 +199,7 @@ class Auth_model extends CI_Model {
 
         //initialize data
         $this->identity_column = $this->config->item('identity', 'auth_conf_api');
+        $this->identity_mobile = $this->config->item('identity_mobile', 'auth_conf_api');
         $this->store_salt = $this->config->item('store_salt', 'auth_conf_api');
         $this->salt_length = $this->config->item('salt_length', 'auth_conf_api');
         $this->join = $this->config->item('join', 'auth_conf_api');
@@ -293,24 +309,25 @@ class Auth_model extends CI_Model {
         if (empty($id) || empty($password)) {
             return FALSE;
         }
-
+        
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select('password, salt')
-                ->where('id', $id)
+        $query = $this->db->select('users_password, users_salt')
+                ->where('users_id', $id)
                 ->limit(1)
-                ->order_by('id', 'desc')
+                ->order_by('users_id', 'desc')
                 ->get($this->tables['users']);
-
+        
         $hash_password_db = $query->row();
-
+        
         if ($query->num_rows() !== 1) {
             return FALSE;
         }
-
+        
+        
         // bcrypt
         if ($use_sha1_override === FALSE && $this->hash_method == 'bcrypt') {
-            if ($this->bcrypt->verify($password, $hash_password_db->password)) {
+            if ($this->bcrypt->verify($password, $hash_password_db->users_password)) {
                 return TRUE;
             }
 
@@ -319,14 +336,14 @@ class Auth_model extends CI_Model {
 
         // sha1
         if ($this->store_salt) {
-            $db_password = sha1($password . $hash_password_db->salt);
+            $db_password = sha1($password . $hash_password_db->users_salt);
         } else {
-            $salt = substr($hash_password_db->password, 0, $this->salt_length);
+            $salt = substr($hash_password_db->users_password, 0, $this->salt_length);
 
             $db_password = $salt . substr(sha1($salt . $password), 0, -$this->salt_length);
         }
 
-        if ($db_password == $hash_password_db->password) {
+        if ($db_password == $hash_password_db->users_password) {
             return TRUE;
         } else {
             return FALSE;
@@ -430,10 +447,10 @@ class Auth_model extends CI_Model {
 
         if ($code !== FALSE) {
             $query = $this->db->select($this->identity_column)
-                    ->where('activation_code', $code)
-                    ->where('id', $id)
+                    ->where('users_activationCode', $code)
+                    ->where('users_id', $id)
                     ->limit(1)
-                    ->order_by('id', 'desc')
+                    ->order_by('users_id', 'desc')
                     ->get($this->tables['users']);
 
             $result = $query->row();
@@ -445,21 +462,20 @@ class Auth_model extends CI_Model {
             }
 
             $data = array(
-                'activation_code' => NULL,
-                'active' => 1
+                'users_activationCode' => NULL,
+                'users_active' => 1
             );
 
             $this->trigger_events('extra_where');
-            $this->db->update($this->tables['users'], $data, array('id' => $id));
+            $this->db->update($this->tables['users'], $data, array('users_id' => $id));
         } else {
             $data = array(
-                'activation_code' => NULL,
-                'active' => 1
+                'users_activationCode' => NULL,
+                'users_active' => 1
             );
 
-
             $this->trigger_events('extra_where');
-            $this->db->update($this->tables['users'], $data, array('id' => $id));
+            $this->db->update($this->tables['users'], $data, array('users_id' => $id));
         }
 
 
@@ -470,6 +486,76 @@ class Auth_model extends CI_Model {
         } else {
             $this->trigger_events(array('post_activate', 'post_activate_unsuccessful'));
             $this->set_error('activate_unsuccessful');
+        }
+
+
+        return $return;
+    }
+    
+    /**
+     * activate OTP
+     *
+     * @return void
+     * @author Mathew
+     * */
+    public function otp_activate($id, $code = false) {
+        $this->trigger_events('pre_activate');
+
+        if ($code !== FALSE) {
+            $query = $this->db->select($this->identity_column,'users_otpTime')
+                    ->where('users_otpCode', $code)
+                    ->where('users_id', $id)
+                    ->limit(1)
+                    ->order_by('users_id', 'desc')
+                    ->get($this->tables['users']);
+
+            $result = $query->row();
+
+            if ($query->num_rows() !== 1) {
+                $this->trigger_events(array('post_activate', 'post_activate_unsuccessful'));
+                $this->set_error('otp_activate_unsuccessful');
+                return FALSE;
+            }
+            
+            $now = time();
+            $otpTime = $result->users_otpTime;
+            $acceptTime = ($this->config->item('otp_time_in_min' != '') && $this->config->item('otp_time_in_min')) != null ? $this->config->item('otp_time_in_min'):1;
+            $timeDuration = 60*$acceptTime;
+            $newTime = $timeDuration+$otpTime;
+            
+            if($now < $newTime)
+            {
+                $this->trigger_events(array('post_activate', 'post_activate_unsuccessful'));
+                $this->set_error('otp_expired');
+                return FALSE;
+            }
+            
+
+            $data = array(
+                'users_otpCode' => NULL,
+                'users_otpActive' => 1
+            );
+
+            $this->trigger_events('extra_where');
+            $this->db->update($this->tables['users'], $data, array('users_id' => $id));
+        } else {
+            $data = array(
+                'users_otpCode' => NULL,
+                'users_otpActive' => 1
+            );
+
+            $this->trigger_events('extra_where');
+            $this->db->update($this->tables['users'], $data, array('users_id' => $id));
+        }
+
+
+        $return = $this->db->affected_rows() == 1;
+        if ($return) {
+            $this->trigger_events(array('post_activate', 'post_activate_successful'));
+            $this->set_message('otp_activate_successful');
+        } else {
+            $this->trigger_events(array('post_activate', 'post_activate_unsuccessful'));
+            $this->set_error('otp_activate_unsuccessful');
         }
 
 
@@ -506,6 +592,58 @@ class Auth_model extends CI_Model {
             $this->set_message('deactivate_successful');
         else
             $this->set_error('deactivate_unsuccessful');
+
+        return $return;
+    }
+    
+    
+    /**
+     * Deactivate
+     *
+     * @return void
+     * @author Mathew
+     * */
+    public function otpCreate($id = NULL) {
+        $this->trigger_events('otp');
+
+        if (!isset($id)) {
+            $this->set_error('deactivate_unsuccessful');
+            return FALSE;
+        }
+
+        $activationCode = random_string('nozero', 5);
+        $this->activationCode = $activationCode;
+
+        $data = array(
+            'users_otpCode' => $activationCode,
+            'users_otpTime' => time(),
+            'users_otpActive' => 0
+        );
+
+        $this->trigger_events('extra_where');
+        $this->db->update($this->tables['users'], $data, array('users_id' => $id));
+        $query = $this->db->select($this->identity_column,'users_mobile')
+                    
+                    ->where('users_id', $id)
+                    ->limit(1)
+                    ->order_by('users_id', 'desc')
+                    ->get($this->tables['users']);
+
+        $userdata  = $query->row();
+        
+        
+        $return = $this->db->affected_rows() == 1;
+        if ($return){
+            $this->set_message('otp_successful');
+            
+            $this->load->library('clickatell');
+        
+            $message = $this->lang->line('otp_message');
+            $message = str_replace('%s', $activationCode, $message);
+            $msgId  = $this->clickatell->send_message('91'.$userdata->users_mobile,$message);
+        }
+        else
+            $this->set_error('otp_unsuccessful');
 
         return $return;
     }
@@ -548,10 +686,11 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select('id, password, salt')
+        $query = $this->db->select('users_id, users_password, users_salt')
                 ->where($this->identity_column, $identity)
+                ->or_where($this->identity_mobile,$identity)
                 ->limit(1)
-                ->order_by('id', 'desc')
+                ->order_by('users_id', 'desc')
                 ->get($this->tables['users']);
 
         if ($query->num_rows() !== 1) {
@@ -562,15 +701,15 @@ class Auth_model extends CI_Model {
 
         $result = $query->row();
 
-        $new = $this->hash_password($new, $result->salt);
+        $new = $this->hash_password($new, $result->users_salt);
 
         //store the new password and reset the remember code so all remembered instances have to re-login
         //also clear the forgotten password code
         $data = array(
-            'password' => $new,
-            'remember_code' => NULL,
-            'forgotten_password_code' => NULL,
-            'forgotten_password_time' => NULL,
+            'users_password' => $new,
+            'users_rememberCode' => NULL,
+            'users_forgottenPasswordCode' => NULL,
+            'users_forgottenPasswordTime' => NULL,
         );
 
         $this->trigger_events('extra_where');
@@ -599,12 +738,13 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select('id, password, salt')
+        $query = $this->db->select('users_id, users_password, users_salt')
                 ->where($this->identity_column, $identity)
+                ->or_where($this->identity_mobile,$identity)
                 ->limit(1)
-                ->order_by('id', 'desc')
+                ->order_by('users_id', 'desc')
                 ->get($this->tables['users']);
-
+        
         if ($query->num_rows() !== 1) {
             $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
             $this->set_error('password_change_unsuccessful');
@@ -612,20 +752,24 @@ class Auth_model extends CI_Model {
         }
 
         $user = $query->row();
-
-        $old_password_matches = $this->hash_password_db($user->id, $old);
-
-        if ($old_password_matches === TRUE) {
+        
+        //$old_password_matches = $this->hash_password_db($user->users_id, $old);
+        
+        
+        //if ($old_password_matches === TRUE) {
+        if (TRUE) {
             //store the new password and reset the remember code so all remembered instances have to re-login
-            $hashed_new_password = $this->hash_password($new, $user->salt);
+            $hashed_new_password = $this->hash_password($new, $user->users_salt);
             $data = array(
-                'password' => $hashed_new_password,
-                'remember_code' => NULL,
+                'users_password' => $hashed_new_password,
+                'users_rememberCode' => NULL,
             );
 
             $this->trigger_events('extra_where');
 
             $successfully_changed_password_in_db = $this->db->update($this->tables['users'], $data, array($this->identity_column => $identity));
+            
+            
             if ($successfully_changed_password_in_db) {
                 $this->trigger_events(array('post_change_password', 'post_change_password_successful'));
                 $this->set_message('password_change_successful');
@@ -682,6 +826,27 @@ class Auth_model extends CI_Model {
                         ->limit(1)
                         ->count_all_results($this->tables['users']) > 0;
     }
+    
+     /**
+     * Checks email
+     *
+     * @return bool
+     * @author Mathew
+     * */
+    public function mobile_check($mobile = '') {
+        $this->trigger_events('mobile_check');
+
+        if (empty($mobile)) {
+            return FALSE;
+        }
+
+        $this->trigger_events('extra_where');
+
+        return $this->db->where(array('users_mobile' => $mobile, 'users_deleted' => 0))
+                        ->order_by("users_id", "ASC")
+                        ->limit(1)
+                        ->count_all_results($this->tables['users']) > 0;
+    }
 
     /**
      * Identity check
@@ -697,6 +862,7 @@ class Auth_model extends CI_Model {
         }
 
         return $this->db->where($this->identity_column, $identity)
+                ->or_where($this->identity_mobile,$identity)
                         ->count_all_results($this->tables['users']) > 0;
     }
 
@@ -740,20 +906,46 @@ class Auth_model extends CI_Model {
         $this->trigger_events('extra_where');
 
         $update = array(
-            'forgotten_password_code' => $key,
-            'forgotten_password_time' => time()
+            'users_forgottenPasswordCode' => $key,
+            'users_forgottenPasswordTime' => time()
         );
+        
+        
 
         $this->db->update($this->tables['users'], $update, array($this->identity_column => $identity));
 
         $return = $this->db->affected_rows() == 1;
 
-        if ($return)
+        if ($return){
             $this->trigger_events(array('post_forgotten_password', 'post_forgotten_password_successful'));
+        }
         else
             $this->trigger_events(array('post_forgotten_password', 'post_forgotten_password_unsuccessful'));
 
         return $return;
+    }
+    
+    /**
+     * Insert a forgotten password key.
+     *
+     * @return bool
+     * @author Mathew
+     * @updated Ryan
+     * @updated 52aa456eef8b60ad6754b31fbdcc77bb
+     * */
+    public function updatePassword($con,$password=false) {
+        
+        $salt = $this->store_salt ? $this->salt() : FALSE;
+        if($password){
+            $data = array(
+                'password' => $this->hash_password($password, $salt),
+            );
+
+            $this->db->update($this->tables['users'], $data, $con);
+        }
+
+        $this->trigger_events(array('post_forgotten_password_complete', 'post_forgotten_password_complete_successful'));
+        return $password;
     }
 
     /**
@@ -770,7 +962,7 @@ class Auth_model extends CI_Model {
             return FALSE;
         }
 
-        $profile = $this->where('forgotten_password_code', $code)->users()->row(); //pass the code to profile
+        $profile = $this->where('users_forgottenPasswordCode', $code)->users()->row(); //pass the code to profile
 
         if ($profile) {
 
@@ -813,7 +1005,14 @@ class Auth_model extends CI_Model {
         $this->trigger_events('pre_register');
 
         $manual_activation = $this->config->item('manual_activation', 'auth_conf_api');
+        
+        $manual_otp_activation = $this->config->item('manual_otp_activation', 'auth_conf_api');
 
+        if ($this->identity_mobile == 'users_mobile' && $this->mobile_check($email)) {
+            $this->set_error('account_creation_duplicate_mobile');
+            return FALSE;
+        }
+        
         if ($this->identity_column == 'users_email' && $this->email_check($email)) {
             $this->set_error('account_creation_duplicate_email');
             return FALSE;
@@ -857,7 +1056,99 @@ class Auth_model extends CI_Model {
             'users_email' => $email,
             'users_ip_address' => $ip_address,
             'creationTime' => time(),
-            'users_active' => ($manual_activation === false ? 1 : 0)
+            'users_active' => ($manual_activation === false ? 1 : 0),
+            'users_otpCode' => ($manual_otp_activation === false ? 1 : 0)
+            
+        );
+
+        if ($this->store_salt) {
+            $data['users_salt'] = $salt;
+        }
+
+        //filter out any data passed that doesnt have a matching column in the users table
+        //and merge the set user data and the additional data
+        $user_data = array_merge($this->_filter_data($this->tables['users'], $additional_data), $data);
+
+        $this->trigger_events('extra_set');
+
+        $this->db->insert($this->tables['users'], $user_data);
+
+        $id = $this->db->insert_id();
+
+        //add in groups array if it doesn't exits and stop adding into default group if default group ids are set
+        if (isset($default_group->roles_id) && empty($groups)) {
+            $groups[] = $default_group->roles_id;
+        }
+
+        if (!empty($groups)) {
+            //add to groups
+            foreach ($groups as $group) {
+                $this->add_to_group($group, $id);
+            }
+        }
+
+        $this->trigger_events('post_register');
+
+        return (isset($id)) ? $id : FALSE;
+    }
+    
+    public function registerSocial($username, $password, $email, $additional_data = array(), $groups = array()) {
+        $this->trigger_events('pre_register');
+
+        $manual_activation = 1;
+        
+        $manual_otp_activation = $this->config->item('manual_otp_activation', 'auth_conf_api');
+        
+        if ($this->identity_mobile == 'users_mobile' && $this->mobile_check($username)) {
+            $this->set_error('account_creation_duplicate_mobile');
+            return FALSE;
+        }
+
+        if ($this->identity_column == 'users_email' && $this->email_check($email)) {
+            $this->set_error('account_creation_duplicate_email');
+            return FALSE;
+        } elseif ($this->identity_column == 'users_username' && $this->username_check($username)) {
+            $this->set_error('account_creation_duplicate_username');
+            return FALSE;
+        }  elseif (!$this->config->item('default_group', 'auth_conf_api') && empty($groups)) {
+            $this->set_error('account_creation_missing_default_group');
+            return FALSE;
+        }
+
+        //check if the default set in config exists in database
+        $query = $this->db->get_where('qyura_roles', array('roles_name' => $this->config->item('default_group', 'auth_conf_api')), 1)->row();
+        if (!isset($query->roles_id) && empty($groups)) {
+            $this->set_error('account_creation_invalid_default_group');
+            return FALSE;
+        }
+        //dump($query);
+        //capture default group details
+        $default_group = $query;
+
+        // If username is taken, use username1 or username2, etc.
+        if ($this->identity_column != 'users_username') {
+            $original_username = $username;
+            for ($i = 0; $this->username_check($username); $i++) {
+                if ($i > 0) {
+                    $username = $original_username . $i;
+                }
+            }
+        }
+
+        // IP Address
+        $ip_address = $this->_prepare_ip($this->input->ip_address());
+        $salt = $this->store_salt ? $this->salt() : FALSE;
+        $password = $this->hash_password($password, $salt);
+
+        // Users table.
+        $data = array(
+            'users_username' => $username,
+            'users_password' => $password,
+            'users_email' => $email,
+            'users_ip_address' => $ip_address,
+            'creationTime' => time(),
+            'users_active' => ($manual_activation === false ? 1 : 0),
+            'users_otpCode' => ($manual_otp_activation === false ? 1 : 0)
         );
 
         if ($this->store_salt) {
@@ -900,6 +1191,15 @@ class Auth_model extends CI_Model {
         $id = $this->db->insert_id();
         return $id;
     }
+    
+    public function setSocialProf($socialData)
+    {
+        //dump($this->tables['patient']);
+        //dump($profData);
+        $this->db->insert($this->tables['userSocial'], $socialData);
+        $id = $this->db->insert_id();
+        return $id;
+    }
     /**
      * login
      *
@@ -916,8 +1216,9 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select($this->identity_column . ', users_username, users_email, users_id, users_password, users_active, users_lastLogin')
+        $query = $this->db->select($this->identity_column . ', users_username, users_email, users_id, users_password, users_active,users_otpActive, users_lastLogin,users_mobile')
                 ->where($this->identity_column, $identity)
+                ->or_where($this->identity_mobile,$identity)
                 ->limit(1)
                 ->order_by('users_id', 'desc')
                 ->get($this->tables['users']);
@@ -938,10 +1239,20 @@ class Auth_model extends CI_Model {
             $password = $this->hash_password_db($user->users_id, $password);
 
             if ($password === TRUE) {
-                if ($user->active == 0) {
+//                if ($user->users_active == 0) {
+//                    $this->trigger_events('post_login_unsuccessful');
+//                    $error = $this->lang->line('login_unsuccessful_not_active_custom');
+//                    $error =  str_replace(array('{replace}', '{param}'), array($user->users_email), $error);  
+//                    $this->set_error($error);
+//
+//                    return FALSE;
+//                }
+                
+                if ($user->users_otpActive == 0) {
                     $this->trigger_events('post_login_unsuccessful');
-                    $this->set_error('login_unsuccessful_not_active');
-
+                    $error = $this->lang->line('login_unsuccessful_not_active_otp_custom');
+                    $error =  str_replace(array('{replace}', '{param}'), array($user->users_mobile), $error);  
+                    $this->set_error($error);
                     return FALSE;
                 }
 
@@ -958,10 +1269,12 @@ class Auth_model extends CI_Model {
                 $this->trigger_events(array('post_login', 'post_login_successful'));
                 $this->set_message('login_successful');
 
-                return TRUE;
+                return $user;
             }
+            
         }
 
+        
         //Hash something anyway, just to take up time
         $this->hash_password($password);
 
@@ -971,6 +1284,82 @@ class Auth_model extends CI_Model {
         $this->set_error('login_unsuccessful');
 
         return FALSE;
+    }
+    
+    public function createPassword($password=false)
+    {
+        $salt = $this->store_salt ? $this->salt() : FALSE;
+        if($password)
+        {
+            $password = $this->hash_password($password, $salt);
+            $data['users_password'] = $password;
+        }
+        
+        if ($this->store_salt) {
+        $data['users_salt'] = $salt;
+        }
+        
+        if(isset($data) && !empty($data))
+        {
+            return $data;
+        }
+        
+        return false;
+    }
+    
+    public function login_user_data($identity, $password,$remember = FALSE) {
+        $this->trigger_events('pre_login');
+
+        if (empty($identity) || empty($password)) {
+            $this->set_error('login_unsuccessful');
+            return FALSE;
+        }
+
+        $this->trigger_events('extra_where');
+
+        $query = $this->db->select($this->identity_column . ', '.$this->tables['users'].'.users_username, '.$this->tables['users'].'.users_email, '.$this->tables['users'].'.users_mobile, '.$this->tables['users'].'.users_lastLogin, '.$this->tables['users'].'.users_id, '.$this->tables['users'].'.users_active, '.$this->tables['users'].'.users_otpActive, '.$this->tables['users'].'.users_otpTime, '.$this->tables['users'].'.users_logintype as logintype, '.$this->tables['patient'].'.patientDetails_patientName as patientName, '.$this->tables['patient'].'.patientDetails_pLastName as pLastName, '.$this->tables['patient'].'.patientDetails_address as address, CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg, '.$this->tables['groups'].'.'.$this->join['roles_id'].','.$this->tables['userSocial'].'.userSocial_pushToken as pushToken,'.$this->tables['userSocial'].'.userSocial_device as device,'.$this->tables['userSocial'].'.userSocial_gpId as gpId,'.$this->tables['userSocial'].'.userSocial_fbId as fbId')
+                ->where($this->identity_column, $identity)
+                ->or_where($this->identity_mobile,$identity)
+                ->join($this->tables['patient'],$this->tables['patient'].'.'.$this->join['patient'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->join($this->tables['userSocial'],$this->tables['userSocial'].'.'.$this->join['userSocial'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->join($this->tables['users_groups'],$this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.'.$this->join['users_id'])
+                ->join($this->tables['groups'],$this->tables['groups'].'.'.$this->join['roles_id'].'='.$this->tables['users_groups'].'.'.$this->join['groups'])
+                ->limit(1)
+                ->order_by('users_id', 'desc')
+                ->get($this->tables['users']);
+
+        // check password 
+        
+        
+        if ($query->num_rows() === 1) {
+            $user = $query->row();
+
+            $password = $this->hash_password_db($user->users_id, $password);
+
+            if ($password === TRUE) {
+
+
+                $this->set_session($user);
+
+                $this->update_last_login($user->users_id);
+
+                $this->clear_login_attempts($identity);
+
+                if ($remember && $this->config->item('remember_users', 'auth_conf_api')) {
+                    $this->remember_user($user->users_id);
+                }
+
+                $this->trigger_events(array('post_login', 'post_login_successful'));
+                //$this->set_message('login_successful');
+
+                return $user;
+            }
+            
+            return FALSE;
+        }
+        
+        return FALSE;
+        
     }
 
     /**
@@ -1106,6 +1495,18 @@ class Auth_model extends CI_Model {
 
         return $this;
     }
+    
+    public function or_where($or_where, $value = NULL) {
+        $this->trigger_events('or_where');
+
+        if (!is_array($or_where)) {
+            $or_where = array($or_where => $value);
+        }
+
+        array_push($this->_ion_or_where, $or_where);
+
+        return $this;
+    }
 
     public function like($like, $value = NULL, $position = 'both') {
         $this->trigger_events('like');
@@ -1199,7 +1600,22 @@ class Auth_model extends CI_Model {
             $this->db->select(array(
                 $this->tables['users'] . '.*',
                 $this->tables['users'] . '.users_id as id',
-                $this->tables['users'] . '.users_id as users_id'
+                $this->tables['users'] . '.users_id as users_id',
+                $this->tables['users'] . '.users_mobile as users_mobile',
+                $this->tables['users'] . '.users_logintype as logintype',
+                $this->tables['users'] . '.users_otpActive as users_otpActive',
+                $this->tables['users'] . '.users_otpTime as users_otpTime',
+                $this->tables['patient'] . '.patientDetails_patientName as patientName',
+                $this->tables['patient'] . '.patientDetails_pLastName as pLastName',
+                $this->tables['patient'] . '.patientDetails_unqId as pUnqId',
+                $this->tables['patient'] . '.patientDetails_address as address',
+                //$this->tables['patient'] . '.patientDetails_patientImg as patientImg',
+                'CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg',
+                $this->tables['userSocial'].'.userSocial_pushToken as pushToken',
+                $this->tables['userSocial'].'.userSocial_usersId as scUsersId',
+                $this->tables['userSocial'].'.userSocial_device as device',
+                $this->tables['userSocial'].'.userSocial_gpId as gpId',
+                $this->tables['userSocial'].'.userSocial_fbId as fbId'
             ));
         }
 
@@ -1239,6 +1655,11 @@ class Auth_model extends CI_Model {
         }
 
         $this->trigger_events('extra_where');
+        
+        //for social detail and notification
+        $this->db->join($this->tables['patient'],$this->tables['patient'].'.'.$this->join['patient'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT');
+        
+        $this->db->join($this->tables['userSocial'],$this->tables['userSocial'].'.'.$this->join['userSocial'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT');
 
         //run each where that was passed
         if (isset($this->_ion_where) && !empty($this->_ion_where)) {
@@ -1247,6 +1668,14 @@ class Auth_model extends CI_Model {
             }
 
             $this->_ion_where = array();
+        }
+        
+        if (isset($this->_ion_or_where) && !empty($this->_ion_or_where)) {
+            foreach ($this->_ion_or_where as $or_where) {
+                $this->db->or_where($or_where);
+            }
+
+            $this->_ion_or_where = array();
         }
 
         if (isset($this->_ion_like) && !empty($this->_ion_like)) {
@@ -1279,6 +1708,30 @@ class Auth_model extends CI_Model {
         $this->response = $this->db->get($this->tables['users']);
 
         return $this;
+    }
+    
+    public function patientUpdate($id=null,array $data = array())
+    {
+        // Filter the data passed
+        $data = $this->_filter_data($this->tables['patient'], $data);
+
+        $this->trigger_events('extra_where');
+        if($id != null)
+        $this->db->update($this->tables['patient'], $data, array('patientDetails_usersId' => $id));
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+
+            $this->trigger_events(array('post_update_user', 'post_update_user_unsuccessful'));
+            $this->set_error('update_patient_unsuccessful');
+            return FALSE;
+        }
+
+        $this->db->trans_commit();
+
+        $this->trigger_events(array('post_update_user', 'post_update_user_successful'));
+        $this->set_message('update_patient_successful');
+        return TRUE;
     }
 
     /**
@@ -1314,9 +1767,9 @@ class Auth_model extends CI_Model {
         //if no id was passed use the current users id
         $id || $id = $this->session->userdata('users_id');
 
-        return $this->db->select($this->tables['users_groups'] . '.' . $this->join['groups'] . ' as id, ' . $this->tables['groups'] . '.name, ' . $this->tables['groups'] . '.description')
+        return $this->db->select($this->tables['users_groups'] . '.' . $this->join['groups'] . ' as id, ' . $this->tables['groups'] . '.roles_name, ' . $this->tables['groups'] . '.roles_description')
                         ->where($this->tables['users_groups'] . '.' . $this->join['users'], $id)
-                        ->join($this->tables['groups'], $this->tables['users_groups'] . '.' . $this->join['groups'] . '=' . $this->tables['groups'] . '.id')
+                        ->join($this->tables['groups'], $this->tables['users_groups'] . '.' . $this->join['groups'] . '=' . $this->tables['groups'] . '.roles_id')
                         ->get($this->tables['users_groups']);
     }
 
@@ -1413,6 +1866,14 @@ class Auth_model extends CI_Model {
             }
             $this->_ion_where = array();
         }
+        
+        if (isset($this->_ion_or_where) && !empty($this->_ion_or_where)) {
+            foreach ($this->_ion_or_where as $or_where) {
+                $this->db->or_where($or_where);
+            }
+
+            $this->_ion_or_where = array();
+        }
 
         if (isset($this->_ion_limit) && isset($this->_ion_offset)) {
             $this->db->limit($this->_ion_limit, $this->_ion_offset);
@@ -1480,7 +1941,7 @@ class Auth_model extends CI_Model {
         // Filter the data passed
         $data = $this->_filter_data($this->tables['users'], $data);
 
-        if (array_key_exists('users_username', $data) || array_key_exists('users_password', $data) || array_key_exists('users_email', $data)) {
+        if (array_key_exists('users_username', $data)|| array_key_exists('users_mobile', $data) || array_key_exists('users_password', $data) || array_key_exists('users_email', $data)) {
             if (array_key_exists('users_password', $data)) {
                 if (!empty($data['users_password'])) {
                     $data['users_password'] = $this->hash_password($data['users_password'], $user->users_salt);
@@ -1492,7 +1953,7 @@ class Auth_model extends CI_Model {
         }
 
         $this->trigger_events('extra_where');
-        $this->db->update($this->tables['users'], $data, array('id' => $user->id));
+        $this->db->update($this->tables['users'], $data, array('users_id' => $user->users_id));
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -1558,7 +2019,7 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
 
-        $this->db->update($this->tables['users'], array('last_login' => time()), array('id' => $id));
+        $this->db->update($this->tables['users'], array('users_lastLogin' => time()), array('users_id' => $id));
 
         return $this->db->affected_rows() == 1;
     }
@@ -1604,6 +2065,7 @@ class Auth_model extends CI_Model {
             'identity' => $user->{$this->identity_column},
             'username' => $user->users_username,
             'email' => $user->users_email,
+            'mobile' => $user->users_mobile,
             'users_id' => $user->users_id, //everyone likes to overwrite id so we'll use users_id
             'old_last_login' => $user->users_lastLogin
         );
@@ -1681,8 +2143,9 @@ class Auth_model extends CI_Model {
 
         //get the user
         $this->trigger_events('extra_where');
-        $query = $this->db->select($this->identity_column . ', users_id, users_username, users_email, users_lastLogin')
+        $query = $this->db->select($this->identity_column . ', users_id, users_username, users_email, users_mobile, users_lastLogin')
                 ->where($this->identity_column, get_cookie($this->config->item('identity_cookie_name', 'auth_conf_api')))
+                ->or_where($this->identity_mobile, get_cookie($this->config->item('identity_cookie_name', 'auth_conf_api')))
                 ->where('remember_code', get_cookie($this->config->item('remember_cookie_name', 'auth_conf_api')))
                 ->limit(1)
                 ->order_by('users_id', 'desc')
@@ -1937,7 +2400,7 @@ class Auth_model extends CI_Model {
     public function messages() {
         $_output = '';
         foreach ($this->messages as $message) {
-            $messageLang = $this->lang->line($message) ? $this->lang->line($message) : '##' . $message . '##';
+            $messageLang = $this->lang->line($message) ? $this->lang->line($message) : '.' . $message . '.';
             $_output .= $this->message_start_delimiter . $messageLang . $this->message_end_delimiter;
         }
 
@@ -1956,7 +2419,7 @@ class Auth_model extends CI_Model {
         if ($langify) {
             $_output = array();
             foreach ($this->messages as $message) {
-                $messageLang = $this->lang->line($message) ? $this->lang->line($message) : '##' . $message . '##';
+                $messageLang = $this->lang->line($message) ? $this->lang->line($message) : '.' . $message . '.';
                 $_output[] = $this->message_start_delimiter . $messageLang . $this->message_end_delimiter;
             }
             return $_output;
@@ -1974,6 +2437,8 @@ class Auth_model extends CI_Model {
      * @author Ben Edmunds
      * */
     public function set_error($error) {
+         
+        
         $this->errors[] = $error;
 
         return $error;
@@ -1990,7 +2455,8 @@ class Auth_model extends CI_Model {
     public function errors() {
         $_output = '';
         foreach ($this->errors as $error) {
-            $errorLang = $this->lang->line($error) ? $this->lang->line($error) : '##' . $error . '##';
+            $errorLang = $this->lang->line($error) ? $this->lang->line($error) : '.' . $error . '.';
+            
             $_output .= $this->error_start_delimiter . $errorLang . $this->error_end_delimiter;
         }
 
@@ -2009,7 +2475,7 @@ class Auth_model extends CI_Model {
         if ($langify) {
             $_output = array();
             foreach ($this->errors as $error) {
-                $errorLang = $this->lang->line($error) ? $this->lang->line($error) : '##' . $error . '##';
+                $errorLang = $this->lang->line($error) ? $this->lang->line($error) : '.' . $error . '.';
                 $_output[] = $this->error_start_delimiter . $errorLang . $this->error_end_delimiter;
             }
             return $_output;

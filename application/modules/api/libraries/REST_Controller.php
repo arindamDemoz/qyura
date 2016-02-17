@@ -1573,6 +1573,7 @@ abstract class REST_Controller extends MX_Controller {
      * @return array
      */
     public function validation_post_warning() {
+        
         if (api_validation_errors() == null || api_validation_errors() == '') {
             $message = lang('restWarningMsg');
         } else

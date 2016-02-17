@@ -42,6 +42,28 @@ function getYearBtTwoDate($datetime1,$datetime2){
     $days = array('Monday' => 0, 'Tuesday' => 1, 'Wednesday' => 2, 'Thursday' => 3, 'Friday' => 4, 'Saturday' => 5, 'Sunday' => 6);
     return $days[$day];
 }
+
+if ( ! function_exists('createImage'))
+{
+    function createImage($img,$path,$name=null)
+    {
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $img = str_replace('[removed]', '', $img);
+
+        $data = base64_decode($img);
+
+        if($name == null)
+        $name = time().'.png';
+
+        $success = file_put_contents($path.$name, $data);
+        
+        if($success)
+            return $name;
+        
+        return $success;
+    }
+}
  //   function deg2rad($deg) {
   //      return $deg * (pi()/180);
   //  }
