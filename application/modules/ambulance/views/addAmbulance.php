@@ -1,5 +1,3 @@
-<?php //print_r($allStates); exit;?>
-
 
 <!DOCTYPE html>
 <html>
