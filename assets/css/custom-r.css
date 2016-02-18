@@ -1137,3 +1137,27 @@ table.top-doctor tr td h6 img {
 .bdr-error, .bdr-error button {
     border-color: #EF5350;
 }
+
+.bar-chart
+{
+    width:100% !important;
+}
+.mp-t-0
+{
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.form-horizontal .control-label {
+    margin-bottom: 0;
+    padding-top: 7px;
+    text-align: left;
+}
+
+/* -- Feb 11, 2016 -- */
+
+.amb-detail h4 {
+    color: #333a4c;
+    font-size: 15px;
+    font-weight: 600;
+}
