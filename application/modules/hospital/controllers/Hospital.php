@@ -6,29 +6,71 @@ class Hospital extends CI_Controller {
     
    public function __construct() {
        parent:: __construct();
-       $this->load->model('hospital_model');
+       $this->load->library('form_validation');
+       $this->load->model('Hospital_model');
    }
    
   function index(){
         $data = array();
-        $data['allStates'] = $this->hospital_model->fetchStates();
-        $data['hospitalData'] = $this->hospital_model->fetchHotelData();
+        $data['allStates'] = $this->Hospital_model->fetchStates();
+        $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
        // print_r($data['hospitalData'] );exit;
         $this->load->view('HospitalListing',$data);
    }
-   function addHospital (){
+   function addHospital(){
        $data = array();
-       $data['allStates'] = $this->hospital_model->fetchStates();
+       $data['allStates'] = $this->Hospital_model->fetchStates();
        $this->load->view('AddHospital',$data);
    }
-   
+   function detailHospital($hospitalId=''){
+       $data = array();
+      // echo $hospitalId;exit;
+        $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
+       // print_r($data);exit;
+        $data['allCountry'] = $this->Hospital_model->fetchCountry();
+        $data['hospitalId'] = $hospitalId;
+        $data['showStatus'] = 'none';
+        $data['detailShow'] = 'block';
+        $this->load->view('hospitalDetail',$data);
+   }
+   function fetchStates(){
+      $stateId = $this->input->post('stateId');
+      $countryId = $this->input->post('countryId');
+     $statesdata = $this->Hospital_model->fetchStates($countryId);
+     $statesOption = '';
+      $statesOption .='<option value=>Select Your States</option>';
+      foreach($statesdata as $key=>$val ) {
+        if($val->state_id == $stateId)
+           $statesOption .= '<option value='.$val->state_id.' selected >'. strtoupper($val->state_statename).'</option>';
+         else
+       $statesOption .= '<option value='.$val->state_id.'>'. strtoupper($val->state_statename).'</option>';
+    }
+    echo $statesOption;
+    exit;
+   }
+   function fetchCityOnload()
+   {
+      $stateId = $this->input->post('stateId');
+      $cityId = $this->input->post('cityId');
+       $cityData = $this->Hospital_model->fetchCity($stateId);
+       $cityOption = '';
+        $cityOption .='<option value=>Select Your City</option>';
+        foreach($cityData as $key=>$val ) {
+          if($val->city_id == $cityId)
+           $cityOption .= '<option value='.$val->city_id.' selected>'. strtoupper($val->city_name).'</option>';
+           else
+            $cityOption .= '<option value='.$val->city_id.'>'. strtoupper($val->city_name).'</option>';
+        }
+       echo $cityOption;
+        exit;
+   }
     function fetchCity (){
         $stateId = $this->input->post('stateId');
-        $cityData = $this->hospital_model->fetchCity($stateId);
+        $cityData = $this->Hospital_model->fetchCity($stateId);
         $cityOption = '';
         $cityOption .='<option value=>Select Your City</option>';
         foreach($cityData as $key=>$val ) {
-            $cityOption .= '<option value='. $val->city_id.'>'. $val->city_name.'</option>';
+            $cityOption .= '<option value='.$val->city_id.'>'. strtoupper($val->city_name).'</option>';
         }
        echo $cityOption;
         exit;
@@ -39,9 +81,7 @@ class Hospital extends CI_Controller {
          $this->form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
        $this->form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
         $this->form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
-       //$this->form_validation->set_rules('hospital_phn', 'Hospital Phone', 'required|trim');
-       //$this->form_validation->set_rules('hospitalServices_serviceName', 'Hospital Service', 'required|trim');
-        $this->form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
+       $this->form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
         $this->form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|trim');
         
         $this->form_validation->set_rules('hospital_countryId', 'Hospital Country', 'required|trim');
@@ -49,19 +89,20 @@ class Hospital extends CI_Controller {
         $this->form_validation->set_rules('hospital_cityId', 'hospital City', 'required|trim');
         
         $this->form_validation->set_rules('hospital_mblNo', 'Hospital Mobile No', 'required|trim');
-       // $this->form_validation->set_rules('hospital_phn', 'Hospital Phone', 'required|trim');
-       // $this->form_validation->set_rules('hospital_phn', 'Hospital Phone', 'required|trim');
        $this->form_validation->set_rules('hospital_zip','Hospital Zip', 'required|trim');
        $this->form_validation->set_rules('hospital_dsgn','Hospital Designation','required|trim');
        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
        $this->form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
         $this->form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
        
-         // exit;
        // $this->form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
+        if (empty($_FILES['hospital_img']['name']))
+         {
+             $this->form_validation->set_rules('hospital_img', 'File', 'required');
+        }
          if ($this->form_validation->run() === FALSE) {
              $data = array();
-                $data['allStates'] = $this->hospital_model->fetchStates();
+                $data['allStates'] = $this->Hospital_model->fetchStates();
              $this->load->view('AddHospital',$data);
          }
          else {
@@ -77,32 +118,27 @@ class Hospital extends CI_Controller {
 		$config['max_width']  = '1024';
 		$config['max_height']  = '768';
                 $config['file_name'] = $newfilename;
-               // $config['tmp_name'] = $_FILES['hospital_img']['tmp_name'];
-                //$field_name = $_FILES['hospital_photo']['name'];
-             
+               
 		$this->load->library('upload', $config);
                $this->upload->initialize($config);
               
                 if ( ! $this->upload->do_upload('hospital_img'))
 		{
-			$error = array('error' => $this->upload->display_errors());
-                         //print_r($error); 
+			
                         $data = array();
-                        $data['allStates'] = $this->hospital_model->fetchStates();
-                        $data['error'] = $error;
+                        $data['allStates'] = $this->Hospital_model->fetchStates();
+                        $this->session->set_flashdata('valid_upload', $this->upload->display_errors());
                         $this->load->view('AddHospital',$data);
                       
 		}
 		else
 		{
-			//$imagesname = $newfilename;
-                       $imagesname = $newfilename;
+                     $imagesname = $newfilename;
                        
 		}
                 
               } 
-              //echo "i am here";
-               
+          
                 $hospital_phn = $this->input->post('hospital_phn');
                 $pre_number = $this->input->post('pre_number');
                  $countPnone = $this->input->post('countPnone');
@@ -126,6 +162,7 @@ class Hospital extends CI_Controller {
                 $hospital_stateId = $this->input->post('hospital_stateId');
                 $hospital_cityId = $this->input->post('hospital_cityId');
                 $hospital_mblNo = $this->input->post('hospital_mblNo');
+                $hospital_aboutUs = $this->input->post('hospital_aboutUs');
                 $isEmergency =0;
                 if(isset($_POST['isEmergency']))
                    $isEmergency  = $_POST['isEmergency'];
@@ -140,7 +177,7 @@ class Hospital extends CI_Controller {
                    'hospital_countryId' => $hospital_countryId,
                    'hospital_stateId' => $hospital_stateId,
                    'hospital_cityId' => $hospital_cityId,
-                    'hospital_aboutUs' => '',
+                    'hospital_aboutUs' => $hospital_aboutUs,
                    'hospital_img' => $imagesname,
                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
                    'hospital_mblNo' => $hospital_mblNo,
@@ -155,14 +192,23 @@ class Hospital extends CI_Controller {
                    'users_email' => $users_email,
                     'users_password'=> $users_password,
                    'users_ip_address' => $this->input->ip_address(),
+                   'users_mobile'=> $this->input->post('hospital_mblNo'),
                 );
+              
                  
-               $hospital_usersId = $this->hospital_model->inserHospitalUser($hospitalInsert);
+               $hospital_usersId = $this->Hospital_model->inserHospitalUser($hospitalInsert);
                if($hospital_usersId) {
                    
                    $inserData['hospital_usersId'] = $hospital_usersId;
-                  $hospitalId = $this->hospital_model->insertHospital($inserData);
-                  
+                  $hospitalId = $this->Hospital_model->insertHospital($inserData);
+                  $insertusersRoles = array(
+                      'usersRoles_userId' => $hospital_usersId,
+                      'usersRoles_roleId' => 1,
+                      'usersRoles_parentId' => 0,
+                      'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                  );
+                  $this->Hospital_model->insertUsersRoles($insertusersRoles);
+                  unset($insertusersRoles);
                    if(isset($_POST['hospitalServices_serviceName']))
                    {
                         $finalNumber = '';
@@ -174,9 +220,10 @@ class Hospital extends CI_Controller {
                                $hospitalServicesData = array(
                                  'hospitalServices_hospitalId'=> $hospitalId,
                                  'hospitalServices_serviceName'=> $finalhospitalServices_serviceName,
+                                  'hospitalServices_deleted' => 0, 
                                  'creationTime' => strtotime(date("Y-m-d H:i:s"))  
                                );
-                               $this->hospital_model->insertHospitalServiceName($hospitalServicesData);
+                               $this->Hospital_model->insertHospitalServiceName($hospitalServicesData);
                             }
                             $hospitalServicesData = '';
                         }  
@@ -217,9 +264,23 @@ class Hospital extends CI_Controller {
                            'bloodBank_phn' => $finalBloodbnkNumber,
                            'countryId' => $hospital_countryId,
                             'stateId' => $hospital_stateId,
-                            'cityId' => $hospital_cityId
+                            'cityId' => $hospital_cityId,
+                           'bloodBank_add' => $hospital_address,
+                           'inherit_status' => 1
                        );
-                      $this->hospital_model->insertBloodbank($bloodBankDetail);
+                      $bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
+                      if($bloodBankId) {
+                                $insertusersRoles = array(
+                               'usersRoles_userId' => $bloodBankId,
+                               'usersRoles_roleId' => 2,
+                               'usersRoles_parentId' => $hospital_usersId,
+                               'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                           );
+                              
+                           $this->Hospital_model->insertUsersRoles($insertusersRoles);
+                         
+                           unset($insertusersRoles);
+                      }
                   }
                   
                    if($_POST['pharmacy_chk']==1){
@@ -254,14 +315,29 @@ class Hospital extends CI_Controller {
                            'pharmacy_img' => $imagePharmacyName,
                            'pharmacy_lat' => $pharmacy_lat,
                            'pharmacy_long' => $pharmacy_long,
-                           'pharmacy_userId' => $hospital_usersId,
+                           'pharmacy_usersId' => $hospital_usersId,
                            'creationTime' => strtotime(date("Y-m-d H:i:s")),
                            'pharmacy_phn' => $finalPharmacyNumber,
                             'pharmacy_countryId' => $hospital_countryId,
                             'pharmacy_stateId' => $hospital_stateId,
-                            'pharmacy_cityId' => $hospital_cityId
+                            'pharmacy_cityId' => $hospital_cityId,
+                            'pharmacy_address' => $hospital_address,
+                            'inherit_status' => 1
                        );
-                      $this->hospital_model->insertPharmacy($pharmacyDetail);
+                      $pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
+                      
+                       if($pharmacyId) {
+                                $insertusersRoles2 = array(
+                               'usersRoles_userId' => $pharmacyId,
+                               'usersRoles_roleId' => 5,
+                               'usersRoles_parentId' => $hospital_usersId,
+                               'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                           );
+                              
+                           $this->Hospital_model->insertUsersRoles($insertusersRoles2);
+                          
+                           unset($insertusersRoles2);
+                      }
                   }
                   
                   
@@ -301,11 +377,25 @@ class Hospital extends CI_Controller {
                            'ambulance_phn' => $finalAmbulanceNumber,
                             'ambulance_countryId' => $hospital_countryId,
                             'ambulance_stateId' => $hospital_stateId,
-                            'ambulance_cityId' => $hospital_cityId
+                            'ambulance_cityId' => $hospital_cityId,
+                           'ambulance_address' => $hospital_address,
+                           'inherit_status' => 1
                        );
-                      $this->hospital_model->insertAmbulance($ambulanceDetail);
+                      $ambulanceId = $this->Hospital_model->insertAmbulance($ambulanceDetail);
+                      if($ambulanceId) {
+                                $insertusersRoles3 = array(
+                               'usersRoles_userId' => $ambulanceId,
+                               'usersRoles_roleId' => 8,
+                               'usersRoles_parentId' => $hospital_usersId,
+                               'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                           );
+                              
+                           $this->Hospital_model->insertUsersRoles($insertusersRoles3);
+                          
+                           unset($insertusersRoles3);
+                      }
                   }
-                  
+                  $this->session->set_flashdata('message','Data inserted successfully !');
                   redirect('hospital/addHospital');
                }
                
@@ -325,11 +415,82 @@ class Hospital extends CI_Controller {
     }
     
     function check_email(){
+       $user_table_id = '';
         $users_email = $this->input->post('users_email');
-        $email = $this->hospital_model->fetchEmail($users_email);
+        if(isset($_POST['user_table_id'])){
+          $user_table_id = $this->input->post('user_table_id');
+        }
+        $email = $this->Hospital_model->fetchEmail($users_email,$user_table_id);
         echo $email;
         exit;
     }
+    function saveDetailHospital($hospitalId){
+        
+        $this->form_validation->set_rules('hospital_name', 'Pharmacy Name', 'required|trim');
+      
+        $this->form_validation->set_rules('hospital_address', 'Pharmacy Address', 'required|trim');
+        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->form_validation->set_rules('hospital_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
+        if ($this->form_validation->run() === FALSE) {
+             $data = array();
+             $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
+               $data['hospitalId'] = $hospitalId;
+               $data['showStatus'] = 'block';
+               $data['detailShow'] = 'none';
+             $this->load->view('hospitalDetail',$data);
+             
+         }
+         else{
+              $hospital_phn = $this->input->post('hospital_phn');
+                $pre_number = $this->input->post('pre_number');
+                 //$countPnone = $this->input->post('countPnone');
+                 
+                  $finalNumber = '';
+                for($i= 0;$i < count($hospital_phn) ;$i++) {
+                    if($hospital_phn[$i] != '' && $pre_number[$i] !='') {
+                       $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i].'|'; 
+                    }
+                } 
+                
+                $updateHospital = array(
+                  'hospital_name'=>  $this->input->post('hospital_name'),
+                  //'hospital_type'=> $this->input->post('hospital_type'),
+                  'hospital_countryId'=> $this->input->post('hospital_countryId'),
+
+                  'hospital_stateId'=> $this->input->post('hospital_stateId'),
+                  'hospital_cityId'=> $this->input->post('hospital_cityId'),
+                     'hospital_address' =>  $this->input->post('hospital_address'),
+                     'hospital_phn' => $finalNumber,
+                      'hospital_cntPrsn'=> $this->input->post('hospital_cntPrsn'),
+                      //'hospital_mmbrTyp'=> $this->input->post('hospital_mmbrTyp'),
+                     // 'hospital_27Src'=> $this->input->post('isEmergency'),
+                     'hospital_lat'=> $this->input->post('lat'), 
+                    'hospital_long'=> $this->input->post('lng'),  
+                    'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                );
+                
+                $where = array(
+                    'hospital_id' => $hospitalId
+                );
+                $response = '';
+               $response = $this->Hospital_model->UpdateTableData($updateHospital,$where,'qyura_hospital');
+               if($response){
+                   $updateUserdata = array(
+                       'users_email' => $this->input->post('users_email'),
+                      'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                  );
+                  $whereUser = array(
+                    'users_id' => $this->input->post('user_tables_id')  
+                  ); 
+                 $response = $this->Hospital_model->UpdateTableData($updateUserdata,$whereUser,'qyura_users'); 
+                 if($response) {
+                 $this->session->set_flashdata('message','Data updated successfully !');
+                  redirect("hospital/detailHospital/$hospitalId");
+                 }
+               }
+         }
+    }
+
     
     function uploadImages ($imageName,$folderName,$newName){
              $path = realpath(FCPATH.'assets/'.$folderName.'/');
@@ -381,5 +542,45 @@ class Hospital extends CI_Controller {
                $this->upload->do_upload($imageName);
                return TRUE;
 
+    }
+    function updatePassword(){
+        //echo "here";exit;
+        $currentPassword = $this->input->post('currentPassword');
+        //$existingPassword = $this->input->post('existingPassword');
+        $user_tables_id = $this->input->post('user_tables_id');
+        
+        $encrypted = md5($currentPassword);
+        $return = 0;
+       /* if($encrypted != $existingPassword){
+            echo $return;
+        }
+         else {
+                    $updateBloodBank = array(
+                  'bloodBank_name'=>  $encrypted,
+                    'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                );
+                
+                $where = array(
+                    'users_id' => $user_tables_id
+                );
+             $this->Bloodbank_model->UpdateTableData($updateBloodBank,$where,'qyura_users');
+                     
+             echo $return = '1'.'~'.$encrypted;
+         }*/
+        
+         $updateHospital= array(
+                  'users_password'=>  $encrypted,
+                    'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                );
+                
+                $where = array(
+                    'users_id' => $user_tables_id
+                );
+            $return = $this->Hospital_model->UpdateTableData($updateHospital,$where,'qyura_users');
+                     
+             echo $return ;
+        //echo $encrypted;
+        exit;
+        
     }
 }
