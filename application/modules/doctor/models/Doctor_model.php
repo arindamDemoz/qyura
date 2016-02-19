@@ -88,6 +88,6 @@ class Doctor_model extends CI_Model {
     function insertDoctorData($insertData,$tableName = NULL){
         $this->db->insert($tableName, $insertData); 
         $insert_id = $this->db->insert_id();
-        return true;
+        return $insert_id;
     }
 }    
