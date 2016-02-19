@@ -828,10 +828,10 @@
                             </section>
                             <fieldset>
                            
-                            <input name="lat" type="text" value="">
+                            <input name="lat" type="hidden" value="">
 
                            <!-- <label>Longitude</label> -->
-                            <input name="lng" type="text" value="">
+                            <input name="lng" type="hidden" value="">
 
                           </fieldset>
                         </form>
