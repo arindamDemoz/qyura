@@ -6,7 +6,7 @@ class Bloodbank extends CI_Controller {
 
      public function __construct() {
        parent:: __construct();
-       $this->load->library('form_validation');
+      // $this->load->library('form_validation');
        $this->load->model('Bloodbank_model');
    }
    
@@ -47,25 +47,25 @@ class Bloodbank extends CI_Controller {
     
   function SaveBloodbank(){
 
-         $this->form_validation->set_rules('bloodBank_name', 'BloodBank Name', 'required|trim');
+         $this->bf_form_validation->set_rules('bloodBank_name', 'BloodBank Name', 'required|trim');
       
-        $this->form_validation->set_rules('countryId', 'Bloodbank Country', 'required|trim');
-        $this->form_validation->set_rules('stateId', 'BloodBank StateId', 'required|trim');
-        $this->form_validation->set_rules('cityId', 'BloodBank City', 'required|trim');
+        $this->bf_form_validation->set_rules('countryId', 'Bloodbank Country', 'required|trim');
+        $this->bf_form_validation->set_rules('stateId', 'BloodBank StateId', 'required|trim');
+        $this->bf_form_validation->set_rules('cityId', 'BloodBank City', 'required|trim');
         
-        $this->form_validation->set_rules('bloodBank_mblNo', 'BloodBank Mobile No', 'required|trim');
-       $this->form_validation->set_rules('bloodBank_zip','BloodBank Zip', 'required|trim');
-       $this->form_validation->set_rules('bloodBank_add','BloodBank Address','required|trim');
-        $this->form_validation->set_rules('bloodBank_cntPrsn', 'Contact Person', 'required|trim');
-        $this->form_validation->set_rules('bloodBank_mbrTyp', 'Membership Type', 'required|trim');
-       $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-       $this->form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
-        $this->form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
+        $this->bf_form_validation->set_rules('bloodBank_mblNo', 'BloodBank Mobile No', 'required|trim');
+       $this->bf_form_validation->set_rules('bloodBank_zip','BloodBank Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('bloodBank_add','BloodBank Address','required|trim');
+        $this->bf_form_validation->set_rules('bloodBank_cntPrsn', 'Contact Person', 'required|trim');
+        $this->bf_form_validation->set_rules('bloodBank_mbrTyp', 'Membership Type', 'required|trim');
+       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+       $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
+        $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
         if (empty($_FILES['bloodBank_photo']['name']))
          {
-             $this->form_validation->set_rules('bloodBank_photo', 'File', 'required');
+             $this->bf_form_validation->set_rules('bloodBank_photo', 'File', 'required');
         }
-        if ($this->form_validation->run() === FALSE) {
+        if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['allStates'] = $this->Bloodbank_model->fetchStates();
             $this->load->view('Addbloodbank',$data);
@@ -210,12 +210,13 @@ class Bloodbank extends CI_Controller {
     
     function saveDetailBloodBank($bloodBankId){
         
-        $this->form_validation->set_rules('bloodBank_name', 'BloodBank Name', 'required|trim');
+        $this->bf_form_validation->set_rules('bloodBank_name', 'BloodBank Name', 'required|trim');
       
-        $this->form_validation->set_rules('bloodBank_add', 'Bloodbank Address', 'required|trim');
-        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->form_validation->set_rules('bloodBank_cntPrsn', 'BloodBank Contact Person', 'required|trim');
-        if ($this->form_validation->run() === FALSE) {
+        $this->bf_form_validation->set_rules('bloodBank_add', 'Bloodbank Address', 'required|trim');
+        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('bloodBank_cntPrsn', 'BloodBank Contact Person', 'required|trim');
+        if ($this->bf_form_validation->run() === FALSE) {
+            
              $data = array();
              $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData($bloodBankId);
                $data['bloodBankId'] = $bloodBankId;

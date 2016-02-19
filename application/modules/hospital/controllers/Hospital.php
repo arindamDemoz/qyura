@@ -78,29 +78,29 @@ class Hospital extends CI_Controller {
     
     function SaveHospital(){
          $this->load->library('form_validation');
-         $this->form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
-       $this->form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
-        $this->form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
-       $this->form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
-        $this->form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|trim');
+         $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
+       $this->bf_form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
+       $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|trim');
         
-        $this->form_validation->set_rules('hospital_countryId', 'Hospital Country', 'required|trim');
-        $this->form_validation->set_rules('hospital_stateId', 'Hospital StateId', 'required|trim');
-        $this->form_validation->set_rules('hospital_cityId', 'hospital City', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_countryId', 'Hospital Country', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_stateId', 'Hospital StateId', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_cityId', 'hospital City', 'required|trim');
         
-        $this->form_validation->set_rules('hospital_mblNo', 'Hospital Mobile No', 'required|trim');
-       $this->form_validation->set_rules('hospital_zip','Hospital Zip', 'required|trim');
-       $this->form_validation->set_rules('hospital_dsgn','Hospital Designation','required|trim');
-       $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-       $this->form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
-        $this->form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
+        $this->bf_form_validation->set_rules('hospital_mblNo', 'Hospital Mobile No', 'required|trim');
+       $this->bf_form_validation->set_rules('hospital_zip','Hospital Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('hospital_dsgn','Hospital Designation','required|trim');
+       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+       $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
+        $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
        
-       // $this->form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
+       // $this->bf_form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
         if (empty($_FILES['hospital_img']['name']))
          {
-             $this->form_validation->set_rules('hospital_img', 'File', 'required');
+             $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
         }
-         if ($this->form_validation->run() === FALSE) {
+         if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
                 $data['allStates'] = $this->Hospital_model->fetchStates();
              $this->load->view('AddHospital',$data);
@@ -426,12 +426,12 @@ class Hospital extends CI_Controller {
     }
     function saveDetailHospital($hospitalId){
         
-        $this->form_validation->set_rules('hospital_name', 'Pharmacy Name', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_name', 'Pharmacy Name', 'required|trim');
       
-        $this->form_validation->set_rules('hospital_address', 'Pharmacy Address', 'required|trim');
-        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->form_validation->set_rules('hospital_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
-        if ($this->form_validation->run() === FALSE) {
+        $this->bf_form_validation->set_rules('hospital_address', 'Pharmacy Address', 'required|trim');
+        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
+        if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
                $data['hospitalId'] = $hospitalId;

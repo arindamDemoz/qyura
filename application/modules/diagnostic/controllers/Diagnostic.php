@@ -80,30 +80,30 @@ class Diagnostic extends CI_Controller {
      
     function SaveDiagnostic(){
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('diagnostic_name', 'Diagnostic Name', 'required|trim');
-        $this->form_validation->set_rules('diagnostic_countryId', 'Diagnostic Country', 'required|trim');
-        $this->form_validation->set_rules('diagnostic_stateId', 'Diagnostic StateId', 'required|trim');
-        $this->form_validation->set_rules('diagnostic_cityId', 'Diagnostic City', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_name', 'Diagnostic Name', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_countryId', 'Diagnostic Country', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_stateId', 'Diagnostic StateId', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_cityId', 'Diagnostic City', 'required|trim');
         
-        $this->form_validation->set_rules('diagnostic_address', 'Diagnostic Address', 'required|trim');
-       //$this->form_validation->set_rules('diagnostic_phn', 'Diagnostic Phone', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_address', 'Diagnostic Address', 'required|trim');
+       //$this->bf_form_validation->set_rules('diagnostic_phn', 'Diagnostic Phone', 'required|trim');
        
-        $this->form_validation->set_rules('diagnostic_cntPrsn', 'Contact Person', 'required|trim');
-        $this->form_validation->set_rules('diagnostic_mbrTyp', 'Membership Type', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_cntPrsn', 'Contact Person', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_mbrTyp', 'Membership Type', 'required|trim');
         
         
-        $this->form_validation->set_rules('diagnostic_mblNo', 'Diagnostic Mobile No', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_mblNo', 'Diagnostic Mobile No', 'required|trim');
       
-       $this->form_validation->set_rules('diagnostic_zip','Diagnostic Zip', 'required|trim');
-       $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-       $this->form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
-        $this->form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
+       $this->bf_form_validation->set_rules('diagnostic_zip','Diagnostic Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+       $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
+        $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
         
         if (empty($_FILES['diagnostic_img']['name']))
          {
-             $this->form_validation->set_rules('diagnostic_img', 'File', 'required');
+             $this->bf_form_validation->set_rules('diagnostic_img', 'File', 'required');
         }
-       if ($this->form_validation->run() === FALSE) {
+       if ($this->bf_form_validation->run() === FALSE) {
            $data = array();
                 $data['allStates'] = $this->diagnostic_model->fetchStates();
              $this->load->view('addDiagcenter',$data);
@@ -256,12 +256,12 @@ class Diagnostic extends CI_Controller {
 
     function saveDetailDiagnostic($diagnosticId){
         //echo $diagnosticId;exit;
-        $this->form_validation->set_rules('diagnostic_name', 'Diagnostic Name', 'required|trim');
+        $this->bf_form_validation->set_rules('diagnostic_name', 'Diagnostic Name', 'required|trim');
       
-        $this->form_validation->set_rules('diagnostic_address', 'Diagnostic Address', 'required|trim');
-        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->form_validation->set_rules('diagnostic_cntPrsn', 'Diagnostic Contact Person', 'required|trim');
-        if ($this->form_validation->run() === FALSE) {
+        $this->bf_form_validation->set_rules('diagnostic_address', 'Diagnostic Address', 'required|trim');
+        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('diagnostic_cntPrsn', 'Diagnostic Contact Person', 'required|trim');
+        if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
                $data['diagnosticId'] = $diagnosticId;

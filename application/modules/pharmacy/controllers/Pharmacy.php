@@ -47,24 +47,24 @@ class Pharmacy extends CI_Controller {
   function SavePharmacy(){
      // print_r($_POST);exit;
       	$this->load->library('form_validation');
-        $this->form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim');
       
-        $this->form_validation->set_rules('pharmacy_countryId', 'Pharmacy Country', 'required|trim');
-        $this->form_validation->set_rules('pharmacy_stateId', 'Pharmacy StateId', 'required|trim');
-        $this->form_validation->set_rules('pharmacy_cityId', 'Pharmacy City', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_countryId', 'Pharmacy Country', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_stateId', 'Pharmacy StateId', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_cityId', 'Pharmacy City', 'required|trim');
         
-        //$this->form_validation->set_rules('pharmacy_phn[]', 'Pharmacy Mobile No', 'required|trim');
-       $this->form_validation->set_rules('pharmacy_zip','Pharmacy Zip', 'required|trim');
-       $this->form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
-       $this->form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
+        //$this->bf_form_validation->set_rules('pharmacy_phn[]', 'Pharmacy Mobile No', 'required|trim');
+       $this->bf_form_validation->set_rules('pharmacy_zip','Pharmacy Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
+       $this->bf_form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
    
-        $this->form_validation->set_rules('pharmacy_mmbrTyp', 'Membership Type', 'required|trim');
-      $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('pharmacy_mmbrTyp', 'Membership Type', 'required|trim');
+      $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
         if (empty($_FILES['pharmacy_img']['name']))
          {
-             $this->form_validation->set_rules('pharmacy_img', 'File', 'required');
+             $this->bf_form_validation->set_rules('pharmacy_img', 'File', 'required');
         }
-        if ($this->form_validation->run() === FALSE) {
+        if ($this->bf_form_validation->run() === FALSE) {
           //echo validation_errors();
           //exit;
              $data = array();
@@ -207,12 +207,12 @@ class Pharmacy extends CI_Controller {
     }
     function saveDetailPharmacy($pharmacyId){
         
-        $this->form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim');
       
-        $this->form_validation->set_rules('pharmacy_address', 'Pharmacy Address', 'required|trim');
-        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->form_validation->set_rules('pharmacy_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
-        if ($this->form_validation->run() === FALSE) {
+        $this->bf_form_validation->set_rules('pharmacy_address', 'Pharmacy Address', 'required|trim');
+        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('pharmacy_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
+        if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($pharmacyId);
                $data['pharmacyId'] = $pharmacyId;

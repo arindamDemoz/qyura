@@ -28,13 +28,13 @@ class Ambulance extends CI_Controller {
    }
    function saveDetailAmbulance($ambulanceId){
       
-        $this->form_validation->set_rules('ambulance_name', 'Ambulance Name', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_name', 'Ambulance Name', 'required|trim');
       
-        $this->form_validation->set_rules('ambulanceType', 'Ambulance Type', 'required|trim');
-        $this->form_validation->set_rules('ambulance_address', 'Ambulance Address', 'required|trim');
-        $this->form_validation->set_rules('users_mobile', 'Ambulance Mobile', 'required|trim');
-        $this->form_validation->set_rules('ambulance_cntPrsn', 'Ambulance Cantact Person', 'required|trim');
-        if($this->form_validation->run() === False){
+        $this->bf_form_validation->set_rules('ambulanceType', 'Ambulance Type', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_address', 'Ambulance Address', 'required|trim');
+        $this->bf_form_validation->set_rules('users_mobile', 'Ambulance Mobile', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_cntPrsn', 'Ambulance Cantact Person', 'required|trim');
+        if($this->bf_form_validation->run() === False){
             $data = array();
             $data['ambulanceData'] = $this->Ambulance_model->fetchambulanceData($ambulanceId);
             $data['ambulanceId'] = $ambulanceId;
@@ -108,24 +108,24 @@ class Ambulance extends CI_Controller {
   function SaveAmbulance(){
      // print_r($_POST);exit;
       	$this->load->library('form_validation');
-        $this->form_validation->set_rules('ambulance_name', 'Ambulance Name', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_name', 'Ambulance Name', 'required|trim');
       
-        $this->form_validation->set_rules('ambulance_countryId', 'Ambulance Country', 'required|trim');
-        $this->form_validation->set_rules('ambulance_stateId', 'Ambulance StateId', 'required|trim');
-        $this->form_validation->set_rules('ambulance_cityId', 'Ambulance City', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_countryId', 'Ambulance Country', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_stateId', 'Ambulance StateId', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_cityId', 'Ambulance City', 'required|trim');
         
-        //$this->form_validation->set_rules('pharmacy_phn[]', 'Pharmacy Mobile No', 'required|trim');
-       $this->form_validation->set_rules('ambulance_zip','Ambulance Zip', 'required|trim');
-       $this->form_validation->set_rules('ambulance_address','Ambulance Address','required|trim');
-        $this->form_validation->set_rules('ambulance_cntPrsn', 'Contact Person', 'required|trim');
-        $this->form_validation->set_rules('ambulance_mmbrTyp', 'Membership Type', 'required|trim');
-        $this->form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->form_validation->set_rules('users_mobile','User Mobile','required|trim|numeric');
+        //$this->bf_form_validation->set_rules('pharmacy_phn[]', 'Pharmacy Mobile No', 'required|trim');
+       $this->bf_form_validation->set_rules('ambulance_zip','Ambulance Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('ambulance_address','Ambulance Address','required|trim');
+        $this->bf_form_validation->set_rules('ambulance_cntPrsn', 'Contact Person', 'required|trim');
+        $this->bf_form_validation->set_rules('ambulance_mmbrTyp', 'Membership Type', 'required|trim');
+        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('users_mobile','User Mobile','required|trim|numeric');
         if (empty($_FILES['ambulance_img']['name']))
          {
-             $this->form_validation->set_rules('ambulance_img', 'File', 'required');
+             $this->bf_form_validation->set_rules('ambulance_img', 'File', 'required');
         }
-        if ($this->form_validation->run() === FALSE) {
+        if ($this->bf_form_validation->run() === FALSE) {
          //echo validation_errors();
          // exit;
              $data = array();
