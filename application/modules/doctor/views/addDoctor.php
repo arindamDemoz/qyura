@@ -540,9 +540,9 @@
                                                         <label class="error" > <?php echo form_error("doctors_cityId"); ?></label>
                                                     </div>
                                                     <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                        <input type="text" class="form-control" id="doctors_pin" nam="doctors_pin" placeholder="700001" maxlength="13" />
-                                                        <label class="error" style="display:none;" id="error-doctors_pin"> please select a pin number</label>
-                                                        <label class="error" > <?php echo form_error("doctors_pin"); ?></label>
+                                                        <input type="text" class="form-control" id="doctors_pinn" name="doctors_pinn" placeholder="700001" maxlength="13" />
+                                                        <label class="error" style="display:none;" id="error-doctors_pinn"> please select a pin number</label>
+                                                        <label class="error" > <?php echo form_error("doctors_pinn"); ?></label>
                                                     </div>
                                                 </aside>
                                             </div>
@@ -552,7 +552,7 @@
                                             <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
                                                 <input type="text" class="form-control" id="geocomplete" name="doctor_addr" placeholder="209, ABC Road, near XYZ Building " />
                                                 <label class="error" style="display:none;" id="error-doctor_addr"> please select a pin number</label>
-                                                  <label class="error" > <?php echo form_error("doctors_pin"); ?></label>
+                                                  <label class="error" > <?php echo form_error("doctor_addr"); ?></label>
                                             </div>
                                         </article>
                                         <article class="form-group m-lr-0">
@@ -966,7 +966,7 @@
             }
        }
        function validationDoctor(){
-       //$("form[name='doctorForm']").submit();
+       $("form[name='doctorForm']").submit();
       // alert('here');
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
@@ -977,7 +977,7 @@
         var midNumber1 = $('#midNumber1').val();
         var doctors_phn1= $('#doctors_phn1').val();
         var doctors_mobile1 = $('#doctors_mobile1').val();
-        var doctors_pin = $.trim($('#doctors_pin').val());
+        var doctors_pinn = $.trim($('#doctors_pinn').val());
         var doctors_cityId =$.trim($('#doctors_cityId').val());
         var doctors_stateId = $.trim($('#doctors_stateId').val());
         var doctors_consultaionFee = $.trim($('#doctors_consultaionFee').val());
@@ -1040,10 +1040,10 @@
                 //status= 0;
                
             }
-            if(!$.isNumeric(doctors_pin)){
+            if(!$.isNumeric(doctors_pinn)){
                 
-                $('#doctors_pin').addClass('bdr-error');
-                $('#error-doctors_pin').fadeIn().delay(3000).fadeOut('slow');
+                $('#doctors_pinn').addClass('bdr-error');
+                $('#error-doctors_pinn').fadeIn().delay(3000).fadeOut('slow');
                 //status= 0;
                 // $('#hospital_zip').focus();
             } 
