@@ -8,6 +8,7 @@ class Bloodbank extends CI_Controller {
        parent:: __construct();
       // $this->load->library('form_validation');
        $this->load->model('Bloodbank_model');
+       $this->load->library('datatables');
    }
    
    function index(){
@@ -16,6 +17,12 @@ class Bloodbank extends CI_Controller {
        $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData();
        // print_r($data['hospitalData'] );exit;
         $this->load->view('bloodBankList',$data);
+   }
+   function getBloodBankDl(){
+
+       
+        echo $this->Bloodbank_model->fetchbloodBankDataTables();
+ 
    }
    function Addbloodbank(){
         $data = array();
@@ -65,13 +72,13 @@ class Bloodbank extends CI_Controller {
          {
              $this->bf_form_validation->set_rules('bloodBank_photo', 'File', 'required');
         }
-        if ($this->bf_form_validation->run() === FALSE) {
+        if ($this->bf_form_validation->run($this) === FALSE) {
              $data = array();
              $data['allStates'] = $this->Bloodbank_model->fetchStates();
             $this->load->view('Addbloodbank',$data);
          }
          else {
-             
+       
              $imagesname='';
               if ($_FILES['bloodBank_photo']['name'] ) {
              $path = realpath(FCPATH.'assets/BloodBank/');

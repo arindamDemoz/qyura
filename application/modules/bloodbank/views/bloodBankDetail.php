@@ -479,7 +479,7 @@
                                                                 <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?> </p>
                                                             </article>
                                                         </aside>
-                                                         <form name="bloodDetail" action="<?php echo site_url(); ?>/bloodbank/saveDetailBloodBank/<?php echo $bloodBankId; ?>" id="bloodDetail" method="post">
+                                                         <form name="bloodDetail" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="bloodDetail" method="post">
                                                         <aside id="newDetail" style="display:<?php echo $showStatus;?>;">
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank Name :</label>

@@ -1,5 +1,3 @@
-<?php ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -14,6 +12,7 @@
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> 
     
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -388,7 +387,7 @@
                                 <aside class="col-md-3 col-sm-4 m-tb-xs-3">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                        <input type="text" name="search" class="form-control" placeholder="Search" />
+                                        <input type="text" name="search" id="search" class="form-control" placeholder="Search" />
                                     </div>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 pull-right">
@@ -403,64 +402,24 @@
                             <!-- Table Section Start -->
                             <article class="clearfix m-top-40 p-b-20">
                                 <aside class="table-responsive">
-                                <table class="table all-bloodbank">
-                                    <tbody>
+                                <table class="table all-bloodbank" id="datatable_bloodbank">
+                                    <thead>
                                         <tr class="border-a-dull">
                                             <th>Logo</th>
                                             <th>Name</th>
                                             <th>Phone</th>
                                             <th>City</th>
                                             <th>Address</th>
-                                            <th>Open Hours</th>
-                                            <th>Call Received</th>
-                                            <th>Action</th>
+<!--                                            <th>Open Hours</th>
+                                            <th>Call Received</th>-->
+<!--                                            <th>Action</th>-->
                                         </tr>
-                                         <?php foreach($bloodBankData as $key => $val){ ?>
-                                        <tr>
-                                            <td>
-                                                <?php if(!empty($val->bloodBank_photo)){
-                                                    ?>
-                                                <h6><img src="<?php echo base_url()?>assets/BloodBank/<?php echo $val->bloodBank_photo; ?>" alt="" class="img-responsive" height="80px;" width="80px;" /></h6>
-                                               <?php } else { ?>
-                                                 <h6><img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="img-responsive" height="80px;" width="80px;" /></h6>
-                                               <?php } ?>
-                                            </td>
-                                            <td>
-                                                <h6><?php echo $val->bloodBank_name;?></h6>
-                                            </td>
-                                             <td>
-                                                 <?php 
-                                                $explode= explode('|',$val->bloodBank_phn); 
-                                                for($i= 0; $i< count($explode);$i++){?>
-                                                <h6><?php echo $explode[$i];?></h6>
-                                                <!--<h6>0731-2349999</h6>-->
-                                                <?php }?>
-                                            </td>
-                                            <td><h6> <?php echo $val->city_name;?></h6></td>
-                                          
-                                            <td>
-                                                <h6><?php echo $val->bloodBank_add;?></h6>
-                                                <a href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light">View Map</a>
-                                            </td>
-                                            <td><h6>08 AM-12 AM</h6>
-                                                <h6>03 PM-08 PM</h6>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>110</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="<?php echo base_url()?>index.php/bloodbank/detailBloodBank/<?php echo $val->bloodBank_id;?>" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <!--<a href="edit-bloodbank.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn"  target="_blank">Edit Detail</a>-->
-                                            </td>
-                                        </tr>
-                                         <?php }?>
-                        </tbody>
+                                    
+                                  </thead>
                         </table>
                                     </aside>
                         </article>
-                        <!-- Table Section End -->
+<!--                         Table Section End 
                         <article class="clearfix m-t-20 p-b-20">
                             <ul class="list-inline list-unstyled pull-right call-pagination">
                                 <li class="disabled"><a href="#">Prev</a></li>
@@ -470,7 +429,7 @@
                                 <li><a href="#">4</a></li>
                                 <li><a href="#">Next</a></li>
                             </ul>
-                        </article>
+                        </article>-->
                 </div>
 
                 </section>
@@ -493,12 +452,14 @@
     <script>
         var resizefunc = [];
     </script>
+    <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/jquery-1.8.2.min.js"></script>
     <script src="<?php echo base_url();?>assets/js/framework.js">
     </script>
     <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
-    <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript">
-    </script>
+    <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+      <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
+    <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>
     <script>
         
         /*-- Selectpicker --*/
@@ -511,16 +472,60 @@ $('.selectpicker').selectpicker({
 var urls = "<?php echo base_url()?>";
 function fetchCity(stateId) {           
            $.ajax({
-               url : urls + 'hospital/fetchCity',
+               url : urls + 'index.php/hospital/fetchCity',
                type: 'POST',
               data: {'stateId' : stateId},
               success:function(datas){
                   $('#hospital_cityId').html(datas);
                   $('#hospital_cityId').selectpicker('refresh');
+                 
               }
            });
            
+           
         }
+        // datatable get records
+         $(document).ready(function () {
+                var oTable = $('#datatable_bloodbank').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "bLengthChange": false,
+                    "bFilter": false,
+                    "iDisplayStart ": 10,
+                    "iDisplayLength" : 12,
+                    "columns": [
+                        {"data": "bloodBank_photo"},
+                        {"data": "bloodBank_name"},
+                        {"data": "bloodBank_phn"},
+                        {"data": "city_name"},
+                        {"data": "bloodBank_add"},
+                        //{"data": "open"},
+                       // {"data": "call"},
+                       // {"data": "view"},
+                    ],
+                    
+                    "ajax": {
+                        "url": "<?php echo site_url('bloodbank/getBloodBankDl'); ?>",
+                        "type": "POST", 
+                        "data": function ( d ) {
+                                         d.cityId = $("#hospital_cityId").val();
+                                         d.bloodBank_name = $("#search").val();
+                                         if($("#hospital_stateId").val() != ' '){
+                                         d.hosStateId = $("#hospital_stateId").val();
+                                        }
+                                         d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                                    } 
+                    }
+                });
+                
+                  $('#hospital_cityId,#hospital_stateId').change( function() {
+                        oTable.draw();
+                  } );
+                     $('#search').on('keyup', function() {
+                        oTable.draw();
+                  } );
+                
+            });
     </script>
 
 </body>
