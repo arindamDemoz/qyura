@@ -953,10 +953,14 @@
             // alert(mobileNumber);
            if(!$.isNumeric(mobileNumber)){
                 
-                if(ids != '')
+                if(ids != ''){
                    $('#'+inputName+ids).addClass('bdr-error');
-                 else
+                    $('#'+inputName+ids).val('');
+               }
+                 else {
                     $('#'+inputName).addClass('bdr-error');
+                    $('#'+inputName).val('');
+                }
                // $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_phn').focus();
             }
