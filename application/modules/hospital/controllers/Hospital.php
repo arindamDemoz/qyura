@@ -6,7 +6,6 @@ class Hospital extends CI_Controller {
     
    public function __construct() {
        parent:: __construct();
-       $this->load->library('form_validation');
        $this->load->model('Hospital_model');
    }
    
@@ -77,7 +76,6 @@ class Hospital extends CI_Controller {
     }
     
     function SaveHospital(){
-         $this->load->library('form_validation');
          $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
        $this->bf_form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
         $this->bf_form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');

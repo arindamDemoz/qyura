@@ -180,9 +180,12 @@ class Doctor extends CI_Controller {
                       'doctorSpecialities_specialitiesId' => $val,
                       'creationTime' => date('Y-m-d')
                   );
-                 $this->Doctor_model->insertDoctorData($doctorSpecialities,'qyura_doctorSpecialities');
-                 $doctorAcademic_degreeId = $this->input->post('doctorAcademic_degreeId');
+                 $this->Doctor_model->insertDoctorData($doctorsinserData,'qyura_doctorSpecialities');
+              }
+              
+              $doctorAcademic_degreeId = $this->input->post('doctorAcademic_degreeId');
                $doctorSpecialities_specialitiesCatId = $this->input->post('doctorSpecialities_specialitiesCatId');
+              
               for($i=0;$i < count($doctorAcademic_degreeId);$i++){
                    /* here one more table insertion needed for academic image load on qyura_doctorAcademicImage table,
                     *  but write now it is not here
@@ -196,11 +199,12 @@ class Doctor extends CI_Controller {
                       );
                       
                       $this->Doctor_model->insertDoctorData($doctorAcademicData,'qyura_doctorSpecialities');
-                      unset($doctorAcademicData);
                   }
                    
+              }
               $countsProfessionalExpCount = $this->input->post('ProfessionalExpCount');
-              for($i=1;$i <= $countsProfessionalExpCount;$i++){
+              
+               for($i=1;$i <= $countsProfessionalExpCount;$i++){
                    /* here one more table insertion needed for academic image load on qyura_doctorAcademicImage table,
                     *  but write now it is not here
                     */
@@ -217,27 +221,23 @@ class Doctor extends CI_Controller {
                   if(isset($_POST['doctorSpecialities_specialitiesId'.$i]))
                      $doctorSpecialities_specialitiesId =  $_POST['doctorSpecialities_specialitiesId'.$i]; 
                   
-                    foreach($doctorSpecialities_specialitiesId as $key => $val){
-                        $dataProfessional = array(
-                          'professionalExp_usersId' => $doctorsProfileId,
-                          'professionalExp_hospitalId' => $professionalExp_hospitalId,
-                          'professionalExp_specialitiesCatId' => $val,
-                          'professionalExp_start' => $professionalExp_start,
-                          'professionalExp_end' => $professionalExp_end,
-                          'creationTime' => date('Y-m-d') 
-                        );
-                         $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
-                         $professionalExp_start = 0;
-                         $professionalExp_end = 0;
-                         $professionalExp_hospitalId = 0;
-                         unset($dataProfessional);
-                    }
+                  foreach($doctorSpecialities_specialitiesId as $key => $val){
+                      $dataProfessional = array(
+                        'professionalExp_usersId' => $doctorsProfileId,
+                        'professionalExp_hospitalId' => $professionalExp_hospitalId,
+                        'professionalExp_specialitiesCatId' => $val,
+                        'professionalExp_start' => $professionalExp_start,
+                        'professionalExp_end' => $professionalExp_end,
+                        'creationTime' => date('Y-m-d') 
+                      );
+                       $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
+                       $professionalExp_start = 0;
+                       $professionalExp_end = 0;
+                       $professionalExp_hospitalId = 0;
+                  }
                
               }
-                  
-            }
               
-            }
                
               $this->session->set_flashdata('message','Data inserted successfully !');
                   redirect('doctor/addDoctor');
@@ -281,6 +281,15 @@ class Doctor extends CI_Controller {
         echo $email;
         exit;
     }
-  
+    function test(){
+                
+              
+               
+              
+              
+              
+             
+              
+    }
 }   
 

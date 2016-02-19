@@ -967,7 +967,6 @@
        }
        function validationDoctor(){
       // $("form[name='doctorForm']").submit();
-      // alert('here');
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
         var doctors_fName = $.trim($('#doctors_fName').val());
