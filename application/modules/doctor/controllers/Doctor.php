@@ -23,7 +23,8 @@ class Doctor extends CI_Controller {
    function saveDoctor(){
      // print_r($_POST['doctorSpecialities_specialitiesId']);
        
-
+       //print_r($_POST);// $_POST['doctors_cityId'];
+      // exit;
         // $this->bf_form_validation->set_rules('doctors_unqId','Unique id', 'required|trim');
         $this->bf_form_validation->set_rules('doctors_fName', 'Doctors First Name', 'required|trim');
       
@@ -33,7 +34,7 @@ class Doctor extends CI_Controller {
         $this->bf_form_validation->set_rules('doctors_stateId', 'State', 'required|trim');
         $this->bf_form_validation->set_rules('doctors_cityId', 'City', 'required|trim');
         
-        $this->bf_form_validation->set_rules('doctors_pin', 'Pin', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('doctors_pinn', 'Pin', 'required|trim|numeric');
        $this->bf_form_validation->set_rules('doctor_addr','Address', 'required|trim');
        $this->bf_form_validation->set_rules('doctors_consultaionFee','Consultaion Fees','required|trim|numeric');
        $this->bf_form_validation->set_rules('users_mobile','User Mobile','required|trim|numeric');
