@@ -358,6 +358,9 @@
                 <div class="container">
 
                     <div class="clearfix">
+                        <div class="col-md-12 text-success">
+                            <?php echo $this->session->flashdata('message'); ?>
+                         </div>
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">Add New Hospital</h3>
 
@@ -372,7 +375,6 @@
                        <input type="hidden" id="serviceName" name="serviceName" value="1" />
                        <input type="hidden" id="StateId" name="StateId" value="" />
                        <input type="hidden" id="countServiceName" name="countServiceName" value="1" />
-                       <div><?php echo $this->session->flashdata('message'); ?></div>
                         <!-- Left Section Start -->
                         <section class="col-md-6 detailbox">
                             <div class="bg-white mi-form-section">
@@ -751,7 +753,7 @@
 
 
                                             <article class="clearfix">
-                                                <label class="control-label col-md-4 col-xs-9" for="cname">24/7 Doctor on Call</label>
+                                                <label class="control-label col-md-4 col-xs-9" for="cname">Emergency Ward</label>
                                                 <div class="col-md-8 col-xs-3">
                                                     <aside class="checkbox checkbox-success m-t-5">
                                                         <input type="checkbox" id="isEmergency" name="isEmergency" value="1">
@@ -780,86 +782,87 @@
                         <section class="col-md-6 detailbox mi-form-section">
                             <div class="bg-white clearfix">
                                 <!-- Feature Access Section Start -->
-
-                                <figure class="clearfix">
-                                    <h3>Feature Access</h3>
-                                </figure>
-
-
-                                <article class="clearfix m-t-10">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname"> Doctor Management</label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
-
-                                <article class="clearfix">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname"> App Consultation Booking </label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
-
-                                <article class="clearfix">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname">Diagnostic Management </label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
-
-                                <article class="clearfix">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname">App Diagnostic Booking </label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
-
-                                <article class="clearfix">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname">Healthcare Packages </label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
-
-                                <article class="clearfix">
-                                    <label class="control-label col-md-6 col-xs-9" for="cname">Healthcare Package Booking </label>
-                                    <div class="col-md-6 col-xs-3">
-                                        <aside class="checkbox checkbox-success m-t-5">
-                                            <input type="checkbox" id="checkbox3">
-                                            <label>
-
-                                            </label>
-                                        </aside>
-                                    </div>
-                                </article>
+                            <!--    <div>
+                                    <figure class="clearfix">
+                                        <h3>Feature Access</h3>
+                                    </figure>
 
 
-                                <!-- Feature Access Section Start -->
+                                    <article class="clearfix m-t-10">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname"> Doctor Management</label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+
+                                    <article class="clearfix">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname"> App Consultation Booking </label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+
+                                    <article class="clearfix">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname">Diagnostic Management </label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+
+                                    <article class="clearfix">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname">App Diagnostic Booking </label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+
+                                    <article class="clearfix">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname">Healthcare Packages </label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+
+                                    <article class="clearfix">
+                                        <label class="control-label col-md-6 col-xs-9" for="cname">Healthcare Package Booking </label>
+                                        <div class="col-md-6 col-xs-3">
+                                            <aside class="checkbox checkbox-success m-t-5">
+                                                <input type="checkbox" id="checkbox3">
+                                                <label>
+
+                                                </label>
+                                            </aside>
+                                        </div>
+                                    </article>
+                                
+                                </div>    -->
+
+                                <!-- Feature Access Section End -->
 
 
                                 <!-- Account Detail Section Start -->
