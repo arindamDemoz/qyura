@@ -23,8 +23,8 @@ class Doctor extends CI_Controller {
    function saveDoctor(){
      // print_r($_POST['doctorSpecialities_specialitiesId']);
        
-       //print_r($_POST);// $_POST['doctors_cityId'];
-      // exit;
+      // print_r($_POST);// $_POST['doctors_cityId'];
+      //exit;
         // $this->bf_form_validation->set_rules('doctors_unqId','Unique id', 'required|trim');
         $this->bf_form_validation->set_rules('doctors_fName', 'Doctors First Name', 'required|trim');
       
@@ -46,6 +46,7 @@ class Doctor extends CI_Controller {
              $this->bf_form_validation->set_rules('doctors_img', 'File', 'required');
         }
         if ($this->bf_form_validation->run($this) === FALSE) {
+           
             $data = array();
              $data['allStates'] = $this->Doctor_model->fetchStates();
              $data['speciality'] = $this->Doctor_model->fetchSpeciality();
@@ -58,7 +59,7 @@ class Doctor extends CI_Controller {
               if ($_FILES['doctors_img']['name'] ) {
              $path = realpath(FCPATH.'assets/doctorsImages/');
              $temp = explode(".", $_FILES["doctors_img"]["name"]);
-                $newfilename = 'Hos_'.round(microtime(true)) . '.' . end($temp);
+                $newfilename = 'DOC_'.round(microtime(true)) . '.' . end($temp);
                 $config['upload_path'] = $path;
                 $config['allowed_types'] = 'jpg|jpeg|gif|png';
 		$config['max_size']	= '5000';
@@ -130,7 +131,6 @@ class Doctor extends CI_Controller {
                   );
                   $this->Doctor_model->insertUsersRoles($insertusersRoles);
                }
-               
                $doctors_fName = $this->input->post('doctors_fName');
                 $doctors_lName = $this->input->post('doctors_lName');
                 $doctors_dob = $this->input->post('doctors_dob');
@@ -142,22 +142,23 @@ class Doctor extends CI_Controller {
                 $isEmergency = $this->input->post('isEmergency');
                 $doctors_cityId = $this->input->post('doctors_cityId');
                 
-                $doctors_pin = $this->input->post('doctors_pin');
+                $doctors_pin = $this->input->post('doctors_pinn');
                 $doctors_lat = $this->input->post('lat');
                 $doctors_long = $this->input->post('lng');
                 $doctors_consultaionFee = $this->input->post('doctors_consultaionFee');
                 $doctors_27Src = $this->input->post('doctors_27Src');
+                $doctor_addr = $this->input->post('doctor_addr');
                 
                 $doctorsinserData = array(
                     
                     'doctors_fName' => $doctors_fName,
                     'doctors_lName' => $doctors_lName,
-                    'doctors_dob' => $doctors_dob,
+                    'doctors_dob' => strtotime($doctors_dob),
                     'doctors_phn' => $doctors_phn,
                     'doctors_mobile' => $doctors_mobile,
                     'doctors_countryId' => $doctors_countryId,
                     'doctors_stateId' => $doctors_stateId,
-                    'isEmergency' => $isEmergency,
+                    'doctors_27Src' => $isEmergency,
                     'doctors_cityId' => $doctors_cityId,
                     'doctors_pin' => $doctors_pin,
                     'doctors_lat' => $doctors_lat,
@@ -165,10 +166,11 @@ class Doctor extends CI_Controller {
                     'doctors_consultaionFee' => $doctors_consultaionFee,
                     'doctors_27Src' => $doctors_27Src,
                     'doctors_img' => $imagesname,
-                    'creationTime' => date('Y-m-d'),
+                    'creationTime' => strtotime(date('Y-m-d')),
                     'doctors_unqId' => $this->input->post('doctors_unqId'),
                     'doctors_userId' => $doctors_usersId,
-                    'doctors_unqId' => 'DOC'.round(microtime(true))
+                    'doctors_unqId' => 'DOC'.round(microtime(true)),
+                    'doctor_addr' => $doctor_addr
                     
                 );
               $doctorsProfileId = $this->Doctor_model->insertDoctorData($doctorsinserData,'qyura_doctors');
@@ -178,13 +180,15 @@ class Doctor extends CI_Controller {
                   $doctorSpecialities = array(
                       'doctorSpecialities_doctorsId' => $doctorsProfileId,
                       'doctorSpecialities_specialitiesId' => $val,
-                      'creationTime' => date('Y-m-d')
+                      'creationTime' => strtotime(date('Y-m-d'))
                   );
-                 $this->Doctor_model->insertDoctorData($doctorsinserData,'qyura_doctorSpecialities');
+                 $this->Doctor_model->insertDoctorData($doctorSpecialities,'qyura_doctorSpecialities');
+                 unset($doctorSpecialities);
               }
               
-               $doctorAcademic_degreeId = $this->input->post('doctorAcademic_degreeId');
+              $doctorAcademic_degreeId = $this->input->post('doctorAcademic_degreeId');
                $doctorSpecialities_specialitiesCatId = $this->input->post('doctorSpecialities_specialitiesCatId');
+              
               for($i=0;$i < count($doctorAcademic_degreeId);$i++){
                    /* here one more table insertion needed for academic image load on qyura_doctorAcademicImage table,
                     *  but write now it is not here
@@ -194,16 +198,17 @@ class Doctor extends CI_Controller {
                           'doctorAcademic_degreeId' => $doctorAcademic_degreeId[$i],
                           'doctorSpecialities_specialitiesCatId' => $doctorSpecialities_specialitiesCatId[$i],
                           'doctorAcademic_doctorsId' => $doctorsProfileId,
-                          'creationTime' => date('Y-m-d')
+                          'creationTime' => strtotime(date('Y-m-d'))
                       );
                       
-                      $this->Doctor_model->insertDoctorData($doctorAcademicData,'qyura_doctorSpecialities');
+                      $this->Doctor_model->insertDoctorData($doctorAcademicData,'qyura_doctorAcademic');
+                      unset($doctorAcademicData);
                   }
                    
               }
-              
               $countsProfessionalExpCount = $this->input->post('ProfessionalExpCount');
-              for($i=1;$i <= $countsProfessionalExpCount;$i++){
+              
+               for($i=1;$i <= $countsProfessionalExpCount;$i++){
                    /* here one more table insertion needed for academic image load on qyura_doctorAcademicImage table,
                     *  but write now it is not here
                     */
@@ -220,6 +225,9 @@ class Doctor extends CI_Controller {
                   if(isset($_POST['doctorSpecialities_specialitiesId'.$i]))
                      $doctorSpecialities_specialitiesId =  $_POST['doctorSpecialities_specialitiesId'.$i]; 
                   
+                  //echo $professionalExp_end.'    '.$professionalExp_start;
+                  //exit;
+                  
                   foreach($doctorSpecialities_specialitiesId as $key => $val){
                       $dataProfessional = array(
                         'professionalExp_usersId' => $doctorsProfileId,
@@ -227,17 +235,20 @@ class Doctor extends CI_Controller {
                         'professionalExp_specialitiesCatId' => $val,
                         'professionalExp_start' => $professionalExp_start,
                         'professionalExp_end' => $professionalExp_end,
-                        'creationTime' => date('Y-m-d') 
+                        'creationTime' => strtotime(date('Y-m-d')) 
                       );
+                      //print_r($dataProfessional);
+                      //exit;
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
-                       $professionalExp_start = 0;
-                       $professionalExp_end = 0;
-                       $professionalExp_hospitalId = 0;
+                       //$professionalExp_start = 0;
+                      // $professionalExp_end = 0;
+                       //$professionalExp_hospitalId = 0;
+                       unset($dataProfessional);
                   }
-                // echo $_POST['professionalExp_start'.$i].' '.$_POST['professionalExp_end'.$i].' '.;
-                
+               
               }
               
+               
               $this->session->set_flashdata('message','Data inserted successfully !');
                   redirect('doctor/addDoctor');
            }
@@ -279,6 +290,16 @@ class Doctor extends CI_Controller {
         $email = $this->Doctor_model->fetchEmail($users_email,$user_table_id);
         echo $email;
         exit;
+    }
+    function test(){
+                
+              
+               
+              
+              
+              
+             
+              
     }
 }   
 
