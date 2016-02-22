@@ -8,6 +8,7 @@ class Ambulance extends CI_Controller {
        parent:: __construct();
        $this->load->model('Ambulance_model');
        $this->load->library('form_validation');
+       $this->load->library('datatables');
    }
    function index(){
         $data = array();
@@ -17,6 +18,12 @@ class Ambulance extends CI_Controller {
        //exit;
        
         $this->load->view('ambulanceListing',$data);
+   }
+      function getAmbulanceDl(){
+
+       
+        echo $this->Ambulance_model->fetchAmbulanceDataTables();
+ 
    }
    function detailAmbulance($ambulanceId){
        $data = array();
