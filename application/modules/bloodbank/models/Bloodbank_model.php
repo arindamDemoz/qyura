@@ -67,7 +67,8 @@ class Bloodbank_model extends CI_Model {
      //echo $this->db->last_query();exit;
      return $data->result();
     }
-        function fetchbloodBankDataTables( $condition = NULL){
+    
+    function fetchbloodBankDataTables( $condition = NULL){
             
          $imgUrl = base_url().'assets/BloodBank/$1';    
          
@@ -102,9 +103,9 @@ class Bloodbank_model extends CI_Model {
               /*$this->datatables->add_column('open','08 AM-12 AM');
               $this->datatables->add_column('call','03 PM-08 PM');*/
        
-      // $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="bloodbank/detailBloodBank/$1">View Detail</a>', 'bloodBank_id');
+       $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="bloodbank/detailBloodBank/$1">View Detail</a>', 'bloodBank_id');
        
-      
+                    $this->datatables->add_column('bloodBank_add', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'bloodBank_add');
        
         return $this->datatables->generate(); 
       //echo $this->datatables->last_query();

@@ -412,7 +412,7 @@
                                             <th>Address</th>
 <!--                                            <th>Open Hours</th>
                                             <th>Call Received</th>-->
-<!--                                            <th>Action</th>-->
+                                            <th>Action</th>
                                         </tr>
                                     
                                   </thead>
@@ -501,7 +501,7 @@ function fetchCity(stateId) {
                         {"data": "bloodBank_add"},
                         //{"data": "open"},
                        // {"data": "call"},
-                       // {"data": "view"},
+                        {"data": "view"},
                     ],
                     
                     "ajax": {
