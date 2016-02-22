@@ -18,6 +18,12 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <![endif]-->
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
+   <style type="text/css">
+    #datatable_bloodbank_filter
+    {
+        display:none;
+    }
+  </style>
 </head>
 
 <body class="fixed-left">
@@ -384,10 +390,10 @@
                                     <option>Kolkata</option> -->
                                     </select>
                                 </aside>
-                                <aside class="col-md-3 col-sm-4 m-tb-xs-3">
+                               <aside class="col-md-3 col-sm-4 m-tb-xs-3">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                        <input type="text" name="search" id="search" class="form-control" placeholder="Search" />
+                                        <input type="text" name="search" id="search" class="form-control" placeholder="Search" /> 
                                     </div>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 pull-right">
@@ -458,7 +464,7 @@
     <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
     <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-      <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
+      <!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>-->
     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>
     <script>
         
@@ -487,12 +493,14 @@ function fetchCity(stateId) {
         // datatable get records
          $(document).ready(function () {
                 var oTable = $('#datatable_bloodbank').DataTable({
+                   // alert('here');
                     "processing": true,
-                    "serverSide": true,
+                    //"searching": true,
                     "bLengthChange": false,
-                    "bFilter": false,
-                    "iDisplayStart ": 10,
-                    "iDisplayLength" : 12,
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    //"bPaginate": true,
+                    "sPaginationType": "full_numbers",
                     "columns": [
                         {"data": "bloodBank_photo"},
                         {"data": "bloodBank_name"},
@@ -521,9 +529,10 @@ function fetchCity(stateId) {
                   $('#hospital_cityId,#hospital_stateId').change( function() {
                         oTable.draw();
                   } );
-                     $('#search').on('keyup', function() {
-                        oTable.draw();
-                  } );
+                     $('#search').on('keyup',function(){
+                        oTable.search($(this).val()).draw() ;
+                    });
+                  
                 
             });
     </script>
