@@ -81,5 +81,46 @@ class Pharmacy_model extends CI_Model {
         //echo $this->db->last_query();exit;
          return TRUE;
     }
+    
+    function fetchPharmacyDataTables( $condition = NULL){
+            
+         $imgUrl = base_url().'assets/pharmacyImages/$1';    
+         
+         $this->datatables->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
+        $this->datatables->from('qyura_pharmacy AS pharmacy');
+        $this->datatables->join('qyura_city AS City','City.city_id = pharmacy.pharmacy_cityId','left');
+        $this->datatables->join('qyura_users AS usr','usr.users_id = pharmacy.pharmacy_usersId','left');
+
+ 
+        $search = $this->input->post('name');
+        if($search){
+            $this->db->or_like('pharmacy.pharmacy_name',$search);
+            $this->db->or_like('pharmacy.pharmacy_address',$search);
+           $this->db->or_like('pharmacy.pharmacy_phn',$search);
+            
+        }
+     
+        $city = $this->input->post('cityId');
+        isset($city) && $city != '' ? $this->datatables->where('pharmacy_cityId', $city) : '';
+        
+        $states = $this->input->post('hosStateId');
+        isset($states) && $states != '' ? $this->datatables->where('pharmacy_stateId', $states) : '';
+        
+      
+        
+        if($condition)
+        $this->datatables->where(array('pharmacy.pharmacy_id'=> $condition));
+        $this->datatables->where(array('pharmacy.pharmacy_deleted'=> 0));
+        
+       $this->datatables->add_column('pharmacy_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'pharmacy_img');
+       
+              $this->datatables->add_column('pharmacy_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'pharmacy_address');
+       
+         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="pharmacy/detailPharmacy/$1">View Detail</a> <a href="#" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>', 'pharmacy_id');
+
+        return $this->datatables->generate(); 
+        // echo $this->datatables->last_query();
+
+    }
 }   
 

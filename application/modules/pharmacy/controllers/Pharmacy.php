@@ -8,6 +8,7 @@ class Pharmacy extends CI_Controller {
        parent:: __construct();
        $this->load->library('form_validation');
        $this->load->model('Pharmacy_model');
+       $this->load->library('datatables');
    }
    function index(){
         $data = array();
@@ -17,6 +18,12 @@ class Pharmacy extends CI_Controller {
        //exit;
        
         $this->load->view('pharmacyListing',$data);
+   }
+    function getPharmacyDl(){
+
+       
+        echo $this->Pharmacy_model->fetchPharmacyDataTables();
+ 
    }
    function addPharmacy(){
    		$data = array();
