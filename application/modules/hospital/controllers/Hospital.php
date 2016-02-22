@@ -7,6 +7,7 @@ class Hospital extends CI_Controller {
    public function __construct() {
        parent:: __construct();
        $this->load->model('Hospital_model');
+        $this->load->library('datatables');
    }
    
   function index(){
@@ -15,6 +16,12 @@ class Hospital extends CI_Controller {
         $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
        // print_r($data['hospitalData'] );exit;
         $this->load->view('HospitalListing',$data);
+   }
+      function getHospitalDl(){
+
+       
+        echo $this->Hospital_model->fetchHospitalDataTables();
+ 
    }
    function addHospital(){
        $data = array();

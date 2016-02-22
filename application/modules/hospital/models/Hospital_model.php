@@ -132,4 +132,45 @@ class Hospital_model extends CI_Model {
         //echo $this->db->last_query();exit;
          return TRUE;
     }
+        function fetchHospitalDataTables( $condition = NULL){
+            
+         $imgUrl = base_url().'assets/hospitalsImages/$1';    
+         
+       $this->datatables->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
+        Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId');
+     $this->datatables->from('qyura_hospital AS Hos');
+     $this->datatables->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
+      $this->datatables->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
+
+ 
+        $search = $this->input->post('name');
+        if($search){
+            $this->db->or_like('Hos.hospital_name',$search);
+            $this->db->or_like('Hos.hospital_phn',$search);
+           $this->db->or_like('Hos.hospital_address',$search);
+            
+        }
+     
+        $city = $this->input->post('cityId');
+        isset($city) && $city != '' ? $this->datatables->where('hospital_cityId', $city) : '';
+        
+        $states = $this->input->post('hosStateId');
+        isset($states) && $states != '' ? $this->datatables->where('hospital_stateId', $states) : '';
+        
+      
+        
+         if($condition)
+          $this->datatables->where(array('Hos.hospital_id'=> $condition));
+          $this->datatables->where(array('Hos.hospital_deleted'=> 0));
+        
+       $this->datatables->add_column('hospital_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'hospital_img');
+       
+              $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
+       
+         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
+
+        return $this->datatables->generate(); 
+        // echo $this->datatables->last_query();
+
+    }
 }
