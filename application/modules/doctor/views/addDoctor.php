@@ -1163,7 +1163,7 @@
                url : urls + 'index.php/doctor/fetchHospitalSpeciality',
                type: 'POST',
               //data: {'hospitalId' : hospitalId},
-              data: {'hospitalId' : 2},
+              data: {'hospitalId' : hospitalId},
               success:function(datas){
                   //console.log(datas);
                   $('#specialityDropdown'+numbers).html(datas);

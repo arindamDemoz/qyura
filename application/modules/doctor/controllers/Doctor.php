@@ -48,6 +48,8 @@ class Doctor extends CI_Controller {
         if ($this->bf_form_validation->run($this) === FALSE) {
            
             $data = array();
+            echo validation_errors();
+            exit;
              $data['allStates'] = $this->Doctor_model->fetchStates();
              $data['speciality'] = $this->Doctor_model->fetchSpeciality();
              $data['degree'] = $this->Doctor_model->fetchDegree();
@@ -237,17 +239,19 @@ class Doctor extends CI_Controller {
                         'professionalExp_end' => $professionalExp_end,
                         'creationTime' => strtotime(date('Y-m-d')) 
                       );
-                      //print_r($dataProfessional);
+                     // echo "<pre>";print_r($dataProfessional);echo "</pre>";
+                      //echo '---------------------------------------------------------';
+                      
                       //exit;
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
                        //$professionalExp_start = 0;
                       // $professionalExp_end = 0;
                        //$professionalExp_hospitalId = 0;
-                       unset($dataProfessional);
+                      // unset($dataProfessional);
                   }
                
               }
-              
+             //exit; 
                
               $this->session->set_flashdata('message','Data inserted successfully !');
                   redirect('doctor/addDoctor');
