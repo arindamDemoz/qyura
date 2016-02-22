@@ -147,12 +147,13 @@ class Doctor extends CI_Controller {
                 $doctors_long = $this->input->post('lng');
                 $doctors_consultaionFee = $this->input->post('doctors_consultaionFee');
                 $doctors_27Src = $this->input->post('doctors_27Src');
+                $doctor_addr = $this->input->post('doctor_addr');
                 
                 $doctorsinserData = array(
                     
                     'doctors_fName' => $doctors_fName,
                     'doctors_lName' => $doctors_lName,
-                    'doctors_dob' => $doctors_dob,
+                    'doctors_dob' => strtotime($doctors_dob),
                     'doctors_phn' => $doctors_phn,
                     'doctors_mobile' => $doctors_mobile,
                     'doctors_countryId' => $doctors_countryId,
@@ -165,10 +166,11 @@ class Doctor extends CI_Controller {
                     'doctors_consultaionFee' => $doctors_consultaionFee,
                     'doctors_27Src' => $doctors_27Src,
                     'doctors_img' => $imagesname,
-                    'creationTime' => date('Y-m-d'),
+                    'creationTime' => strtotime(date('Y-m-d')),
                     'doctors_unqId' => $this->input->post('doctors_unqId'),
                     'doctors_userId' => $doctors_usersId,
-                    'doctors_unqId' => 'DOC'.round(microtime(true))
+                    'doctors_unqId' => 'DOC'.round(microtime(true)),
+                    'doctor_addr' => $doctor_addr
                     
                 );
               $doctorsProfileId = $this->Doctor_model->insertDoctorData($doctorsinserData,'qyura_doctors');
@@ -178,9 +180,10 @@ class Doctor extends CI_Controller {
                   $doctorSpecialities = array(
                       'doctorSpecialities_doctorsId' => $doctorsProfileId,
                       'doctorSpecialities_specialitiesId' => $val,
-                      'creationTime' => date('Y-m-d')
+                      'creationTime' => strtotime(date('Y-m-d'))
                   );
-                 $this->Doctor_model->insertDoctorData($doctorsinserData,'qyura_doctorSpecialities');
+                 $this->Doctor_model->insertDoctorData($doctorSpecialities,'qyura_doctorSpecialities');
+                 unset($doctorSpecialities);
               }
               
               $doctorAcademic_degreeId = $this->input->post('doctorAcademic_degreeId');
@@ -195,10 +198,11 @@ class Doctor extends CI_Controller {
                           'doctorAcademic_degreeId' => $doctorAcademic_degreeId[$i],
                           'doctorSpecialities_specialitiesCatId' => $doctorSpecialities_specialitiesCatId[$i],
                           'doctorAcademic_doctorsId' => $doctorsProfileId,
-                          'creationTime' => date('Y-m-d')
+                          'creationTime' => strtotime(date('Y-m-d'))
                       );
                       
-                      $this->Doctor_model->insertDoctorData($doctorAcademicData,'qyura_doctorSpecialities');
+                      $this->Doctor_model->insertDoctorData($doctorAcademicData,'qyura_doctorAcademic');
+                      unset($doctorAcademicData);
                   }
                    
               }
@@ -226,14 +230,15 @@ class Doctor extends CI_Controller {
                         'professionalExp_usersId' => $doctorsProfileId,
                         'professionalExp_hospitalId' => $professionalExp_hospitalId,
                         'professionalExp_specialitiesCatId' => $val,
-                        'professionalExp_start' => $professionalExp_start,
-                        'professionalExp_end' => $professionalExp_end,
-                        'creationTime' => date('Y-m-d') 
+                        'professionalExp_start' => strtotime($professionalExp_start),
+                        'professionalExp_end' => strtotime($professionalExp_end),
+                        'creationTime' => strtotime(date('Y-m-d')) 
                       );
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
                        $professionalExp_start = 0;
                        $professionalExp_end = 0;
                        $professionalExp_hospitalId = 0;
+                       unset($dataProfessional);
                   }
                
               }
