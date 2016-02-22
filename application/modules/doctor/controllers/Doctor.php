@@ -23,8 +23,8 @@ class Doctor extends CI_Controller {
    function saveDoctor(){
      // print_r($_POST['doctorSpecialities_specialitiesId']);
        
-       //print_r($_POST);// $_POST['doctors_cityId'];
-      // exit;
+      // print_r($_POST);// $_POST['doctors_cityId'];
+      //exit;
         // $this->bf_form_validation->set_rules('doctors_unqId','Unique id', 'required|trim');
         $this->bf_form_validation->set_rules('doctors_fName', 'Doctors First Name', 'required|trim');
       
@@ -225,19 +225,24 @@ class Doctor extends CI_Controller {
                   if(isset($_POST['doctorSpecialities_specialitiesId'.$i]))
                      $doctorSpecialities_specialitiesId =  $_POST['doctorSpecialities_specialitiesId'.$i]; 
                   
+                  //echo $professionalExp_end.'    '.$professionalExp_start;
+                  //exit;
+                  
                   foreach($doctorSpecialities_specialitiesId as $key => $val){
                       $dataProfessional = array(
                         'professionalExp_usersId' => $doctorsProfileId,
                         'professionalExp_hospitalId' => $professionalExp_hospitalId,
                         'professionalExp_specialitiesCatId' => $val,
-                        'professionalExp_start' => strtotime($professionalExp_start),
-                        'professionalExp_end' => strtotime($professionalExp_end),
+                        'professionalExp_start' => $professionalExp_start,
+                        'professionalExp_end' => $professionalExp_end,
                         'creationTime' => strtotime(date('Y-m-d')) 
                       );
+                      //print_r($dataProfessional);
+                      //exit;
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
                        $professionalExp_start = 0;
                        $professionalExp_end = 0;
-                       $professionalExp_hospitalId = 0;
+                       //$professionalExp_hospitalId = 0;
                        unset($dataProfessional);
                   }
                
