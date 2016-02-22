@@ -92,5 +92,44 @@ class Diagnostic_model extends CI_Model {
         //echo $this->db->last_query();exit;
          return TRUE;
     }
+    
+    function fetchDiagnosticDataTables( $condition = NULL){
+            
+         $imgUrl = base_url().'assets/diagnosticsImage/$1';    
+         
+    $this->datatables->select('diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,diag.diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId');
+    $this->datatables->from('qyura_diagnostic AS diag');
+    $this->datatables->join('qyura_city AS City','City.city_id = diag.diagnostic_cityId','left');
+    $this->datatables->join('qyura_users AS usr','usr.users_id = diag.diagnostic_usersId','left');
+
+ 
+        $search = $this->input->post('bloodBank_name');
+        if($search){
+            $this->db->or_like('diag.diagnostic_name',$search);
+            $this->db->or_like('diag.diagnostic_phn',$search);
+           $this->db->or_like('diag.diagnostic_address',$search);
+            
+        }
+     
+        $city = $this->input->post('cityId');
+        isset($city) && $city != '' ? $this->datatables->where('diagnostic_cityId', $city) : '';
+        
+        $states = $this->input->post('hosStateId');
+        isset($states) && $states != '' ? $this->datatables->where('diagnostic_stateId', $states) : '';
+        
+      
+        
+    if($condition)
+    $this->datatables->where(array('diag.diagnostic_id'=> $condition));
+    $this->datatables->where(array('diag.diagnostic_deleted'=> 0));
+        
+       $this->datatables->add_column('diagnostic_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'diagnostic_img');
+       
+         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="diagnostic/detailDiagnostic/$1">View Detail</a>', 'diagnostic_id');
+
+        return $this->datatables->generate(); 
+
+
+    }
 }   
 

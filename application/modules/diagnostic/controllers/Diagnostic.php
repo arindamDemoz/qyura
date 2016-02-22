@@ -8,6 +8,7 @@ class Diagnostic extends CI_Controller {
        parent:: __construct();
        $this->load->library('form_validation');
        $this->load->model('diagnostic_model');
+        $this->load->library('datatables');
    }
    
    function index(){
@@ -18,7 +19,12 @@ class Diagnostic extends CI_Controller {
        $this->load->view('diagnosticlisting',$data);
        
    }
-   
+   function getDiagnosticDl(){
+
+       
+        echo $this->diagnostic_model->fetchDiagnosticDataTables();
+ 
+   }
    function addDiagnostic(){
     $data = array();
         $data['allStates'] = $this->diagnostic_model->fetchStates();
