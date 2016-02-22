@@ -240,8 +240,8 @@ class Doctor extends CI_Controller {
                       //print_r($dataProfessional);
                       //exit;
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
-                       $professionalExp_start = 0;
-                       $professionalExp_end = 0;
+                       //$professionalExp_start = 0;
+                      // $professionalExp_end = 0;
                        //$professionalExp_hospitalId = 0;
                        unset($dataProfessional);
                   }
