@@ -431,12 +431,13 @@ class Hospital extends CI_Controller {
     }
     function saveDetailHospital($hospitalId){
         
-        $this->bf_form_validation->set_rules('hospital_name', 'Pharmacy Name', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
       
-        $this->bf_form_validation->set_rules('hospital_address', 'Pharmacy Address', 'required|trim');
-        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
-        if ($this->bf_form_validation->run() === FALSE) {
+        $this->bf_form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
+        //$this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
+        $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Hospital Contact Person', 'required|trim');
+        $this->bf_form_validation->set_rules('hospital_dsgn', 'Hospital Contact Person', 'required|trim');
+        if ($this->bf_form_validation->run($this) === FALSE) {
              $data = array();
              $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
                $data['hospitalId'] = $hospitalId;
@@ -456,22 +457,25 @@ class Hospital extends CI_Controller {
                        $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i].'|'; 
                     }
                 } 
-                
+                $hospital_address =  $this->input->post('hospital_address');
+                $hospital_lat = $this->input->post('lat'); 
+                $hospital_long = $this->input->post('lng');
                 $updateHospital = array(
                   'hospital_name'=>  $this->input->post('hospital_name'),
-                  //'hospital_type'=> $this->input->post('hospital_type'),
-                  'hospital_countryId'=> $this->input->post('hospital_countryId'),
+                  'hospital_type'=> $this->input->post('hospital_type'),
+                  //'hospital_countryId'=> $this->input->post('hospital_countryId'),
 
-                  'hospital_stateId'=> $this->input->post('hospital_stateId'),
-                  'hospital_cityId'=> $this->input->post('hospital_cityId'),
-                     'hospital_address' =>  $this->input->post('hospital_address'),
+                  //'hospital_stateId'=> $this->input->post('hospital_stateId'),
+                  //'hospital_cityId'=> $this->input->post('hospital_cityId'),
+                     'hospital_address' =>  $hospital_address,
                      'hospital_phn' => $finalNumber,
                       'hospital_cntPrsn'=> $this->input->post('hospital_cntPrsn'),
-                      //'hospital_mmbrTyp'=> $this->input->post('hospital_mmbrTyp'),
-                     // 'hospital_27Src'=> $this->input->post('isEmergency'),
-                     'hospital_lat'=> $this->input->post('lat'), 
-                    'hospital_long'=> $this->input->post('lng'),  
-                    'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                     'hospital_dsgn'=> $this->input->post('hospital_dsgn'),
+                     'isEmergency'=> $this->input->post('isEmergency'),
+                     'hospital_lat'=> $hospital_lat, 
+                    'hospital_long'=> $hospital_long,  
+                    'modifyTime'=> strtotime(date("Y-m-d H:i:s")), 
+                    'hospital_dsgn'=> $this->input->post('hospital_dsgn')
                 );
                 
                 $where = array(
@@ -479,8 +483,7 @@ class Hospital extends CI_Controller {
                 );
                 $response = '';
                $response = $this->Hospital_model->UpdateTableData($updateHospital,$where,'qyura_hospital');
-               if($response){
-                   $updateUserdata = array(
+                  /* $updateUserdata = array(
                        'users_email' => $this->input->post('users_email'),
                       'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
                   );
@@ -488,11 +491,129 @@ class Hospital extends CI_Controller {
                     'users_id' => $this->input->post('user_tables_id')  
                   ); 
                  $response = $this->Hospital_model->UpdateTableData($updateUserdata,$whereUser,'qyura_users'); 
+                   
+                   */
                  if($response) {
+                     if($_POST['bloodbank_chk']==1){
+                      
+                       $bloodBank_phn = $this->input->post('bloodBank_phn');
+                        $preblbankNo = $this->input->post('preblbankNo');
+                          $finalBloodbnkNumber = '';
+                        for($i= 0;$i < count($preblbankNo) ;$i++) {
+                            if(isset($bloodBank_phn[$i]) != '' && isset($preblbankNo[$i]) !='') {
+                               $finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i].'|'; 
+                            }
+
+                        }
+                      
+                      $conditions = array();
+                      $conditions['users_id'] = $this->input->post('user_tables_id');
+                      $conditions['bloodBank_deleted'] = 0;
+                      $select = array('bloodBank_id');
+                      $getData = '';
+                       $getData = $this->Hospital_model->checkStatus($select,'qyura_bloodBank',$conditions);
+                       
+                       $bloodBankDetail = array(
+                           'bloodBank_name' => $this->input->post('bloodBank_name'),
+                           'bloodBank_lat' => $hospital_lat,
+                           'bloodBank_long' => $hospital_long,
+                           'bloodBank_add' => $hospital_address,
+                           'bloodBank_phn' => $finalBloodbnkNumber,
+                           'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+                           
+                       );
+                       if($getData){
+                       $bloodWhereUser = array(
+                        'users_id' => $this->input->post('user_tables_id')  
+                        );
+                      //$bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
+                        $this->Hospital_model->UpdateTableData($bloodBankDetail,$bloodWhereUser,'qyura_bloodBank');
+                       }  else {
+                           
+                           unset($select,$conditions);
+                           $conditions = array();
+                            $conditions['hospital_usersId'] = $this->input->post('user_tables_id');
+                            $conditions['hospital_deleted'] = 0;
+                            $select = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                           $bloodBankResult  = $this->Hospital_model->checkStatus($select,'qyura_hospital',$conditions);
+                           $bloodBankDetail['countryId'] = $bloodBankResult[0]->hospital_countryId;
+                           $bloodBankDetail['stateId'] = $bloodBankResult[0]->hospital_stateId;
+                           $bloodBankDetail['cityId'] = $bloodBankResult[0]->hospital_cityId;
+                           $bloodBankDetail['users_id']= $this->input->post('user_tables_id');
+                           $bloodBankDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
+                            $bloodBankDetail['inherit_status']= 1;
+                            $bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
+                         
+                       } 
+                      
+                  }
+                  
+                     if($_POST['pharmacy_chk']==1){
+                      
+                       $pharmacy_phn = $this->input->post('pharmacy_phn');
+                        $prePharmacy = $this->input->post('prePharmacy');
+                        
+                        //print_r($pharmacy_phn);exit;;
+                          $finalPharmacyNumber = '';
+                        for($i= 0;$i < count($prePharmacy) ;$i++) {
+                            if($pharmacy_phn[$i] != '' && $prePharmacy[$i] !='') {
+                               $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i].'|'; 
+                            }
+
+                        }
+                      // echo $finalPharmacyNumber;exit;
+                       $pharmacy_name = $this->input->post('pharmacy_name');
+                       
+                       $pharmacy_lat = $hospital_lat;
+                       $pharmacy_long = $hospital_long;
+                     
+                       $pharmacyDetail = array(
+                           'pharmacy_name' => $pharmacy_name,
+                           //'pharmacy_img' => $imagePharmacyName,
+                           'pharmacy_lat' => $pharmacy_lat,
+                           'pharmacy_long' => $pharmacy_long,
+                           'pharmacy_usersId' => $this->input->post('user_tables_id'),
+                           'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                           'pharmacy_phn' => $finalPharmacyNumber,
+                            'pharmacy_address' => $hospital_address
+                           
+                       );
+                       $pharmacyConditions = array();
+                      $pharmacyConditions['pharmacy_usersId'] = $this->input->post('user_tables_id');
+                      $pharmacyConditions['pharmacy_deleted'] = 0;
+                      $pharmacySelect = array('pharmacy_id');
+                      $getDataPharmacy = '';
+                       $getDataPharmacy = $this->Hospital_model->checkStatus($pharmacySelect,'qyura_pharmacy',$pharmacyConditions);
+                      //$pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
+                       if($getDataPharmacy){
+                           $pharmacyWhereUser = array(
+                            'pharmacy_usersId' => $this->input->post('user_tables_id')  
+                        );
+                      //print_r($pharmacyDetail);exit;
+                        $this->Hospital_model->UpdateTableData($pharmacyDetail,$pharmacyWhereUser,'qyura_pharmacy');
+                       }else
+                       {
+                           unset($pharmacySelect,$pharmacyConditions);
+                           $pharmacyConditions = array();
+                            $pharmacyConditions['hospital_usersId'] = $this->input->post('user_tables_id');
+                            $pharmacyConditions['hospital_deleted'] = 0;
+                            $pharmacySelect = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                           $pharmacyResult  = $this->Hospital_model->checkStatus($pharmacySelect,'qyura_hospital',$pharmacyConditions);
+                           $pharmacyDetail['pharmacy_countryId'] = $pharmacyResult[0]->hospital_countryId;
+                           $pharmacyDetail['pharmacy_stateId'] = $pharmacyResult[0]->hospital_stateId;
+                           $pharmacyDetail['pharmacy_cityId'] = $pharmacyResult[0]->hospital_cityId;
+                           $pharmacyDetail['inherit_status'] = 1;
+                           $pharmacyDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
+                           $pharmacyDetail['pharmacy_usersId'] = $this->input->post('user_tables_id');
+                           $pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
+                       }    
+                      
+                     
+                  }
                  $this->session->set_flashdata('message','Data updated successfully !');
                   redirect("hospital/detailHospital/$hospitalId");
                  }
-               }
+              
          }
     }
 
