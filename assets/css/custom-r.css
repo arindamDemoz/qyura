@@ -1127,23 +1127,22 @@ table.top-doctor tr td h6 img {
 
 /*-- Form Error --*/
 
-
 .error {
     color: #EF5350 !important;
     margin-top: 3px;
     font-size: 13px;
 }
 
-.bdr-error, .bdr-error button {
+.bdr-error,
+.bdr-error button {
     border-color: #EF5350;
 }
 
-.bar-chart
-{
-    width:100% !important;
+.bar-chart {
+    width: 100% !important;
 }
-.mp-t-0
-{
+
+.mp-t-0 {
     padding-top: 0px;
     margin-top: 0px;
 }
@@ -1154,10 +1153,153 @@ table.top-doctor tr td h6 img {
     text-align: left;
 }
 
+
 /* -- Feb 11, 2016 -- */
 
 .amb-detail h4 {
     color: #333a4c;
     font-size: 15px;
     font-weight: 600;
+}
+
+
+/* -- Upload Button -- */
+
+.choose_file {
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+    border: #ebebeb solid 1px;
+    width: 85px;
+    padding: 4px 6px 4px 8px;
+    font: normal 14px Myriad Pro, Verdana, Geneva, sans-serif;
+    color: #fff;
+    margin-top: 2px;
+    background: #53D0D1;
+    text-align: center;
+}
+
+.choose_file input[type="file"] {
+    -webkit-appearance: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+.btn-upld {
+    border: #ebebeb solid 1px;
+    color: #fff;
+    width: 85px;
+    padding: 3px 6px 3px 8px;
+    text-align: center;
+    font: normal 14px Myriad Pro, Verdana, Geneva, sans-serif;
+}
+
+.form-control[readonly] {
+    background-color: #fff;
+}
+
+
+/* -- File Upload --*/
+
+.logo-Upload {
+    color: #40ccb3;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+
+/* -- File Upload --*/
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.btn-upload {
+    border: 1px solid #777777;
+    color: #777777;
+    padding: 7px 11px;
+}
+
+.btn-upload:hover {
+    color: #3FCEB2;
+    border: 1px solid #3FCEB2;
+}
+
+.showUpload {
+    color: #555;
+    background-color: transparent;
+    border: none;
+    margin-top: 10px;
+    vertical-align: top;
+}
+
+.flUpload {
+    border: 1px solid #A8DEB7;
+    color: #A8DEB7;
+    padding: 3px 10px;
+}
+
+.bg-btn,
+.bg-btn:hover {
+    background-color: #46ccce !important;
+    border: 1px solid #46ccce !important;
+}
+
+
+/* -- 16 Feb --*/
+
+.btn-upload.logo-Upload {
+    color: #40ccb3;
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+}
+
+
+/*-- Tab Height --*/
+
+.h400 {
+    height: 400px;
+}
+
+.h380 {
+    height: 380px;
+}
+
+.m-r-10 {
+    margin-right: 10px;
+}
+
+
+/*-- Feb 19 2016 --*/
+
+.pagi-detail {
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.modal-dialog {}
+.thumbnail {margin-bottom:6px;}
+
+.carousel-control.left,.carousel-control.right{
+  background-image:none;
+  margin-top:10%;
+  width:5%;
 }

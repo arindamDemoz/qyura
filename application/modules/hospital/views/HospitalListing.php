@@ -18,6 +18,12 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <![endif]-->
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
+     <style type="text/css">
+    #hospital_datatable_filter
+    {
+        display:none;
+    }
+  </style>
 </head>
 
 <body class="fixed-left">
@@ -460,7 +466,7 @@
     <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
     <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-      <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
+      <!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>-->
     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>
     <script>
         
@@ -487,14 +493,20 @@ function fetchCity(stateId) {
                          // datatable get records
          $(document).ready(function () {
                 var oTable = $('#hospital_datatable').DataTable({
-                    "processing": true,
-                    "serverSide": false,
+                   /* "processing": true,
+                    "serverSide": true,
                     "bFilter": false,
                     "iDisplayStart ": 10,
                      "bLengthChange": false,
                     "bProcessing": true,
                     "iDisplayLength": 10,
                     "bPaginate": true,
+                    "sPaginationType": "full_numbers",*/
+                    "processing": true,
+                    "serverSide": true,
+                    "bLengthChange": false,
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
                     "sPaginationType": "full_numbers",
 
                     "columns": [
@@ -524,7 +536,9 @@ function fetchCity(stateId) {
                         oTable.draw();
                   } );
                      $('#search').on('keyup', function() {
-                        oTable.draw();
+                        //oTable.draw();
+                         oTable.search($(this).val()).draw() ;
+                        
                   } );
                 
             });

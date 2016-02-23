@@ -100,13 +100,17 @@ class Hospital_model extends CI_Model {
     
     function fetchHospitalData($condition = NULL){
        $this->db->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
-        Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId');
+        Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.isEmergency,Blood.bloodBank_name,Blood.bloodBank_phn
+        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn');
      $this->db->from('qyura_hospital AS Hos');
      $this->db->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
       $this->db->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
+      $this->db->join('qyura_bloodBank AS Blood','Blood.users_id = Hos.hospital_usersId','left');
+      $this->db->join('qyura_pharmacy AS Pharmacy','Pharmacy.pharmacy_usersId = Hos.hospital_usersId','left');
         //$this->db->join('qyura_usersRoles AS Roles','Roles.usersRoles_userId = Hos.hospital_usersid','left'); // changed
-         if($condition)
+         if($condition){
             $this->db->where(array('Hos.hospital_id'=> $condition));
+         }
     $this->db->where(array('Hos.hospital_deleted'=> 0));
     //$this->db->where(array('Roles.usersRoles_parentId'=> 0)); // changed
        $this->db->order_by("Hos.creationTime", "desc"); 
@@ -172,5 +176,18 @@ class Hospital_model extends CI_Model {
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
 
+    }
+    
+    function checkStatus($select = array(),$tableName,$condition = array()){
+        //echo 
+        $this->db->select(implode(",",$select));
+        $this->db->from($tableName);
+        foreach($condition as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+        
+        $data= $this->db->get(); 
+     return $data->result();
+      //echo $this->db->last_query(); exit;
     }
 }
