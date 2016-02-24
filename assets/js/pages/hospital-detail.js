@@ -37,12 +37,19 @@ $("#allTime").click(function () {
     $("#session").fadeToggle();
 });
 
-$("#pharmacybtn").click(function () {
-    $("#pharmacydetail").fadeToggle();
+$("#editpharma").click(function () {
+    $("#detailpharma").toggle();
+    $("#newpharma").toggle();
 });
 
-$("#bloodbankbtn").click(function () {
-    $("#bloodbankdetail").fadeToggle();
+$("#editbbk").click(function () {
+    $("#detailbbk").toggle();
+    $("#newbbk").toggle();
+});
+
+$("#editac").click(function () {
+    $("#detailac").toggle();
+    $("#newac").toggle();
 });
 
 
@@ -84,10 +91,30 @@ $("#editservices").click(function () {
     $("#detailservices").toggle();
     $("#newservices").toggle();
 });
+
 $("#picEdit").click(function () {
     $(".logo-img").hide();
-    $(".pic-edit").hide();
     $(".logo-up").show();
+    $("#picEdit").hide();
+    $("#picEditClose").show();
+
+});
+
+$("#picEditClose").click(function () {
+    $(".logo-up").hide();
+    $(".logo-img").show();
+    $("#picEdit").show();
+    $("#picEditClose").hide();
+
+
+});
+
+$("#pharmacybtn").click(function () {
+    $("#pharmacydetail").fadeToggle();
+});
+
+$("#bloodbankbtn").click(function () {
+    $("#bloodbankdetail").fadeToggle();
 });
 
 /* -- Upload Button -- */
@@ -125,24 +152,3 @@ $("#modal-carousel").carousel({
 $("#modal-carousel").on("slid.bs.carousel", function () {
     $(".modal-title").html($(this).find(".active img").attr("title"));
 })
-
-/* when clicking a thumbnail */
-//$(".row .thumbnail").click(function () {
-//    var content = $(".carousel-inner");
-//    var title = $(".modal-title");
-//
-//    content.empty();
-//    title.empty();
-//
-//    var id = this.id;
-//    var repo = $("#img-repo .item");
-//    var repoCopy = repo.filter("#" + id).clone();
-//    var active = repoCopy.first();
-//
-//    active.addClass("active");
-//    title.html(active.find("img").attr("title"));
-//    content.append(repoCopy);
-//
-//    // show the modal
-//    $("#modal-gallery").modal("show");
-//});

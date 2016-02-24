@@ -14,7 +14,10 @@
           $('.pickDate').datepicker('hide');
       });
 
-
+var hideKeyboard = function () {
+      document.activeElement.blur();
+      $(".pickDate").blur();
+  };
 
  /* -- Call Distribution Chart -- */
 

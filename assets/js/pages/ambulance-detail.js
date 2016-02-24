@@ -1,22 +1,7 @@
 $("#edit").click(function () {
     $("#detail").toggle();
-    $("#newDetail").toggle();
+    $("#editdetail").toggle();
 });
-
-$("#opve").click(function () {
-    $("#opveDetail").fadeToggle();
-});
-$("#onve").click(function () {
-    $("#onveDetail").fadeToggle();
-});
-
-$("#apve").click(function () {
-    $("#apveDetail").fadeToggle();
-});
-$("#anve").click(function () {
-    $("#anveDetail").fadeToggle();
-});
-
 $("#picEdit").click(function () {
     $(".logo-img").hide();
     $(".logo-up").show();
@@ -33,12 +18,6 @@ $("#picEditClose").click(function () {
 
 
 });
-
-/* -- Upload Button -- */
-
-document.getElementById("uploadBtnB").onchange = function () {
-    document.getElementById("uploadFileB").value = this.value;
-};
 
 
 /* -- center modal -- */
@@ -70,3 +49,9 @@ function isNumberKey(evt, id) {
         return true;
     }
 }
+
+/* -- Upload Button -- */
+
+document.getElementById("uploadBt").onchange = function () {
+    document.getElementById("uploadImg").value = this.value;
+};

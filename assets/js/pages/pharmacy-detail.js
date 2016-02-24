@@ -4,8 +4,19 @@
   });
   $("#picEdit").click(function () {
       $(".logo-img").hide();
-      $(".pic-edit").hide();
       $(".logo-up").show();
+      $("#picEdit").hide();
+      $("#picEditClose").show();
+
+  });
+
+  $("#picEditClose").click(function () {
+      $(".logo-up").hide();
+      $(".logo-img").show();
+      $("#picEdit").show();
+      $("#picEditClose").hide();
+
+
   });
 
   /* -- Upload Button -- */

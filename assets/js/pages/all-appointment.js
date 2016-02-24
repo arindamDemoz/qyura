@@ -79,12 +79,12 @@
            $('.pickDate').datepicker('hide');
        });
 
- /*-- Selectpicker --*/
-$('.selectpicker').selectpicker({
-    style: 'btn-default',
-    size: "auto",
-    width: "100%"
-});
+   /*-- Selectpicker --*/
+   $('.selectpicker').selectpicker({
+       style: 'btn-default',
+       size: "auto",
+       width: "100%"
+   });
 
 
    /*-- Appointment Chart (Pie Chart) --*/
@@ -203,3 +203,8 @@ $('.selectpicker').selectpicker({
        "use strict";
        $.ChartJs.init()
    }(window.jQuery);
+
+   var hideKeyboard = function () {
+       document.activeElement.blur();
+       $(".pickDate").blur();
+   };

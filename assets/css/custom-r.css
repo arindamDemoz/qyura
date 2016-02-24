@@ -1296,10 +1296,58 @@ table.top-doctor tr td h6 img {
 }
 
 .modal-dialog {}
-.thumbnail {margin-bottom:6px;}
 
-.carousel-control.left,.carousel-control.right{
-  background-image:none;
-  margin-top:10%;
-  width:5%;
+.thumbnail {
+    margin-bottom: 6px;
+}
+
+.carousel-control.left,
+.carousel-control.right {
+    background-image: none;
+    margin-top: 10%;
+    width: 5%;
+}
+
+aside.show-image {
+    position: relative;
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+aside.show-image:hover img {
+    opacity: 0.5;
+}
+
+aside.show-image:hover a {
+    display: block;
+}
+
+aside.show-image a {
+    position: absolute;
+    display: none;
+}
+
+aside.show-image a.update {
+    top: 0;
+    left: 0;
+}
+
+aside.show-image a.delete {
+    top: 5px;
+    left: 85%;
+    color: #FF290B;
+    cursor: pointer;
+}
+
+/* -- 22 Feb -- */
+.im-upload
+{
+    padding: 0px;
+    border:1px solid #fff;
+}
+
+.pro-img:hover .pic-edit
+{
+    display: block !important;
 }
