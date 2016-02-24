@@ -8,7 +8,13 @@ class Doctor extends CI_Controller {
        $this->load->model('Doctor_model');
    }
    function index(){
-       echo "test";
+      $data = array();
+        $data['allStates'] = $this->Doctor_model->fetchStates();
+        $data['doctorData'] = $this->Doctor_model->fetchDoctorData();
+        $data['speciality'] = $this->Doctor_model->fetchSpeciality();
+       // $data['hospital']=$this->Doctor_model->fetchHospital();
+       // print_r($data['hospitalData'] );exit;
+        $this->load->view('doctorListing',$data);
    }
    
    function addDoctor(){
@@ -48,8 +54,6 @@ class Doctor extends CI_Controller {
         if ($this->bf_form_validation->run($this) === FALSE) {
            
             $data = array();
-            echo validation_errors();
-            exit;
              $data['allStates'] = $this->Doctor_model->fetchStates();
              $data['speciality'] = $this->Doctor_model->fetchSpeciality();
              $data['degree'] = $this->Doctor_model->fetchDegree();
@@ -294,16 +298,6 @@ class Doctor extends CI_Controller {
         $email = $this->Doctor_model->fetchEmail($users_email,$user_table_id);
         echo $email;
         exit;
-    }
-    function test(){
-                
-              
-               
-              
-              
-              
-             
-              
     }
 }   
 

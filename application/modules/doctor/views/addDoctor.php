@@ -168,8 +168,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-hospital-o"></i> 
                             <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="hospital-listing.html">All Hospitals</a></li>
-                                <li><a href="add-hospital.html">Add New Hospital</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
                             </ul>
                         </li>
 
@@ -177,8 +177,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-plus-square"></i> 
                             <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="diagnostic-center-listing.html">All Diag Centres</a></li>
-                                <li><a href="add-diagcenter.html">Add New Diag Centre</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/diagnostic">All Diag Centres</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/diagnostic/addDiagnostic">Add New Diag Centre</a></li>
                             </ul>
                         </li>
 
@@ -186,8 +186,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-heartbeat"></i> 
                             <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-bloodbank.html">All Blood Banks</a></li>
-                                <li><a href="add-bloodbank.html">Add New Blood Bank</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/bloodbank">All Blood Banks</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank">Add New Blood Bank</a></li>
                             </ul>
                         </li>
 
@@ -195,8 +195,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
                             <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-pharmacies.html">All Pharmacies</a></li>
-                                <li><a href="add-pharmacy.html">Add New Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
                             </ul>
                         </li>
 
@@ -204,8 +204,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
                             <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-ambulance-provider.html">All Ambulance Providers</a></li>
-                                <li><a href="add-ambulance-provider.html">Add Ambulance Provider</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
 
@@ -213,7 +213,7 @@
                             <a class="waves-effect active" href="#"><i class="fa fa-stethoscope"></i> 
                             <span>Doctors</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-doctor.html">All Doctors</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/doctor">All Doctors</a></li>
                                 <li class="active"><a href="<?php echo base_url();?>index.php/doctor/addDoctor">Add New Doctor</a></li>
                                 <li><a href="#">Schedule & Availability</a></li>
                             </ul>
@@ -431,7 +431,7 @@
                                                     <li class="label label-select">Cardiology<span class="badge"><i class="fa fa-close"></i></span></li>
                                                     <li class="label label-select">ENT<span class="badge"><i class="fa fa-close"></i></span></li>
                                                 </ul> -->
-                                                <select  multiple="" class="bs-select form-control-select2 " data-width="100%" name="doctorSpecialities_specialitiesId[]" Id="doctorSpecialities_specialitiesId" data-size="4" onchange ="fetchCity(this.value)">
+                                                <select  multiple="" class="bs-select form-control-select2 " data-width="100%" name="doctorSpecialities_specialitiesId[]" Id="doctorSpecialities_specialitiesId" data-size="4">
                                                         <!--<option value="">Select Speciality</option>-->
                                                        <?php foreach($speciality as $key=>$val) {?>
                                                         <option value="<?php echo $val->specialities_id;?>"><?php echo $val->specialities_name;?></option>
