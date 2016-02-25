@@ -33,12 +33,14 @@ class Hospital_model extends CI_Model {
     function fetchEmail($email,$usersId = NULL){
         $this->db->select('users_email');
         $this->db->from('qyura_users');
+        $this->db->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId = qyura_users.users_id','left');
         if($usersId) {
-            $this->db->where('users_id !=',$usersId);
+            $this->db->where('qyura_users.users_id !=',$usersId);
         }
-         $this->db->where('users_email',$email); 
+        $this->db->where('qyura_usersRoles.usersRoles_roleId',1);
+         $this->db->where('qyura_users.users_email',$email); 
        $result = $this->db->get();
-       // return $this->db->last_query();
+       //return $this->db->last_query();
        
         if($result->num_rows() > 0)
             return 1;
@@ -79,6 +81,13 @@ class Hospital_model extends CI_Model {
 
         return  $insert_id;
     }
+    function insertTableData($tableName , $insertData = array()){
+        $this->db->insert($tableName, $insertData); 
+      
+        $insert_id = $this->db->insert_id();
+        //echo $this->db->last_query(); exit;
+        return  $insert_id;
+    }
     
     function insertAmbulance($insertData){
         $this->db->insert('qyura_ambulance', $insertData); 
@@ -98,18 +107,18 @@ class Hospital_model extends CI_Model {
         
     }
     
-    function fetchHospitalData($condition = NULL){
+    function fetchHospitalData($conditionId = NULL){
        $this->db->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
         Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.isEmergency,Blood.bloodBank_name,Blood.bloodBank_phn
-        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn');
+        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn,usr.users_mobile,Hos.hospital_mmbrTyp');
      $this->db->from('qyura_hospital AS Hos');
      $this->db->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
       $this->db->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
       $this->db->join('qyura_bloodBank AS Blood','Blood.users_id = Hos.hospital_usersId','left');
       $this->db->join('qyura_pharmacy AS Pharmacy','Pharmacy.pharmacy_usersId = Hos.hospital_usersId','left');
         //$this->db->join('qyura_usersRoles AS Roles','Roles.usersRoles_userId = Hos.hospital_usersid','left'); // changed
-         if($condition){
-            $this->db->where(array('Hos.hospital_id'=> $condition));
+         if($conditionId){
+            $this->db->where(array('Hos.hospital_id'=> $conditionId));
          }
     $this->db->where(array('Hos.hospital_deleted'=> 0));
     //$this->db->where(array('Roles.usersRoles_parentId'=> 0)); // changed
@@ -189,5 +198,44 @@ class Hospital_model extends CI_Model {
         $data= $this->db->get(); 
      return $data->result();
       //echo $this->db->last_query(); exit;
+    }
+    
+    function fetchInsurance($hospitalId){
+        $this->db->select('Hos.hospitalInsurance_id,Hos.hospitalInsurance_insuranceId,Insu.insurance_Name,Insu.insurance_img');
+        $this->db->from('qyura_hospitalInsurance AS Hos');
+        $this->db->join('qyura_insurance AS Insu','Insu.insurance_id = Hos.hospitalInsurance_insuranceId','left');
+        $this->db->where(array('Hos.hospitalInsurance_hospitalId' => $hospitalId,'Insu.insurance_deleted' => 0,'Hos.hospitalInsurance_deleted' => 0 ));
+    
+        $data= $this->db->get(); 
+        return $data->result();
+    }
+
+      function fetchAllInsurance($insurance_condition = array()){
+        $this->db->select('insurance_id,insurance_Name,insurance_img,insurance_detail');
+        $this->db->from('qyura_insurance');
+        $this->db->where(array('insurance_deleted'=> 0));
+         if(!empty($insurance_condition))
+             $this->db->where_not_in('insurance_id',$insurance_condition);
+        $data= $this->db->get(); 
+        //echo $this->db->last_query(); exit;
+        return $data->result();
+    }
+    
+    function fetchAwards($hospitalId){
+        $this->db->select('hospitalAwards_awardsName,hospitalAwards_id');
+        $this->db->from('qyura_hospitalAwards');
+         $this->db->where(array('hospitalAwards_deleted'=> 0 , 'hospitalAwards_hospitalId' => $hospitalId));
+        $data= $this->db->get(); 
+        //echo $this->db->last_query(); exit;
+        return $data->result();
+    }
+    
+    function fetchServices($hospitalId){
+         $this->db->select('hospitalServices_id,hospitalServices_serviceName');
+        $this->db->from('qyura_hospitalServices');
+         $this->db->where(array('hospitalServices_deleted'=> 0 , 'hospitalServices_hospitalId' => $hospitalId));
+        $data= $this->db->get(); 
+        //echo $this->db->last_query(); exit;
+        return $data->result();
     }
 }

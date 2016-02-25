@@ -389,6 +389,7 @@
                                                 <!-- description div -->
                                                 <div class='pic-edit'>
                                                     <h3><a id="picEdit" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
+                                                    <h3><a id="picEditClose" class="pull-center cl-white" title="Cancel"  style="display:none;"><i class="fa fa-times"></i></a></h3>
                                                 </div>
 
                                                 <!-- end description div -->
@@ -444,7 +445,7 @@
                                         <article class="detailbox">
                                             <div class="bg-white mi-form-section">
 
-                                                <!-- Table Section End -->
+                                                <!-- Hospital Detail Starts here -->
                                                 <aside class="clearfix m-t-20 setting">
                                                     <div class="col-md-6">
                                                         <h4>Hospital Detail
@@ -456,12 +457,12 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Hospital Name :</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Indraprastha Appolo Hospital</p>
                                                             </article>
-                                                            
+
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Hospital Type :</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Multispeciality Hospital</p>
                                                             </article>
-                                                            
+
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">201, ABC Road, Sector 12, New Delhi-100123 India</p>
@@ -475,59 +476,25 @@
                                                                     <p>+91-011-123456</p>
                                                                 </aside>
                                                             </article>
-                                                            
-                                                            
-                                                             <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Available</p>
-                                                            </article>
-                                                             <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Appolo Bloodbank Center</p>
-                                                            </article>
-                                                            
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <aside class="col-md-8 col-sm-8 t-xs-left">
-                                                                    <p>+91-011-123456</p>
-                                                                </aside>
-                                                            </article>
-                                                            
-                                                            
-                                                             <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Pharmacy :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Available</p>
-                                                            </article>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Appolo Pharmacies</p>
-                                                            </article>
-                                                            
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <aside class="col-md-8 col-sm-8 t-xs-left">
-                                                                    <p>+91-011-123456</p>
-                                                                </aside>
-                                                            </article>
-                                                            
-                                                            
+
+
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">24x7 Emergency :</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Available</p>
                                                             </article>
 
-                                                        
+
 
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Mr. Tapan Roy</p>
                                                             </article>
-                                                            
+
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Designation:</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Manager</p>
                                                             </article>
-                                                            
+
                                                         </section>
 
                                                         <section id="newDetail" style="display:none;">
@@ -535,9 +502,9 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Hospital Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
-                                                                    <div>
+                                                                </div>
                                                             </article>
-                                                               <article class="clearfix m-b-10">
+                                                            <article class="clearfix m-b-10">
                                                                 <label for="cname" class="control-label col-md-4  col-sm-4">Hospital Type :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <select class="selectpicker" data-width="100%" name="hospitalType">
@@ -564,7 +531,7 @@
                                                                                 <option>+1</option>
                                                                             </select>
                                                                         </div>
-                                                                        <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
+                                                                        <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
                                                                             <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
                                                                         </div>
 
@@ -573,112 +540,34 @@
                                                                     <p class="m-t-10">* If it is landline, include Std code with number </p>
                                                                 </div>
                                                             </article>
-                                                            
-                                                                    <article class="clearfix">
-                                                                        <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">Bloodbank Availablity </label>
-                                                                        <div class="col-md-8 col-xs-3">
-                                                                            <aside class="checkbox checkbox-success m-t-5">
-                                                                                <input type="checkbox" id="bloodbankbtn">
-                                                                                <label>
 
-                                                                                </label>
-                                                                            </aside>
-                                                                        </div>
-                                                                    </article>
-                                                                    
-                                                                    <section id="bloodbankdetail" style="display:none">
-                                                                
-                                                                 <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
-                                                                    <div>
-                                                            </article>
-                                                                <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <aside class="row">
-                                                                        <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                            <select class="selectpicker" data-width="100%">
-                                                                                <option>+91</option>
-                                                                                <option>+1</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                            <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
-                                                                        </div>
 
+                                                            <article class="clearfix">
+                                                                <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">24x7 Emergency </label>
+                                                                <div class="col-md-8 col-xs-3">
+                                                                    <aside class="checkbox checkbox-success m-t-5">
+                                                                        <input type="checkbox" id="emergency">
+                                                                        <label>
+
+                                                                        </label>
                                                                     </aside>
                                                                 </div>
                                                             </article>
-                                                                    </section>
-                                                            
-                                                                      <article class="clearfix">
-                                                                        <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">Pharmacy Availablity </label>
-                                                                        <div class="col-md-8 col-xs-3">
-                                                                            <aside class="checkbox checkbox-success m-t-5">
-                                                                                <input type="checkbox" id="pharmacybtn">
-                                                                                <label>
 
-                                                                                </label>
-                                                                            </aside>
-                                                                        </div>
-                                                                    </article>
-                                                                     
-                                                                     <section id="pharmacydetail" style="display:none">
-                                                                
-                                                                 <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
-                                                                    <div>
-                                                            </article>
-                                                                 
-                                                                <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <aside class="row">
-                                                                        <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                            <select class="selectpicker" data-width="100%">
-                                                                                <option>+91</option>
-                                                                                <option>+1</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                            <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
-                                                                        </div>
-
-                                                                    </aside>
-                                                                </div>
-                                                            </article>
-                                                                    </section>
-                                                                     
-                                                                      <article class="clearfix">
-                                                                        <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">24x7 Emergency </label>
-                                                                        <div class="col-md-8 col-xs-3">
-                                                                            <aside class="checkbox checkbox-success m-t-5">
-                                                                                <input type="checkbox" id="emergency">
-                                                                                <label>
-
-                                                                                </label>
-                                                                            </aside>
-                                                                        </div>
-                                                                    </article>
-                                                               
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
-                                                                    <div>
+                                                                </div>
                                                             </article>
-                                                                    
+
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Designation :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="" name="designation" type="text" required="">
-                                                                    <div>
+                                                                </div>
                                                             </article>
-                                                                    
+
                                                             <article class="clearfix ">
                                                                 <div class="col-md-12 m-t-20 m-b-20">
 
@@ -688,6 +577,115 @@
                                                             </article>
                                                         </section>
 
+                                                        <aside class="clearfix m-t-20 setting">
+                                                            <h4>Blood Bank Detail
+                                                            <a id="editbbk"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                                              </h4>
+                                                            <hr/>
+                                                            <section id="detailbbk">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <p class="col-md-8 col-sm-8 t-xs-left">Appolo Bloodbank Center</p>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <aside class="col-md-8 col-sm-8 t-xs-left">
+                                                                        <p>+91-11-90100006</p>
+                                                                    </aside>
+                                                                </article>
+                                                            </section>
+                                                            <section id="newbbk" style="display:none">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <div class="col-md-8 col-sm-8">
+                                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="" value="Appolo Pharmacies">
+                                                                        <div>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <div class="col-md-8 col-sm-8">
+                                                                        <aside class="row">
+                                                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                                <select class="selectpicker" data-width="100%">
+                                                                                    <option>+91</option>
+                                                                                    <option>+1</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
+                                                                                <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="1190100006" />
+
+                                                                            </div>
+                                                                            <p class="m-t-10">* If it is landline, include Std code with number </p>
+                                                                        </aside>
+                                                                    </div>
+                                                                </article>
+                                                                <article class="clearfix ">
+                                                                    <div class="col-md-12 m-t-20 m-b-20">
+
+                                                                        <button type="button" class="btn btn-success waves-effect waves-light pull-right">Update</button>
+                                                                    </div>
+
+                                                                </article>
+                                                            </section>
+                                                        </aside>
+
+
+                                                        <aside class="clearfix m-t-20 setting">
+                                                            <h4>Pharmacy Detail
+                                                            <a id="editpharma"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                                              </h4>
+                                                            <hr/>
+                                                            <section id="detailpharma">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <p class="col-md-8 col-sm-8 t-xs-left">Appolo Pharmacies</p>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <aside class="col-md-8 col-sm-8 t-xs-left">
+                                                                        <p>+91-11-12345678</p>
+                                                                    </aside>
+                                                                </article>
+                                                            </section>
+                                                            <section id="newpharma" style="display:none">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <div class="col-md-8 col-sm-8">
+                                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="" value="Appolo Pharmacies">
+                                                                        <div>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <div class="col-md-8 col-sm-8">
+                                                                        <aside class="row">
+                                                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                                <select class="selectpicker" data-width="100%">
+                                                                                    <option>+91</option>
+                                                                                    <option>+1</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
+                                                                                <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="1112345678" />
+
+                                                                            </div>
+                                                                            <p class="m-t-10">* If it is landline, include Std code with number </p>
+                                                                        </aside>
+                                                                    </div>
+                                                                </article>
+                                                                <article class="clearfix ">
+                                                                    <div class="col-md-12 m-t-20 m-b-20">
+
+                                                                        <button type="button" class="btn btn-success waves-effect waves-light pull-right">Update</button>
+                                                                    </div>
+
+                                                                </article>
+                                                            </section>
+                                                        </aside>
+
                                                         <div class="gap"></div>
                                                         <article class="clearfix company-logo">
                                                             <aside class="clearfix">
@@ -695,43 +693,43 @@
                                                                      <a id="editcompany" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
                                                                 </h4>
                                                                 <hr/>
-                                                                </aside>
+                                                            </aside>
                                                             <section id="detailcompany">
-                                                          <div class="col-md-3 col-sm-6">
-                                                             <img src="assets/images/bajaj.png" class="img-responsive center-block">
-                                                              <h5>Bajaj</h5>
-                                                            </div>
-                                                            <div class="col-md-3 col-sm-6">
-                                                             <img src="assets/images/hdfc.png" class="img-responsive center-block">
-                                                                <h5>HDFC ERGO</h5>
-                                                            </div>
-                                                            <div class="col-md-3 col-sm-6">
-                                                             <img src="assets/images/icici.png" class="img-responsive center-block">
-                                                                <h5>ICICI</h5>
-                                                            </div>
-                                                            <div class="col-md-3 col-sm-6">
-                                                             <img src="assets/images/hdfc.png" class="img-responsive center-block">
-                                                                <h5>HDFC ERGO</h5>
-                                                            </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="assets/images/bajaj.png" class="img-responsive center-block">
+                                                                    <h5>Bajaj</h5>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="assets/images/hdfc.png" class="img-responsive center-block">
+                                                                    <h5>HDFC ERGO</h5>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="assets/images/icici.png" class="img-responsive center-block">
+                                                                    <h5>ICICI</h5>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="assets/images/hdfc.png" class="img-responsive center-block">
+                                                                    <h5>HDFC ERGO</h5>
+                                                                </div>
                                                             </section>
                                                             <section id="newcompany" style="display:none;">
                                                                 <article class="clearfix m-b-10">
-                                                            <label for="cemail" class="control-label col-md-4 col-sm-4">Company Name :</label>
-                                                             <div class="col-md-8 col-sm-8">
-                                                                 <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Company Name :</label>
+                                                                    <div class="col-md-8 col-sm-8">
+                                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="">
                                                                     </div>
-                                                        </article>
-                                                                 <article class="form-group m-lr-0 ">
-                                                    <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
-                                                    <div class="col-md-8 col-sm-8 text-right">
-                                                        <input id="uploadFileBb" class="showUpload" disabled="disabled" />
-                                                        <div class="fileUpload btn btn-sm btn-upload">
-                                                            <span><i class="fa fa-cloud-upload fa-3x"></i></span>
-                                                            <input id="uploadBtnBb" type="file" class="upload" />
-                                                        </div>
-                                                    </div>
-                                                </article>
-                                                                 <article class="clearfix ">
+                                                                </article>
+                                                                <article class="form-group m-lr-0 ">
+                                                                    <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
+                                                                    <div class="col-md-8 col-sm-8 text-right">
+                                                                        <input id="uploadFileBb" class="showUpload" disabled="disabled" />
+                                                                        <div class="fileUpload btn btn-sm btn-upload">
+                                                                            <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                                            <input id="uploadBtnBb" type="file" class="upload" />
+                                                                        </div>
+                                                                    </div>
+                                                                </article>
+                                                                <article class="clearfix ">
                                                                     <div class="col-md-12 m-t-20 m-b-20">
                                                                         <button type="button" class="btn btn-success waves-effect waves-light pull-right">Add More</button>
                                                                     </div>
@@ -739,8 +737,11 @@
                                                             </section>
                                                         </article>
                                                         <div class="gap"></div>
-                                                        <article class="clearfix">
-                                                            <h4>Awards Recognition
+
+                                                        </div>
+                                                        <div class="col-md-6 p-b-20">
+                                                            <article class="clearfix">
+                                                                <h4>Awards Recognition
                                                                <a id="editawards" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
                                                             </h4>
                                                                 <hr/>
@@ -754,8 +755,8 @@
                                                                 </aside>
                                                                 <form id="newawards" style="display:none">
                                                                     <aside class="form-group m-lr-0 p-b-20 m-b-30">
-                                                                        <label for="cname" class="control-label col-md-4 col-sm-4">Awards:</label>
-                                                                        <div class="col-md-8 col-sm-8">
+                                                                        <label for="cname" class="control-label col-md-3 col-sm-4">Awards:</label>
+                                                                        <div class="col-md-9 col-sm-8">
                                                                             <aside class="row">
                                                                                 <div class="col-md-10 col-sm-10 col-xs-10">
                                                                                     <input type="text" class="form-control" name="awards" id="awards" placeholder="FICCI Healthcare Excillence Awards" />
@@ -769,9 +770,8 @@
                                                                         </div>
                                                                     </aside>
                                                                 </form>
-                                                        </article>
-                                                        </div>
-                                                        <div class="col-md-6 p-b-20">
+                                                            </article>
+
                                                             <article class="clearfix">
                                                                 <aside class="clearfix">
                                                                     <h4>Services
@@ -795,10 +795,10 @@
                                                                 </section>
                                                                 <form>
                                                                     <aside class="form-group m-lr-0" id="newservices" style="display:none">
-                                                                        <label for="cname" class="control-label col-md-3 col-sm-3">Services :</label>
-                                                                        <div class="col-md-9 col-sm-9">
+                                                                        <label for="cname" class="control-label col-md-3 col-sm-4">Services :</label>
+                                                                        <div class="col-md-9 col-sm-8">
                                                                             <aside class="row">
-                                                                                <div class="col-md-10 col-sm-10 col-xs-10">
+                                                                                <div class="col-md-10">
 
                                                                                     <select class="selectpicker" data-width="100%" multiple>
                                                                                         <option selected>Radiology</option>
@@ -816,23 +816,24 @@
                                                                 </form>
                                                             </article>
                                                         </div>
-                                                        </aside>
+                                                </aside>
 
-                                                        </div>
+                                                </div>
                                         </article>
                                     </section>
                                     <!-- General Detail Ends -->
 
+
                                     <!--diagnostic Starts -->
-                                    <section class="tab-pane fade in" id="diagnostic"  ng-app="myApp">
+                                    <section class="tab-pane fade in" id="diagnostic" ng-app="myApp">
                                         <!-- first Section Start -->
                                         <aside class="clearfix">
-                                            <section class="col-md-3 detailbox m-b-20 diag" ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
                                                         <h3>Diagnostic Categories Available</h3>
-                                                        
+
 
                                                         <article class="clearfix">
 
@@ -864,7 +865,7 @@
                                             <!-- first Section End -->
 
 
-                                            <section class="col-md-1 detailbox m-b-20 text-center">
+                                            <section class="col-md-2 detailbox m-b-20 text-center">
                                                 <div class="m-t-150">
                                                     <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
                                                 </div>
@@ -875,7 +876,7 @@
 
                                             </section>
                                             <!-- second Section Start -->
-                                            <section class="col-md-3 detailbox m-b-20 diag" ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
@@ -906,41 +907,6 @@
                                             </section>
                                             <!-- second Section End -->
 
-
-
-
-
-                                            <!-- third Section Start -->
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Available</h3>
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-                                            <!-- third Section End -->
                                         </aside>
 
                                         <section class="clearfix detailbox m-b-20">
@@ -1173,13 +1139,13 @@
                                     <!--Specialities Starts -->
                                     <section class="tab-pane fade in" id="specialities">
                                         <aside class="clearfix">
-                                            
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp"  ng-controller="diag-c-avail">
+
+                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
-                                                          <h3>Specialities Available</h3>
-                                                        
+                                                        <h3>Specialities Available</h3>
+
 
                                                         <article class="clearfix">
 
@@ -1219,13 +1185,13 @@
 
                                             </section>
                                             <!-- second Section Start -->
-                                            
+
                                             <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
-                                                          <h3>Specialities Added</h3>
-                                                        
+                                                        <h3>Specialities Added</h3>
+
 
                                                         <article class="clearfix">
 
@@ -1255,89 +1221,43 @@
                                         </aside>
                                     </section>
                                     <!-- Specialities Ends -->
-                                    
+
                                     <!--Gllery Starts -->
                                     <section class="tab-pane fade in" id="gallery">
-                                       
+                                        <div class="fileUpload btn btn-sm btn-upload im-upload">
+                                            <span class="btn btn-appointment">Add More</span>
+                                            <input type="file" class="upload" id="uploadBtn">
+                                        </div>
                                         <div class="clearfix">
- 
-    
-    <div class="clearfix">
-      			
-      			<div class="col-12 col-md-3 col-sm-3">
-					<a title="Image 1" href="#"> 
-						<img class="thumbnail img-responsive" id="image-1" src="assets/images/hospital/h1.jpg">
-					</a>
-				</div>
-      
-				<div class="col-12 col-md-3 col-sm-3">
-					<a title="Image 2" href="#"> 
-						<img class="thumbnail img-responsive" id="image-2" src="assets/images/hospital/h2.jpg">
-					</a>
-
-				</div>
-				<div class="col-12 col-md-3 col-sm-3">
-					<a title="Image 3" href="#"> 
-						<img class="thumbnail img-responsive" id="image-3" src="assets/images/hospital/h3.jpg" />
-					</a>
-				</div>
-              <div class="col-12 col-md-3 col-sm-3">
-					<a title="Image 3" href="#"> 
-						<img class="thumbnail img-responsive" id="image-3" src="assets/images/hospital/h3.jpg" />
-					</a>
-				</div>
-    </div>
-    
-    <hr>
-    
-  </div>
-
-	<div class="hidden" id="img-repo">
-		
-		<!-- #image-1 -->
-		<div class="item" id="image-1">
-			<img class="thumbnail img-responsive" title="Image 11" src="http://dummyimage.com/600x350/ccc/969696">
-		</div>
-		<div class="item" id="image-1">
-			<img class="thumbnail img-responsive" title="Image 12" src="http://dummyimage.com/600x600/ccc/969696">
-		</div>
-		<div class="item" id="image-1">
-			<img class="thumbnail img-responsive" title="Image 13" src="http://dummyimage.com/300x300/ccc/969696">
-		</div>
-      
-		<!-- #image-2 -->
-		<div class="item" id="image-2">
-			<img class="thumbnail img-responsive" title="Image 21" src="http://dummyimage.com/600x350/2255EE/969696">
-		</div>
-		<div class="item" id="image-2">
-			<img class="thumbnail img-responsive" title="Image 21" src="http://dummyimage.com/600x600/2255EE/969696">
-		</div>
-		<div class="item" id="image-2">
-			<img class="thumbnail img-responsive" title="Image 23" src="http://dummyimage.com/300x300/2255EE/969696">
-		</div>   
-      
-		<!-- #image-3-->
-		<div class="item" id="image-3">
-			<img class="thumbnail img-responsive" title="Image 31" src="http://dummyimage.com/600x350/449955/FFF">
-		</div>
-		<div class="item" id="image-3">
-			<img class="thumbnail img-responsive" title="Image 32" src="http://dummyimage.com/600x600/449955/FFF">
-		</div>
-		<div class="item" id="image-3">
-			<img class="thumbnail img-responsive" title="Image 33" src="http://dummyimage.com/300x300/449955/FFF">
-		</div>        
-		
-	</div>
-
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="assets/images/hospital/h1.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="assets/images/hospital/h2.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="assets/images/hospital/h3.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="assets/images/hospital/h4.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="assets/images/hospital/h2.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                        </div>
                                     </section>
                                     <!--Gallery Ends -->
-                                                                     
+
+                                    <!-- Timeslot Starts Section -->
                                     <section class="tab-pane fade in" id="timeslot">
                                         <div class="col-md-10 p-b-20">
                                             <form class="form-horizontal">
-                                                <article class="clearfix">
-                                                    <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">24/7 Services :</label>
-                                                </article>
+
                                                 <aside id="session">
                                                     <article class="clearfix m-t-10">
                                                         <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
@@ -1380,6 +1300,21 @@
                                                             </div>
                                                         </div>
                                                     </article>
+
+                                                    <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:30 AM" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
                                                 </aside>
                                                 <article class="clearfix ">
                                                     <div class="col-md-12 m-t-20 m-b-20">
@@ -1395,227 +1330,302 @@
                                     <!--All Doctors Starts -->
                                     <section class="tab-pane fade in" id="doctor">
 
-                                                     <article class="clearfix m-top-40 p-b-20">
-                           <aside class="table-responsive">
-                              <table class="table all-doctor">
-                                 <tbody>
-                                    <tr class="border-a-dull">
-                                       <th>Photo</th>
-                                       <th>Name and Id</th>
-                                       <th>Speciality</th>
-                                       <th>Experience</th>
-                                       <th>Date of Joining</th>
-                                       <th>Phone</th>
-                                       <th>Action</th>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Alpesh Dhakad</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Surgury</h6>
-                                       </td>
-                                       <td>
-                                          <h6>20 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Nov, 2014</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Manoj Kumar</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Cardiology</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Prabha Jha</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Eye Specialist</h6>
-                                       </td>
-                                       <td>
-                                          <h6>10 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Alpesh Dhakad</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Surgury</h6>
-                                       </td>
-                                       <td>
-                                          <h6>20 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Nov, 2014</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Manoj Kumar</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Cardiology</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Prabha Jha</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Eye Specialist</h6>
-                                       </td>
-                                       <td>
-                                          <h6>10 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                    
-                                </tbody>
-                              </table>
-                           </aside>
-                            <article class="clearfix m-t-20 p-b-20">
-                        <ul class="list-inline list-unstyled pull-right call-pagination">
-                           <li class="disabled"><a href="#">Prev</a></li>
-                           <li><a href="#">1</a></li>
-                           <li class="active"><a href="#">2</a></li>
-                           <li><a href="#">3</a></li>
-                           <li><a href="#">4</a></li>
-                           <li><a href="#">Next</a></li>
-                        </ul>
-                     </article>                              
-                        </article>
+                                        <article class="clearfix m-top-40 p-b-20">
+                                            <aside class="table-responsive">
+                                                <table class="table all-doctor">
+                                                    <tbody>
+                                                        <tr class="border-a-dull">
+                                                            <th>Photo</th>
+                                                            <th>Name and Id</th>
+                                                            <th>Speciality</th>
+                                                            <th>Experience</th>
+                                                            <th>Date of Joining</th>
+                                                            <th>Phone</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Alpesh Dhakad</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Surgury</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>20 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Nov, 2014</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Dr. Manoj Kumar</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Cardiology</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Jan, 2013</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Dr. Prabha Jha</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Eye Specialist</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>10 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Jan, 2013</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Alpesh Dhakad</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Surgury</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>20 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Nov, 2014</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Dr. Manoj Kumar</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Cardiology</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Jan, 2013</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <i class="fa fa-check-circle doc-online"></i>
+                                                                <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Dr. Prabha Jha</h6>
+                                                                <p>ACH089</p>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Eye Specialist</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>10 Years</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>15 Jan, 2013</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6>9826000777</h6>
+                                                                <h6>0731-2349999</h6>
+                                                            </td>
+                                                            <td>
+                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
+                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </aside>
+                                            <article class="clearfix m-t-20 p-b-20">
+                                                <ul class="list-inline list-unstyled pull-right call-pagination">
+                                                    <li class="disabled"><a href="#">Prev</a></li>
+                                                    <li><a href="#">1</a></li>
+                                                    <li class="active"><a href="#">2</a></li>
+                                                    <li><a href="#">3</a></li>
+                                                    <li><a href="#">4</a></li>
+                                                    <li><a href="#">Next</a></li>
+                                                </ul>
+                                            </article>
+                                        </article>
                                     </section>
                                     <!-- All Doctors Ends -->
 
                                     <!--Account Starts -->
                                     <section class="tab-pane fade in" id="account">
-                                        <div class="clearfix m-t-20 p-b-20 doctor-description">
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
-                                                <p class="col-md-8 col-sm-7">abs@example.com</p>
-                                            </article>
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
-                                                <p class="col-md-8 col-sm-7">+91 8077224467</p>
-                                            </article>
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Membership Type:</label>
-                                                <p class="col-md-3 col-sm-5">General</p>
-                                                 <aside class="col-sm-2">
-                                                      <button class="btn btn-appointment waves-effect waves-light pull-right" type="button">Upgrade</button>
-                                                 </aside>
-                                            </article>
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
+                                        <aside class="col-md-9 setting">
+                                            <h4>Account Detail
+                                                <a id="editac"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                            </h4>
+                                            <hr/>
 
-                                                <aside class="col-md-5 col-sm-6">
-                                                    <form class="">
-                                                        <input type="password" name="password" class="form-control" placeholder="New Password" />
-                                                    </form>
-                                                </aside>
-                                            </article>
-                                        </div>
+                                            <!-- Account Detail Section -->
+                                            <div class="clearfix m-t-20 p-b-20 doctor-description" id="detailac">
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
+                                                    <p class="col-md-8 col-sm-7">abs@example.com</p>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
+                                                    <p class="col-md-8 col-sm-7">+91 8077224467</p>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Membership Type:</label>
+                                                    <p class="col-md-6 col-sm-5">General</p>
+                                                    <aside class="col-sm-2">
+                                                        <button class="btn btn-appointment waves-effect waves-light pull-right" type="button">Upgrade</button>
+                                                    </aside>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
+
+                                                    <aside class="col-md-5 col-sm-6">
+                                                        <form class="">
+                                                            <input type="password" name="password" class="form-control" placeholder="New Password" />
+                                                        </form>
+                                                    </aside>
+                                                </article>
+                                            </div>
+                                            <!-- Account Detail Section -->
+
+                                            <!-- Account Edit Section -->
+                                            <aside id="newac" style="display:none">
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Registered Email Id :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input class="form-control" id="diagnosticCenter" name="email" type="email" required="" value="abc@gmail.com">
+                                                    </div>
+                                                </article>
+
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="" value="Appolo Pharmacies">
+                                                    </div>
+                                                </article>
+
+                                                <article class="clearfix m-b-10 ">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <aside class="row">
+                                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                <select class="selectpicker" data-width="100%">
+                                                                    <option>+91</option>
+                                                                    <option>+1</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
+                                                                <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="1112345678" />
+
+                                                            </div>
+                                                            <p class="m-t-10">* If it is landline, include Std code with number </p>
+                                                        </aside>
+                                                    </div>
+                                                </article>
+
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cname" class="control-label col-md-4 col-sm-4">Membership Type:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <select class="selectpicker" data-width="100%" name="company">
+                                                            <option value=" " selected>General</option>
+                                                            <option value="male">Premium</option>
+
+                                                        </select>
+                                                    </div>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Change Password:</label>
+
+                                                    <aside class="col-md-8 col-sm-8">
+                                                        <form class="">
+                                                            <input type="password" name="password" class="form-control" placeholder="New Password" />
+                                                        </form>
+                                                    </aside>
+                                                </article>
+
+
+                                                <article class="clearfix ">
+                                                    <div class="col-md-12 m-t-20 m-b-20">
+
+                                                        <button type="button" class="btn btn-success waves-effect waves-light pull-right">Update</button>
+                                                    </div>
+
+                                                </article>
+                                            </aside>
+                                            <!-- Account Edit Section -->
+                                        </aside>
                                     </section>
                                     <!-- Account Ends -->
 
@@ -1684,15 +1694,15 @@
                                         <form class="form-horizontal">
 
                                             <article class="form-group m-lr-0 ">
-                                                    <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Background :</label>
-                                                    <div class="col-md-8 col-sm-8 text-right">
-                                                        <input id="uploadFileBg" class="showUpload" disabled="disabled" />
-                                                        <div class="fileUpload btn btn-sm btn-upload">
-                                                            <span><i class="fa fa-cloud-upload fa-3x"></i></span>
-                                                            <input id="uploadBtnBg" type="file" class="upload" />
-                                                        </div>
+                                                <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Background :</label>
+                                                <div class="col-md-8 col-sm-8 text-right">
+                                                    <input id="uploadFileBg" class="showUpload" disabled="disabled" />
+                                                    <div class="fileUpload btn btn-sm btn-upload">
+                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                        <input id="uploadBtnBg" type="file" class="upload" />
                                                     </div>
-                                                </article>
+                                                </div>
+                                            </article>
 
 
                                             <article class="clearfix m-t-20">
@@ -1708,31 +1718,31 @@
                         </div>
                     </div>
                     <!-- /Change Logo -->
-                                        
+
                     <!-- Gallery Model -->
                     <div class="modal" id="modal-gallery" role="dialog">
-                          <div class="modal-dialog">
+                        <div class="modal-dialog">
                             <div class="modal-content">
-                              <div class="modal-header">
-                                  <button class="close" type="button" data-dismiss="modal">×</button>
-                                  <h3 class="modal-title"></h3>
-                              </div>
-                              <div class="modal-body">
-                                  <div id="modal-carousel" class="carousel">
+                                <div class="modal-header">
+                                    <button class="close" type="button" data-dismiss="modal">×</button>
+                                    <h3 class="modal-title"></h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modal-carousel" class="carousel">
 
-                                    <div class="carousel-inner">           
+                                        <div class="carousel-inner">
+                                        </div>
+
+                                        <a class="carousel-control left" href="#modal-carousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                                        <a class="carousel-control right" href="#modal-carousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+
                                     </div>
-
-                                    <a class="carousel-control left" href="#modal-carousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
-                                    <a class="carousel-control right" href="#modal-carousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
-
-                                  </div>
-                              </div>
-                              <div class="modal-footer">
-                                  <button class="btn btn-default" data-dismiss="modal">Close</button>
-                              </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
-                          </div>
+                        </div>
                     </div>
                     <!-- Gallery Model Ends -->
 
@@ -1747,8 +1757,11 @@
                     <script src="assets/vendor/timepicker/bootstrap-timepicker.min.js">
                     </script>
 
-                    <script type="text/javascript" src="assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-                    <script type="text/javascript" src="assets/vendor/x-editable/jquery.xeditable.js"> </script>
+                    <script type="text/javascript" src="assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js">
+                        l
+                    </script>
+                    <script type="text/javascript" src="assets/vendor/x-editable/jquery.xeditable.js">
+                    </script>
                     <script src="assets/js/angular.min.js">
                     </script>
                     <script src="assets/js/pages/hospital-detail.js">

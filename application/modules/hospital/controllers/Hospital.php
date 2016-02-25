@@ -37,7 +37,178 @@ class Hospital extends CI_Controller {
         $data['hospitalId'] = $hospitalId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
+        $insurance_condition = '';
+        $data['insurance']  = $this->Hospital_model->fetchInsurance($hospitalId);
+        if(!empty($data['insurance'])){
+            foreach ($data['insurance'] as $key => $val){
+               $insurance_condition[]= $val->hospitalInsurance_insuranceId;
+            }
+        }
+    
+        $data['allInsurance']  = $this->Hospital_model->fetchAllInsurance($insurance_condition);
+        
+       // $this->load->super_admin_template('hospitalDetail', $data, 'bloodBankScript');
         $this->load->view('hospitalDetail',$data);
+   }
+   function hospitalAwards($hospitalId){
+      $dataAwards = $this->Hospital_model->fetchAwards($hospitalId);
+      $showAwards = '';
+      if($dataAwards){
+        foreach($dataAwards as $key=>$val){
+            $showAwards .='<li>'.$val->hospitalAwards_awardsName.'</li>';
+
+        }
+      }
+    else {
+            $showAwards = 'Add Awards';
+         }
+       echo $showAwards;
+       exit;
+   }
+   function hospitalServices($hospitalId){
+       $dataAwardsServices = $this->Hospital_model->fetchServices($hospitalId);
+      $showServices = '';
+      if($dataAwardsServices){
+        foreach($dataAwardsServices as $key=>$val){
+            $showServices .='<li>'.$val->hospitalServices_serviceName.'</li>';
+
+        }
+      }
+    else {
+            $showServices = 'Add Service';
+         }
+       echo $showServices;
+       exit;
+   }
+   function detailAwards($hospitalId){
+       $dataAwards = $this->Hospital_model->fetchAwards($hospitalId);
+       if($dataAwards){
+           $showTotalAwards = '';
+        foreach($dataAwards as $key=>$val){
+       $showTotalAwards .= '<div class="row m-t-10">
+        <div class="col-md-8 col-sm-8 col-xs-8">
+           <input type="text" class="form-control" name="hospitalAwards_awardsName" id='.$val->hospitalAwards_id.' value='.$val->hospitalAwards_awardsName.' placeholder="FICCI Healthcare " />
+         </div>
+           <div class="col-md-2 col-sm-2 col-xs-2">
+            <a onclick="editAwards('.$val->hospitalAwards_id.')"><i class="fa fa-pencil-square-o fa-2x m-t-5 label-plus" title="Edit Awards"></i></a>
+           </div>
+
+          <div class="col-md-2 col-sm-2 col-xs-2">
+          <a onclick="deleteAwards('.$val->hospitalAwards_id.')"><i class="fa fa-times fa-2x m-t-5 label-plus" title="Delete Awards"></i></a>
+          </div>
+         </div>';
+         }
+         
+      }
+    else {
+            $showTotalAwards = 'Add Awards';
+         }
+         
+         echo $showTotalAwards;
+         exit;
+   }
+   function detailServices($hospitalId){
+        $dataServices = $this->Hospital_model->fetchServices($hospitalId);
+       if($dataServices){
+           $showTotalService = '';
+        foreach($dataServices as $key=>$val){
+       $showTotalService .= '<div class="row m-t-10">
+        <div class="col-md-8 col-sm-8 col-xs-8">
+           <input type="text" class="form-control" name="hospitalServices_serviceName" id='.$val->hospitalServices_id.' value='.$val->hospitalServices_serviceName.' placeholder="Service Name" />
+         </div>
+           <div class="col-md-2 col-sm-2 col-xs-2">
+            <a onclick="editServices('.$val->hospitalServices_id.')"><i class="fa fa-pencil-square-o fa-2x m-t-5 label-plus" title="Edit Services"></i></a>
+           </div>
+
+          <div class="col-md-2 col-sm-2 col-xs-2">
+          <a onclick="deleteServices('.$val->hospitalServices_id.')"><i class="fa fa-times fa-2x m-t-5 label-plus" title="Delete Services"></i></a>
+          </div>
+         </div>';
+         }
+         
+      }
+    else {
+            $showTotalService = 'Add Services';
+         }
+         
+         echo $showTotalService;
+         exit;
+   }
+   function addHospitalAwards(){
+       $hospitalId = $this->input->post('hospitalId');
+       $hospitalAwards_awardsName = $this->input->post('hospitalAwards_awardsName');
+       $awardData = array('hospitalAwards_awardsName'=>$hospitalAwards_awardsName,'hospitalAwards_hospitalId' => $hospitalId);
+       $return = $this->Hospital_model->insertTableData('qyura_hospitalAwards',$awardData);
+       echo $return;
+       exit;
+   }
+   
+   function addHospitalService(){
+       $hospitalId = $this->input->post('hospitalId');
+       $hospitalServices_serviceName = $this->input->post('hospitalServices_serviceName');
+       $serviceData = array('hospitalServices_serviceName'=>$hospitalServices_serviceName,'hospitalServices_hospitalId' => $hospitalId);
+       $return = $this->Hospital_model->insertTableData('qyura_hospitalServices',$serviceData);
+       echo $return;
+       exit;
+   }
+   function editHospitalAwards(){
+       $hospitalAwards_id = $this->input->post('awardsId');
+       $hospitalAwards_awardsName = $this->input->post('hospitalAwards_awardsName');
+       $updatedData = array('hospitalAwards_awardsName'=>$hospitalAwards_awardsName);
+       $updatedDataWhere = array('hospitalAwards_id'=>$hospitalAwards_id);
+       $return = $this->Hospital_model->UpdateTableData($updatedData,$updatedDataWhere,'qyura_hospitalAwards');
+       echo $return ;
+       exit;
+   }
+  
+   function editHospitalService(){
+       $hospitalServices_id = $this->input->post('serviceId');
+       $hospitalServices_serviceName = $this->input->post('hospitalServices_serviceName');
+       $updatedData = array('hospitalServices_serviceName'=>$hospitalServices_serviceName);
+       $updatedDataWhere = array('hospitalServices_id'=>$hospitalServices_id);
+       $return = $this->Hospital_model->UpdateTableData($updatedData,$updatedDataWhere,'qyura_hospitalServices');
+       echo $return ;
+       exit;
+   }
+   
+   function deleteHospitalService(){
+       $hospitalServices_id = $this->input->post('serviceId');
+       $hospitalServices_serviceName = $this->input->post('hospitalServices_serviceName');
+       $updatedData = array('	hospitalServices_deleted'=>1);
+       $updatedDataWhere = array('hospitalServices_id'=>$hospitalServices_id);
+       $return = $this->Hospital_model->UpdateTableData($updatedData,$updatedDataWhere,'qyura_hospitalServices');
+       echo $return ;
+       exit;
+   }
+   function deleteHospitalAwards(){
+       $hospitalAwards_id = $this->input->post('awardsId');
+       $updatedData = array('hospitalAwards_deleted' => 1);
+       $updatedDataWhere = array('hospitalAwards_id' => $hospitalAwards_id);
+       $return = $this->Hospital_model->UpdateTableData($updatedData,$updatedDataWhere,'qyura_hospitalAwards');
+       echo $return ;
+       exit;
+   }
+   function addInsurance(){
+      $hospitalId = $this->input->post('hospitalInsuranceId');
+      // echo $hospitalId;
+       $insurances = $this->input->post('insurances');
+     // print_r($insurances);
+       if(!empty($insurances)){
+           foreach($insurances as $key => $val){
+               $insurancesData = array(
+                  'hospitalInsurance_hospitalId' => $hospitalId ,
+                  'hospitalInsurance_insuranceId' => $val
+               );
+              // print_r($insurancesData);
+              // exit;
+               $this->Hospital_model->insertTableData('qyura_hospitalInsurance',$insurancesData);
+               //$insurancesData = '';
+           }
+             $this->session->set_flashdata('message','Insurance added successfully !');
+             redirect("hospital/detailHospital/$hospitalId");
+       }  else {
+           redirect("hospital/detailHospital/$hospitalId");
+       }
    }
    function fetchStates(){
       $stateId = $this->input->post('stateId');
@@ -443,7 +614,16 @@ class Hospital extends CI_Controller {
                $data['hospitalId'] = $hospitalId;
                $data['showStatus'] = 'block';
                $data['detailShow'] = 'none';
+                $data['insurance']  = $this->Hospital_model->fetchInsurance($hospitalId);
+                if(!empty($data['insurance'])){
+                    foreach ($data['insurance'] as $key => $val){
+                       $insurance_condition[]= $val->hospitalInsurance_insuranceId;
+                    }
+                }
+    
+        $data['allInsurance']  = $this->Hospital_model->fetchAllInsurance($insurance_condition);
              $this->load->view('hospitalDetail',$data);
+             return false;
              
          }
          else{
@@ -671,12 +851,16 @@ class Hospital extends CI_Controller {
     }
     function updatePassword(){
         //echo "here";exit;
-        $currentPassword = $this->input->post('currentPassword');
+        $users_email = $this->input->post('users_email');
+       // echo $users_email;
+       // exit;
         //$existingPassword = $this->input->post('existingPassword');
-        $user_tables_id = $this->input->post('user_tables_id');
+        $user_tables_id = $this->input->post('hospitalUserId');
+        $users_password = $this->input->post('users_password');
         
-        $encrypted = md5($currentPassword);
-        $return = 0;
+        $users_mobile = $this->input->post('users_mobile');
+        $hospital_mmbrTyp = $this->input->post('hospital_mmbrTyp');
+       
        /* if($encrypted != $existingPassword){
             echo $return;
         }
@@ -693,18 +877,34 @@ class Hospital extends CI_Controller {
                      
              echo $return = '1'.'~'.$encrypted;
          }*/
+         $where = array(
+                        'users_id' => $user_tables_id
+                    );
+        $userTableData = array(
+            'users_mobile' => $users_mobile,
+            'users_email' => $users_email,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $return = $this->Hospital_model->UpdateTableData($userTableData,$where,'qyura_users');
+        if(!empty($users_password))
+        {
+            $encrypted = md5($currentPassword);
+             $updateHospital= array(
+                      'users_password'=>  $encrypted,
+                        'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                    );
+
+                   
+                $return = $this->Hospital_model->UpdateTableData($updateHospital,$where,'qyura_users');
+        }    
         
-         $updateHospital= array(
-                  'users_password'=>  $encrypted,
-                    'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
-                );
-                
-                $where = array(
-                    'users_id' => $user_tables_id
-                );
-            $return = $this->Hospital_model->UpdateTableData($updateHospital,$where,'qyura_users');
-                     
-             echo $return ;
+        $hospitalData = array(
+            'hospital_mmbrTyp' => $hospital_mmbrTyp,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $hospitalWhere = array('hospital_usersId' => $user_tables_id);
+        $return = $this->Hospital_model->UpdateTableData($hospitalData,$hospitalWhere,'qyura_hospital');
+       echo $return ;
         //echo $encrypted;
         exit;
         

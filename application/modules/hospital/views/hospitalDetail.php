@@ -12,6 +12,7 @@
     <link href="<?php echo base_url();?>assets/css/custom-g.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="<?php echo base_url();?>assets/vendor/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -381,13 +382,20 @@
                                                 <!-- image -->
                                                 <?php if(!empty($hospitalData[0]->hospital_img)){
                                                     ?>
-                                               <img src="<?php echo base_url()?>assets/hospitalsImages/<?php echo $hospitalData[0]->hospital_img; ?>" alt="" class="img-responsive" />
+                                               <img src="<?php echo base_url()?>assets/hospitalsImages/<?php echo $hospitalData[0]->hospital_img; ?>" alt="" class="logo-img" />
                                                <?php } else { ?>
-                                                 <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="img-responsive" />
+                                                 <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>
+                                                  <article class="logo-up" style="display:none">
+                                                    <div class="fileUpload btn btn-sm btn-upload logo-Upload">
+                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                        <input id="uploadBtn" type="file" class="upload" />
+                                                    </div>
+                                                </article>
                                                 <!-- description div -->
                                                 <div class='pic-edit'>
-                                                    <h3><a href="javascript:void(0)" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
+                                                    <h3><a id="picEdit" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
+                                                    <h3><a id="picEditClose" class="pull-center cl-white" title="Cancel"  style="display:none;"><i class="fa fa-times"></i></a></h3>
                                                 </div>
                                                 <!-- end description div -->
                                             </div>
@@ -450,7 +458,7 @@
 
                                                 <!-- Table Section End -->
                                                 <aside class="clearfix m-t-20 setting">
-                                                    <div class="col-md-8">
+                                                    <div class="col-md-6">
                                                         <h4>Hospital Details 
                                                          <a href="javascript:void(0)" id="edit" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
                                                         </h4>
@@ -486,57 +494,11 @@
                                                                     <p>+<?php echo $explode[$i];?></p>
                                                                    
                                                                     <?php }?>
-                                                                    <!-- <p>+91-011-123456</p>
-                                                                    <p>+91-011-123456</p>
-                                                                    <p>+91-011-123456</p> -->
+                                                                    
                                                                 </aside>
                                                             </article>
-                                                            <?php if(isset($hospitalData[0]->bloodBank_name)){?>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Available</p>
-                                                            </article>
-                                                             <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left"><?php echo $hospitalData[0]->bloodBank_name;?></p>
-                                                            </article>
-                                                            
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <aside class="col-md-8 col-sm-8 t-xs-left">
-                                                                    <?php 
-                                                                    $bloodBank_explode= explode('|',$hospitalData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($bloodBank_explode)-1;$i++){?>
-                                                                    <p>+<?php echo $bloodBank_explode[$i];?></p>
-                                                                   
-                                                                    <?php }?>
-                                                                    <!--<p>+91-011-123456</p>-->
-                                                                </aside>
-                                                            <?php }?>
-                                                            </article>
-                                                            <?php if(isset($hospitalData[0]->pharmacy_name)){?>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Pharmacy :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left">Available</p>
-                                                            </article>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left"><?php echo $hospitalData[0]->pharmacy_name;?></p>
-                                                            </article>
-                                                            
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <aside class="col-md-8 col-sm-8 t-xs-left">
-                                                                    <?php 
-                                                                    $pharmacy_explode= explode('|',$hospitalData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($pharmacy_explode)-1;$i++){?>
-                                                                    <p>+<?php echo $pharmacy_explode[$i];?></p>
-                                                                   
-                                                                    <?php }?>
-                                                                  <!-- <p>+<?php echo $hospitalData[0]->pharmacy_phn;?></p>-->
-                                                                </aside>
-                                                            </article>
-                                                            <?php }?>
+                                                           
+                                                          
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">24x7 Emergency :</label>
                                                                 <?php if($hospitalData[0]->isEmergency == 1){?>
@@ -545,10 +507,7 @@
                                                                 <p class="col-md-8 col-sm-8 t-xs-left">Not Available</p>
                                                                  <?php }?>
                                                             </article>
-                                                            <!--<article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Email Id :</label>
-                                                                <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php echo $hospitalData[0]->users_email;?> </p>
-                                                            </article>-->
+                                                           
                                                             
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
@@ -558,9 +517,64 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Designation:</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left"><?php if(isset($hospitalData[0]->hospital_dsgn)){ echo $hospitalData[0]->hospital_dsgn; }?></p>
                                                             </article> 
+                                                            
+                                                            
+                                                             <aside class="clearfix m-t-20 setting">
+                                                            <h4>Blood Bank Detail
+                                                            
+                                                              </h4>
+                                                            <hr/>
+                                                            <section id="detailbbk">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <p class="col-md-8 col-sm-8 t-xs-left"><?php echo $hospitalData[0]->bloodBank_name;?></p>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <aside class="col-md-8 col-sm-8 t-xs-left">
+                                                                         <?php 
+                                                                    $bloodBank_explode= explode('|',$hospitalData[0]->bloodBank_phn); 
+                                                                    for($i= 0; $i< count($bloodBank_explode)-1;$i++){?>
+                                                                    <p>+<?php echo $bloodBank_explode[$i];?></p>
+                                                                   
+                                                                    <?php }?>
+                                                                    </aside>
+                                                                </article>
+                                                            </section>
+                                                         
                                                         </aside>
+
+
+                                                        <aside class="clearfix m-t-20 setting">
+                                                            <h4>Pharmacy Detail
+                                                           
+                                                              </h4>
+                                                            <hr/>
+                                                            <section id="detailpharma">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <p class="col-md-8 col-sm-8 t-xs-left"><?php echo $hospitalData[0]->pharmacy_name;?></p>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <aside class="col-md-8 col-sm-8 t-xs-left">
+                                                                         <?php 
+                                                                    $pharmacy_explode= explode('|',$hospitalData[0]->pharmacy_phn); 
+                                                                    for($i= 0; $i< count($pharmacy_explode)-1;$i++){?>
+                                                                    <p>+<?php echo $pharmacy_explode[$i];?></p>
+                                                                   
+                                                                    <?php }?>
+                                                                    </aside>
+                                                                </article>
+                                                            </section>
+                                                            
+                                                        </aside>
+                                                        </aside>
+                                                        
                                                         <!--edit-->
-                                                         <form name="hospitalDetail" action="<?php echo site_url(); ?>/hospital/saveDetailHospital/<?php echo $hospitalId; ?>" id="hospitalDetail" method="post">
+                                                         <form name="hospitalDetail" action="<?php echo site_url("hospital/saveDetailHospital/$hospitalId"); ?>" id="hospitalDetail" method="post">
                                                          <input type="hidden" id="StateId" name="StateId" value="<?php echo $hospitalData[0]->hospital_stateId;?>" />
                                                           <input type="hidden" id="countryId" name="countryId" value="<?php echo $hospitalData[0]->hospital_countryId;?>" />
                                                           <input type="hidden" id="cityId" name="cityId" value="<?php echo $hospitalData[0]->hospital_cityId;?>" />
@@ -585,35 +599,7 @@
                                                             <article class="clearfix m-b-10">
                                                             <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
                                                             <div class="col-md-8 col-sm-8">
-                                                    <!-- <aside class="row">
-                                                         <div class="col-md-6 col-sm-6">
-                                                             <select class="selectpicker" data-width="100%" name="hospital_countryId" id="hospital_countryId">
-                                                                 <option>Select Country</option>
-                                                                 <?php foreach($allCountry as $key=>$val) {?>
-                                                                 <option value="<?php echo $val->country_id;?>" <?php if($val->country_id == $hospitalData[0]->hospital_countryId){ echo 'selected';} ?>><?php echo $val->country;?></option>
-                                                                  <?php }?>
-
-                                                             </select>
-                                                         </div>
-                                                         <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                             <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" onchange ="fetchCity(this.value)">
-                                                                 <option>Select State</option>
-                                                                 <?php foreach($allStates as $key=>$val) {?>
-                                                                 <option value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
-                                                                  <?php }?>
-                                                             </select>
-                                                         </div>
-                                                     </aside> -->
-                                                     <!-- <aside class="row m-t-10">
-                                                         <div class="col-md-6 col-sm-6">
-                                                             <select class="selectpicker" data-width="100%" name="hospital_cityId" id="hospital_cityId" data-size="4">
-
-                                                             </select>
-                                                         </div>
-                                                         <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                             <input class="form-control" id="hospital_zip" name="hospital_zip" type="text" value="<?php echo $hospitalData[0]->hospital_zip;?>">
-                                                         </div>
-                                                     </aside> -->
+                                                    
                                             <div class="clearfix m-t-10">
                                                 <textarea class="form-control" id="geocomplete" name="hospital_address" type="text" ><?php if(isset($hospitalData[0]->hospital_address)){ echo $hospitalData[0]->hospital_address; }?></textarea>
                                                <label class="error" > <?php echo form_error("hospital_address"); ?></label>
@@ -705,14 +691,7 @@
                                                                        </div>
                                                                    </article>
                                                                   </section>
-                                                          <!--  <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Email Id :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                 <input class="form-control" id="users_email" name="users_email" type="email" value="<?php echo $hospitalData[0]->users_email;?>" onblur="checkEmailFormat()" />
-                                                                  <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>
-                                                                <label class="error" > <?php echo form_error("users_email"); ?></label>
-                                                                </div>
-                                                            </article> -->
+                                                         
                                                            <article class="clearfix">
                                                                         <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">Pharmacy Availablity </label>
                                                                         <div class="col-md-8 col-xs-3">
@@ -825,9 +804,163 @@
                                                             <?php } ?>  
                                                              </fieldset>  
                                                         </form>  
-                                                    </div>
+                                                        
+                                                       
+                                                        <div class="gap"></div>
+                                                        <article class="clearfix company-logo">
+                                                            <aside class="clearfix">
+                                                                <h4>Insurance Company Tied
+                                                                     <a id="editcompany" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                                                </h4>
+                                                                <hr/>
+                                                            </aside>
+                                                            <section id="detailcompany">
+                                                                <?php if(!empty($insurance)){
+                                                                    foreach($insurance as $key => $val){    
+                                                                 ?>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="<?php echo base_url()?>assets/insurance/<?php echo $val->insurance_img;?>" class="img-responsive center-block">
+                                                                    <h5><?php echo $val->insurance_Name;?></h5>
+                                                                </div>
+                                                                <?php }} else{?>
+                                                                <div class="col-md-6 col-sm-6">
+                                                                 
+                                                                    <h5>Please select Insurance company</h5>
+                                                                </div>
+                                                                <?php }?>
+                                                                <!--<div class="col-md-3 col-sm-6">
+                                                                    <img src="<?php echo base_url()?>assets/insurance/hdfc.jpg" class="img-responsive center-block">
+                                                                    <h5>HDFC ERGO</h5>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="<?php echo base_url()?>assets/insurance/icici.png" class="img-responsive center-block">
+                                                                    <h5>ICICI</h5>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-6">
+                                                                    <img src="<?php echo base_url()?>assets/insurance/hsbc.png" class="img-responsive center-block">
+                                                                    <h5>HDFC ERGO</h5>
+                                                                </div>-->
+                                                            </section>
+                                                            <section id="newcompany" style="display:none;">
+                                                                <form name="insuranceForm" id="insuranceForm" action="<?php echo site_url("hospital/addInsurance/$hospitalId"); ?>" method="post">
+                                                                    <input type="hidden" name="hospitalInsuranceId" id="hospitalInsuranceId" value="<?php echo $hospitalId;?>" />
+                                                                    <article class="clearfix m-b-10">
+                                                                        <label for="cemail" class="control-label col-md-4 col-sm-4">Company Name :</label>
+                                                                        <div class="col-md-8 col-sm-8">
+                                                                            <!--<input class="form-control" id="diagnosticCenter" name="name" type="text" required=""> -->
+                                                                            <select  multiple="" class="bs-select form-control-select2 " data-width="100%" name="insurances[]" Id="insurances" data-size="4" >
 
+                                                                                    <?php foreach($allInsurance as $key=>$val) {?>
+                                                                                     <option value="<?php echo $val->insurance_id;?>"><?php echo $val->insurance_Name;?></option>
+                                                                                      <?php }?>
+                                                                                 </select>
+                                                                        </div>
+                                                                    </article>
+                                                                   <!-- <article class="form-group m-lr-0 ">
+                                                                        <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
+                                                                        <div class="col-md-8 col-sm-8 text-right">
+                                                                            <input id="uploadFileBb" class="showUpload" disabled="disabled" />
+                                                                            <div class="fileUpload btn btn-sm btn-upload">
+                                                                                <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                                                <input id="uploadBtnBb" type="file" class="upload" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </article>-->
+                                                                    <article class="clearfix ">
+                                                                        <div class="col-md-12 m-t-20 m-b-20">
+                                                                            <button type="submit" class="btn btn-success waves-effect waves-light pull-right">Add More</button>
+                                                                        </div>
+                                                                    </article>
+                                                                </form>    
+                                                            </section>
+                                                        </article> 
+                                                    </div>
+                                                                    
+                                                      <div class="col-md-6 p-b-20">
+                                                            <article class="clearfix">
+                                                                <h4>Awards Recognition
+                                                               <a id="editawards" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                                            </h4>
+                                                                <hr/>
+                                                                <aside class="clearfix" id="detailawards">
+                                                                    <ul class="ul-tick" id="loadAwards">
+                                                                       
+                                                                    </ul>
+                                                                </aside>
+                                                                <form id="newawards" style="display:none">
+                                                                    <aside class="form-group m-lr-0 p-b-20 m-b-30">
+                                                                        <label for="cname" class="control-label col-md-3 col-sm-4">Awards:</label>
+                                                                        <div class="col-md-9 col-sm-8">
+                                                                            <aside class="row">
+                                                                                <div class="col-md-10 col-sm-10 col-xs-10">
+                                                                                    <input type="text" class="form-control" name="hospitalAwards_awardsName" id="hospitalAwards_awardsName" placeholder="FICCI Healthcare Excillence Awards" />
+                                                                                </div>
+                                                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                                                    <a onclick="addAwards()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus" title="Add Awards"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                
+                                                                               
+                                                                            </aside>
+                                                                            <div id="totalAwards">
+                                                                               
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </aside>
+                                                                </form>
+                                                            </article>
+
+                                                            <article class="clearfix">
+                                                                <aside class="clearfix">
+                                                                    <h4>Services
+                                                      <a id="editservices" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                                   </h4>
+                                                                    <hr>
+                                                                </aside>
+                                                                <section id="detailservices">
+                                                                    <ul class="ul-tick" id="loadServices">
+                                                                       <!-- <li>Hemetology</li>
+                                                                        <li>Microbiology Blood Bank</li>
+                                                                        <li>Radiology</li>
+                                                                        <li>Loren</li>
+                                                                        <li>Loren Ipsum</li>
+                                                                        <li>Hemetology</li>
+                                                                        <li>Microbiology Blood Bank</li>
+                                                                        <li>Radiology</li>
+                                                                        <li>Loren</li>
+                                                                        <li>Loren Ipsum</li> -->
+                                                                    </ul>
+                                                                </section>
+                                                                <form>
+                                                                    <aside class="form-group m-lr-0" id="newservices" style="display:none">
+                                                                        <label for="cname" class="control-label col-md-3 col-sm-4">Services :</label>
+                                                                        <div class="col-md-9 col-sm-8">
+                                                                            <aside class="row">
+                                                                                <div class="col-md-10 col-sm-10 col-xs-10">
+                                                                                    <input type="text" class="form-control" name="hospitalServices_serviceName" id="hospitalServices_serviceName" placeholder="Add Service" />
+                                                                                </div>
+                                                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                                                    <a onclick="addServices()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus" title="Add Services"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                
+                                                                               
+                                                                            </aside>
+                                                                            <div id="totalServices">
+                                                                               
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </aside>
+                                                                </form>
+                                                            </article>
+                                                        </div>               
+                                                                    
+                                                                    
+                                                   
                                                 </aside>
+                                                
                                             </div>
                                         </article>
                                     </section>  
@@ -1274,24 +1407,24 @@
       			
                                                             <div class="col-12 col-md-3 col-sm-3">
                                                                             <a title="Image 1" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-1" src="assets/images/hospital/h1.jpg">
+                                                                                    <img class="thumbnail img-responsive" id="image-1" src="<?php echo base_url()?>assets/images/hospital/h1.jpg">
                                                                             </a>
                                                                     </div>
 
                                                                     <div class="col-12 col-md-3 col-sm-3">
                                                                             <a title="Image 2" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-2" src="assets/images/hospital/h2.jpg">
+                                                                                    <img class="thumbnail img-responsive" id="image-2" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
                                                                             </a>
 
                                                                     </div>
                                                                     <div class="col-12 col-md-3 col-sm-3">
                                                                             <a title="Image 3" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-3" src="assets/images/hospital/h3.jpg" />
+                                                                                    <img class="thumbnail img-responsive" id="image-3" src="<?php echo base_url()?>assets/images/hospital/h3.jpg" />
                                                                             </a>
                                                                     </div>
                                                   <div class="col-12 col-md-3 col-sm-3">
                                                                             <a title="Image 3" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-3" src="assets/images/hospital/h3.jpg" />
+                                                                                    <img class="thumbnail img-responsive" id="image-3" src="<?php echo base_url()?>assets/images/hospital/h3.jpg" />
                                                                             </a>
                                                                     </div>
                                         </div>
@@ -1344,9 +1477,7 @@
                                     <section class="tab-pane fade in" id="timeslot">
                                         <div class="col-md-10 p-b-20">
                                             <form class="form-horizontal">
-                                                <article class="clearfix">
-                                                    <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">24/7 Services :</label>
-                                                </article>
+
                                                 <aside id="session">
                                                     <article class="clearfix m-t-10">
                                                         <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
@@ -1389,6 +1520,21 @@
                                                             </div>
                                                         </div>
                                                     </article>
+
+                                                    <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:30 AM" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
                                                 </aside>
                                                 <article class="clearfix ">
                                                     <div class="col-md-12 m-t-20 m-b-20">
@@ -1599,43 +1745,130 @@
                                     
                                    <!--Account Starts -->
                                     <section class="tab-pane fade in" id="account">
-                                        <div class="clearfix m-t-20 p-b-20 doctor-description">
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
-                                                <p class="col-md-8 col-sm-7"><?php echo $hospitalData[0]->users_email; ?></p>
-                                            </article>
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
-                                                <p class="col-md-8 col-sm-7">+91 <?php if(isset($hospitalData[0]->users_mobile)){ echo $hospitalData[0]->users_mobile; } ?></p>
-                                            </article>
-                                            <form class="" name="passwordUpdate" id="passwordUpdate" action="<?php base_url();?>hospital/updatePassword">
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
+                                        <aside class="col-md-9 setting">
+                                            <h4>Account Detail
+                                                <a id="editac"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                            </h4>
+                                            <hr/>
 
-                                                <aside class="col-md-4 col-sm-4">
-                                                   
-                                                    <input type="password" name="users_password" class="form-control" placeholder="New Password" id="users_password" />
-                                                   
-                                                    <!-- <p><a class="m-t-10" href="#">Edit</a></p> -->
-                                                </aside>
-                                            </article>
-                                            
-                                            <article class="clearfix m-b-10">
+                                            <!-- Account Detail Section -->
+                                            <div class="clearfix m-t-20 p-b-20 doctor-description" id="detailac">
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
+                                                    <p class="col-md-8 col-sm-7"><?php echo $hospitalData[0]->users_email; ?></p>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
+                                                    <p class="col-md-8 col-sm-7">+91 <?php if(isset($hospitalData[0]->users_mobile)){ echo $hospitalData[0]->users_mobile; } ?></p>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Membership Type:</label>
+                                                    <p class="col-md-6 col-sm-5">
+                                                        <?php if($hospitalData[0]->hospital_mmbrTyp == 1){echo 'Life Time';}if($hospitalData[0]->hospital_mmbrTyp == 2){echo 'Health Club';}?>
+                                                    </p>
+                                                   <!-- <aside class="col-sm-2">
+                                                        <button class="btn btn-appointment waves-effect waves-light pull-right" type="button">Upgrade</button>
+                                                    </aside> -->
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
+
+                                                    <aside class="col-md-5 col-sm-6">
+                                                        <form class="">
+                                                            <input type="password" name="password" class="form-control" placeholder="New Password" value ="********" readonly="readonly" />
+                                                        </form>
+                                                    </aside>
+                                                </article>
+                                            </div>
+                                            <!-- Account Detail Section -->
+
+                                            <!-- Account Edit Section -->
+                                            <form name="acccountForm" id="acccountForm" type="post">
+                                                <input type="hidden" name="hospitalUserId" id="hospitalUserId" value="<?php echo $hospitalData[0]->users_id;?>" >
+                                                 <p class="text-success" style="display:none;" id="error-password_email_check_success"> Data Changed Successfully!</p>
+                                                <aside id="newac" style="display:none">
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Registered Email Id :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input class="form-control" id="users_email" name="users_email" type="users_email" required="" value="<?php echo $hospitalData[0]->users_email; ?>" onblur="checkEmailFormat()">
+                                                        <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
+                                                        <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
+                                                        <label class="error" style="display:none;" id="error-users_emailBlank"> Email id field should not be blank!</label>
+                                                    </div>
+                                                </article>
+
+                                               <!-- <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="" value="Appolo Pharmacies">
+                                                    </div>
+                                                </article> -->
+
+                                                <article class="clearfix m-b-10 ">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Mobile Numbers :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <aside class="row">
+                                                            <!--<div class="col-md-3 col-sm-3 col-xs-12">
+                                                                <select class="selectpicker" data-width="100%">
+                                                                    <option>+91</option>
+                                                                    <option>+1</option>
+                                                                </select>
+                                                            </div>-->
+                                                            <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
+                                                                <input type="teL" class="form-control" name="users_mobile" id="users_mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="<?php if(isset($hospitalData[0]->users_mobile)){ echo $hospitalData[0]->users_mobile; } ?>" />
+                                                                   <p class="error" id="error-users_mobile" style="display:none;"> Enter Mobile Number!</p>
+                                                            </div>
+                                                            <!--<p class="m-t-10">* If it is landline, include Std code with number </p> -->
+                                                        </aside>
+                                                    </div>
+                                                </article>
+
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cname" class="control-label col-md-4 col-sm-4">Membership Type:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <select class="selectpicker" data-width="100%" name="hospital_mmbrTyp" id="hospital_mmbrTyp">
+                                                            <option value="1" <?php if($hospitalData[0]->hospital_mmbrTyp == 1){echo "selected";} ?>>Life Time</option>
+                                                            <option value="2" <?php if($hospitalData[0]->hospital_mmbrTyp == 2){echo "selected";} ?>>Health Club</option>
+
+                                                        </select>
+                                                    </div>
+                                                </article>
+                                                <article class="clearfix m-b-10">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Change Password:</label>
+
+                                                    <aside class="col-md-8 col-sm-8">
+                                                      
+                                                            <input type="password" name="users_password" id="users_password" class="form-control" placeholder="New Password" />
+                                                             <label class="error" style="display:none;" id="error-users_password"> please enter password and should be 6 character </label>
+                                                    </aside>
+                                                </article>
+                                               <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-5">Confirm Password:</label>
 
-                                                <aside class="col-md-4 col-sm-4">
+                                                <aside class="col-md-8 col-sm-8">
                                                    
                                                     <input type="password" name="cnfPassword" class="form-control" placeholder="Confirm Password" id="cnfPassword" />
                                                    
-                                                    <p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>
-                                                    <p class="error" id="error-password_email_check" style="display:none;"> Server not respond properly!</p>
-                                                    <p class="text-success" style="display:none;" id="error-password_email_check_success"> Password Changed Successfully!</p>
+                                                    <!--<p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p> -->
+                                                     <label class="error" style="display:none;" id="error-cnfPassword"> Password and confirm password should be same </label>
+                                                  
+                                                   
                                                 </aside>
                                             </article>
                                                <!-- <input type="text" name="myPassword" id="myPassword" value="<?php if(isset($bloodBankData[0]->users_password)){ echo $bloodBankData[0]->users_password;}?>" /> -->
-                                            </form>      
-                                        </div>
+                                                <article class="clearfix ">
+                                                    <div class="col-md-12 m-t-20 m-b-20">
+
+                                                        <button type="button" class="btn btn-success waves-effect waves-light pull-right" onclick="updateAccount()">Update</button>
+                                                    </div>
+
+                                                </article>
+                                            </aside>
+                                            </form>    
+                                            <!-- Account Edit Section -->
+                                        </aside>
                                     </section>
+                                   
                                    <!-- Account Ends -->
 
                                 </article>
@@ -1761,13 +1994,11 @@
     </script>
      <script src="<?php echo base_url();?>assets/js/jquery-1.8.2.min.js"> </script>
     <script src="<?php echo base_url();?>assets/js/framework.js"> </script>
-        <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js">
-    </script>
      <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js">  </script>
     <script type="text/javascript" src="https://www.google.com/jsapi">
     </script>
-    
+ 
    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 
     <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
@@ -1775,9 +2006,11 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script>
     <script src="<?php echo base_url(); ?>assets/js/angular.min.js"> </script>
     <script src="<?php echo base_url(); ?>assets/js/pages/hospital-detail.js"></script>
+    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>
     <script>
          var urls = "<?php echo base_url()?>";
          var stateIds = $.trim($('#StateId').val());
+          var hospitalId = <?php echo $hospitalId; ?>;
          $(function(){
         $("#geocomplete").geocomplete({
           map: ".map_canvas",
@@ -1792,6 +2025,7 @@
 
       });
         $(document).ready(function(){
+           
            /* fetchStates();
             function fetchStates(){
             
@@ -1828,6 +2062,11 @@
            });
            
         }*/
+        $(".bs-select").select2({ placeholder: "Select Insurance",
+          allowClear: true
+      });
+        loadAwards();
+        loadServices();
         var pharmacy_status = '';
         pharmacy_status = $('#pharmacy_status').val();
         var bloodbank_status = '';
@@ -1836,9 +2075,120 @@
         $("#bloodbankbtn").trigger("click");
         if(bloodbank_status != '')
         $("#pharmacybtn").trigger("click");
-
-
+        
+        
     }) ;
+    function addAwards(){
+        var hospitalAwards_awardsName = $.trim($('#hospitalAwards_awardsName').val());
+        if(hospitalAwards_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/addHospitalAwards',
+               type: 'POST',
+              data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
+              success:function(datas){
+               // console.log(datas);
+                  loadAwards();
+                  $('#hospitalAwards_awardsName').val('');
+              }
+           });
+        }    
+    }
+    function editAwards(awardsId){
+         var edit_awardsName = $.trim($('#'+awardsId).val());
+        
+        if(edit_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/editHospitalAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId , 'hospitalAwards_awardsName' : edit_awardsName },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        }  
+    }
+    function deleteAwards(awardsId){
+        
+         $.ajax({
+               url : urls + 'index.php/hospital/deleteHospitalAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        
+    }
+    function loadAwards(){
+       
+        $('#loadAwards').load(urls + 'index.php/hospital/hospitalAwards/'+hospitalId,function () {
+           // alert('callback function ');
+        });
+        $('#totalAwards').load(urls + 'index.php/hospital/detailAwards/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+    }
+    function loadServices(){
+        $('#loadServices').load(urls + 'index.php/hospital/hospitalServices/'+hospitalId,function (data) {
+            //alert('callback function implementation');
+            
+        });
+        $('#totalServices').load(urls + 'index.php/hospital/detailServices/'+hospitalId,function () {
+            //alert('callback function implementation');
+        });
+    }
+    function addServices(){
+        var hospitalServices_serviceName = $.trim($('#hospitalServices_serviceName').val());
+        //alert(hospitalServices_serviceName);
+        if(hospitalServices_serviceName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/addHospitalService',
+               type: 'POST',
+              data: {'hospitalId' : hospitalId , 'hospitalServices_serviceName' : hospitalServices_serviceName },
+              success:function(datas){
+               // console.log(datas);
+                  loadServices();
+                  $('#hospitalServices_serviceName').val('');
+              }
+           });
+        }    
+    }
+    
+    function editServices(serviceId){
+         var edit_serviceName = $.trim($('#'+serviceId).val());
+        
+        if(edit_serviceName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/editHospitalService',
+               type: 'POST',
+              data: {'serviceId' : serviceId , 'hospitalServices_serviceName' : edit_serviceName },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        }  
+    }
+    
+    function deleteServices(serviceId){
+        
+         $.ajax({
+               url : urls + 'index.php/hospital/deleteHospitalService',
+               type: 'POST',
+              data: {'serviceId' : serviceId },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        
+    }
       function fetchCity(stateId) {    
            
            $.ajax({
@@ -1860,10 +2210,9 @@
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
         //var emails = $.trim($('#users_email').val());
-        var cpname = $.trim($('#hospital_cntPrsn').val());
         
        
-            if($.trim($('#hospital_name').val()) === ''){
+         if($.trim($('#hospital_name').val()) === ''){
                 $('#hospital_name').addClass('bdr-error');
                 
             }
@@ -1892,25 +2241,112 @@
          }
         }
         function checkEmailFormat(){
+           
                 var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
                 var email = $('#users_email').val();
                 if(email!==''){
                     if (!filter.test(email)){
-                       $('#users_email').addClass('bdr-error');
+                       $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
                     }
             }
         } 
         
-        function check_email(myEmail){
+       
+        function updateAccount(){
+          
+            var pswd = $.trim($("#users_password").val());
+            var cnfpswd = $.trim($("#cnfPassword").val());
+            var mobile = $('#users_mobile').val();
+            var emails = $('#users_email').val();
+            var user_tables_id = $('#user_tables_id').val();
+            var users_mobile = $('#users_mobile').val();
+            var returnValue = 0;
+           
+            var status = 1;
+            if(emails === ''){
+                $('#error-users_emailBlank').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(users_mobile === ''){
+                $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(pswd != ''){
+                if(pswd.length < 6){
+                    $('#users_password').addClass('bdr-error');
+                    $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+                   // $('#users_password').focus();
+                   status = 0;
+                }
+
+               if(pswd != cnfpswd){
+                    $('#cnfPassword').addClass('bdr-error');
+                    $('#error-cnfPassword').fadeIn().delay(3000).fadeOut('slow');
+
+                   // $('#cnfpassword').focus();
+                   status = 0;
+                }
+            }
+            if(status == 0)
+                return false;
+            else{
+                    var user_table_id = $('#user_tables_id').val();
+                    $.ajax({
+                        url : urls + 'index.php/hospital/check_email',
+                        type: 'POST',
+                       data: {'users_email' : emails,'user_table_id' : user_table_id },
+                       success:function(datas){
+                           //console.log(datas);
+                           if(datas == 0){
+                            
+                             $.ajax({
+                                    url : urls + 'index.php/hospital/updatePassword',
+                                    type: 'POST',
+                                   //data: {'currentPassword' : pswd,'existingPassword' : password,'user_tables_id' : user_tables_id}, password updated from another user except super admin
+                                   data: $('#acccountForm').serialize(),
+                                   success:function(insertData){
+                                       
+                                       console.log(insertData);
+
+                                       if(insertData == 1){
+                                     $('#users_password').val('');
+                                      $('#cnfPassword').val('');
+                                   
+                                    setTimeout(function(){
+                                      $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut(function() {
+                                      window.location.reload();
+                                                               
+                                        });
+                                       }, 4000);
+                                      
+                                        return true;
+                                      }
+                                     
+                                   } 
+                                });
+                       }
+                       else {
+                         $('#users_email').addClass('bdr-error');
+                         $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
+
+                        return false;
+                       }
+                       } 
+                    });
+                
+              
+            }
+        }
+        
+         function check_email(myEmail){
             var user_table_id = $('#user_tables_id').val();
            $.ajax({
                url : urls + 'index.php/hospital/check_email',
                type: 'POST',
               data: {'users_email' : myEmail,'user_table_id' : user_table_id },
               success:function(datas){
-                 // console.log(datas);
+                  console.log(datas);
                   if(datas == 0){
-                   $("form[name='hospitalDetail']").submit();
                    return true;
               }
               else {
@@ -1922,57 +2358,6 @@
               } 
            });
         }
-        function updatePassword(){
-          
-            var pswd = $.trim($("#users_password").val());
-            var cnfpswd = $.trim($("#cnfPassword").val());
-            //var password = $('#myPassword').val();
-            var user_tables_id = $('#user_tables_id').val();
-            var status = 1;
-            if(pswd.length < 6){
-                $('#users_password').addClass('bdr-error');
-                //$('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
-               // $('#users_password').focus();
-               status = 0;
-            }
-           
-           if(pswd != cnfpswd){
-                $('#cnfPassword').addClass('bdr-error');
-               // $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#cnfpassword').focus();
-               status = 0;
-            }
-            if(status == 0)
-                return false;
-            else{
-                    $.ajax({
-                  url : urls + 'index.php/hospital/updatePassword',
-                  type: 'POST',
-                 //data: {'currentPassword' : pswd,'existingPassword' : password,'user_tables_id' : user_tables_id}, password updated from another user except super admin
-                 data: {'currentPassword' : pswd,'user_tables_id' : user_tables_id},
-                 success:function(datas){
-                     //var statuss = datas.split('~');
-                     //console.log(datas);
-                    
-                     if(datas == 0){
-                   $('#error-password_email_check').fadeIn().delay(4000).fadeOut('slow');
-                      return true;
-                    }
-                    else {
-                           /*$('#myPassword').val(statuss[1]);*/
-                           $('#users_password').val('');
-                           $('#cnfPassword').val('');
-                           $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut('slow');
-
-                           return true;
-                    }
-                 } 
-              });
-              
-            }
-        }
-        
     </script>
 </body>
 
