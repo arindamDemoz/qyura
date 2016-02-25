@@ -73,7 +73,10 @@ $(function () {
     });
 });
 
-
+$("#edit").click(function () {
+    $("#detail").toggle();
+    $("#newDetail").toggle();
+});
 $("#editdetail").click(function () {
     $("#detail").toggle();
     $("#newDetail").toggle();
@@ -152,3 +155,5 @@ $("#modal-carousel").carousel({
 $("#modal-carousel").on("slid.bs.carousel", function () {
     $(".modal-title").html($(this).find(".active img").attr("title"));
 })
+
+
