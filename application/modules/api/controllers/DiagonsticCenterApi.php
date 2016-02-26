@@ -16,8 +16,14 @@ class DiagonsticCenterApi extends MyRest {
     function diagonsticlist_post() {
 
 
-        $this->form_validation->set_rules('lat', 'Lat', 'required|decimal');
-        $this->form_validation->set_rules('long', 'Long', 'required|decimal');
+        $this->form_validation->set_rules('lat', 'Lat', 'xss_clean|trim|required|decimal');
+        $this->form_validation->set_rules('long', 'Long', 'xss_clean|trim|required|decimal');
+       // $this->form_validation->set_rules('isemergency', 'Is Emergency', 'xss_clean|trim|numeric|required');
+        $this->form_validation->set_rules('radius', 'Radius', 'xss_clean|trim|numeric|required');
+        $this->form_validation->set_rules('rating', 'Rating', 'xss_clean|trim|numeric|required');
+        $this->form_validation->set_rules('isHealtPkg', 'Is Health Package', 'xss_clean|trim|numeric|required');
+        $this->form_validation->set_rules('isConsulting', 'Is Consultaion', 'xss_clean|trim|numeric|required');
+        $this->form_validation->set_rules('notin', 'Not in', 'xss_clean|trim|required');
 
         if ($this->form_validation->run() == FALSE) {
             // setup the input
@@ -25,73 +31,41 @@ class DiagonsticCenterApi extends MyRest {
             $response = array('status' => FALSE, 'msg' => $message);
             $this->response($response, 400);
         } else {
-
-
-            $lat = isset($_POST['lat']) ? $_POST['lat'] : '';
-            $long = isset($_POST['long']) ? $_POST['long'] : '';       
             
-            $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
+            
+            $lat = isset($_POST['lat']) ? $this->input->post('lat') : '';
+            $long = isset($_POST['long']) ? $this->input->post('long') : '';      
+            $isemergency = isset($_POST['isemergency'])  ? $this->input->post('isemergency') : NULL;  
+            
+            $notIn = isset($_POST['notin']) && $_POST['notin'] != 0 ? $_POST['notin'] : '';
             $notIn = explode(',', $notIn);
+             
+            // filtration parameter
+            $radius = isset($_POST['radius']) ? $this->input->post('radius') : 5;
+            $rating = isset($_POST['rating']) ? $this->input->post('rating') : NULL; 
+            $isHealtPkg = isset($_POST['isHealtPkg'])  ? $this->input->post('isHealtPkg') : NULL; 
+            $isConsulting = isset($_POST['isConsulting'])  ? $this->input->post('isConsulting') : NULL; 
 
 
+            $response['data'] = $this->diagonsticCenter_models->diaginsticList($lat,$long,$notIn,$isemergency,$radius,$rating,$isHealtPkg, $isConsulting);
+            
+            $option = array('table'=>'diagnostic','select'=>'diagnostic_id');
+            $deleted = $this->singleDelList($option);
+            $response['diagon_deleted']= $deleted;
+           
+            $response['colName'] =  array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","diaCat","healpkgCount", "consultinCount","userId");
+           
+              if($response['data']){
+                $response['status'] = TRUE;
+                $response['msg'] = 'success';
+                $this->response($response, 200);
+              }else{
+                $response['status'] = False;
+                $response['msg'] = 'There is no Diagonstic Center at this range!';
+                $this->response($response, 400);
+           }
 
-                $this->db->select('qyura_diagnostic.diagnostic_id as id, diagnostic_deleted as fav, diagnostic_deleted as rat, diagnostic_address adr,diagnostic_name name,diagnostic_phn phn, diagnostic_lat lat, diagnostic_long long, qyura_diagnostic.modifyTime upTm, diagnostic_img imUrl, (
-                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( diagnostic_lat ) ) * cos( radians( diagnostic_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( diagnostic_lat ) ) )
-                ) AS distance, Group_concat(qyura_diagnosticsCat.diagnosticsCat_catName order by diagnosticsCat_catName) as diaCat')
 
-                    ->from('qyura_diagnostic')
-
-                    ->join('qyura_diagnosticsHasCat', 'qyura_diagnosticsHasCat.diagnosticsHasCat_diagnosticId=qyura_diagnostic.diagnostic_id','left')
-                    
-                    ->join('qyura_diagnosticsCat', 'qyura_diagnosticsCat.diagnosticsCat_catId=qyura_diagnosticsHasCat.diagnosticsHasCat_diagnosticsCatId','left')
-
-                    ->where(array('diagnostic_deleted' => 0))
-                    
-                    ->having(array('distance <' => USER_DISTANCE))
-                    
-                    ->where_not_in('diagnostic_id', $notIn)
-                    
-                    ->order_by('distance' , 'ASC')
-                    
-                    ->group_by('diagnostic_id   ')
-                    
-                    ->limit(DATA_LIMIT);
-
-            $response = $this->db->get()->result();
-            //echo $this->db->last_query(); die();
-            $aoClumns = array("id","fav","rat","adr", "name","phn","lat","lng","upTm","imUrl","diaCat");
-            //  print_r($response); die();
-            $finalResult = array();
-            if (!empty($response)) {                
-                foreach ($response as $row) {
-                    $finalTemp = array();
-                    $finalTemp[] = isset($row->id) ? $row->id : "";
-                    $finalTemp[] = isset($row->fav) ? $row->fav : "";
-                    $finalTemp[] = isset($row->rat) ? $row->rat : "";
-                    $finalTemp[] = isset($row->adr) ? $row->adr : "";
-                    $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->phn) ? $row->phn : "";
-                    $finalTemp[] = isset($row->lat) ? $row->lat : "";
-                    $finalTemp[] = isset($row->long) ? $row->long : "";
-                    $finalTemp[] = isset($row->upTm) ? $row->upTm : "";
-                    $finalTemp[] = isset($row->imUrl) ? base_url().'assets/diagnosticsImage/'.$row->imUrl : "";
-                    $finalTemp[] = isset($row->diaCat) ? $row->diaCat : "";
-                    $finalResult[] = $finalTemp;
-                    
-                }
-            }
-
-            if (!empty($finalResult)) {
-                $finalStatus['msg'] = 'Recored found!';
-                $finalStatus['status'] = TRUE;
-                $finalStatus['colName'] = $aoClumns;
-                $finalStatus['data'] = $finalResult;
-                $this->response($finalStatus, 200); // 200 being the HTTP response code
-            } else {
-                $finalStatus['msg'] = 'No diagnostic centres is available at this range!';
-                $finalStatus['status'] = FALSE;
-                $this->response($finalStatus, 404);
-            }
         }
     }
 
@@ -108,7 +82,7 @@ class DiagonsticCenterApi extends MyRest {
       {  
         $diagonsticId = $this->input->post('diagonsticId');
         $diagonsticDetails = $this->diagonsticCenter_models->diagonstic_Details($diagonsticId);
-       // print_r($diagonsticDetails);exit;
+        //print_r($diagonsticDetails);exit;
         if($diagonsticDetails)
         {
             $response['diagonsticDetails'] = $diagonsticDetails;
@@ -121,13 +95,15 @@ class DiagonsticCenterApi extends MyRest {
             
             $response['reviewCount'] = $reviewCount = $this->diagonsticCenter_models->getDiagnosticsReviewCount($diagonsticId);
             
-           $response['rating'] = $this->diagonsticCenter_models->getDiagnosticsAvgRating($diagonsticId);
+            $response['rating'] = $this->diagonsticCenter_models->getDiagnosticsAvgRating($diagonsticDetails->diagnostic_usersId);
             
             $response['diagDoctors'] = $this->diagonsticCenter_models->getDiagnosticsDoctors($diagonsticId,$diagonsticDetails->diagnostic_usersId);
           
-            $response['DiagnosticsCat'] = $hosDiagnostics = $this->diagonsticCenter_models->getDiagnosticsCat($diagonsticId);
+            $response['diagnosticsCat'] = $hosDiagnostics = $this->diagonsticCenter_models->getDiagnosticsCat($diagonsticId);
             
-            $response['awards'] =  $this->diagonsticCenter_models->getDiagnosticsds($diagonsticId);
+            $response['awards'] =  $this->diagonsticCenter_models->getDiagAwards($diagonsticId);
+            
+            $response['diagonHelthPkg'] = $diagonHelthPkg =  $this->diagonsticCenter_models->getDiagonHelthPkg($diagonsticId);
             
             $response['gallery'] =  $this->diagonsticCenter_models->getDiagonGallery($diagonsticId);
             

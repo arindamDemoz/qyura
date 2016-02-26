@@ -186,7 +186,7 @@ class Ion_auth_api {
                 }
             } else {
                 //$this->set_error('forgot_password_unsuccessful');
-                $this->set_error('forgot_password_active_unsuccessful');
+                $this->set_error('forgot_password_otp_active_unsuccessful');
                 return FALSE;
             }
         } else {
@@ -352,6 +352,7 @@ class Ion_auth_api {
                 $this->set_message('activation_email_successful');
                 return $data;
             } else {
+                
                 $message = $this->load->view($this->config->item('email_templates', 'auth_conf_api') . $this->config->item('email_activate', 'auth_conf_api'), $data, true);
 
                 $this->email->clear();

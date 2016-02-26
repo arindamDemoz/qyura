@@ -16,12 +16,17 @@ class DoctorApi extends MyRest {
     function doctorlist_post() {
 
 
-        $this->form_validation->set_rules('lat', 'Lat', 'required|decimal');
-        $this->form_validation->set_rules('long', 'Long', 'required|decimal');
-        $this->form_validation->set_rules('specialitycatid', 'Speciality category Id', 'required|xss_clean|numeric');
+        $this->bf_form_validation->set_rules('lat', 'Lat', 'xss_clean|trim|required|decimal');
+        $this->bf_form_validation->set_rules('long', 'Long', 'xss_clean|trim|required|decimal');
+        $this->bf_form_validation->set_rules('specialityid', 'Speciality Id', 'xss_clean|trim|numeric');
+        $this->bf_form_validation->set_rules('isemergency', 'Is Emergency', 'xss_clean|trim|numeric|required');
+        $this->bf_form_validation->set_rules('radius', 'Radius', 'xss_clean|trim|numeric|required');
+        $this->bf_form_validation->set_rules('rating', 'Rating', 'xss_clean|trim|numeric|required');
+        $this->bf_form_validation->set_rules('exp', 'Experience', 'xss_clean|trim|required');
+        $this->bf_form_validation->set_rules('notin', 'Not in', 'xss_clean|trim|required');
 
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->bf_form_validation->run($this) == FALSE) {
             // setup the input
             $message = $this->validation_post_warning();
             $response = array('status' => FALSE, 'msg' => $message);
@@ -29,120 +34,140 @@ class DoctorApi extends MyRest {
         } else {
 
 
-            $lat = isset($_POST['lat']) ? $_POST['lat'] : '';
-            $long = isset($_POST['long']) ? $_POST['long'] : '';       // $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
-            $specialitycatid = isset($_POST['specialitycatid']) ? $_POST['specialitycatid'] : '';
+            $lat = isset($_POST['lat']) ? $this->input->post('lat') : '';
+            $long = isset($_POST['long']) ? $this->input->post('long') : '';
+            $specialityid = isset($_POST['specialityid']) && $_POST['specialityid'] != 0 ? $this->input->post('specialityid') : NULL;
+            $isemergency = isset($_POST['isemergency']) ? $this->input->post('isemergency') : NULL;
 
-            $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
+            // filtration parameter
+            $radius = isset($_POST['radius']) ? $this->input->post('radius') : 5;
+            $rating = isset($_POST['rating']) ? $this->input->post('rating') : NULL;
+            $exp = isset($_POST['exp']) ? $this->input->post('exp') : NULL;
+
+
+            $notIn = isset($_POST['notin']) && $_POST['notin'] != 0 ? $this->input->post('notin') : '';
             $notIn = explode(',', $notIn);
 
-            
-            $aoClumns = array("id","name","exp","imUrl","rating", "consFee", "speciality","degree", "lat", "long");
+            $response['data'] = $this->doctors_model->getDoctorsList($lat, $long, $notIn, $isemergency, $specialityid, $radius, $rating, $exp);
 
-            $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
-                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( doctors_lat ) ) * cos( radians( doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( doctors_lat ) ) )
-                ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, Group_concat(qyura_degree.degree_SName) as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
 
-                    ->from('qyura_doctors')
-                    
-                    ->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId=qyura_doctors.doctors_userId','left')
-                    
-                    ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_doctorsId=qyura_doctors.doctors_id', 'left')
+            $option = array('table' => 'doctors', 'select' => 'doctors_id');
+            $deleted = $this->singleDelList($option);
+            $response['doc_deleted'] = $deleted;
 
-                    ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left')
-
-                    ->join('qyura_degree', 'qyura_doctorAcademic.doctorAcademic_degreeId=qyura_degree.degree_id', 'left')
-
-                    ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
-
-                    ->where(array('doctors_deleted' => 0, 'qyura_specialitiesCat.specialitiesCat_id' => $specialitycatid,'usersRoles_roleId' => ROLE_DOCTORE, 'usersRoles_parentId'=> 0))
-                    
-                    ->having(array('distance <' => USER_DISTANCE))
-                    
-                    ->where_not_in('doctors_id', $notIn)
-                    
-                    ->order_by('distance' , 'ASC')
-                    
-                    ->group_by('doctors_id')
-                    
-                    ->limit(DATA_LIMIT);
-
-            $response = $this->db->get()->result();
-           // echo $this->db->last_query(); die();
-
-            //  print_r($response); die();
-            $finalResult = array();
-            if (!empty($response)) {                
-                foreach ($response as $row) {
-                    $finalTemp = array();
-                    $finalTemp[] = isset($row->id) ? $row->id : "";
-                    $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
-                    $finalTemp[] = isset($row->imUrl) ? base_url().'assets/doctorsImages/'.$row->imUrl : "";
-                    $finalTemp[] = isset($row->rating) ? $row->rating : "";
-                    $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
-                    $finalTemp[] = isset($row->specialityCat) ? $row->specialityCat : "";
-                    $finalTemp[] = isset($row->degree) ? $row->degree : "";
-                    $finalTemp[] = isset($row->lat) ? $row->lat : "";
-                    $finalTemp[] = isset($row->long) ? $row->long : "";
-                    $finalResult[] = $finalTemp;
-                    
-                }
-            }
-
-            if (!empty($finalResult)) {
-                $finalStatus['msg'] = 'success';
-                $finalStatus['status'] = TRUE;
-                $finalStatus['colName'] = $aoClumns;
-                $finalStatus['data'] = $finalResult;
-                $this->response($finalStatus, 200); // 200 being the HTTP response code
+            $response['colName'] = array("id", "name", "exp", "imUrl", "rating", "consFee", "speciality", "degree", "lat", "long", "isEmergency","mobile","userId");
+            if ($response['data']) {
+                $response['status'] = TRUE;
+                $response['msg'] = 'success';
+                $this->response($response, 200);
             } else {
-                $finalStatus['msg'] = 'Doctor  does not exist in this specialty!';
-                $finalStatus['status'] = FALSE;
-                $this->response($finalStatus, 404);
+                $response['status'] = FALSE;
+                $response['msg'] = 'There is no Doctor at this range!';
+                $this->response($response, 400);
+            }
+        }
+    }
+
+    function doctordetail_post() {
+        $this->bf_form_validation->set_rules('doctorId', 'DoctorId Id', 'xss_clean|numeric|required|trim');
+        if ($this->bf_form_validation->run($this) == FALSE) {
+            // setup the input
+            $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
+            $this->response($response, 400);
+        } else {
+            $doctorId = $this->input->post('doctorId');
+            $doctorsDetails = $this->doctors_model->getDoctorsDetails($doctorId);
+            // echo $doctorsDetails; exit;
+            // print_r($doctorsDetails);
+            if (!empty($doctorsDetails['id']) && $doctorsDetails['id'] != '') {
+                $response['docDetails'] = $doctorsDetails;
+
+                $response['services'] = $services = $this->doctors_model->getDoctorServices($doctorId);
+
+                $response['reviewCount'] = $reviewCount = $this->doctors_model->getDoctorNumReviews($doctorsDetails['userId']);
+
+                $response['review'] = $this->doctors_model->getDoctorReviews($doctorsDetails['userId']);
+
+                //  $response['fav'] = $this->doctors_model->getFavList($doctorsDetails['userId']);
+
+                $response['docGallary'] = $gallary = $this->doctors_model->getDocGallery($doctorId);
+
+                $response['availability'] = $hosDiagonDetail = $this->doctors_model->getHosDiagonDetail($doctorsDetails['userId']);
+
+                $response['status'] = TRUE;
+                $response['msg'] = 'success';
+                $this->response($response, 200); // 200 being the HTTP response code
+            } else {
+                $response['status'] = false;
+                $response['msg'] = 'No Doctor is available at this Id';
+                $this->response($response, 400); // 200 being the HTTP response code
             }
         }
     }
     
+   public function timeslot_post(){
+            $this->bf_form_validation->set_rules('type', 'Type', 'xss_clean|trim|required');
+            $this->bf_form_validation->set_rules('doctorUserId', 'Doctor UserId', 'xss_clean|numeric|required|trim');
+            $this->bf_form_validation->set_rules('id','Hospital Or Diagnostic Id','xss_clean|numeric|trim');
+              if ($this->bf_form_validation->run() == FALSE) {
+            // setup the input
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'msg' => $message);
+            $this->response($response, 400);
+        }else{
+             $id = $this->input->post('id');
+             $doctorUserId = $this->input->post('doctorUserId');
+             $type = $this->input->post('type');
+             if($type == 'hos'){
+                 $arrayKey = 'hospitalTimeSlot';
+                 $msg = 'Time slote not assign for this  hospital';
+                 $timeSlot = $this->doctors_model->getHosTimeSlot($id, $doctorUserId);
+                 $docTimeslot = $this->doctors_model->getDocTimeSlotForhospital($id, $doctorUserId);
+             }else{
+                 $arrayKey = 'diagnosticTimeSlot';
+                 $msg = 'Time slote not assign for this dignostic center';
+                 $timeSlot = $this->doctors_model->getDiagnoTimeSlot($id, $doctorUserId);
+                 $docTimeslot = $this->doctors_model->getDocTimeSlotForDiagon($id, $doctorUserId);
+             }
+            
+             if (!empty($timeSlot) && $timeSlot != NULL) {
+                $response[$arrayKey] = $timeSlot;
+                $response['doctorTimeSlot'] = $docTimeslot;
+                $response['status'] = TRUE;
+                $response['msg'] = 'success';
+                $this->response($response, 200);
+            } else {
+                $response['status'] = FALSE;
+                $response['msg'] = $msg;
+                $this->response($response, 400);
+            }
+            
+        }
+    }
     
-   function doctordetail_post() {
-     $this->form_validation->set_rules('doctorId','DoctorId Id','xss_clean|numeric|required|trim');
-      if($this->form_validation->run($this) == FALSE)
-      { 
-        // setup the input
-         $response =  array('status'=>FALSE,'message'=>$this->validation_post_warning());
-         $this->response($response, 400);
-      }
-      else 
-      {  
-        $doctorId = $this->input->post('doctorId');
-        $doctorsDetails = $this->doctors_model->getDoctorsDetails($doctorId);
-        if($doctorsDetails)
-        {
-             $response['docDetails'] = $doctorsDetails;
+    
+     public function bookNow_post(){
+            $this->bf_form_validation->set_rules('doctorUserId', 'Doctor UserId', 'xss_clean|numeric|required|trim');
+              if ($this->bf_form_validation->run() == FALSE) {
+            // setup the input
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'msg' => $message);
+            $this->response($response, 400);
+        }else{
+             $doctorUserId = $this->input->post('doctorUserId');
+             $timeSlot = $this->doctors_model->getDocAllTimeSlot($doctorUserId);
+             if (!empty($timeSlot) && $timeSlot != NULL) {
+                $response['booknow'] = $timeSlot;
+                $response['status'] = TRUE;
+                $response['msg'] = 'success';
+                $this->response($response, 200);
+            } else {
+                $response['status'] = FALSE;
+                $response['msg'] = $msg;
+                $this->response($response, 400);
+            }
             
-             $response['services'] = $services =  $this->doctors_model->getDoctorServices($doctorId);
-            
-             $response['reviewCount'] = $reviewCount =  $this->doctors_model->getDoctorNumReviews($doctorsDetails['userId']);
-           
-             $response['getDoctorReviews'] = $this->doctors_model->getDoctorReviews($doctorsDetails['userId']);
-            
-            
-            $response['hosDiagonDetail'] = $hosDiagonDetail = $this->doctors_model->getHosDiagonDetail($doctorsDetails['userId']);
-          
-            $response['status'] = TRUE;
-            $response['msg'] = 'success';
-            $this->response($response, 200); // 200 being the HTTP response code
         }
-        else
-        {
-            $response['status'] = false;
-            $response['msg'] = 'No Hospital  is available at this Id';
-            $this->response($response, 400); // 200 being the HTTP response code
-        }
-        
-      }
-
-  } 
+    }
 
 }

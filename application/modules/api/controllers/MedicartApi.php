@@ -10,18 +10,21 @@ class MedicartApi extends MyRest {
         // Construct our parent class
         parent::__construct();
         $this->load->model(array('medicart_model'));
+        //$this->methods['hospital_post']['limit'] = 1; //500 requests per hour per user/key
+        // $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
+        // $this->methods['user_delete']['limit'] = 50; //50 requests per hour per user/key
     }
 
     function list_post() {
 
 
-        $this->form_validation->set_rules('lat', 'Lat', 'required|decimal');
-        $this->form_validation->set_rules('long', 'Long', 'required|decimal');
-        $this->form_validation->set_rules('q', 'q', 'trim|xss_clean');
-        $this->form_validation->set_rules('notin', 'notin', 'trim|xss_clean');
+        $this->bf_form_validation->set_rules('lat', 'Lat', 'required|decimal');
+        $this->bf_form_validation->set_rules('long', 'Long', 'required|decimal');
+        $this->bf_form_validation->set_rules('q', 'q', 'trim|xss_clean');
+        $this->bf_form_validation->set_rules('notin', 'notin', 'trim|xss_clean');
 
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->bf_form_validation->run() == FALSE) {
             // setup the input
             $message = $this->validation_post_warning();
             $response = array('status' => FALSE, 'msg' => $message);
@@ -115,11 +118,11 @@ class MedicartApi extends MyRest {
     function MedicartDitail_post() {
 
 
-        $this->form_validation->set_rules('medicartOffer_id', 'MedicartOffer id', 'required|integer');
+        $this->bf_form_validation->set_rules('medicartOffer_id', 'MedicartOffer id', 'required|is_natural_no_zero');
         
 
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->bf_form_validation->run() == FALSE) {
             // setup the input
             $message = $this->validation_post_warning();
             $response = array('status' => FALSE, 'msg' => $message);
@@ -201,5 +204,151 @@ class MedicartApi extends MyRest {
             }
         }
     }
+    
+    function addContect_post() {
+        
+        $this->bf_form_validation->set_rules('medicartOfferId', 'Medicart Offer Id', 'xss_clean|trim|required|numeric|is_natural_no_zero');
+        $this->bf_form_validation->set_rules('name', 'name', 'xss_clean|trim|required|max_length[80]|callback__alpha_dash_space');
+        $this->bf_form_validation->set_rules('mobileNo', 'Mobile No', 'xss_clean|trim|numeric|min_length[10]|max_length[10]');
+        $this->bf_form_validation->set_rules('email', 'email', 'xss_clean|trim|valid_email|max_length[255]');
+        
+
+        if ($this->bf_form_validation->run($this) == FALSE) {
+            // setup the input
+            $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
+            $this->response($response, 400);
+        } else {
+
+            $medicartOfferId = isset($_POST['medicartOfferId']) ? $this->input->post('medicartOfferId') : '';
+            $name = isset($_POST['name']) ? $this->input->post('name') : '';
+            $mobileNo = isset($_POST['mobileNo']) ? $this->input->post('mobileNo') : '';
+            $email = isset($_POST['email']) ? $this->input->post('email') : '';
+            
+            $data = array(
+                'medicartContect_name'=>$name,
+                'medicartContect_medicartOfferId'=>$medicartOfferId,
+                'medicartContect_mobileNo'=>$mobileNo,
+                'medicartContect_email'=>$email,
+                'creationTime'=>time()
+            );
+            
+            $isInsert = $this->medicart_model->add('qyura_medicartContect',$data);
+            
+            if($isInsert){
+                $response = array('status' => TRUE, 'message' => 'Thanks for Contact us' );
+                $this->response($response, 200);
+            }
+            else
+            {
+                $response = array('status' => FALSE, 'message' => 'Network Error .Please retry' );
+                $this->response($response, 400);
+            }
+            
+        }
+    }
+    
+    
+    function cartBook_post() {
+        
+        $this->bf_form_validation->set_rules('medicartOfferId', 'Medicart Offer Id', 'xss_clean|trim|required|numeric|is_natural_no_zero');
+        $this->bf_form_validation->set_rules('usersId', 'User Id', 'xss_clean|trim|required|numeric|is_natural_no_zero|_user_check');
+        $this->bf_form_validation->set_rules('preferredDate', 'Preferred Date', 'xss_clean|trim|required|max_length[11]|valid_date[y-m-d,-]|callback__check_date');
+        $this->bf_form_validation->set_rules('message', 'Message', 'xss_clean|trim|required|max_length[255]');
+       
+
+        if ($this->bf_form_validation->run($this) == FALSE) {
+            // setup the input
+            $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
+            $this->response($response, 400);
+        } else {
+
+            $medicartOfferId = isset($_POST['medicartOfferId']) ? $this->input->post('medicartOfferId') : '';
+            $usersId = isset($_POST['usersId']) ? $this->input->post('usersId') : '';
+            $preferredDate = isset($_POST['preferredDate']) ? $this->input->post('preferredDate') : '';
+            $message = isset($_POST['message']) ? $this->input->post('message') : '';
+            
+            $where =  array(
+                'medicartBooking_usersId'=>$usersId,
+                'medicartBooking_medicartOfferId'=>$medicartOfferId,
+                'medicartBooking_deleted'=>0);
+            
+            $booking_check = $this->medicart_model->booking_check($where);
+            
+            if(!$booking_check)
+            {
+            
+                $data = array(
+                    'medicartBooking_medicartOfferId'=>$medicartOfferId,
+                    'medicartBooking_usersId'=>$usersId,
+                    'medicartBooking_preferredDate'=>$preferredDate,
+                    'medicartBooking_message'=>$message,
+                    'creationTime'=>time()
+                );
+
+                $isInsert = $this->medicart_model->add('qyura_medicartBooking',$data);
+
+                if($isInsert){
+                    $response = array('status' => TRUE, 'message' => 'Your booking request has been submitted successfully .We will get back to you shortly.' );
+                    $this->response($response, 200);
+                }
+                else
+                {
+                    $response = array('status' => FALSE, 'message' => 'Network Error .Please retry' );
+                    $this->response($response, 400);
+                }
+            }
+            else {
+                $response = array('status' => FALSE, 'message' => 'You have already booked this cart.' );
+                $this->response($response, 200);
+            }
+            
+        }
+    }
+    
+    function _alpha_dash_space($str_in = '') {
+
+        if (!preg_match("/^([-a-zA-Z_ ])+$/i", $str_in)) {
+            $this->bf_form_validation->set_message('_alpha_dash_space', 'The %s field may only contain alpha characters, spaces, underscores, and dashes.');
+
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    function _check_date($str_in = '')
+    {
+        
+        $medicartOfferId = isset($_POST['medicartOfferId'])?$this->input->post('medicartOfferId'):'';
+        $medicartOfferData = $this->medicart_model->getSingleData(array('medicartOffer_id'=>$medicartOfferId,'medicartOffer_deleted'=>0),'medicartOffer_id,medicartOffer_startDate as startDate,medicartOffer_endDate as endDate');
+        
+        
+        if($medicartOfferData == NULL)
+        {
+            $this->bf_form_validation->set_message('_check_date', 'Medicart offer is no more available for booking');
+            return FALSE;
+        }
+        
+        $prfDate  = strtotime($str_in);
+        
+        if ($medicartOfferData->startDate > $prfDate) {
+            $this->bf_form_validation->set_message('_check_date', 'The {field} is valid since '.date('Y-m-d',$medicartOfferData->startDate) .'to '.date('Y-m-d',$medicartOfferData->endDate));
+
+            return FALSE;
+        }
+        
+        if($medicartOfferData->endDate < $prfDate)
+        {
+             $this->bf_form_validation->set_message('_check_date', 'The {field} is valid since '.date('Y-m-d',$medicartOfferData->startDate) .'to '.date('Y-m-d',$medicartOfferData->endDate));
+
+            return FALSE;
+        }
+        
+        return TRUE;
+    }
+    
+    
+    
+    
 
 }

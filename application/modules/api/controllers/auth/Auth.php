@@ -119,19 +119,21 @@ class Auth extends MyRest {
 
                    
                     
-                    if ($identity->patientImg == null || $identity->patientImg == '')
+                    if ($identity->patientImg == null || $identity->patientImg == '' || $identity->patientImg == 'assets/proImg/')
                     {
                         $img =  isset($_POST['image']) ? createImage($this->input->post('image'),$this->profImgPath) : false;
-                        $image_name = ($img) ? $img :'';
+                        $image_name = $img ? $img :'';
                         $userPatient['patientDetails_patientImg'] = $image_name;
                     }
 
                     $userPatient['modifyTime'] = time();
 
-                    if ($identity->patientName == null || $identity->patientName == '')
+                    if ($identity->patientName == null || $identity->patientName == '' )
                         $userPatient['patientDetails_patientName'] = isset($_POST['name']) ? $this->input->post('name') : '';
 
                     $this->db->update('qyura_patientDetails', $userPatient, array('patientDetails_usersId' => $identity->users_id));
+                    
+                    
 
                     $update = $this->db->affected_rows() == 1;
                     
@@ -302,7 +304,6 @@ class Auth extends MyRest {
             
             if($result)
             {
-                
                 //$this->db->update('qyura_userSocial', $userSocial, array('userSocial_usersId' => $identity->users_id));
                 $response = array('status' => TRUE, 'message' => $this->ion_auth_api->messages());
                 $this->response($response, 200);
@@ -319,20 +320,21 @@ class Auth extends MyRest {
     
     public function insertUserProfile($users_id, $data = null) {
         
-        $img =  isset($_POST['image']) ? createImage($this->input->post('image'),$this->profImgPath) : false;
-        $image_name = ($img) ? $img :'';
-        $profData['patientDetails_patientImg'] = $image_name;
-        
         $profData = array(
             'patientDetails_patientName' => $this->input->post('name'),
             'patientDetails_usersId' => $users_id,
             'patientDetails_unqId' => 'PNT'.random_string('alnumnew',6),
             'creationTime' => time()
         );
+        
+        $img =  isset($_POST['image']) ? createImage($this->input->post('image'),$this->profImgPath) : false;
+        $image_name = $img ? $img :'';
+        $profData['patientDetails_patientImg'] = $image_name;
 
         if ($data != null && is_array($data))
             $profData = array_merge($profData, $data);
 
+       
         return $this->ion_auth_api->setPatientProf($profData);
     }
 
@@ -395,7 +397,7 @@ class Auth extends MyRest {
             //the user is not logging in so display the login page
             //set the flash data error message if there is one
             $message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-dump($this->validation_post_warning());
+
             $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
             $this->response($response, 400);
         }
@@ -421,7 +423,7 @@ dump($this->validation_post_warning());
         return $userDetail;
         }
         
-        return false;
+        return new stdClass();
     }
     
     //activate the user

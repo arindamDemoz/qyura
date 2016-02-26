@@ -9,13 +9,15 @@ class PharmacyApi extends MyRest {
     function __construct() {
         // Construct our parent class
         parent::__construct();
+         $this->load->model(array('pharmacy_model'));
     }
 
     function pharmacylist_post() {
 
 
-        $this->form_validation->set_rules('lat', 'Lat', 'required|decimal');
-        $this->form_validation->set_rules('long', 'Long', 'required|decimal');
+        $this->form_validation->set_rules('lat', 'Lat', 'xss_clean|trim|required|decimal');
+        $this->form_validation->set_rules('long', 'Long', 'xss_clean|trim|required|decimal');
+        $this->form_validation->set_rules('isemergency', 'Is Emergency', 'xss_clean|trim|numeric');
 
 
         if ($this->form_validation->run() == FALSE) {
@@ -26,67 +28,30 @@ class PharmacyApi extends MyRest {
         } else {
 
 
-            $lat = isset($_POST['lat']) ? $_POST['lat'] : '';
-            $long = isset($_POST['long']) ? $_POST['long'] : '';      
-            $notIn = isset($_POST['notin']) ? $_POST['notin'] : '';
+            $lat = isset($_POST['lat']) ? $this->input->post('lat') : '';
+            $long = isset($_POST['long']) ? $this->input->post('long') : '';      
+            $notIn = isset($_POST['notin']) ? $this->input->post('notin') : '';
             $notIn = explode(',', $notIn);
+            $isemergency = isset($_POST['isemergency'])  ? $this->input->post('isemergency') : NULL; 
 
-
-
-            $this->db->select('qyura_pharmacy.pharmacy_id as id, pharmacy_name name, pharmacy_address adr, pharmacy_img imUrl, (
-                6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( pharmacy_lat ) ) * cos( radians( pharmacy_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( pharmacy_lat ) ) )
-                ) AS distance, pharmacy_phn phn, pharmacy_lat lat, pharmacy_long long')
-                    
-                    ->from('qyura_pharmacy')
-
-                    ->where(array('qyura_pharmacy.pharmacy_deleted' => 0))
-                    
-                    ->having(array('distance <' => USER_DISTANCE))
-                    
-                    ->where_not_in('qyura_pharmacy.pharmacy_id', $notIn)
-                    
-                    ->order_by('distance' , 'ASC')
-                    
-                    ->group_by('pharmacy_id')
-                    
-                    ->limit(DATA_LIMIT);
-
-
-            $response = $this->db->get()->result();
-            // echo $this->db->last_query(); die();
-            $aoClumns = array("id","name","adr","imUrl","phn","lat","long");
-             
-            $finalResult = array();
-            if (!empty($response)) {                
-                foreach ($response as $row) {
-                    
-                    $finalTemp = array();
-                    $finalTemp[] = isset($row->id) ? $row->id : "";
-                    $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->adr) ? $row->adr : "";
-                    $finalTemp[] = isset($row->imUrl) ? base_url().'assets/pharmacyImages/'.$row->imUrl : "";
-                    $finalTemp[] = isset($row->phn) ? $row->phn : "";
-                    $finalTemp[] = isset($row->lat) ? $row->lat : "";
-                    $finalTemp[] = isset($row->long) ? $row->long : "";
-                    $finalResult[] = $finalTemp;
-                    
-                }
-            }
-
-     // $finalResult = $this->jsonify($finalResult);
-      
+            $response['data'] =  $this->pharmacy_model->getPhamacyList($lat,$long,$notIn,$isemergency);
             
-            if (!empty($finalResult)) {
-                $response1['msg'] = 'Phramacy found';
-                $response1['status'] = TRUE;
-                $response1['data'] = $finalResult;
-                $response1['colName'] = $aoClumns;
-                $this->response($response1, 200); // 200 being the HTTP response code
-            } else {
-                $response1['msg'] = 'No Pharmacy is available at this range!';
-                $response1['status'] = FALSE;
-                $this->response($response1, 404);
-            }
+            $option = array('table'=>'pharmacy','select'=>'pharmacy_deleted');
+            $deleted = $this->singleDelList($option);
+            $response['pharmacy_deleted']= $deleted;
+             
+             $response['colName'] = array("id", "name", "adr", "imUrl", "phn", "lat", "long", "isEmergency");
+             
+                if($response['data']){
+                 $response['status'] = TRUE;
+                 $response['msg'] = 'success';
+                 $this->response($response, 200);
+                }else{
+                 $response['status'] = False;
+                 $response['msg'] = 'There is no Pharmacy at this range!';
+                 $this->response($response, 400);
+               }
+
         }
     }
     
