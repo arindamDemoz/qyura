@@ -187,7 +187,7 @@ class Hospital_model extends CI_Model {
 
     }
     
-    function checkStatus($select = array(),$tableName,$condition = array()){
+    function fetchTableData($select = array(),$tableName,$condition = array()){
         //echo 
         $this->db->select(implode(",",$select));
         $this->db->from($tableName);

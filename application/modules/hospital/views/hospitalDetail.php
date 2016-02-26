@@ -9,6 +9,7 @@
     <link href="<?php echo base_url();?>assets/images/fevicon-m.ico" rel="shortcut icon">
     <title>Hospitals Details</title>
     <link href="<?php echo base_url();?>assets/css/framework.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
     <link href="<?php echo base_url();?>assets/css/custom-g.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
@@ -18,6 +19,9 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <![endif]-->
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
+    <script> var urls = "<?php echo base_url()?>";
+         var hospitalId = <?php echo $hospitalId; ?>;
+    </script>
 </head>
 
 <body class="fixed-left">
@@ -348,7 +352,7 @@
         </div>
         <!-- Left Sidebar End -->
         <!-- Start right Content here -->
-        <div class="content-page">
+        <div class="content-page" ng-app="myApp">
             <!-- Start content -->
             <div class="content">
                 <div class="container row">
@@ -966,15 +970,15 @@
                                     </section>  
                                   
                                     <!--diagnostic Starts -->
-                                    <section class="tab-pane fade in" id="diagnostic"  ng-app="myApp">
+                                    <section class="tab-pane fade in" id="diagnostic" ng-app="myApp">
                                         <!-- first Section Start -->
                                         <aside class="clearfix">
-                                            <section class="col-md-3 detailbox m-b-20 diag" ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
                                                         <h3>Diagnostic Categories Available</h3>
-                                                        
+
 
                                                         <article class="clearfix">
 
@@ -1006,7 +1010,7 @@
                                             <!-- first Section End -->
 
 
-                                            <section class="col-md-1 detailbox m-b-20 text-center">
+                                            <section class="col-md-2 detailbox m-b-20 text-center">
                                                 <div class="m-t-150">
                                                     <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
                                                 </div>
@@ -1017,7 +1021,7 @@
 
                                             </section>
                                             <!-- second Section Start -->
-                                            <section class="col-md-3 detailbox m-b-20 diag" ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
@@ -1048,41 +1052,6 @@
                                             </section>
                                             <!-- second Section End -->
 
-
-
-
-
-                                            <!-- third Section Start -->
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Available</h3>
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-                                            <!-- third Section End -->
                                         </aside>
 
                                         <section class="clearfix detailbox m-b-20">
@@ -1316,7 +1285,7 @@
                                     <section class="tab-pane fade in" id="specialities">
                                         <aside class="clearfix">
                                             
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp"  ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag"   >
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
@@ -1329,15 +1298,16 @@
                                                                 <span class="input-group-btn">
                                                         <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
                                                         </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
+                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="specialSearch">
                                                             </div>
                                                         </article>
                                                     </figure>
-                                                    <div class="nicescroll mx-h-300">
+                                                    <div class="nicescroll mx-h-300"  ng-controller="special">
                                                         <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
+                                                            <ul >
+                                                                
+                                                                <li  ng-repeat="x in splnames | filter:specialSearch">
+                                                                    <input ng-model="ischeck" ng-click="xyz(x.specialities_id)" type="checkbox" value="{{ x.specialities_id }}" class="checkBoxes"/>  {{ x.specialities_name }}
                                                                 </li>
                                                             </ul>
 
@@ -1362,7 +1332,7 @@
                                             </section>
                                             <!-- second Section Start -->
                                             
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
+                                            <section class="col-md-5 detailbox m-b-20 diag"  ng-controller="diag-c-avail">
                                                 <aside class="bg-white">
                                                     <figure class="clearfix">
 
@@ -1399,81 +1369,37 @@
                                     <!-- Specialities Ends -->
                                     <!--Gllery Starts -->
                                     <section class="tab-pane fade in" id="gallery">
-                                       
-                                        <div class="clearfix">
- 
-    
-                                             <div class="clearfix">
-      			
-                                                            <div class="col-12 col-md-3 col-sm-3">
-                                                                            <a title="Image 1" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-1" src="<?php echo base_url()?>assets/images/hospital/h1.jpg">
-                                                                            </a>
-                                                                    </div>
-
-                                                                    <div class="col-12 col-md-3 col-sm-3">
-                                                                            <a title="Image 2" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-2" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
-                                                                            </a>
-
-                                                                    </div>
-                                                                    <div class="col-12 col-md-3 col-sm-3">
-                                                                            <a title="Image 3" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-3" src="<?php echo base_url()?>assets/images/hospital/h3.jpg" />
-                                                                            </a>
-                                                                    </div>
-                                                  <div class="col-12 col-md-3 col-sm-3">
-                                                                            <a title="Image 3" href="#"> 
-                                                                                    <img class="thumbnail img-responsive" id="image-3" src="<?php echo base_url()?>assets/images/hospital/h3.jpg" />
-                                                                            </a>
-                                                                    </div>
+                                        <div class="fileUpload btn btn-sm btn-upload im-upload">
+                                            <span class="btn btn-appointment">Add More</span>
+                                            <input type="file" class="upload" id="uploadBtn">
                                         </div>
-
-                                        <hr>
-
-                                      </div>
-
-                                    <div class="hidden" id="img-repo">
-
-                                            <!-- #image-1 -->
-                                            <div class="item" id="image-1">
-                                                    <img class="thumbnail img-responsive" title="Image 11" src="http://dummyimage.com/600x350/ccc/969696">
-                                            </div>
-                                            <div class="item" id="image-1">
-                                                    <img class="thumbnail img-responsive" title="Image 12" src="http://dummyimage.com/600x600/ccc/969696">
-                                            </div>
-                                            <div class="item" id="image-1">
-                                                    <img class="thumbnail img-responsive" title="Image 13" src="http://dummyimage.com/300x300/ccc/969696">
-                                            </div>
-
-                                            <!-- #image-2 -->
-                                            <div class="item" id="image-2">
-                                                    <img class="thumbnail img-responsive" title="Image 21" src="http://dummyimage.com/600x350/2255EE/969696">
-                                            </div>
-                                            <div class="item" id="image-2">
-                                                    <img class="thumbnail img-responsive" title="Image 21" src="http://dummyimage.com/600x600/2255EE/969696">
-                                            </div>
-                                            <div class="item" id="image-2">
-                                                    <img class="thumbnail img-responsive" title="Image 23" src="http://dummyimage.com/300x300/2255EE/969696">
-                                            </div>   
-
-                                            <!-- #image-3-->
-                                            <div class="item" id="image-3">
-                                                    <img class="thumbnail img-responsive" title="Image 31" src="http://dummyimage.com/600x350/449955/FFF">
-                                            </div>
-                                            <div class="item" id="image-3">
-                                                    <img class="thumbnail img-responsive" title="Image 32" src="http://dummyimage.com/600x600/449955/FFF">
-                                            </div>
-                                            <div class="item" id="image-3">
-                                                    <img class="thumbnail img-responsive" title="Image 33" src="http://dummyimage.com/300x300/449955/FFF">
-                                            </div>        
-
-                                    </div>
-
+                                        <div class="clearfix" id="galleryImages">
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h1.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h3.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h4.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
+                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>
+                                        </div>
                                     </section>
                                     <!--Gallery Ends -->
                                     
                                     <!-- Timeslot start -->
+                                      <!-- Timeslot Starts Section -->
                                     <section class="tab-pane fade in" id="timeslot">
                                         <div class="col-md-10 p-b-20">
                                             <form class="form-horizontal">
@@ -1546,6 +1472,7 @@
                                         </div>
                                     </section>
                                     <!-- Timeslot Ends -->
+                                  
                                     
                                      <!--All Doctors Starts -->
                                    <section class="tab-pane fade in" id="doctor">
@@ -2008,9 +1935,9 @@
     <script src="<?php echo base_url(); ?>assets/js/pages/hospital-detail.js"></script>
     <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>
     <script>
-         var urls = "<?php echo base_url()?>";
+        
          var stateIds = $.trim($('#StateId').val());
-          var hospitalId = <?php echo $hospitalId; ?>;
+         
          $(function(){
         $("#geocomplete").geocomplete({
           map: ".map_canvas",
@@ -2062,6 +1989,9 @@
            });
            
         }*/
+        $('.checkBoxes').on('click',function(){
+               alert('here');
+        });
         $(".bs-select").select2({ placeholder: "Select Insurance",
           allowClear: true
       });
@@ -2075,7 +2005,9 @@
         $("#bloodbankbtn").trigger("click");
         if(bloodbank_status != '')
         $("#pharmacybtn").trigger("click");
-        
+          /*$('#hospitalSpecialities').load(urls + 'index.php/hospital/hospitalSpecialities/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });*/
         
     }) ;
     function addAwards(){

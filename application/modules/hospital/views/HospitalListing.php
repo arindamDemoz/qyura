@@ -373,7 +373,7 @@
                         <article class="row p-b-10">
                             <form>
                                 <aside class="col-lg-1 col-md-2 col-sm-2">
-                                    <a href="<?php echo base_url()?>hospital/addHospital" class="btn btn-appointment waves-effect waves-light" title="Add New Hospital"><i class="fa fa-plus"></i> Add</a>
+                                    <a href="<?php echo site_url('hospital/addHospital')?>" class="btn btn-appointment waves-effect waves-light" title="Add New Hospital"><i class="fa fa-plus"></i> Add</a>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 m-t-xs-2">
                                                     <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" data-size="4" onchange ="fetchCity(this.value)">

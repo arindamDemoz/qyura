@@ -691,7 +691,7 @@ class Hospital extends CI_Controller {
                       $conditions['bloodBank_deleted'] = 0;
                       $select = array('bloodBank_id');
                       $getData = '';
-                       $getData = $this->Hospital_model->checkStatus($select,'qyura_bloodBank',$conditions);
+                       $getData = $this->Hospital_model->fetchTableData($select,'qyura_bloodBank',$conditions);
                        
                        $bloodBankDetail = array(
                            'bloodBank_name' => $this->input->post('bloodBank_name'),
@@ -715,7 +715,7 @@ class Hospital extends CI_Controller {
                             $conditions['hospital_usersId'] = $this->input->post('user_tables_id');
                             $conditions['hospital_deleted'] = 0;
                             $select = array('hospital_countryId,hospital_stateId,hospital_cityId');
-                           $bloodBankResult  = $this->Hospital_model->checkStatus($select,'qyura_hospital',$conditions);
+                           $bloodBankResult  = $this->Hospital_model->fetchTableData($select,'qyura_hospital',$conditions);
                            $bloodBankDetail['countryId'] = $bloodBankResult[0]->hospital_countryId;
                            $bloodBankDetail['stateId'] = $bloodBankResult[0]->hospital_stateId;
                            $bloodBankDetail['cityId'] = $bloodBankResult[0]->hospital_cityId;
@@ -763,7 +763,7 @@ class Hospital extends CI_Controller {
                       $pharmacyConditions['pharmacy_deleted'] = 0;
                       $pharmacySelect = array('pharmacy_id');
                       $getDataPharmacy = '';
-                       $getDataPharmacy = $this->Hospital_model->checkStatus($pharmacySelect,'qyura_pharmacy',$pharmacyConditions);
+                       $getDataPharmacy = $this->Hospital_model->fetchTableData($pharmacySelect,'qyura_pharmacy',$pharmacyConditions);
                       //$pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
                        if($getDataPharmacy){
                            $pharmacyWhereUser = array(
@@ -778,7 +778,7 @@ class Hospital extends CI_Controller {
                             $pharmacyConditions['hospital_usersId'] = $this->input->post('user_tables_id');
                             $pharmacyConditions['hospital_deleted'] = 0;
                             $pharmacySelect = array('hospital_countryId,hospital_stateId,hospital_cityId');
-                           $pharmacyResult  = $this->Hospital_model->checkStatus($pharmacySelect,'qyura_hospital',$pharmacyConditions);
+                           $pharmacyResult  = $this->Hospital_model->fetchTableData($pharmacySelect,'qyura_hospital',$pharmacyConditions);
                            $pharmacyDetail['pharmacy_countryId'] = $pharmacyResult[0]->hospital_countryId;
                            $pharmacyDetail['pharmacy_stateId'] = $pharmacyResult[0]->hospital_stateId;
                            $pharmacyDetail['pharmacy_cityId'] = $pharmacyResult[0]->hospital_cityId;
@@ -908,5 +908,20 @@ class Hospital extends CI_Controller {
         //echo $encrypted;
         exit;
         
+    }
+    function hospitalSpecialities($hospitalId){
+        $selectTableData = array (
+           'specialities_id','specialities_name'
+        );
+        $where = array(
+            'specialities_deleted' => 0
+        );
+        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_specialities',$where);
+        $specialist = '';
+        foreach($data as $key=>$val){
+        //$specialist .='<li ng-repeat="x in names | filter:specialities_name">'. $val->specialities_name .'</li>';
+            $array []= $val->specialities_name;
+        }
+        echo json_encode($data);
     }
 }

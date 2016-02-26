@@ -367,7 +367,7 @@
                         </div>
                     </div>
                     <div class="map_canvas"></div>
-                    <form class="cmxform form-horizontal tasi-form" id="hospitalForm" name="hospitalForm" method="post" action="<?php echo site_url(); ?>/hospital/SaveHospital" novalidate="novalidate" enctype="multipart/form-data" >
+                    <form class="cmxform form-horizontal tasi-form" id="hospitalForm" name="hospitalForm" method="post" action="<?php echo site_url('hospital/SaveHospital'); ?>" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="countPnone" name="countPnone" value="1" />
                         <input type="hidden" id="countbloodBank_phn" name="countbloodBank_phn" value="1" />
                         <input type="hidden" id="countPharmacy_phn" name="countPharmacy_phn" value="1" />
