@@ -148,6 +148,8 @@ class CI_Form_validation {
 
 		// Automatically load the form helper
 		$this->CI->load->helper('form');
+                
+                $this->CI->load->model(array('Common_model'));
 
 		log_message('info', 'Form Validation Class Initialized');
 	}
@@ -1563,6 +1565,15 @@ class CI_Form_validation {
 	{
 		return (base64_encode(base64_decode($str)) === $str);
 	}
+        
+        public function valid_base64_image($str)
+        {
+            
+            $img = str_replace('data:image/png;base64,', '', $str);
+            $img = str_replace(' ', '+', $img);
+            $img = str_replace('[removed]', '', $img);
+            return base64_decode($img,true) AND strlen($img)%4==0;
+        }
 
 	// --------------------------------------------------------------------
 
@@ -1662,5 +1673,8 @@ class CI_Form_validation {
 		$this->error_string = '';
 		return $this;
 	}
+        
+        
+        
 
 }
