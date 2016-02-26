@@ -1,5 +1,9 @@
 $('#date-3').datepicker();
 
+document.getElementById("uploadBtn").onchange = function () {
+    document.getElementById("uploadFile").value = this.value;
+};
+
 $('.selectpicker').selectpicker({
     style: 'btn-default',
     size: "auto",
@@ -17,3 +21,14 @@ $("#pharmacy").click(function () {
 $("#ambulance").click(function () {
     $("#ambulanceOption").fadeToggle();
 });
+
+function isNumberKey(evt, id) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        $("#" + id).html("Please enter number key");
+        return false;
+    } else {
+        $("#" + id).html('');
+        return true;
+    }
+}

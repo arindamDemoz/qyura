@@ -12,11 +12,18 @@
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
+        <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> 
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <![endif]-->
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
+     <style type="text/css">
+    #hospital_datatable_filter
+    {
+        display:none;
+    }
+  </style>
 </head>
 
 <body class="fixed-left">
@@ -155,7 +162,7 @@
         <!-- Top Bar End -->
         <!-- Left Sidebar Start -->
         <div class="left side-menu">
-            <div class="sidebar-inner slimscrollleft">
+             <div class="sidebar-inner slimscrollleft">
                 <!--- Divider -->
                 <div id="sidebar-menu">
                     <ul>
@@ -167,8 +174,8 @@
                             <a class="waves-effect active" href="#"><i class="fa fa-hospital-o"></i> 
                             <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li class="active"><a href="hospital-listing.html">All Hospitals</a></li>
-                                <li><a href="add-hospital.html">Add New Hospital</a></li>
+                                <li class="active"><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
                             </ul>
                         </li>
 
@@ -176,8 +183,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-plus-square"></i> 
                             <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="diagnostic-center-listing.html">All Diag Centres</a></li>
-                                <li><a href="add-diagcenter.html">Add New Diag Centre</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/diagnostic">All Diag Centres</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/diagnostic/addDiagnostic">Add New Diag Centre</a></li>
                             </ul>
                         </li>
 
@@ -185,8 +192,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-heartbeat"></i> 
                             <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-bloodbank.html">All Blood Banks</a></li>
-                                <li><a href="add-bloodbank.html">Add New Blood Bank</a></li>
+                                 <li><a href="<?php echo base_url();?>index.php/bloodbank">All Blood Banks</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank">Add New Blood Bank</a></li>
                             </ul>
                         </li>
 
@@ -194,8 +201,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
                             <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-pharmacies.html">All Pharmacies</a></li>
-                                <li><a href="add-pharmacy.html">Add New Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
                             </ul>
                         </li>
 
@@ -203,8 +210,8 @@
                             <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
                             <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-ambulance-provider.html">All Ambulance Providers</a></li>
-                                <li><a href="add-ambulance-provider.html">Add Ambulance Provider</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
 
@@ -366,7 +373,7 @@
                         <article class="row p-b-10">
                             <form>
                                 <aside class="col-lg-1 col-md-2 col-sm-2">
-                                    <a href="<?php echo base_url()?>hospital/addHospital" class="btn btn-appointment waves-effect waves-light" title="Add New Hospital"><i class="fa fa-plus"></i> Add</a>
+                                    <a href="<?php echo site_url('hospital/addHospital')?>" class="btn btn-appointment waves-effect waves-light" title="Add New Hospital"><i class="fa fa-plus"></i> Add</a>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 m-t-xs-2">
                                                     <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" data-size="4" onchange ="fetchCity(this.value)">
@@ -387,7 +394,7 @@
                                 <aside class="col-md-3 col-sm-4 m-tb-xs-3">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                        <input type="text" name="search" class="form-control" placeholder="Search" />
+                                        <input type="text" name="search" id="search" class="form-control" placeholder="Search" />
                                     </div>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 pull-right">
@@ -402,221 +409,26 @@
                             <!-- Table Section Start -->
                             <article class="clearfix m-top-40 p-b-20">
                                 <aside class="table-responsive">
-                                <table class="table all-bloodbank">
-                                    <tbody>
+                                <table class="table all-bloodbank" id="hospital_datatable">
+                                    <thead>
                                         <tr class="border-a-dull">
                                             <th>Logo</th>
                                             <th>Name</th>
                                              <th>City</th>
                                             <th>Phone</th>
                                             <th>Address</th>
-                                            <th>Total Appointments</th>
-                                            <th>Reviews Received</th>
+<!--                                            <th>Total Appointments</th>
+                                            <th>Reviews Received</th>-->
                                             <th>Action</th>
                                         </tr>
-                                        
-                                            <?php foreach($hospitalData as $key => $val){ ?>
-                                        <tr>
-                                            <td>
-                                                <h6><img src="<?php echo base_url()?>assets/hospitalsImages/<?php echo $val->hospital_img; ?>" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6><?php echo $val->hospital_name?></h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">5.0</span></p>
-                                            </td>
-                                            <td><h6><?php echo $val->city_name;?></h6></td>
-                                             <td>
-                                                 <?php 
-                                                $explode= explode('|',$val->hospital_phn); 
-                                                for($i= 0; $i< count($explode);$i++){?>
-                                                <h6><?php echo $explode[$i];?></h6>
-                                                <!--<h6>0731-2349999</h6>-->
-                                                <?php }?>
-                                            </td>
-                                            <td>
-                                                <h6>Sector 38, Near Rajiv Chowk, CH Baktawar Singh Road, Gurgaon, Haryana 122001</h6>
-                                                <a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>
-                                            </td>
-                                            <td><h6>310</h6>
-                                            </td>
-                                            <td>
-                                                <h6>212</h6>
-                                            </td>
-                                            <td>
-                                                <h6><a href="<?php echo base_url()?>hospital/detailHospital/<?php echo $val->hospital_id;?>" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="#" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                           </tr> 
-                                            <?php }?>   
-                                        
-                                        
-                                        <!-- <tr>
-                                            <td>
-                                                <h6><img src="<?php echo base_url()?>assets/images/am-nanavati.png" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6>Nanavati Hospital</h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">4.4</span></p>
-                                            </td>
-                                              <td><h6>Mumbai</h6></td>
-                                             <td>
-                                                <h6>9826000777</h6>
-                                                <h6>0731-2349999</h6>
-                                            </td>
-                                           
-                                          
-                                            <td>
-                                                <h6> A - 791, Bandra Reclamation, Bandra West, Mumbai, Maharashtra 400050</h6>
-                                                <a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>
-                                            </td>
-                                            <td><h6>810</h6>
-                                            
-                                            </td>
-                                            <td>
-                                                <h6>175</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="hospital-detail.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="edit-hospital.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <td>
-                                                <h6><img src="assets/images/am-appolo.png" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6>Appolo Hospital</h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">4.0</span></p>
-                                            </td>
-                                             <td>
-                                                <h6>9826000777</h6>
-                                                <h6>0731-2349999</h6>
-                                            </td>
-                                            <td><h6>Chennai</h6></td>
-                                          
-                                            <td>
-                                                <h6> No. 134, Mint Street, Opposite Ramar Temple, Sowcarpet, Chennai, Tamil Nadu 600079</h6>
-                                                <a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>
-                                            </td>
-                                            <td><h6>710</h6>
-                                            </td>
-                                            <td>
-                                                <h6>300</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="hospital-detail.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="edit-hospital.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <td>
-                                                <h6><img src="assets/images/am-medanta.png" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6>Medanta - The Medcity</h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">5.0</span></p>
-                                            </td>
-                                              <td><h6>Gurgaon</h6></td>
-                                             <td>
-                                                <h6>9826000777</h6>
-                                                <h6>0731-2349999</h6>
-                                            </td>
-                                          
-                                          
-                                            <td>
-                                                <h6>Sector 38, Near Rajiv Chowk, CH Baktawar Singh Road, Gurgaon, Haryana 122001</h6>
-                                                <a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>
-                                            </td>
-                                            <td><h6>900</h6>
-                                            </td>
-                                            <td>
-                                                <h6>124</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="hospital-detail.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="edit-hospital.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                        </tr>
-                                        
-                                         <tr>
-                                            <td>
-                                                <h6><img src="assets/images/am-nanavati.png" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6>Nanavati Hospital</h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">4.6</span></p>
-                                            </td>
-                                              <td><h6>Mumbai</h6></td>
-                                             <td>
-                                                <h6>9826000777</h6>
-                                                <h6>0731-2349999</h6>
-                                            </td>
-                                          
-                                            <td>
-                                                <h6> A - 791, Bandra Reclamation, Bandra West, Mumbai, Maharashtra 400050</h6>
-                                                <a href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light">View Map</a>
-                                            </td>
-                                            <td><h6>600</h6>
-                                            
-                                            </td>
-                                            <td>
-                                                <h6>113</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="hospital-detail.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="edit-hospital.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <td>
-                                                <h6><img src="assets/images/am-appolo.png" alt="" class="img-responsive" /></h6>
-                                            </td>
-                                            <td>
-                                                <h6>Appolo Hospital</h6>
-                                                 <p> <span class="label label-success waves-effect waves-light m-tb-5 center-block">4.0</span></p>
-                                            </td>
-                                              <td><h6>Chennai</h6></td>
-                                             <td>
-                                                <h6>9826000777</h6>
-                                                <h6>0731-2349999</h6>
-                                            </td>
-                                        
-                                            <td>
-                                                <h6> No. 134, Mint Street, Opposite Ramar Temple, Sowcarpet, Chennai, Tamil Nadu 600079</h6>
-                                                <a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>
-                                            </td>
-                                            <td><h6>230</h6>
-                                            </td>
-                                            <td>
-                                                <h6>188</h6>
-                                            </td>
-                                             
-                                           
-                                            <td>
-                                                <h6><a href="hospital-detail.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" >View Detail</a></h6>
-                                                <a href="edit-hospital.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                            </td>
-                                        </tr>-->
-                                        
-                     
-                        </tbody>
+
+                        </thead>
                         </table>
 </aside>
 
                         </article>
                         <!-- Table Section End -->
-                        <article class="clearfix m-t-20 p-b-20">
+<!--                        <article class="clearfix m-t-20 p-b-20">
                             <ul class="list-inline list-unstyled pull-right call-pagination">
                                 <li class="disabled"><a href="#">Prev</a></li>
                                 <li><a href="#">1</a></li>
@@ -625,7 +437,7 @@
                                 <li><a href="#">4</a></li>
                                 <li><a href="#">Next</a></li>
                             </ul>
-                        </article>
+                        </article>-->
                 </div>
 
                 </section>
@@ -648,10 +460,14 @@
     <script>
         var resizefunc = [];
     </script>
+    <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/jquery-1.8.2.min.js"></script>
     <script src="<?php echo base_url();?>assets/js/framework.js">
     </script>
-    <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript">
+    <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
+    <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+      <!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>-->
+    <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>
     <script>
         
         /*-- Selectpicker --*/
@@ -664,7 +480,7 @@ $('.selectpicker').selectpicker({
 var urls = "<?php echo base_url()?>";
 function fetchCity(stateId) {           
            $.ajax({
-               url : urls + 'hospital/fetchCity',
+               url : urls + 'index.php/hospital/fetchCity',
                type: 'POST',
               data: {'stateId' : stateId},
               success:function(datas){
@@ -674,6 +490,58 @@ function fetchCity(stateId) {
            });
            
         }
+                         // datatable get records
+         $(document).ready(function () {
+                var oTable = $('#hospital_datatable').DataTable({
+                   /* "processing": true,
+                    "serverSide": true,
+                    "bFilter": false,
+                    "iDisplayStart ": 10,
+                     "bLengthChange": false,
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    "bPaginate": true,
+                    "sPaginationType": "full_numbers",*/
+                    "processing": true,
+                    "serverSide": true,
+                    "bLengthChange": false,
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    "sPaginationType": "full_numbers",
+
+                    "columns": [
+                        {"data": "hospital_img"},
+                        {"data": "hospital_name"},
+                        {"data": "city_name"},
+                        {"data": "hospital_phn"},
+                        {"data": "hospital_address"},
+                        {"data": "view"},
+                    ],
+                    
+                    "ajax": {
+                        "url": "<?php echo site_url('hospital/getHospitalDl'); ?>",
+                        "type": "POST", 
+                        "data": function ( d ) {
+                                         d.cityId = $("#hospital_cityId").val();
+                                         d.name = $("#search").val();
+                                         if($("#hospital_stateId").val() != ' '){
+                                         d.hosStateId = $("#hospital_stateId").val();
+                                        }
+                                         d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                                    } 
+                    }
+                });
+                
+                  $('#hospital_cityId,#hospital_stateId').change( function() {
+                        oTable.draw();
+                  } );
+                     $('#search').on('keyup', function() {
+                        //oTable.draw();
+                         oTable.search($(this).val()).draw() ;
+                        
+                  } );
+                
+            });
     </script>
   
 </body>

@@ -342,13 +342,13 @@ input[type=search] {
     border: none;
     padding: 9px 12px 9px 32px;
     width: 40px;
-    
-   
-    
     -webkit-transition: all .5s;
     -moz-transition: all .5s;
     transition: all .5s;
 }
+
+
+
 input[type=search]:focus {
     width: 90px;
     background-color: #fff;
@@ -367,14 +367,16 @@ input::-webkit-input-placeholder {
 
 /*search*/
 
-.diag-detail ul {border:1px solid #EEEEEE; padding:0;}
+
+
+
+   /*08/02/2016*/
+
+   .diag-detail ul {border:1px solid #EEEEEE; padding:0;}
 .diag-detail ul li{ list-style-type: none; 
    border-bottom: 1px solid #EEEEEE;
    padding: 10px 5px;
    }
-
-
-   /*08/02/2016*/
 
    input[type="button"], input[type="reset"], input[type="submit"] {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -382,3 +384,58 @@ input::-webkit-input-placeholder {
     cursor: pointer;
 }
 
+
+
+
+.diag-d input[type=search] {
+    background: url(../images/search.png) no-repeat right center;
+    border: none;
+    padding:0;
+    width: 100%;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    transition: all .5s;
+}
+
+
+.diag-d input[type=search]:focus {
+    width: 90px;
+    background-color: #fff;
+    
+      width: 100%;
+    
+}
+
+.mx-h-300 {max-height:300px; border:1px solid #DDDDDD;}
+
+.mx-h-400 {height:385px; border:1px solid #DDDDDD;}
+
+.mx-h-340 {height:340px; border:1px solid #DDDDDD;}
+
+.mx-h-410 {height:385px; border:1px solid #DDDDDD;}
+
+.p-5 {padding:0 5px;}
+
+.p-abs {position:absolute; bottom:0;}
+
+.s-add {background:#53D0D1; padding:10px;  color: #fff;}
+.diag-ser-active { background:#CCCCCC;}
+
+.m-t-150 {margin-top:150px;}
+
+.b-search { font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.m-b-5 {margin-bottom:5px; margin-right:10px;}
+
+.diag input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    position:relative; margin-left:20px;}
+
+
+  
