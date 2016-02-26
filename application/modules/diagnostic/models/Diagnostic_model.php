@@ -59,7 +59,7 @@ class Diagnostic_model extends CI_Model {
     }
     
     function fetchdiagnosticData($condition = NULL){
-    $this->db->select('diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,diag.diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId');
+    $this->db->select('diag.diagnostic_dsgn,diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,diag.diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId');
     $this->db->from('qyura_diagnostic AS diag');
     $this->db->join('qyura_city AS City','City.city_id = diag.diagnostic_cityId','left');
     $this->db->join('qyura_users AS usr','usr.users_id = diag.diagnostic_usersId','left');
@@ -95,9 +95,10 @@ class Diagnostic_model extends CI_Model {
     
     function fetchDiagnosticDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/diagnosticsImage/$1';    
+         $imgUrl = base_url().'assets/diagnosticsImage/thumb/original/$1';    
          
-    $this->datatables->select('diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,diag.diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId');
+    $this->datatables->select('diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,diag.diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId,'
+            . "CASE WHEN diagnostic_img IS NULL THEN 'noImage.png' ELSE diagnostic_img END AS diagnostic_img ");
     $this->datatables->from('qyura_diagnostic AS diag');
     $this->datatables->join('qyura_city AS City','City.city_id = diag.diagnostic_cityId','left');
     $this->datatables->join('qyura_users AS usr','usr.users_id = diag.diagnostic_usersId','left');
@@ -117,8 +118,8 @@ class Diagnostic_model extends CI_Model {
         $states = $this->input->post('hosStateId');
         isset($states) && $states != '' ? $this->datatables->where('diagnostic_stateId', $states) : '';
         
-      
-        
+    $this->datatables->order_by('diagnostic_id');  
+    
     if($condition)
     $this->datatables->where(array('diag.diagnostic_id'=> $condition));
     $this->datatables->where(array('diag.diagnostic_deleted'=> 0));

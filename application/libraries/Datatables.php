@@ -37,6 +37,7 @@
     private $add_columns    = array();
     private $edit_columns   = array();
     private $unset_columns  = array();
+    private $order_by  = array();
     private $having = array();
 
     /**
@@ -55,6 +56,11 @@
     {
       $db_data = $this->ci->load->database($db_name, TRUE);
       $this->ci->db = $db_data;
+    }
+    
+    public function order_by($column){
+      $this->order_by = $column;
+      $this->ci->db->order_by($column ,'desc');
     }
 
     /**

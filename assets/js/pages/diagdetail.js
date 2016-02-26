@@ -102,9 +102,7 @@ $(function () {
 });
 
 // Select2
-$(".select2").select2({
-    width: '100%'
-});
+
 
 function isNumberKey(evt, id) {
     var charCode = (evt.which) ? evt.which : event.keyCode
@@ -127,4 +125,8 @@ $('.thumbnail').click(function () {
     $('#img-gallery').modal({
         show: true
     });
+});
+
+$(".select2").select2({
+    width: '100%'
 });

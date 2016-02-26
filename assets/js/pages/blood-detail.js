@@ -36,9 +36,9 @@ $("#picEditClose").click(function () {
 
 /* -- Upload Button -- */
 
-document.getElementById("uploadBtnB").onchange = function () {
-    document.getElementById("uploadFileB").value = this.value;
-};
+//document.getElementById("uploadBtnB").onchange = function () {
+//    document.getElementById("uploadFileB").value = this.value;
+//};
 
 
 /* -- center modal -- */

@@ -17,7 +17,7 @@
     
 </head>
 
-<body class="fixed-left">
+<body class="fixed-left" id="crop-avatar">
     <!-- Begin page -->
     <div id="wrapper">
         <!-- Top Bar Start -->
@@ -45,7 +45,7 @@
                         </form>
                         <ul class="nav navbar-nav navbar-right pull-right">
                             <li class="dropdown">
-                                <a aria-expanded="true" class="dropdown-toggle profile" data-toggle="dropdown" href=""><img alt="user-img" class="img-circle" src="assets/images/users/avatar-1.jpg"> Ramesh K
+                                <a aria-expanded="true" class="dropdown-toggle profile" data-toggle="dropdown" href=""><img alt="user-img" class="img-circle" src="<?php echo base_url();?>assets/images/users/avatar-1.jpg"> Ramesh K
                                     <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -156,42 +156,45 @@
                         </li>
                         <li class="has_sub">
                             <a class="waves-effect" href="#"><i class="fa fa-hospital-o"></i> 
-                        <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="hospital-listing.html">All Hospitals</a></li>
-                                <li><a href="add-hospital.html">Add New Hospital</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
                             </ul>
                         </li>
-                        <li class="has_sub">
-                            <a class="waves-effect active" href="#"><i class="fa fa-plus-square"></i> 
-                        <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                          <li class="has_sub">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'diagnostic'):echo"active";endif;?>" href="#"><i class="fa fa-plus-square"></i> 
+                            <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li class="active"><a href="diagnostic-center-listing.html">All Diag Centres</a></li>
-                                <li><a href="add-diagcenter.html">Add New Diag Centre</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'diagnostic' && $this->router->fetch_method() != 'addDiagnostic'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/diagnostic">All Diag Centres</a></li>
+                                
+                                <li class="<?php if($this->router->fetch_method() == 'addDiagnostic'):echo"active";endif;?>">
+                                        <a href="<?php echo base_url();?>index.php/diagnostic/addDiagnostic">Add New Diag Centre
+                                        </a></li>
                             </ul>
                         </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-heartbeat"></i> 
-                        <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                         <li class="has_sub">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'bloodbank'):echo"active";endif;?>" href="#"><i class="fa fa-heartbeat"></i> 
+                            <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-bloodbank.html">All Blood Banks</a></li>
-                                <li><a href="add-bloodbank.html">Add New Blood Bank</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'bloodbank' && $this->router->fetch_method() != 'Addbloodbank'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/bloodbank">All Blood Banks</a></li>
+                                <li class="<?php if($this->router->fetch_method() == 'Addbloodbank'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank">Add New Blood Bank</a></li>
                             </ul>
                         </li>
                         <li class="has_sub">
                             <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
-                        <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-pharmacies.html">All Pharmacies</a></li>
-                                <li><a href="add-pharmacy.html">Add New Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
                             </ul>
                         </li>
-                        <li class="has_sub">
+                         <li class="has_sub">
                             <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
-                        <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-ambulance-provider.html">All Ambulance Providers</a></li>
-                                <li><a href="add-ambulance-provider.html">Add Ambulance Provider</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
                         <li class="has_sub">

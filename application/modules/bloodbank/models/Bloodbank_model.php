@@ -28,8 +28,8 @@ class Bloodbank_model extends CI_Model {
         }
          $this->db->where('users_email',$email); 
        $result = $this->db->get();
-       // return $this->db->last_query();
-       
+       //return $this->db->last_query();
+       //exit;
         if($result->num_rows() > 0)
             return 1;
         else             
@@ -70,10 +70,12 @@ class Bloodbank_model extends CI_Model {
     
     function fetchbloodBankDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/BloodBank/$1';    
+         $imgUrl = base_url().'assets/BloodBank/thumb/original/$1';    
          
          $this->datatables->select('blood.bloodBank_id,blood.users_id,blood.bloodBank_name,blood.bloodBank_phn,blood.bloodBank_add,City.city_name,'
-                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long');
+                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long,'
+                  . "CASE WHEN bloodBank_photo IS NULL THEN 'noImage.png' ELSE bloodBank_photo END AS bloodBank_photo ");
+         
      $this->datatables->from('qyura_bloodBank AS blood');
      $this->datatables->join('qyura_city AS City','City.city_id = blood.cityId','left');
      $this->datatables->join('qyura_users AS usr','usr.users_id = blood.users_id','left');
@@ -92,7 +94,7 @@ class Bloodbank_model extends CI_Model {
         $states = $this->input->post('hosStateId');
         isset($states) && $states != '' ? $this->datatables->where('stateId', $states) : '';
         
-      
+      $this->datatables->order_by('bloodBank_id');
         
      if($condition)
         $this->datatables->where(array('blood.bloodBank_id'=> $condition));   
