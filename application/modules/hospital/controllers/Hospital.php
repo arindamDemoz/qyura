@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Hospital extends CI_Controller {
+class Hospital extends MY_Controller {
     
    public function __construct() {
        parent:: __construct();
@@ -15,7 +15,8 @@ class Hospital extends CI_Controller {
         $data['allStates'] = $this->Hospital_model->fetchStates();
         $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
        // print_r($data['hospitalData'] );exit;
-        $this->load->view('HospitalListing',$data);
+       // $this->load->view('HospitalListing',$data);
+        $this->load->super_admin_template('HospitalListing', $data, 'hospitalScript');
    }
       function getHospitalDl(){
 
@@ -26,7 +27,7 @@ class Hospital extends CI_Controller {
    function addHospital(){
        $data = array();
        $data['allStates'] = $this->Hospital_model->fetchStates();
-       $this->load->view('AddHospital',$data);
+       $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
    }
    function detailHospital($hospitalId=''){
        $data = array();
@@ -254,7 +255,8 @@ class Hospital extends CI_Controller {
     }
     
     function SaveHospital(){
-         $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
+       
+       $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
        $this->bf_form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
         $this->bf_form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
        $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
@@ -272,48 +274,35 @@ class Hospital extends CI_Controller {
         $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
        
        // $this->bf_form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
-        if (empty($_FILES['hospital_img']['name']))
-         {
-             $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
-        }
+       // if (empty($_FILES['hospital_img']['name']))
+        // {
+           //  $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
+      //  }
          if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
-                $data['allStates'] = $this->Hospital_model->fetchStates();
-             $this->load->view('AddHospital',$data);
+             $data['allStates'] = $this->Hospital_model->fetchStates();
+             $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
          }
          else {
         
-             $imagesname='';
-              if ($_FILES['hospital_img']['name'] ) {
-             $path = realpath(FCPATH.'assets/hospitalsImages/');
-             $temp = explode(".", $_FILES["hospital_img"]["name"]);
-                $newfilename = 'Hos_'.round(microtime(true)) . '.' . end($temp);
-                $config['upload_path'] = $path;
-                $config['allowed_types'] = 'jpg|jpeg|gif|png';
-		$config['max_size']	= '5000';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                $config['file_name'] = $newfilename;
-               
-		$this->load->library('upload', $config);
-               $this->upload->initialize($config);
+             $imagesname = "";
+            if ($_FILES['avatar_file']['name']) {
+                $path = realpath(FCPATH . 'assets/hospitalsImages/');
+                $upload_data = $this->input->post('avatar_data');
+                $upload_data = json_decode($upload_data);
+                $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
+
+                if (empty($original_imagesname)) {
+                    $data['allStates'] = $this->Bloodbank_model->fetchStates();
+                    $this->session->set_flashdata('valid_upload', $this->error_message);
+                    $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
+                    return false;
+                } else {
+                    $imagesname = $original_imagesname;
+                }
+                 }
               
-                if ( ! $this->upload->do_upload('hospital_img'))
-		{
-			
-                        $data = array();
-                        $data['allStates'] = $this->Hospital_model->fetchStates();
-                        $this->session->set_flashdata('valid_upload', $this->upload->display_errors());
-                        $this->load->view('AddHospital',$data);
-                      
-		}
-		else
-		{
-                     $imagesname = $newfilename;
-                       
-		}
-                
-              } 
+             
           
                 $hospital_phn = $this->input->post('hospital_phn');
                 $pre_number = $this->input->post('pre_number');
@@ -419,9 +408,9 @@ class Hospital extends CI_Controller {
                         }
                         $imageBloodbnkName = '';
                          if ($_FILES['bloodBank_photo']['name'] ) {
-                              $tempblood = explode(".", $_FILES["hospital_img"]["name"]);
+                              $tempblood = explode(".", $_FILES["bloodBank_photo"]["name"]);
                                $newfilenameblood = 'Blood_'.round(microtime(true)) . '.' . end($tempblood);
-                             $status = $this->uploadImages('hospital_img','BloodBank',$newfilenameblood);
+                             $status = $this->uploadImages('bloodBank_photo','BloodBank',$newfilenameblood);
                              if($status == TRUE)
                                  $imageBloodbnkName = $newfilenameblood;
                          }
@@ -799,11 +788,11 @@ class Hospital extends CI_Controller {
 
     
     function uploadImages ($imageName,$folderName,$newName){
-             $path = realpath(FCPATH.'assets/'.$folderName.'/');
+                $path = realpath(FCPATH.'assets/'.$folderName.'/');
                  $config['upload_path'] = $path;
             //echo $config['upload_path']; 
 		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '5000';
+		$config['max_size']	= '10'; // in kb
 		$config['max_width']  = '1024';
 		$config['max_height']  = '768';
                 $config['file_name'] = $newName;
@@ -811,8 +800,43 @@ class Hospital extends CI_Controller {
                
 		$this->load->library('upload', $config);
                $this->upload->initialize($config);
-               $this->upload->do_upload($imageName);
-               return TRUE;
+              // $this->upload->do_upload($imageName);
+               
+               if ($this->upload->do_upload($imageName)) {
+                //If image upload in folder, set also this value in "$image_data".
+                   $image_data = $this->upload->data();
+                    return TRUE;
+                }else{
+                    $upload_error['upload_error'] = array('error' => $this->upload->display_errors()); 
+                    $msg = '';
+                    if(!empty($upload_error) && count($upload_error) > 0){
+                        foreach ($upload_error as $key => $value) {
+                             $msg .= $value['error'].'in'.$folderName;
+                        }
+                        
+                    }
+                    $this->session->set_flashdata('message',$msg);
+                    redirect('hospital/addHospital');
+                    return FALSE;
+                }
+              // print_r($image_data);
+            /*   $img = $this->uploadResizeImage($image_data);
+               print_r($img);
+               exit();
+               
+                $config['image_library'] = 'gd2';
+                $config['create_thumb'] = TRUE;
+                $config['maintain_ratio'] = TRUE;
+                $config['width'] = 75;
+                $config['height'] = 50;
+
+               
+	       $this->load->library('image_lib', $config); 
+               $this->image_lib->initialize($config);
+              if ( !$this->image_lib->resize($image_data)){
+		echo $this->image_lib->display_errors();
+	    }
+               return TRUE; */
 
     }
     
