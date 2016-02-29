@@ -1011,7 +1011,7 @@ class Hospital extends MY_Controller {
         $data = $this->Hospital_model->fetchhospitalDiagonasticData($hospitalId);
         $allocatedSpecialist = '';
         foreach($data as $key=>$val){
-        $allocatedSpecialist .='<li onclick=showDiagonasticDetail('.$hospitalId.','.$val->hospitalDiagnosticsCat_id.')>'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocdiagonastic value='.$val->hospitalDiagnosticsCat_id.' /></li>';
+        $allocatedSpecialist .='<li onclick=showDiagonasticDetail('.$hospitalId.','.$val->hospitalDiagnosticsCat_diagnosticsCatId.')>'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocdiagonastic value='.$val->hospitalDiagnosticsCat_id.' /></li>';
            
         }
         echo $allocatedSpecialist;
@@ -1053,6 +1053,7 @@ class Hospital extends MY_Controller {
             
         );
         $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+        //echo $data;exit;
        $diagonasticTest = '';
         foreach($data as $key => $val){
             $diagonasticTest .='<tr onclick = fetchInstruction('.$val->quotationDetailTests_id.')> <td>'.$val->quotationDetailTests_testName.'</td><td><i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">'.$val->quotationDetailTests_price.'</a>';
