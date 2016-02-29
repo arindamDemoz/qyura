@@ -71,7 +71,7 @@ class Miappointment_model extends CI_Model {
     
     function getDiagnostic( $condition = NULL){
         $now = time();
-        $this->datatables->select("qyura_quotations.quotation_id, qyura_quotations.quotation_dateTime as dateTime, (CASE WHEN(diagnostic_usersId is not null) THEN diagnostic_name WHEN(hospital_usersId is not null) THEN hospital_name END) as MIname, qyura_diagnosticsCat.diagnosticsCat_catName AS diagCatName, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_name ELSE qyura_patientDetails.patientDetails_patientName END AS userName, qyura_quotationBooking.quotationBooking_orderId AS orderId, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_gender ELSE qyura_patientDetails.patientDetails_gender END AS userGender, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_age ELSE (FROM_UNIXTIME('{$now}', '%Y') - FROM_UNIXTIME(qyura_patientDetails.patientDetails_dob, '%Y')) END AS userAge,qyura_quotationBooking.quotationBooking_bookStatus as bookStatus");
+        $this->datatables->select("qyura_quotations.quotation_id, qyura_quotations.quotation_dateTime as date, (CASE WHEN(diagnostic_usersId is not null) THEN diagnostic_name WHEN(hospital_usersId is not null) THEN hospital_name END) as MIname, qyura_diagnosticsCat.diagnosticsCat_catName AS diagCatName, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_name ELSE qyura_patientDetails.patientDetails_patientName END AS userName, qyura_quotationBooking.quotationBooking_orderId AS orderId, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_gender ELSE qyura_patientDetails.patientDetails_gender END AS userGender, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_age ELSE (FROM_UNIXTIME('{$now}', '%Y') - FROM_UNIXTIME(qyura_patientDetails.patientDetails_dob, '%Y')) END AS userAge,qyura_quotationBooking.quotationBooking_bookStatus as bookStatus");
 //        $this->datatables->select("qyura_quotations.quotation_id,qyura_quotationBooking.quotationBooking_reportTitle as title, qyura_quotations.quotation_dateTime as dateTime, CASE WHEN (qyura_hospital.hospital_usersId <> 0 ) THEN qyura_hospital.hospital_address ELSE qyura_diagnostic.diagnostic_address END AS address, (CASE WHEN(diagnostic_usersId is not null) THEN diagnostic_name WHEN(hospital_usersId is not null) THEN hospital_name END) as MIname, qyura_quotationBooking.quotationBooking_orderId AS orderId,qyura_quotationBooking.quotationBooking_bookStatus as bookStatus, CASE qyura_quotationBooking.quotationBooking_bookStatus WHEN '0' THEN 'pending' WHEN '1' THEN 'confirmed' ELSE NULL END AS bookingStatus, CASE transactionInfo.payment_status WHEN '1' THEN 'Success' WHEN 4 THEN 'Aborted' WHEN 5 THEN 'Failure' ELSE NULL END AS paymentStatus, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_name ELSE qyura_patientDetails.patientDetails_patientName END AS userName, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_gender ELSE qyura_patientDetails.patientDetails_gender END AS userGender, qyura_users.users_mobile AS usersMobile, CASE WHEN (qyura_quotations.quotation_familyId <> 0 ) THEN qyura_usersFamily.usersfamily_age ELSE (FROM_UNIXTIME('{$now}', '%Y') - FROM_UNIXTIME(qyura_patientDetails.patientDetails_dob, '%Y')) END AS userAge, transactionInfo.payment_method AS paymentMethod, '' AS remark, qyura_diagnosticsCat.diagnosticsCat_catName AS diagCatName, '' AS speciality, 'Diagnostic' as type, (CASE WHEN(quotation_dateTime > CURRENT_TIMESTAMP ) THEN 'Upcoming' ELSE 'Completed' END) as upcomingStatus");
         
 $this->datatables->from("qyura_quotationBooking");
@@ -87,9 +87,10 @@ $this->datatables->join("qyura_diagnosticsCat "," qyura_diagnosticsCat.diagnosti
 
 $this->datatables->where(array("qyura_quotationBooking.quotationBooking_deleted" => 0,"qyura_quotations.quotation_dateTime" <> 0));
 
+$this->datatables->date_range($_POST['startDate'],$_POST['endDate']);
 
 
-$this->datatables->edit_column('orderId', '<h6>$1</h6><p>$2</p>', 'orderId,dateFormate(dateTime)');
+$this->datatables->edit_column('orderId', '<h6>$1</h6><p>$2</p>', 'orderId,dateFormate(date)');
 //$this->datatables->add_column('orderId', '<h6>$1</h6><p>$2</p>', 'orderId,dateTime');
 $this->datatables->add_column('userName', '<h6>$1</h6><p>$2|$3</p>', 'userName,userGender,userAge');
 //$this->datatables->add_column('userNameView', '<h6>$1</h6><p>$2|$3</p>', 'userName,userGender,userAge');
@@ -104,7 +105,7 @@ $this->datatables->add_column('MIname', '<h6>$1</h6>', 'MIname');
 
 $this->datatables->edit_column('bookStatus', '$1', 'getStatusDropDown(bookStatus)');
 //$this->datatables->add_column('bookStatus', '$1', 'bookStatus');
-$this->datatables->add_column('view', '<p><a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="#$1">View Detail</a></p><button type="button" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Change Timing</button>', 'quotation_id');
+$this->datatables->add_column('action', '<p><a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="#$1">View Detail</a></p><button type="button" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Change Timing</button>', 'quotation_id');
 
 
 

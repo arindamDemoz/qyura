@@ -23,6 +23,7 @@ class Miappointment extends MY_Controller {
 
     
     function getDignostiData() {
+        
         echo $this->miappointment->getDiagnostic();
     }
     /**
