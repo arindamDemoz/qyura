@@ -10,6 +10,9 @@ var resizefunc = [];
 </script>
      <script src="<?php echo base_url();?>assets/js/jquery-1.8.2.min.js"> </script>
      <script src="<?php echo base_url();?>assets/js/framework.js"></script>
-     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>
+<!--     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>-->
+     <script src="<?php echo base_url(); ?>assets/js/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/datatables/dataTables.bootstrap.js"></script>
+     
 </body>
 </html>
