@@ -792,7 +792,7 @@ class Hospital extends MY_Controller {
                  $config['upload_path'] = $path;
             //echo $config['upload_path']; 
 		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '500'; // in kb
+		$config['max_size']	= '10'; // in kb
 		$config['max_width']  = '1024';
 		$config['max_height']  = '768';
                 $config['file_name'] = $newName;
@@ -808,6 +808,15 @@ class Hospital extends MY_Controller {
                     return TRUE;
                 }else{
                     $upload_error['upload_error'] = array('error' => $this->upload->display_errors()); 
+                    $msg = '';
+                    if(!empty($upload_error) && count($upload_error) > 0){
+                        foreach ($upload_error as $key => $value) {
+                             $msg .= $value['error'].'in'.$folderName;
+                        }
+                        
+                    }
+                    $this->session->set_flashdata('message',$msg);
+                    redirect('hospital/addHospital');
                     return FALSE;
                 }
               // print_r($image_data);
