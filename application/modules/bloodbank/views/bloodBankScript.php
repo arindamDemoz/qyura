@@ -32,23 +32,15 @@ if($current == 'detailBloodBank'):?>
     $(document).ready(function () {
         var oTable = $('#datatable_bloodbank').DataTable({
             "processing": true,
-            "bServerSide": false,
-            //"searching": true,
+            "bServerSide": true,
+           // "searching": true,
             "bLengthChange": false,
             "bProcessing": true,
             "iDisplayLength": 10,
-            //"bPaginate": true,
+            "bPaginate": true,
             "sPaginationType": "full_numbers",
-            "columns": [
-                {"data": "bloodBank_photo"},
-                {"data": "bloodBank_name"},
-                {"data": "bloodBank_phn"},
-                {"data": "city_name"},
-                {"data": "bloodBank_add"},
-                //{"data": "open"},
-                // {"data": "call"},
-                {"data": "view"},
-            ],
+            //"sAjaxSource": "<?php echo site_url('bloodbank/getBloodBankDl'); ?>",
+           
             "ajax": {
                 "url": "<?php echo site_url('bloodbank/getBloodBankDl'); ?>",
                 "type": "POST",
@@ -60,14 +52,24 @@ if($current == 'detailBloodBank'):?>
                     }
                     d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
                 }
-            }
+            },
+             "columns": [
+                {"data": "bloodBank_photo"},
+                {"data": "bloodBank_name"},
+                {"data": "bloodBank_phn"},
+                {"data": "city_name"},
+                {"data": "bloodBank_add"},
+                //{"data": "open"},
+                // {"data": "call"},
+               {"data": "view" ,'searchable' : false},
+            ],
         });
 
         $('#hospital_cityId,#hospital_stateId').change(function () {
             oTable.draw();
         });
         $('#search').on('keyup', function () {
-            oTable.search($(this).val()).draw();
+            oTable.columns( 5 ).search($(this).val()).draw();
         });
     });
 
