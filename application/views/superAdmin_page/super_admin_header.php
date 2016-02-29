@@ -12,8 +12,12 @@
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
+    <!-- DataTables -->
+     <link href="<?php echo base_url(); ?>assets/js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> 
+<!--    <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> -->
+
     
 </head>
 
