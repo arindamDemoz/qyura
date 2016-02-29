@@ -322,11 +322,11 @@
       $iStart = $this->ci->input->post('start');
       $iLength = $this->ci->input->post('length');
 
-      //if($iLength != '' && $iLength != '-1')
-       // $this->ci->db->limit($iLength, ($iStart)? $iStart : 0);
-      
       if($iLength != '' && $iLength != '-1')
-        $this->ci->db->limit($iLength);
+        $this->ci->db->limit($iLength, ($iStart)? $iStart : 0);
+      
+//      if($iLength != '' && $iLength != '-1')
+//        $this->ci->db->limit($iLength);
     }
 
     /**
@@ -370,7 +370,7 @@
           
         for($i = 0; $i < count($mColArray); $i++){
            
-          if($mColArray[$i]['searchable'] == true ){
+          if($mColArray[$i]['searchable'] == 'true' ){
               
             if($this->check_cType())
             {

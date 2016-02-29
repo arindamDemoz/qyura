@@ -33,7 +33,7 @@
                                     </div>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 m-tb-xs-3">
-                                    <input type="text" placeholder="Search" class="form-control" name="search">
+                                    <input type="text" id="search" placeholder="Search" class="form-control" name="search">
                                 </aside>
                                 <aside class="col-md-2 col-sm-2">
                                     <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right">Export</button>

@@ -40,6 +40,7 @@ if($current == 'detailBloodBank'):?>
                 var oTable = $('#datatable_bloodbank').DataTable({
                     "processing": true,
                     "serverSide": true,
+                     "pageLength":1,
                      "bJQueryUI": true,
                     "sPaginationType": "full_numbers",
                     "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
@@ -49,21 +50,26 @@ if($current == 'detailBloodBank'):?>
                         {"data": "userName"},
                         {"data": "diagCatName"},
                         {"data": "MIname"},
-                        {"data": "bookStatus"},
-                        {"data": "view"}
+                        {"data": "bookStatus","searchable":false},
+                        {"data": "action","searchable" : false}
                     ],
                     
                     "ajax": {
                         "url": "<?php echo site_url('miappointment/getDignostiData'); ?>",
                         "type": "POST",
                         "data": function ( d ) {
+                                        d.search['value'] = $("#search").val();
+                                        d.startDate = $("#date-1").val();
+                                        d.endDate = $("#date-2").val();
                                         
                                         d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
                                     } 
                     }
                 });
                 
-                 
+                 $('#date-1, #date-2, #search').change( function() {
+                        oTable.draw();
+                  } );
             });
     
 </script>
