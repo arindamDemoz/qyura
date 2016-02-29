@@ -31,6 +31,8 @@ $lang['forgot_password_successful'] 	 	 = 'Password Reset SMS & Email Sent';
 $lang['forgot_password_unsuccessful'] 	 	 = 'Unable to Reset Password';
 $lang['forgot_password_active_unsuccessful'] 	 = 'This account has not been activated. Please check your email for the activation instructions.';
 
+$lang['forgot_password_otp_active_unsuccessful'] 	 = 'Please first enter your OTP code.';
+
 // Activation
 $lang['activate_successful'] 		  	     = 'Account Activated';
 $lang['otp_activate_successful'] 		     = 'Account Activated By OTP';

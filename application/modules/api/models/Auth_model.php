@@ -98,7 +98,7 @@ class Auth_model extends CI_Model {
     /**
      * Like
      *
-     * @var array
+     * @var arrayfilter
      * */
     public $_ion_like = array();
 
@@ -502,7 +502,7 @@ class Auth_model extends CI_Model {
         $this->trigger_events('pre_activate');
 
         if ($code !== FALSE) {
-            $query = $this->db->select($this->identity_column,'users_otpTime')
+            $query = $this->db->select($this->identity_column.', users_otpTime')
                     ->where('users_otpCode', $code)
                     ->where('users_id', $id)
                     ->limit(1)
@@ -622,7 +622,7 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
         $this->db->update($this->tables['users'], $data, array('users_id' => $id));
-        $query = $this->db->select($this->identity_column,'users_mobile')
+        $query = $this->db->select($this->identity_column.',users_mobile')
                     
                     ->where('users_id', $id)
                     ->limit(1)
@@ -630,7 +630,6 @@ class Auth_model extends CI_Model {
                     ->get($this->tables['users']);
 
         $userdata  = $query->row();
-        
         
         $return = $this->db->affected_rows() == 1;
         if ($return){
@@ -641,6 +640,17 @@ class Auth_model extends CI_Model {
             $message = $this->lang->line('otp_message');
             $message = str_replace('%s', $activationCode, $message);
             $msgId  = $this->clickatell->send_message('91'.$userdata->users_mobile,$message);
+            $subject = 'Qyura OTP';
+            $to = $userdata->users_email;
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+// Create email headers
+            $headers .= 'From: ' . $this->config->item('admin_email', 'auth_conf_api') . "\r\n" .
+                    'Reply-To: ' . $this->config->item('admin_email', 'auth_conf_api') . "\r\n" .
+                    'X-Mailer: PHP/' . phpversion();
+            $mailr = mail($to, $subject, $message, $headers);
+            
+            
         }
         else
             $this->set_error('otp_unsuccessful');
@@ -2484,19 +2494,19 @@ class Auth_model extends CI_Model {
         }
     }
 
-    protected function _filter_data($table, $data) {
-        $filtered_data = array();
-        $columns = $this->db->list_fields($table);
-
-        if (is_array($data)) {
-            foreach ($columns as $column) {
-                if (array_key_exists($column, $data))
-                    $filtered_data[$column] = $data[$column];
-            }
-        }
-
-        return $filtered_data;
-    }
+//    protected function _filter_data($table, $data) {
+//        $filtered_data = array();
+//        $columns = $this->db->list_fields($table);
+//
+//        if (is_array($data)) {
+//            foreach ($columns as $column) {
+//                if (array_key_exists($column, $data))
+//                    $filtered_data[$column] = $data[$column];
+//            }
+//        }
+//
+//        return $filtered_data;
+//    }
 
     protected function _prepare_ip($ip_address) {
         //just return the string IP address now for better compatibility

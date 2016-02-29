@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -48,33 +49,45 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class CI_Model {
 
-	/**
-	 * Class constructor
-	 *
-	 * @return	void
-	 */
-	public function __construct()
-	{
-		log_message('info', 'Model Class Initialized');
-	}
+    /**
+     * Class constructor
+     *
+     * @return	void
+     */
+    public function __construct() {
+        log_message('info', 'Model Class Initialized');
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * __get magic
-	 *
-	 * Allows models to access CI's loaded classes using the same
-	 * syntax as controllers.
-	 *
-	 * @param	string	$key
-	 */
-	public function __get($key)
-	{
-		// Debugging note:
-		//	If you're here because you're getting an error message
-		//	saying 'Undefined Property: system/core/Model.php', it's
-		//	most likely a typo in your model code.
-		return get_instance()->$key;
-	}
+    /**
+     * __get magic
+     *
+     * Allows models to access CI's loaded classes using the same
+     * syntax as controllers.
+     *
+     * @param	string	$key
+     */
+    public function __get($key) {
+        // Debugging note:
+        //	If you're here because you're getting an error message
+        //	saying 'Undefined Property: system/core/Model.php', it's
+        //	most likely a typo in your model code.
+        return get_instance()->$key;
+    }
+
+    public function _filter_data($table, $data) {
+        $filtered_data = array();
+        $columns = $this->db->list_fields($table);
+
+        if (is_array($data)) {
+            foreach ($columns as $column) {
+                if (array_key_exists($column, $data))
+                    $filtered_data[$column] = $data[$column];
+            }
+        }
+
+        return $filtered_data;
+    }
 
 }

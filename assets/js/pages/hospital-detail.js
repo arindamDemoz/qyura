@@ -1,5 +1,3 @@
-
-
 /*diagnostic list*/
 
 
@@ -261,24 +259,6 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $('.selectpicker').selectpicker({
     style: 'btn-default',
     size: "auto",
@@ -328,7 +308,7 @@ $(function () {
 });
 
 $("#edit").click(function () {
-    $("#detail").toggle();
+ $("#detail").toggle();
     $("#newDetail").toggle();
 });
 $("#editdetail").click(function () {

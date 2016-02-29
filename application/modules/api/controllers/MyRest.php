@@ -19,13 +19,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . 'modules/api/libraries/REST_Controller.php';
 
 class MyRest extends REST_Controller {
-
+    
+    public $time;
+    
     function __construct() {
         // Construct our parent class
         parent::__construct();
         $this->load->helper('common_helper');
         $this->load->database();
         $this->load->library('datatables');
+        $this->time = time();
         // Configure limits on our controller methods. Ensure
         // you have created the 'limits' table and enabled 'limits'
         // within application/config/rest.php
@@ -62,5 +65,7 @@ class MyRest extends REST_Controller {
         else
         return '';
     }
+    
+    
 
 }

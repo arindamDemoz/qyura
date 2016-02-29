@@ -5,8 +5,3 @@
         .on('changeDate', function (ev) {
             $('.pickDate').datepicker('hide');
         });
-
-    var hideKeyboard = function () {
-        document.activeElement.blur();
-        $(".pickDate").blur();
-    };

@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Hospital extends CI_Controller {
+class Hospital extends MY_Controller {
     
    public function __construct() {
        parent:: __construct();
@@ -14,8 +14,9 @@ class Hospital extends CI_Controller {
         $data = array();
         $data['allStates'] = $this->Hospital_model->fetchStates();
         $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
-       // print_r($data['hospitalData'] );exit;
-        $this->load->view('HospitalListing',$data);
+      
+       $data['hospitalId'] = 0;
+        $this->load->super_admin_template('HospitalListing', $data, 'hospitalScript');
    }
       function getHospitalDl(){
 
@@ -26,7 +27,7 @@ class Hospital extends CI_Controller {
    function addHospital(){
        $data = array();
        $data['allStates'] = $this->Hospital_model->fetchStates();
-       $this->load->view('AddHospital',$data);
+       $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
    }
    function detailHospital($hospitalId=''){
        $data = array();
@@ -46,9 +47,12 @@ class Hospital extends CI_Controller {
         }
     
         $data['allInsurance']  = $this->Hospital_model->fetchAllInsurance($insurance_condition);
+        //print_r($data['allInsurance']);
+       // exit;
         
        // $this->load->super_admin_template('hospitalDetail', $data, 'bloodBankScript');
-        $this->load->view('hospitalDetail',$data);
+        //$this->load->view('hospitalDetail',$data);
+        $this->load->super_admin_template('hospitalDetail', $data, 'hospitalScript');
    }
    function hospitalAwards($hospitalId){
       $dataAwards = $this->Hospital_model->fetchAwards($hospitalId);
@@ -254,7 +258,8 @@ class Hospital extends CI_Controller {
     }
     
     function SaveHospital(){
-         $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
+       
+       $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
        $this->bf_form_validation->set_rules('hospital_type', 'Hospital Type', 'required|trim');
         $this->bf_form_validation->set_rules('hospital_address', 'Hospital Address', 'required|trim');
        $this->bf_form_validation->set_rules('hospital_cntPrsn', 'Contact Person', 'required|trim');
@@ -272,48 +277,35 @@ class Hospital extends CI_Controller {
         $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
        
        // $this->bf_form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
-        if (empty($_FILES['hospital_img']['name']))
-         {
-             $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
-        }
+       // if (empty($_FILES['hospital_img']['name']))
+        // {
+           //  $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
+      //  }
          if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
-                $data['allStates'] = $this->Hospital_model->fetchStates();
-             $this->load->view('AddHospital',$data);
+             $data['allStates'] = $this->Hospital_model->fetchStates();
+             $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
          }
          else {
         
-             $imagesname='';
-              if ($_FILES['hospital_img']['name'] ) {
-             $path = realpath(FCPATH.'assets/hospitalsImages/');
-             $temp = explode(".", $_FILES["hospital_img"]["name"]);
-                $newfilename = 'Hos_'.round(microtime(true)) . '.' . end($temp);
-                $config['upload_path'] = $path;
-                $config['allowed_types'] = 'jpg|jpeg|gif|png';
-		$config['max_size']	= '5000';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                $config['file_name'] = $newfilename;
-               
-		$this->load->library('upload', $config);
-               $this->upload->initialize($config);
+             $imagesname = "";
+            if ($_FILES['avatar_file']['name']) {
+                $path = realpath(FCPATH . 'assets/hospitalsImages/');
+                $upload_data = $this->input->post('avatar_data');
+                $upload_data = json_decode($upload_data);
+                $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
+
+                if (empty($original_imagesname)) {
+                    $data['allStates'] = $this->Bloodbank_model->fetchStates();
+                    $this->session->set_flashdata('valid_upload', $this->error_message);
+                    $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
+                    return false;
+                } else {
+                    $imagesname = $original_imagesname;
+                }
+                 }
               
-                if ( ! $this->upload->do_upload('hospital_img'))
-		{
-			
-                        $data = array();
-                        $data['allStates'] = $this->Hospital_model->fetchStates();
-                        $this->session->set_flashdata('valid_upload', $this->upload->display_errors());
-                        $this->load->view('AddHospital',$data);
-                      
-		}
-		else
-		{
-                     $imagesname = $newfilename;
-                       
-		}
-                
-              } 
+             
           
                 $hospital_phn = $this->input->post('hospital_phn');
                 $pre_number = $this->input->post('pre_number');
@@ -419,9 +411,9 @@ class Hospital extends CI_Controller {
                         }
                         $imageBloodbnkName = '';
                          if ($_FILES['bloodBank_photo']['name'] ) {
-                              $tempblood = explode(".", $_FILES["hospital_img"]["name"]);
+                              $tempblood = explode(".", $_FILES["bloodBank_photo"]["name"]);
                                $newfilenameblood = 'Blood_'.round(microtime(true)) . '.' . end($tempblood);
-                             $status = $this->uploadImages('hospital_img','BloodBank',$newfilenameblood);
+                             $status = $this->uploadImages('bloodBank_photo','BloodBank',$newfilenameblood);
                              if($status == TRUE)
                                  $imageBloodbnkName = $newfilenameblood;
                          }
@@ -600,7 +592,7 @@ class Hospital extends CI_Controller {
         echo $email;
         exit;
     }
-    function saveDetailHospital($hospitalId){
+     function saveDetailHospital($hospitalId){
         
         $this->bf_form_validation->set_rules('hospital_name', 'Hospital Name', 'required|trim');
       
@@ -799,11 +791,11 @@ class Hospital extends CI_Controller {
 
     
     function uploadImages ($imageName,$folderName,$newName){
-             $path = realpath(FCPATH.'assets/'.$folderName.'/');
+                $path = realpath(FCPATH.'assets/'.$folderName.'/');
                  $config['upload_path'] = $path;
             //echo $config['upload_path']; 
 		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '5000';
+		$config['max_size']	= '10'; // in kb
 		$config['max_width']  = '1024';
 		$config['max_height']  = '768';
                 $config['file_name'] = $newName;
@@ -811,46 +803,49 @@ class Hospital extends CI_Controller {
                
 		$this->load->library('upload', $config);
                $this->upload->initialize($config);
-               $this->upload->do_upload($imageName);
-               return TRUE;
+              // $this->upload->do_upload($imageName);
+               
+               if ($this->upload->do_upload($imageName)) {
+                //If image upload in folder, set also this value in "$image_data".
+                   $image_data = $this->upload->data();
+                    return TRUE;
+                }else{
+                    $upload_error['upload_error'] = array('error' => $this->upload->display_errors()); 
+                    $msg = '';
+                    if(!empty($upload_error) && count($upload_error) > 0){
+                        foreach ($upload_error as $key => $value) {
+                             $msg .= $value['error'].'in'.$folderName;
+                        }
+                        
+                    }
+                    $this->session->set_flashdata('message',$msg);
+                    redirect('hospital/addHospital');
+                    return FALSE;
+                }
+              // print_r($image_data);
+            /*   $img = $this->uploadResizeImage($image_data);
+               print_r($img);
+               exit();
+               
+                $config['image_library'] = 'gd2';
+                $config['create_thumb'] = TRUE;
+                $config['maintain_ratio'] = TRUE;
+                $config['width'] = 75;
+                $config['height'] = 50;
+
+               
+	       $this->load->library('image_lib', $config); 
+               $this->image_lib->initialize($config);
+              if ( !$this->image_lib->resize($image_data)){
+		echo $this->image_lib->display_errors();
+	    }
+               return TRUE; */
 
     }
     
-    function PharmacyImage ($imageName){
-             $path = realpath(FCPATH.'assets/pharmacyImages/');
-                 $config['upload_path'] = $path;
-            //echo $config['upload_path']; 
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '5000';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                //$field_name = $_FILES['hospital_photo']['name'];
-               
-		$this->load->library('upload', $config);
-               $this->upload->initialize($config);
-               $this->upload->do_upload($imageName);
-               return TRUE;
-
-    }
-    
-    function ambulanceImage($imageName){
-             $path = realpath(FCPATH.'assets/pharmacyImages/');
-                 $config['upload_path'] = $path;
-            //echo $config['upload_path']; 
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '5000';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                //$field_name = $_FILES['hospital_photo']['name'];
-               
-		$this->load->library('upload', $config);
-               $this->upload->initialize($config);
-               $this->upload->do_upload($imageName);
-               return TRUE;
-
-    }
+   
     function updatePassword(){
-        //echo "here";exit;
+         //echo "here";exit;
         $users_email = $this->input->post('users_email');
        // echo $users_email;
        // exit;
@@ -907,21 +902,179 @@ class Hospital extends CI_Controller {
        echo $return ;
         //echo $encrypted;
         exit;
-        
     }
     function hospitalSpecialities($hospitalId){
+        $hospitalSeleted =array (
+           'hospitalSpecialities_id','hospitalSpecialities_specialitiesId'
+        );
+        $hospitalWhere = array(
+            'hospitalSpecialities_deleted' => 0,
+            'hospitalSpecialities_hospitalId'=>$hospitalId
+        );
+        $notIn = '';
+        $hospitalData = $this->Hospital_model->fetchTableData($hospitalSeleted,'qyura_hospitalSpecialities',$hospitalWhere);
+        foreach($hospitalData as $key=>$val){
+           $notIn []= $val->hospitalSpecialities_specialitiesId;
+            
+        }
+        
         $selectTableData = array (
            'specialities_id','specialities_name'
         );
         $where = array(
-            'specialities_deleted' => 0
+            'specialities_deleted' => 0,
+            
         );
-        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_specialities',$where);
+        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_specialities',$where,$notIn,'specialities_id');
         $specialist = '';
         foreach($data as $key=>$val){
-        //$specialist .='<li ng-repeat="x in names | filter:specialities_name">'. $val->specialities_name .'</li>';
-            $array []= $val->specialities_name;
+        $specialist .='<li >'. $val->specialities_name .'<input type=checkbox class=specialityCheck name=speciality value='.$val->specialities_id.' /></li>';
+           
         }
-        echo json_encode($data);
+       
+        echo $specialist;
+        exit;
     }
+     function hospitalDiagnostics($hospitalId){
+        
+        $hospitalDiagnostics =array (
+           'hospitalDiagnosticsCat_hospitalId','hospitalDiagnosticsCat_diagnosticsCatId'
+        );
+        $DiagnosticsWhere = array(
+            'hospitalDiagnosticsCat_deleted' => 0,
+            'hospitalDiagnosticsCat_hospitalId'=>$hospitalId
+        );
+        $notIn = '';
+        $DiagnosticsData = $this->Hospital_model->fetchTableData($hospitalDiagnostics,'qyura_hospitalDiagnosticsCat',$DiagnosticsWhere);
+        foreach($DiagnosticsData as $key=>$val){
+           $notIn []= $val->hospitalDiagnosticsCat_diagnosticsCatId;
+            
+        }
+        
+        $selectTableData = array (
+           'diagnosticsCat_catId','diagnosticsCat_catName'
+        );
+        $where = array(
+            'diagnosticsCat_deleted' => 0,
+            
+        );
+        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_diagnosticsCat',$where,$notIn,'diagnosticsCat_catId');
+        $diagnostic = '';
+        foreach($data as $key=>$val){
+        $diagnostic .='<li >'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticCheck name=speciality value='.$val->diagnosticsCat_catId.' /></li>';
+           
+        }
+       
+        echo $diagnostic;
+        exit;
+        
+    }
+    function addDiagnostic(){
+        $hospitalId = $this->input->post('hospitalId');
+        $hospitalDiagnosticsCat_diagnosticsCatId = $this->input->post('hospitalDiagnosticsCat_diagnosticsCatId');
+        $insertData = array(
+            'hospitalDiagnosticsCat_diagnosticsCatId' => $hospitalDiagnosticsCat_diagnosticsCatId,
+            'hospitalDiagnosticsCat_hospitalId' => $hospitalId,
+            'hospitalDiagnosticsCat_deleted' => 0,
+            'creationTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+        $return = $this->Hospital_model->insertTableData('qyura_hospitalDiagnosticsCat',$insertData);
+        echo $return;
+        exit;
+    }
+    function addSpeciality(){
+        $hospitalId = $this->input->post('hospitalId');
+        $hospitalSpecialities_specialitiesId = $this->input->post('hospitalSpecialities_specialitiesId');
+        $insertData = array(
+            'hospitalSpecialities_specialitiesId' => $hospitalSpecialities_specialitiesId,
+            'hospitalSpecialities_hospitalId' => $hospitalId,
+            'hospitalSpecialities_deleted' => 0,
+            'creationTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+        $return = $this->Hospital_model->insertTableData('qyura_hospitalSpecialities',$insertData);
+        echo $return;
+        exit;
+    }
+    
+    function hospitalAllocatedSpecialities($hospitalId){
+        
+        $data = $this->Hospital_model->fetchhospitalSpecialityData($hospitalId);
+        $allocatedSpecialist = '';
+        foreach($data as $key=>$val){
+        $allocatedSpecialist .='<li >'. $val->specialities_name .'<input type=checkbox class=specialityAllocCheck name=allocSpeciality value='.$val->hospitalSpecialities_id.' /></li>';
+           
+        }
+        echo $allocatedSpecialist;
+        exit;
+    }
+    function hospitalFetchDiagnostics($hospitalId){
+        $data = $this->Hospital_model->fetchhospitalDiagonasticData($hospitalId);
+        $allocatedSpecialist = '';
+        foreach($data as $key=>$val){
+        $allocatedSpecialist .='<li onclick=showDiagonasticDetail('.$hospitalId.','.$val->hospitalDiagnosticsCat_id.')>'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocdiagonastic value='.$val->hospitalDiagnosticsCat_id.' /></li>';
+           
+        }
+        echo $allocatedSpecialist;
+        exit;
+    }
+    function revertDiagnostic(){
+        $hospitalId = $this->input->post('hospitalId');
+        $hospitalDiagnosticsCat_id = $this->input->post('hospitalDiagnosticsCat_id');
+        $diagonasticData = array(
+            'hospitalDiagnosticsCat_deleted' => 1,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $diagonasticWhere = array('hospitalDiagnosticsCat_id' => $hospitalDiagnosticsCat_id,'hospitalDiagnosticsCat_hospitalId'=> $hospitalId);
+        $return = $this->Hospital_model->UpdateTableData($diagonasticData,$diagonasticWhere,'qyura_hospitalDiagnosticsCat');
+       echo $return ;
+    }
+   function revertSpeciality(){
+       $hospitalId = $this->input->post('hospitalId');
+        $hospitalSpecialities_id = $this->input->post('hospitalSpecialities_id');
+        $hospitalData = array(
+            'hospitalSpecialities_deleted' => 1,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $hospitalWhere = array('hospitalSpecialities_id' => $hospitalSpecialities_id,'hospitalSpecialities_hospitalId'=> $hospitalId);
+        $return = $this->Hospital_model->UpdateTableData($hospitalData,$hospitalWhere,'qyura_hospitalSpecialities');
+       echo $return ;
+   }
+   
+   function detailDiagnostic(){
+       $hospitalId = $this->input->post('hospitalId');
+       $categoryId = $this->input->post('categoryId');
+        $selectTableData = array (
+           'quotationDetailTests_testName','quotationDetailTests_price','quotationDetailTests_id'
+        );
+        $where = array(
+            'quotationDetailTests_diagnosticCatId' => $categoryId,
+            'quotationDetailTests_MIprofileId' => $hospitalId,
+            'quotationDetailTests_deleted' => 0
+            
+        );
+        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+       $diagonasticTest = '';
+        foreach($data as $key => $val){
+            $diagonasticTest .='<tr onclick = fetchInstruction('.$val->quotationDetailTests_id.')> <td>'.$val->quotationDetailTests_testName.'</td><td><i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">'.$val->quotationDetailTests_price.'</a>';
+         $diagonasticTest .= '</td><td><a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a></td></tr>';
+        }
+        echo $diagonasticTest;
+        exit;
+   }
+   
+   function detailDiagnosticInstruction(){
+       $quotationDetailTests_id = $this->input->post('quotationDetailTests_id');
+        $selectTableData = array (
+           'quotationDetailTests_instruction'
+        );
+        $where = array(
+            'quotationDetailTests_id' => $quotationDetailTests_id,
+           'quotationDetailTests_deleted' => 0
+            
+        );
+        $data = $this->Hospital_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+       $diagonasticTest = $data[0]->quotationDetailTests_instruction;
+       echo $diagonasticTest;
+       exit;
+   }
 }

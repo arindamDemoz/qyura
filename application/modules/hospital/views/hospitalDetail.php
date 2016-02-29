@@ -1,357 +1,8 @@
-<?php //print_r($pharmacyData);exit;?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="<?php echo base_url();?>assets/images/fevicon-m.ico" rel="shortcut icon">
-    <title>Hospitals Details</title>
-    <link href="<?php echo base_url();?>assets/css/framework.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
-    <link href="<?php echo base_url();?>assets/css/custom-g.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
-    <link href="<?php echo base_url();?>assets/vendor/select2/select2.css" rel="stylesheet" type="text/css" />
-    <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <![endif]-->
-    <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
-    <script> var urls = "<?php echo base_url()?>";
-         var hospitalId = <?php echo $hospitalId; ?>;
-    </script>
-</head>
 
 <body class="fixed-left">
-    <!-- Begin page -->
-  <div id="wrapper">
-        <!-- Top Bar Start -->
-        <div class="topbar">
-            <!-- Logo -->
-            <div class="topbar-left">
-            </div>
-            <!-- Button mobile view to collapse sidebar menu -->
-            <div class="navbar navbar-default" role="navigation">
-                <div class="container row">
-                    <div class="clearfix">
-                        <div class="pull-left">
-                            <div class="mlogo visible-xs visible-sm"><a href="#"><i class="md"></i></a></div>
+   
 
-                            <div class="hidden-xs hidden-sm">
-                                <a class="logo" href="#"><img src="<?php echo base_url();?>assets/images/qyura-f-l.png"></a>
-
-                                <button class="button-menu-mobile open-left"><i class="fa fa-bars"></i></button> <span class="clearfix"></span>
-                            </div>
-
-                            <button class="button-menu-mobile open-left hidden-lg hidden-md"><i class="fa fa-bars"></i></button> <span class="clearfix"></span>
-                        </div>
-
-                        <form class="navbar-form pull-left visible-md" role="search">
-                            <div class="form-group">
-                                <input class="form-control search-bar" placeholder="Type here for search..." type="text">
-                            </div>
-                            <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right pull-right">
-                            <li class="dropdown">
-                                <a aria-expanded="true" class="dropdown-toggle profile" data-toggle="dropdown" href=""><img alt="user-img" class="img-circle" src="<?php echo base_url();?>assets/images/users/avatar-1.jpg"> Ramesh K
-                                    <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-face-unlock"></i> Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-settings"></i> Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-lock"></i> Lock screen</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-settings-power"></i> Logout</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown hidden-xs">
-                                <a aria-expanded="true" class="dropdown-toggle waves-effect waves-light" data-target="#" data-toggle="dropdown" href="#"><i class="md md-notifications"></i>
-                           <span class="badge badge-xs badge-danger">3</span></a>
-                                <ul class="dropdown-menu dropdown-menu-lg">
-                                    <li class="text-center notifi-title">
-                                        Notification
-                                    </li>
-                                    <li class="list-group">
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-user-plus fa-2x text-info">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        New user registered
-                                                    </div>
-                                                    <p class="m-0"><small>You have
-                                             10 unread messages</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-diamond fa-2x text-primary">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        New settings
-                                                    </div>
-                                                    <p class="m-0"><small>There are
-                                             new settings
-                                             available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-bell-o fa-2x text-danger">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        Updates
-                                                    </div>
-                                                    <p class="m-0"><small>There are
-                                             <span class=
-                                                "text-primary">2</span> new
-                                             updates available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);"><small>See
-                                 all notifications</small></a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <!-- <li class="hidden-xs">
-                           <a href="#" class="right-bar-toggle waves-effect waves-light"><i class="md md-settings"></i></a>
-                           </li> -->
-                            <li class="hidden-xs hidden-sm">
-                                <a class="waves-effect waves-light" href="#" id="btn-fullscreen"><i class=
-                              "md md-crop-free"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- nav-collapse -->
-                </div>
-            </div>
-        </div>
-        <!-- Top Bar End -->
-        <!-- Left Sidebar Start -->
-        <div class="left side-menu">
-           <div class="sidebar-inner slimscrollleft">
-                <!--- Divider -->
-                <!--  Side Menu Bar -->
-                <div id="sidebar-menu">
-                    <ul>
-                        <li>
-                            <a href="dashboard.html" class="waves-effect"><i class="ion-ios7-keypad-outline"></i><span>Dashboard</span></a>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-hospital-o"></i> 
-                            <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-plus-square"></i> 
-                            <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/diagnostic">All Diag Centres</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/diagnostic/addDiagnostic">Add New Diag Centre</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-heartbeat"></i> 
-                            <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/bloodBank">All Blood Banks</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/bloodBank/AddbloodBank">Add New Blood Bank</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
-                            <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
-                            <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>Doctors</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="all-doctor.html">All Doctors</a></li>
-                                <li><a href="add-doctor.html">Add New Doctor</a></li>
-                                <li><a href="#">Schedule & Availability</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>MI Appointments</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Appointments</a></li>
-                                <li><a href="all-appointment.html">All Appointments</a></li>
-                                <li><a href="addappointment.html">Add New Appointment</a></li>
-                                <li><a href="upload-reports.html">Upload Test Reports</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>Dr. Appointments</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Appointments</a></li>
-                                <li><a href="doctor-appointments.html">All Appointments</a></li>
-                                <li><a href="add-doctor-appointment.html">Add New Appointment</a></li>
-
-                            </ul>
-                        </li>
-
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="ion-clipboard"></i> 
-                            <span>Quotations</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Quotation Req.</a></li>
-                                <li><a href="quotelist.html">All Quotation Requests</a></li>
-                                <li><a href="send-quote.html">Send a Quote</a></li>
-                                <li><a href="quote-history.html">Quotation History</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Healthcare Packag.</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="health-packages.html">Healthcare Package</a></li>
-                                <li><a href="add-health-package.html">Add New Package</a></li>
-                                <li><a href="health-package-booking.html">Package Booking</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Medicart</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="medicart-offer-list.html">Medicart Offers</a></li>
-                                <li><a href="medicart-booking.html">Booking Requests</a></li>
-                                <li><a href="medicart-enquiry.html">Enquiries</a></li>
-                                <li><a href="add-medicat-offer.html">Add New Offer</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="call-tracking.html" class="waves-effect"><i class="ion-ios7-telephone-outline"></i><span>Call Tracking</span></a>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="md md-account-circle"></i><span>User Management</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="all-user.html">User List</a></li>
-                                <li><a href="add-user.html">Add New User</a></li>
-                            </ul>
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-star-o"></i><span>Rate & Reviews</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="review-management.html">All Reviews</a></li>
-                                <li><a href="#">Ratings</a></li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="#" class="waves-effect"><i class="fa fa-star-o"></i><span>Favorited By</span></a>
-                        </li>
-                        <li>
-                            <a href="#" class="waves-effect"><i class="fa fa-bar-chart-o"></i><span>App Analytics</span></a>
-
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="md md-trending-up"></i><span>Finance</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Finacial Accounts</a></li>
-                                <li><a href="#">Invoice List</a></li>
-                                <li><a href="#">Payment Transactions</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Promo Coupons</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Coupons List</a></li>
-                                <li><a href="#">Create a Coupon</a></li>
-                            </ul>
-                        </li>
-
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Sponsor Health Tips</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">All Healthtip Offers</a></li>
-                                <li><a href="#">Healthtip Bookings</a></li>
-                                <li><a href="#">Healthtip Messages</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="#"><i class="fa fa-list-alt"></i><span>Reporting</span></a>
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Master</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="specialities.html">Specialities</a></li>
-                                <li><a href="diagnostics.html">Diagnostics</a></li>
-                                <li><a href="degrees.html">Doctor Degrees</a></li>
-                                <li><a href="#">Memberships</a></li>
-                                <li><a href="#">Transaction Configuration</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="#"><i class="fa fa-cog"></i><span>Settings</span></a>
-                        </li>
-
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                
-                <!-- End Side Bar -->
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <!-- Left Sidebar End -->
-        <!-- Start right Content here -->
+    <!-- Start right Content here -->
         <div class="content-page" ng-app="myApp">
             <!-- Start content -->
             <div class="content">
@@ -788,7 +439,7 @@
                                                             <article class="clearfix m-b-10">
 
                                                               <div class="col-md-12">
-                                                              <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" onclick="return validationHospital();">Update</button>
+                                                              <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" onclick="return validationHospitalDetail();">Update</button>
                                                               </div>
 
                                                              </article>
@@ -970,402 +621,295 @@
                                     </section>  
                                   
                                     <!--diagnostic Starts -->
-                                    <section class="tab-pane fade in" id="diagnostic" ng-app="myApp">
-                                        <!-- first Section Start -->
-                                        <aside class="clearfix">
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Available</h3>
-
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
+                                     <section class="tab-pane fade in diagdetail" id="diagnostic">
+                                            <!-- first Section Start -->
+                                            <aside class="clearfix">
+                                            <section class="col-md-5 detailbox m-b-20 diag" >
+                                            <aside class="bg-white">
+                                            <figure class="clearfix">
+                                            <h3>Diagnostic Categories Available</h3>
+                                            <article class="clearfix">
+                                            <div class="input-group m-b-5">
+                                            <span class="input-group-btn">
+                                            <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                                            </span>
+                                            <input type="text" id="search-text1" placeholder="search" class="form-control">
+                                            </div>
+                                            </article>
+                                            </figure>
+                                            <div class="nicescroll mx-h-400">
+                                            <div class="clearfix diag-detail">
+                                            <ul id="list1">
+                                           <!-- <li>Pet</li>
+                                            <li>Mri</li> -->
+                                            </ul>
+                                            </div>
+                                            </div>
+                                            </aside>
                                             </section>
-
-
-
-
                                             <!-- first Section End -->
-
-
                                             <section class="col-md-2 detailbox m-b-20 text-center">
-                                                <div class="m-t-150">
-                                                    <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-                                                </div>
-                                                <div class="m-t-50">
-
-                                                    <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-                                                </div>
-
+                                            <div class="m-t-150">
+                                            <a onclick="addDiagnostic()"><i class="fa fa-arrow-right s-add"></i></a>
+                                            </div>
+                                            <div class="m-t-50">
+                                            <a onclick="revertDiagnostic()"> <i class="fa fa-arrow-left s-add"></i></a>
+                                            </div>
                                             </section>
                                             <!-- second Section Start -->
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Added</h3>
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
+                                            <section class="col-md-5 detailbox m-b-20 diag">
+                                            <aside class="bg-white">
+                                            <figure class="clearfix">
+                                            <h3>Diagnostic Categories Added</h3>
+                                            <article class="clearfix">
+                                            <div class="input-group m-b-5">
+                                            <span class="input-group-btn">
+                                            <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                                            </span>
+                                            <input type="text" id="search-text" placeholder="search" class="form-control">
+                                            </div>
+                                            </article>
+                                            </figure>
+                                            <div class="nicescroll mx-h-400">
+                                            <div class="clearfix diag-detail">
+                                            <ul id="list">
+                                            <!--<li>Pet</li>
+                                            <li>Mri</li> -->
+                                            </ul>
+                                            </div>
+                                            </div>
+                                            </aside>
                                             </section>
                                             <!-- second Section End -->
-
-                                        </aside>
-
-                                        <section class="clearfix detailbox m-b-20">
+                                            </aside>
+                                            <section class="clearfix detailbox m-b-20">
                                             <div class="col-md-8" ng-app="myApp" ng-controller="diag-c-avail">
-                                                <figure class="clearfix">
-                                                    <h3>Diagnostic Test Pricing Setup</h3>
-                                                    <article class="clearfix">
-
-                                                        <div class="input-group m-b-5">
-                                                            <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                            <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
-                                                        </div>
-                                                    </article>
-                                                </figure>
-
-
-                                                <aside class="table-responsive">
-                                                    <table class="table">
-
-                                                        <col style="width:70%">
-                                                            <col style="width:20%">
-                                                                <col style="width:10%">
-                                                                    <tbody>
-
-                                                                        <tr class="border-a-dull">
-                                                                            <th>Test Name</th>
-                                                                            <th>Price</th>
-                                                                            <th>Action</th>
-
-                                                                        </tr>
-                                                                    </tbody>
-                                                    </table>
-
-
-                                                    <article class="nicescroll mx-h-300">
-                                                        <table class="table">
-
-                                                            <col style="width:70%">
-                                                                <col style="width:20%">
-                                                                    <col style="width:10%">
-                                                                        <tbody>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-
-
-
-                                                                        </tbody>
-                                                        </table>
-                                                    </article>
-                                                </aside>
-
+                                            <figure class="clearfix">
+                                            <h3>Diagnostic Test Pricing Setup</h3>
+                                            <article class="clearfix">
+                                            <div class="input-group m-b-5">
+                                            <span class="input-group-btn">
+                                            <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                                            </span>
+                                            <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
                                             </div>
-
+                                            </article>
+                                            </figure>
+                                            <aside class="table-responsive">
+                                            <table class="table">
+                                            <col style="width:70%">
+                                            <col style="width:20%">
+                                            <col style="width:10%">
+                                            <tbody>
+                                            <tr class="border-a-dull">
+                                            <th>Test Name</th>
+                                            <th>Price</th>
+                                            <th>Action</th>
+                                            </tr>
+                                            </tbody>
+                                            </table>
+                                            <article class="nicescroll mx-h-300">
+                                            <table class="table">
+                                            <col style="width:70%">
+                                            <col style="width:20%">
+                                            <col style="width:10%">
+                                            <tbody id="loadTestDetail">
+                                            <!--<tr>
+                                            <td>
+                                            Cmplete Blood Count(CBC)
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Blood Chemistry Test
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Cmplete Blood Count(CBC)
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Blood Chemistry Test
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Cmplete Blood Count(CBC)
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Blood Chemistry Test
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Cmplete Blood Count(CBC)
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Blood Chemistry Test
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Cmplete Blood Count(CBC)
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>
+                                            <tr>
+                                            <td>
+                                            Blood Chemistry Test
+                                            </td>
+                                            <td>
+                                            <i class="fa fa-inr"></i> 1200
+                                            </td>
+                                            <td>
+                                            <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                            </td>
+                                            </tr>-->
+                                            </tbody>
+                                            </table>
+                                            </article>
+                                            </aside>
+                                            </div>
                                             <div class="col-md-4">
-
-                                                <figure class="clearfix">
-                                                    <h3 class="pull-left ">Test Preparation Instruction</h3>
-                                                </figure>
-
-                                                <aside class="clearfix mx-h-400">
-
-                                                    <article class="nicescroll">
-                                                        <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-
-                                                        </p>
-
-                                                        <aside class="clearfix p-5">
-                                                            <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
-
-                                                        </aside>
-
-                                                    </article>
-                                                </aside>
-
+                                            <figure class="clearfix">
+                                            <h3 class="pull-left ">Test Preparation Instruction</h3>
+                                            </figure>
+                                            <aside class="clearfix mx-h-400">
+                                            <article class="nicescroll">
+                                            <p class="p-5" id="detailInstruction"></p>
+                                             <!--<p class="p-5" id="detailInstruction">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                            </p>-->
+                                            <aside class="clearfix p-5">
+                                            <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
+                                            </aside>
+                                            </article>
+                                            </aside>
                                             </div>
-
-                                        </section>
-
-                                    </section>
+                                            </section>
+                                     </section>
                                     <!-- diagnostic Ends --> 
                                     
                                      <!--Specialities Starts -->
                                     <section class="tab-pane fade in" id="specialities">
-                                        <aside class="clearfix">
-                                            
-                                            <section class="col-md-5 detailbox m-b-20 diag"   >
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                          <h3>Specialities Available</h3>
-                                                        
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="specialSearch">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300"  ng-controller="special">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul >
-                                                                
-                                                                <li  ng-repeat="x in splnames | filter:specialSearch">
-                                                                    <input ng-model="ischeck" ng-click="xyz(x.specialities_id)" type="checkbox" value="{{ x.specialities_id }}" class="checkBoxes"/>  {{ x.specialities_name }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-
-                                            <!-- first Section End -->
-
-
-                                            <section class="col-md-2 detailbox m-b-20 text-center">
-                                                <div class="m-t-150">
-                                                    <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-                                                </div>
-                                                <div class="m-t-50">
-
-                                                    <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-                                                </div>
-
-                                            </section>
-                                            <!-- second Section Start -->
-                                            
-                                            <section class="col-md-5 detailbox m-b-20 diag"  ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                          <h3>Specialities Added</h3>
-                                                        
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-                                            <!-- second Section End -->
-
-                                        </aside>
-                                    </section>
+                  <aside class="clearfix">
+                  <section class="col-md-5 detailbox m-b-20 diag" >
+                  <aside class="bg-white">
+                  <figure class="clearfix">
+                  <h3>Specialities Categories Available</h3>
+                  <article class="clearfix">
+                  <div class="input-group m-b-5">
+                  <span class="input-group-btn">
+                  <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                  </span>
+                  <input type="text" id="search-text2" placeholder="search" class="form-control">
+                  </div>
+                  </article>
+                  </figure>
+                  <div class="nicescroll mx-h-400">
+                  <div class="clearfix diag-detail">
+                  <ul id="list2">
+                 <!-- <li>Pet</li>
+                  <li>Mri</li> -->
+                  </ul>
+                  </div>
+                  </div>
+                  </aside>
+                  </section>
+                  <!-- first Section End -->
+                  <section class="col-md-2 detailbox m-b-20 text-center">
+                  <div class="m-t-150">
+                  <a onclick="sendSpeciality()"><i class="fa fa-arrow-right s-add"></i></a>
+                  </div>
+                  <div class="m-t-50">
+                  <a onclick ="revertSpeciality()"> <i class="fa fa-arrow-left s-add"></i></a>
+                  </div>
+                  </section>
+                  <!-- second Section Start -->
+                  <section class="col-md-5 detailbox m-b-20 diag">
+                  <aside class="bg-white">
+                  <figure class="clearfix">
+                  <h3>Specialities Categories Added</h3>
+                  <article class="clearfix">
+                  <div class="input-group m-b-5">
+                  <span class="input-group-btn">
+                  <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                  </span>
+                  <input type="text" id="search-text3" placeholder="search" class="form-control">
+                  </div>
+                  </article>
+                  </figure>
+                  <div class="nicescroll mx-h-400">
+                  <div class="clearfix diag-detail">
+                  <ul id="list3">
+                 <!-- <li>Pet</li>
+                  <li>Mri</li> -->
+                  </ul>
+                  </div>
+                  </div>
+                  </aside>
+                  </section>
+                  <!-- second Section End -->
+                  </aside>
+               </section>
                                     <!-- Specialities Ends -->
                                     <!--Gllery Starts -->
                                     <section class="tab-pane fade in" id="gallery">
@@ -1409,12 +953,12 @@
                                                         <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="08:30 AM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:00 AM" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="11:59 AM" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -1423,12 +967,12 @@
                                                         <label for="" class="control-label col-md-4 col-sm-4">Afternoon Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:00 PM" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:59 PM" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -1437,12 +981,12 @@
                                                         <label for="" class="control-label col-md-4 col-sm-4">Evening Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:00 PM" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="10:59 PM" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -1451,12 +995,12 @@
                                                         <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="11:00 PM" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:30 AM" />
+                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="5:00 AM" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -1910,387 +1454,8 @@
                           </div>
                     </div>
                     <!-- Gallery Model Ends -->
-
-
-
-
-
-
-    <script>
-        var resizefunc = [];
-    </script>
-     <script src="<?php echo base_url();?>assets/js/jquery-1.8.2.min.js"> </script>
-    <script src="<?php echo base_url();?>assets/js/framework.js"> </script>
-     <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-    <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js">  </script>
-    <script type="text/javascript" src="https://www.google.com/jsapi">
-    </script>
- 
-   <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
-
-    <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script>
-    <script src="<?php echo base_url(); ?>assets/js/angular.min.js"> </script>
-    <script src="<?php echo base_url(); ?>assets/js/pages/hospital-detail.js"></script>
-    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>
-    <script>
-        
-         var stateIds = $.trim($('#StateId').val());
-         
-         $(function(){
-        $("#geocomplete").geocomplete({
-          map: ".map_canvas",
-          details: "form",
-          types: ["geocode", "establishment"],
-        });
-
-        $("#find").click(function(){
-          $("#geocomplete").trigger("geocode");
-        });
-
-
-      });
-        $(document).ready(function(){
-           
-           /* fetchStates();
-            function fetchStates(){
-            
-            var countryId = $('#countryId').val();
-            //var stateId = $('#StateId').val();
-            
-            $.ajax({
-               url : urls + 'index.php/hospital/fetchStates',
-               type: 'POST',
-              data: {'stateId' : stateIds , 'countryId' : countryId},
-              success:function(datas){
-               // console.log(datas);
-                  $('#hospital_stateId').html(datas);
-                  $('#hospital_stateId').selectpicker('refresh');
-                  fetchCityOnload();
-                  //$('#StateId').val(stateId);
-              }
-           });
-        }
-
-        function fetchCityOnload(stateId) {    
-           var cityId = $('#cityId').val();
-           //alert(cityId);
-           $.ajax({
-               url : urls + 'index.php/hospital/fetchCityOnload',
-               type: 'POST',
-              data: {'stateId' : stateIds , 'cityId' : cityId},
-              success:function(datas){
-               // console.log(datas);
-                  $('#hospital_cityId').html(datas);
-                  $('#hospital_cityId').selectpicker('refresh');
-                  $('#StateId').val(stateId);
-              }
-           });
-           
-        }*/
-        $('.checkBoxes').on('click',function(){
-               alert('here');
-        });
-        $(".bs-select").select2({ placeholder: "Select Insurance",
-          allowClear: true
-      });
-        loadAwards();
-        loadServices();
-        var pharmacy_status = '';
-        pharmacy_status = $('#pharmacy_status').val();
-        var bloodbank_status = '';
-        bloodbank_status = $('#bloodbank_status').val();
-        if(bloodbank_status != '')
-        $("#bloodbankbtn").trigger("click");
-        if(bloodbank_status != '')
-        $("#pharmacybtn").trigger("click");
-          /*$('#hospitalSpecialities').load(urls + 'index.php/hospital/hospitalSpecialities/'+hospitalId,function () {
-           // alert('callback function implementation');
-        });*/
-        
-    }) ;
-    function addAwards(){
-        var hospitalAwards_awardsName = $.trim($('#hospitalAwards_awardsName').val());
-        if(hospitalAwards_awardsName != ''){
-            
-            $.ajax({
-               url : urls + 'index.php/hospital/addHospitalAwards',
-               type: 'POST',
-              data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
-              success:function(datas){
-               // console.log(datas);
-                  loadAwards();
-                  $('#hospitalAwards_awardsName').val('');
-              }
-           });
-        }    
-    }
-    function editAwards(awardsId){
-         var edit_awardsName = $.trim($('#'+awardsId).val());
-        
-        if(edit_awardsName != ''){
-            
-            $.ajax({
-               url : urls + 'index.php/hospital/editHospitalAwards',
-               type: 'POST',
-              data: {'awardsId' : awardsId , 'hospitalAwards_awardsName' : edit_awardsName },
-              success:function(datas){
-              console.log(datas);
-                  loadAwards();
-              }
-           });
-        }  
-    }
-    function deleteAwards(awardsId){
-        
-         $.ajax({
-               url : urls + 'index.php/hospital/deleteHospitalAwards',
-               type: 'POST',
-              data: {'awardsId' : awardsId },
-              success:function(datas){
-              console.log(datas);
-                  loadAwards();
-              }
-           });
-        
-    }
-    function loadAwards(){
-       
-        $('#loadAwards').load(urls + 'index.php/hospital/hospitalAwards/'+hospitalId,function () {
-           // alert('callback function ');
-        });
-        $('#totalAwards').load(urls + 'index.php/hospital/detailAwards/'+hospitalId,function () {
-           // alert('callback function implementation');
-        });
-    }
-    function loadServices(){
-        $('#loadServices').load(urls + 'index.php/hospital/hospitalServices/'+hospitalId,function (data) {
-            //alert('callback function implementation');
-            
-        });
-        $('#totalServices').load(urls + 'index.php/hospital/detailServices/'+hospitalId,function () {
-            //alert('callback function implementation');
-        });
-    }
-    function addServices(){
-        var hospitalServices_serviceName = $.trim($('#hospitalServices_serviceName').val());
-        //alert(hospitalServices_serviceName);
-        if(hospitalServices_serviceName != ''){
-            
-            $.ajax({
-               url : urls + 'index.php/hospital/addHospitalService',
-               type: 'POST',
-              data: {'hospitalId' : hospitalId , 'hospitalServices_serviceName' : hospitalServices_serviceName },
-              success:function(datas){
-               // console.log(datas);
-                  loadServices();
-                  $('#hospitalServices_serviceName').val('');
-              }
-           });
-        }    
-    }
-    
-    function editServices(serviceId){
-         var edit_serviceName = $.trim($('#'+serviceId).val());
-        
-        if(edit_serviceName != ''){
-            
-            $.ajax({
-               url : urls + 'index.php/hospital/editHospitalService',
-               type: 'POST',
-              data: {'serviceId' : serviceId , 'hospitalServices_serviceName' : edit_serviceName },
-              success:function(datas){
-              console.log(datas);
-                  loadServices();
-              }
-           });
-        }  
-    }
-    
-    function deleteServices(serviceId){
-        
-         $.ajax({
-               url : urls + 'index.php/hospital/deleteHospitalService',
-               type: 'POST',
-              data: {'serviceId' : serviceId },
-              success:function(datas){
-              console.log(datas);
-                  loadServices();
-              }
-           });
-        
-    }
-      function fetchCity(stateId) {    
-           
-           $.ajax({
-               url : urls + 'index.php/hospital/fetchCity',
-               type: 'POST',
-              data: {'stateId' : stateId},
-              success:function(datas){
-               // console.log(datas);
-                  $('#hospital_cityId').html(datas);
-                  $('#hospital_cityId').selectpicker('refresh');
-                  $('#StateId').val(stateId);
-              }
-           });
-           
-        }
-       function validationHospital(){
-           
-       //$("form[name='bloodDetail']").submit();
-        var check= /^[a-zA-Z\s]+$/;
-        var numcheck=/^[0-9]+$/;
-        //var emails = $.trim($('#users_email').val());
-        
-       
-         if($.trim($('#hospital_name').val()) === ''){
-                $('#hospital_name').addClass('bdr-error');
-                
-            }
-          
-            if($.trim($('#geocomplete').val()) === ''){
-               $("#geocomplete").addClass('bdr-error');
-               
-            }
-             if(!check.test(cpname)){
-                $('#hospital_cntPrsn').addClass('bdr-error');
-                
-            }
-
-            if( emails !== ''){
-                check_email(emails);
-            }
-            
-            return false;
-            
-            
-        }
-        function checkNumber(id){
-            var phone = $.trim($('#'+'hospital_phn'+id).val());
-            if(!($.isNumeric(phone))){
-             $('#'+'hospital_phn'+id).addClass('bdr-error');
-         }
-        }
-        function checkEmailFormat(){
-           
-                var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-                var email = $('#users_email').val();
-                if(email!==''){
-                    if (!filter.test(email)){
-                       $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
-                    }
-            }
-        } 
-        
-       
-        function updateAccount(){
-          
-            var pswd = $.trim($("#users_password").val());
-            var cnfpswd = $.trim($("#cnfPassword").val());
-            var mobile = $('#users_mobile').val();
-            var emails = $('#users_email').val();
-            var user_tables_id = $('#user_tables_id').val();
-            var users_mobile = $('#users_mobile').val();
-            var returnValue = 0;
-           
-            var status = 1;
-            if(emails === ''){
-                $('#error-users_emailBlank').fadeIn().delay(3000).fadeOut('slow');
-                status = 0;
-            }
-            if(users_mobile === ''){
-                $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
-                status = 0;
-            }
-            if(pswd != ''){
-                if(pswd.length < 6){
-                    $('#users_password').addClass('bdr-error');
-                    $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
-                   // $('#users_password').focus();
-                   status = 0;
-                }
-
-               if(pswd != cnfpswd){
-                    $('#cnfPassword').addClass('bdr-error');
-                    $('#error-cnfPassword').fadeIn().delay(3000).fadeOut('slow');
-
-                   // $('#cnfpassword').focus();
-                   status = 0;
-                }
-            }
-            if(status == 0)
-                return false;
-            else{
-                    var user_table_id = $('#user_tables_id').val();
-                    $.ajax({
-                        url : urls + 'index.php/hospital/check_email',
-                        type: 'POST',
-                       data: {'users_email' : emails,'user_table_id' : user_table_id },
-                       success:function(datas){
-                           //console.log(datas);
-                           if(datas == 0){
-                            
-                             $.ajax({
-                                    url : urls + 'index.php/hospital/updatePassword',
-                                    type: 'POST',
-                                   //data: {'currentPassword' : pswd,'existingPassword' : password,'user_tables_id' : user_tables_id}, password updated from another user except super admin
-                                   data: $('#acccountForm').serialize(),
-                                   success:function(insertData){
-                                       
-                                       console.log(insertData);
-
-                                       if(insertData == 1){
-                                     $('#users_password').val('');
-                                      $('#cnfPassword').val('');
-                                   
-                                    setTimeout(function(){
-                                      $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut(function() {
-                                      window.location.reload();
-                                                               
-                                        });
-                                       }, 4000);
-                                      
-                                        return true;
-                                      }
-                                     
-                                   } 
-                                });
-                       }
-                       else {
-                         $('#users_email').addClass('bdr-error');
-                         $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
-
-                        return false;
-                       }
-                       } 
-                    });
-                
-              
-            }
-        }
-        
-         function check_email(myEmail){
-            var user_table_id = $('#user_tables_id').val();
-           $.ajax({
-               url : urls + 'index.php/hospital/check_email',
-               type: 'POST',
-              data: {'users_email' : myEmail,'user_table_id' : user_table_id },
-              success:function(datas){
-                  console.log(datas);
-                  if(datas == 0){
-                   return true;
-              }
-              else {
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
-               
-               return false;
-              }
-              } 
-           });
-        }
-    </script>
+   
+  
 </body>
 
 </html>
