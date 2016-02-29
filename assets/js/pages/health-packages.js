@@ -3,10 +3,6 @@ $('#date-1').datepicker();
 $('#date-2').datepicker();
 
 
-var hideKeyboard = function () {
-    document.activeElement.blur();
-    $(".pickDate").blur();
-};
 
 /* -- Revenue Generation Chart --*/
 Morris.Bar({

@@ -4828,15 +4828,15 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     line-height: 1.42857143;
     text-decoration: none;
     color: #337ab7;
-    background-color: #fff;
-    border: 1px solid #ddd;
+   /* background-color: #fff;
+    border: 1px solid #ddd;*/
     margin-left: -1px
 }
 .pagination>li:first-child>a,
 .pagination>li:first-child>span {
     margin-left: 0;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px
+   /* border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px*/
 }
 .pagination>li:last-child>a,
 .pagination>li:last-child>span {
@@ -4848,8 +4848,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination>li>a:focus,
 .pagination>li>span:focus {
     z-index: 3;
-    color: #23527c;
-    background-color: #eee;
+    color: #ccc;
+   
     border-color: #ddd
 }
 .pagination>.active>a,
@@ -4871,8 +4871,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination>.disabled>a:hover,
 .pagination>.disabled>a:focus {
     color: #777;
-    background-color: #fff;
-    border-color: #ddd;
+   /* background-color: #fff;
+    border-color: #ddd;*/
     cursor: not-allowed
 }
 .pagination-lg>li>a,
@@ -17914,8 +17914,8 @@ button.confirm {
     background-color: #212121
 }
 .pagination>li>a {
-    background-color: #fff;
-    border: 1px solid #ddd;
+  /*  background-color: #fff;*/
+   /* border: 1px solid #ddd;*/
     color: #373e4a
 }
 .pagination>li>span {
@@ -17929,8 +17929,8 @@ button.confirm {
 .pagination>.active>span:hover,
 .pagination>.active>a:focus,
 .pagination>.active>span:focus {
-    background-color: #317eeb;
-    border-color: #317eeb
+    background-color: #40cdb2;
+    border-color: #40cdb2
 }
 .tabs {
     background-color: #fff;

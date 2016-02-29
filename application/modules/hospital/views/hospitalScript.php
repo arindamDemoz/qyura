@@ -33,6 +33,7 @@ if($current == 'detailBloodBank'):?>
     <script>
         var resizefunc = [];
     </script>
+    <script> var hospitalId = <?php echo $hospitalId;?> </script>
 <script>
              /*-- Selectpicker --*/
 $('.selectpicker').selectpicker({

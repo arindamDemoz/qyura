@@ -1127,22 +1127,23 @@ table.top-doctor tr td h6 img {
 
 /*-- Form Error --*/
 
+
 .error {
     color: #EF5350 !important;
     margin-top: 3px;
     font-size: 13px;
 }
 
-.bdr-error,
-.bdr-error button {
+.bdr-error, .bdr-error button {
     border-color: #EF5350;
 }
 
-.bar-chart {
-    width: 100% !important;
+.bar-chart
+{
+    width:100% !important;
 }
-
-.mp-t-0 {
+.mp-t-0
+{
     padding-top: 0px;
     margin-top: 0px;
 }
@@ -1153,7 +1154,6 @@ table.top-doctor tr td h6 img {
     text-align: left;
 }
 
-
 /* -- Feb 11, 2016 -- */
 
 .amb-detail h4 {
@@ -1161,6 +1161,8 @@ table.top-doctor tr td h6 img {
     font-size: 15px;
     font-weight: 600;
 }
+<<<<<<< HEAD
+=======
 
 
 /* -- Upload Button -- */
@@ -1476,3 +1478,4 @@ aside.show-image a.delete {
   opacity:1;
   visibility:visible;
 }
+>>>>>>> 0649ebb1cd1a1f84ba69b16ba205af381cb494cb

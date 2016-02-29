@@ -63,7 +63,9 @@ class My_model extends CI_Model
             $data   =   false;
 
             extract($options);
-
+            
+            $data = $this->_filter_data($table, $data);
+            
             $this->db->insert($table, $data);
 
             return $this->db->insert_id();
@@ -82,6 +84,7 @@ class My_model extends CI_Model
             $where      =   false;
             $or_where   =   false;
             $single     =   false;
+            $group_by   =   false;
 
             extract($options);
 
@@ -110,6 +113,11 @@ class My_model extends CI_Model
                                     }
                             }
                     }
+                    
+                    if($group_by !=false){
+
+                            $this->db->group_by($group_by);
+                    }
 
 
                     if($order!=false){
@@ -129,6 +137,8 @@ class My_model extends CI_Model
                                     }
                             }
                     }
+                    
+                    
 
 
                     if($join!=false){
@@ -311,5 +321,18 @@ class My_model extends CI_Model
         $this->email->message($data['message'].$data['body']);
         $status = (bool) $this->email->send();
         return $status;
+    }
+    
+    
+    public function user_check($where='',$select='*')
+    {
+        if (empty($where)) {
+            return FALSE;
+        }
+
+        return $this->db->select($select)->where($where)
+                        ->order_by("users_id", "ASC")
+                        ->limit(1)
+                        ->get('qyura_users')->row();
     }
 }

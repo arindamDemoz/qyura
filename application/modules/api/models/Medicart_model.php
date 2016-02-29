@@ -4,7 +4,7 @@ if(!defined('BASEPATH'))
     exit('No direct script access allowed');
 }
 
-class Medicart_model extends CI_Model
+class Medicart_model extends Common_model
 {
     
     public function __construct()
@@ -91,6 +91,49 @@ class Medicart_model extends CI_Model
         ->limit(1);
         return $this->db->get()->row();
     }
+    
+    public function add($table,$data)
+    {
+         $data = $this->_filter_data($table, $data);
+
+         $this->db->insert($table, $data);
+
+         $id = $this->db->insert_id();
+
+         return $id;
+    }
+    
+    /**
+     * booking_check
+     *
+     * @return bool
+     
+     * */
+    public function booking_check($where = '') {
+        
+        if (empty($where)) {
+            return FALSE;
+        }
+
+        return $this->db->where($where)
+                        ->order_by("medicartBooking_id", "ASC")
+                        ->limit(1)
+                        ->count_all_results('qyura_medicartBooking') > 0;
+    }
+    
+    public function getSingleData($where='',$select='*')
+    {
+        if (empty($where)) {
+            return FALSE;
+        }
+
+        return $this->db->select($select)->where($where)
+                        ->order_by("medicartOffer_id", "ASC")
+                        ->limit(1)
+                        ->get('qyura_medicartOffer')->row();
+    }
+    
+    
     
 
 }

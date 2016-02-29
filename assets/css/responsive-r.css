@@ -9,7 +9,7 @@
         margin: 5px 0px;
     }
     .m-t-xs-10 {
-        margin-top: 10px;
+        margin-top: 14px;
     }
     .m-t-sm-10 {
         margin-top: 10px;
@@ -78,22 +78,13 @@
         line-height: 25px;
         padding: 10px 25px;
     }
-    ul.ul-tick {
+    ul.ul-tick
+    {
         padding-left: 30px;
     }
-    ul.ul-setting {
-        padding-left: 15px;
-    }
-    .control-label {
-        margin-bottom: 4px !important;
-    }
-    .form-group
+    ul.ul-setting
     {
-        margin-bottom: 5px;
-    }
-    .mi-form-section label.control-label
-    {
-        margin-top:0px;
+        padding-left:15px;
     }
 }
 
@@ -133,11 +124,13 @@
     .m-r-0 {
         margin-right: 0px;
     }
-    ul.ul-tick {
+     ul.ul-tick
+    {
         padding-left: 30px;
     }
-    ul.ul-setting {
-        padding-left: 15px;
+    ul.ul-setting
+    {
+        padding-left:15px;
     }
 }
 
@@ -153,20 +146,26 @@
     .mi-form-section {
         font-size: 12px;
     }
-    .chart canvas {
-        width: 86px !important;
-        height: 86px !important;
+    .chart canvas
+    {
+        width:86px !important;
+         height:86px !important;
     }
-    .bootstrap-select > .dropdown-toggle {
+    .bootstrap-select > .dropdown-toggle
+    {
         font-size: 13px;
     }
-    .m-t-md-15 {
+     .m-t-md-15 
+    {
         margin-top: 15px;
     }
-    .bootstrap-select > .dropdown-toggle {
+    .bootstrap-select > .dropdown-toggle
+    {
         padding-left: 5px;
     }
 }
+
+
 
 @media screen and (min-width:767px) {
     .t-center {
@@ -182,6 +181,7 @@
     .content-page {
         margin-left: 0px;
     }
+    
 }
 
 @media (min-width:767px) and (max-width:6000px) {
@@ -198,12 +198,18 @@
     .t-xs-left {
         text-align: right;
     }
+
+    
 }
+
+
 
 @media (width:768px) {
     .content-page {
         margin-left: 44px;
     }
+
+    
 }
 
 .mlogo {
@@ -223,16 +229,12 @@
     width: 44px;
 }
 
-.h-300 {
-    height: 400px !important;
-    width: 100% !important;
-}
+ .h-300
+    {
+        height: 400px !important;
+        width: 100% !important;
+    }
 
-.revenue-t {
-    width: 100% !important;
-    height: 200px !important;
-}
+   .revenue-t {width:100% !important; height:200px !important;}
 
-.w-full {
-    width: 100% !important;
-}
+   .w-full {width:100% !important;}

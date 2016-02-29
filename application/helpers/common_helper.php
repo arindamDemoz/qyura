@@ -64,6 +64,17 @@ if ( ! function_exists('createImage'))
         return $success;
     }
 }
+
+
+if ( ! function_exists('dateFormate'))
+{
+    function dateFormate($strToTime)
+    {
+        
+        return date("m  D, Y g:i A",$strToTime);
+        //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
  //   function deg2rad($deg) {
   //      return $deg * (pi()/180);
   //  }

@@ -1,4 +1,6 @@
-<?php defined('BASEPATH') || exit('No direct script access allowed');
+<?php
+
+defined('BASEPATH') || exit('No direct script access allowed');
 /**
  * Bonfire
  *
@@ -13,6 +15,7 @@
  * @since     Version 1.0
  * @filesource
  */
+
 /**
  * Form Validation
  *
@@ -23,27 +26,28 @@
  * @author     Bonfire Dev Team
  * @link       http://cibonfire.com/docs/guides
  */
-class CI_BF_Form_validation extends CI_Form_validation
-{
+class CI_BF_Form_validation extends CI_Form_validation {
+
     /**
      * @var object The CodeIgniter core object.
      */
     public $CI;
+
     //--------------------------------------------------------------------
     /**
      * Constructor
      *
      * @return void
      */
-    public function __construct($config = array())
-    {
+    public function __construct($config = array()) {
         // Merged super-global $_FILES to $_POST to allow for better file
         // validation inside of Form_validation library
-        if (! empty($_FILES) && is_array($_FILES)) {
+        if (!empty($_FILES) && is_array($_FILES)) {
             $_POST = array_merge($_POST, $_FILES);
         }
         parent::__construct($config);
     }
+
     /**
      * Check if the field has an error associated with it.
      *
@@ -51,13 +55,13 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool
      */
-    public function has_error($field = null)
-    {
+    public function has_error($field = null) {
         if (empty($field)) {
             return false;
         }
-        return ! empty($this->_field_data[$field]['error']);
+        return !empty($this->_field_data[$field]['error']);
     }
+
     /**
      * Performs the actual form validation
      *
@@ -66,25 +70,25 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool Success or Failure
      */
-    public function run($module = '', $group = '')
-    {
-        is_object($module) && $this->CI =& $module;
+    public function run($module = '', $group = '') {
+        is_object($module) && $this->CI = & $module;
         return parent::run($group);
     }
+
     /**
      * Returns Form Validation Errors in an HTML Un-ordered list format.
      *
      * @return string|bool Form Validation Errors in an HTML Un-ordered list, or
      * false when no errors are returned.
      */
-    public function validation_errors_list()
-    {
+    public function validation_errors_list() {
         $errors = $this->CI->form_validation->error_string('<li>', '</li>');
         if (empty($errors)) {
             return false;
         }
         return '<ul>' . PHP_EOL . "{$errors}</ul>";
     }
+
     //--------------------------------------------------------------------------
     // Validation Rules
     //--------------------------------------------------------------------------
@@ -100,9 +104,8 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool If files are in the allowed type array then TRUE else FALSE
      */
-    public function allowed_types($str, $types = null)
-    {
-        if (! $types) {
+    public function allowed_types($str, $types = null) {
+        if (!$types) {
             log_message('debug', 'form_validation method allowed_types was called without any allowed types.');
             $this->CI->form_validation->set_message('allowed_types', lang('bf_form_allowed_types_none'));
             return false;
@@ -115,6 +118,7 @@ class CI_BF_Form_validation extends CI_Form_validation
         $this->CI->form_validation->set_message('allowed_types', lang('bf_form_allowed_types'));
         return false;
     }
+
     /**
      * Check that a string only contains Alpha-numeric characters with periods,
      * underscores, spaces, and dashes
@@ -123,14 +127,14 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return	bool
      */
-    public function alpha_extra($str)
-    {
+    public function alpha_extra($str) {
         if (preg_match("/^([\.\s-a-z0-9_-])+$/i", $str)) {
             return true;
         }
         $this->CI->form_validation->set_message('alpha_extra', lang('bf_form_alpha_extra'));
         return false;
     }
+
     /**
      * Check that the string matches a specific regex pattern
      *
@@ -139,14 +143,14 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool
      */
-    public function matches_pattern($str, $pattern)
-    {
+    public function matches_pattern($str, $pattern) {
         if (preg_match('/^' . $pattern . '$/', $str)) {
             return true;
         }
         $this->CI->form_validation->set_message('matches_pattern', lang('bf_form_matches_pattern'));
         return false;
     }
+
     /**
      * Set maximum file upload size in your form validation rules.
      *
@@ -157,8 +161,7 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool
      */
-    public function max_file_size($str, $size = 0)
-    {
+    public function max_file_size($str, $size = 0) {
         if (empty($size)) {
             log_message('error', 'Form_validation rule, max_file_size was called without setting an allowable file size.');
             $this->CI->form_validation->set_message('max_file_size', str_replace('{max_size}', '0', lang('bf_form_max_file_size')));
@@ -170,6 +173,7 @@ class CI_BF_Form_validation extends CI_Form_validation
         $this->CI->form_validation->set_message('max_file_size', str_replace('{max_size}', $size, lang('bf_form_max_file_size')));
         return false;
     }
+
     /**
      * Verify that the entered string is one of the values entered as the second
      * parameter.
@@ -181,9 +185,8 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool If files are in the allowed type array then TRUE else FALSE
      */
-    public function one_of($str, $options = null)
-    {
-        if (! $options) {
+    public function one_of($str, $options = null) {
+        if (!$options) {
             log_message('debug', 'form_validation method one_of was called without any possible values.');
             $this->CI->form_validation->set_message('one_of', lang('bf_form_one_of_none'));
             return false;
@@ -196,6 +199,7 @@ class CI_BF_Form_validation extends CI_Form_validation
         $this->CI->form_validation->set_message('one_of', lang('bf_form_one_of'));
         return false;
     }
+
     /**
      * Checks that a value is unique in the database.
      *
@@ -213,17 +217,16 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool True if the value is unique for that field, else false.
      */
-    public function unique($value, $params)
-    {
+    public function unique($value, $params) {
         // Allow for more than 1 parameter.
         $fields = explode(",", $params);
         // Extract the table and field from the first parameter.
         list($table, $field) = explode('.', $fields[0], 2);
         // Setup the db request.
         $this->CI->db->select($field)
-                     ->from($table)
-                     ->where($field, $value)
-                     ->limit(1);
+                ->from($table)
+                ->where($field, $value)
+                ->limit(1);
         // Check whether a second parameter was passed to be used as an
         // "AND NOT EQUAL" where clause
         // eg "select * from users where users.name='test' AND users.id != 4
@@ -245,6 +248,28 @@ class CI_BF_Form_validation extends CI_Form_validation
         }
         return true;
     }
+    
+    
+    public function MUnique($value, $params) {
+        // Allow for more than 1 parameter.
+        
+        $option = json_decode($params,true);
+        
+        $query = $this->CI->common_model->customGet($option);
+        
+        $message = false;
+        extract($option);
+        if ($query != null) {
+            if(!$message)
+                $message = lang('bf_form_unique');
+            $this->set_message('MUnique', $message);
+            return false;
+        }
+        
+        return true;
+    }
+    
+
     /**
      * Check the entered password against the password strength settings.
      *
@@ -252,13 +277,12 @@ class CI_BF_Form_validation extends CI_Form_validation
      *
      * @return bool
      */
-    public function valid_password($str)
-    {
+    public function valid_password($str) {
         // Get the password strength settings from the database
-        $min_length	= $this->CI->settings_lib->item('auth.password_min_length');
-        $use_nums   = $this->CI->settings_lib->item('auth.password_force_numbers');
-        $use_syms   = $this->CI->settings_lib->item('auth.password_force_symbols');
-        $use_mixed  = $this->CI->settings_lib->item('auth.password_force_mixed_case');
+        $min_length = $this->CI->settings_lib->item('auth.password_min_length');
+        $use_nums = $this->CI->settings_lib->item('auth.password_force_numbers');
+        $use_syms = $this->CI->settings_lib->item('auth.password_force_symbols');
+        $use_mixed = $this->CI->settings_lib->item('auth.password_force_mixed_case');
         // Check length
         if (strlen($str) < $min_length) {
             $this->CI->form_validation->set_message('valid_password', str_replace('{min_length}', $min_length, lang('bf_form_valid_password')));
@@ -287,7 +311,76 @@ class CI_BF_Form_validation extends CI_Form_validation
         }
         return true;
     }
+
+    /**
+     * @desc Validates a date format
+     * @params format,delimiter
+     * e.g. d/m/y,/ or y-m-d,-
+     */
+    function valid_date($str, $params) {
+        // setup
+        $CI = &get_instance();
+        $params = explode(',', $params);
+        $delimiter = $params[1];
+        $date_parts = explode($delimiter, $params[0]);
+
+        // get the index (0, 1 or 2) for each part
+        $di = $this->valid_date_part_index($date_parts, 'd');
+        $mi = $this->valid_date_part_index($date_parts, 'm');
+        $yi = $this->valid_date_part_index($date_parts, 'y');
+
+        // regex setup
+        $dre = "(0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)";
+        $mre = "(0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12)";
+        $yre = "([0-9]{4})";
+        $red = '' . $delimiter; // escape delimiter for regex
+        $rex = "/^[0]{$red}[1]{$red}[2]/";
+
+        // do replacements at correct positions
+        $rex = str_replace("[{$di}]", $dre, $rex);
+        $rex = str_replace("[{$mi}]", $mre, $rex);
+        $rex = str_replace("[{$yi}]", $yre, $rex);
+
+        if (preg_match($rex, $str, $matches)) {
+            // skip 0 as it contains full match, check the date is logically valid
+            if (checkdate($matches[$mi + 1], $matches[$di + 1], $matches[$yi + 1])) {
+                return true;
+            } else {
+                // match but logically invalid
+                $this->set_message('valid_date', "The date is invalid. Use {$params[0]}");
+                return false;
+            }
+        }
+
+        // no match
+        $this->set_message('valid_date', "The date format is invalid. Use {$params[0]}");
+        return false;
+    }
+
+    function valid_date_part_index($parts, $search) {
+        for ($i = 0; $i <= count($parts); $i++) {
+            if ($parts[$i] == $search) {
+                return $i;
+            }
+        }
+    }
+    
+    function _user_check($str_in = '')
+    {
+
+        $user_check = $this->CI->common_model->user_check(array('users_id'=>$str_in,'users_deleted'=>0),'users_id');
+
+        if($user_check == NULL)
+        {
+            $this->set_message('_user_check', 'user not exist...');
+            return FALSE;
+        }
+
+        return TRUE;
+    }
     
     
+
 }
+
 /* End of file : /libraries/BF_Form_validation.php */

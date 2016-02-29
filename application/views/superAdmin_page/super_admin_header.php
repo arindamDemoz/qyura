@@ -13,13 +13,15 @@
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <link href="<?php echo base_url();?>assets/vendor/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
+    <!-- DataTables -->
+     <link href="<?php echo base_url(); ?>assets/js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
+
     <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
     <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> 
-    <script> var urls = "<?php echo base_url()?>";
-         var hospitalId = <?php echo $hospitalId; ?>;
-    </script>
-    
+   
+
 </head>
 
 <body class="fixed-left" id="crop-avatar">
