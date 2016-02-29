@@ -35,7 +35,7 @@
                                                         <span><i class="fa fa-cloud-upload fa-3x avatar-view"></i></span>
 <!--                                                        <input id="uploadBtn" type="file" class="upload" />-->
                                                          <input type="hidden" style="display:none;" class="no-display" id="file_action_url" name="file_action_url" value="<?php echo site_url('diagnostic/editUploadImage');?>">
-                                                        <input type="hidden" style="display:none;" class="no-display" id="load_url" name="load_url" value="<?php echo site_url('diagnostic/getUpdateAvtar/'.$this->uri->segment(3));?>">
+                                                         <input type="hidden" style="display:none;" class="no-display" id="load_url" name="load_url" value="<?php echo site_url('diagnostic/getUpdateAvtar/'.$this->uri->segment(3));?>">
                                                     </div>
                                                 </article>
                                                 <!-- description div -->
@@ -128,14 +128,14 @@
 
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left"><?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_address; endif;?></p>
+                                                                <p class="col-md-8 col-sm-8 t-xs-left"><?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_cntPrsn; endif;?></p>
                                                             </article>
 
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Designation:</label>
                                                                 <p class="col-md-8 col-sm-8 t-xs-left"><?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_dsgn; endif;?></p>
                                                             </article>
-
+<div class="map_canvas"></div>
                                                         </section>
                                                         <section id="newDetail" style="display:none;">
                                  <form name="diagnosticForm" action="<?php echo site_url('diagnostic/saveDetailDiagnostic/'.$diagnosticData[0]->diagnostic_id);?>" method="post"> 
@@ -143,6 +143,10 @@
                                                      <input type="hidden" id="countryId" name="countryId" value="<?php echo $diagnosticData[0]->diagnostic_countryId;?>" />
                                                      <input type="hidden" id="cityId" name="cityId" value="<?php echo $diagnosticData[0]->diagnostic_cityId;?>" />
                                                      <input type="hidden" id="diagnostic_id" name="diagnostic_id" value="<?php echo $diagnosticData[0]->diagnostic_id;?>" />
+                                         <input name="lat" type="hidden" value="<?php echo $diagnosticData[0]->diagnostic_lat;?>">
+
+                                                               <!-- <label>Longitude</label> -->
+                                         <input name="lng" type="hidden" value="<?php echo $diagnosticData[0]->diagnostic_long;?>">
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Diagnostic Centre Name:</label>
                                                                 <div class="col-md-8 col-sm-8">
@@ -177,11 +181,11 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                                            <input type="text" class="form-control" id="diagnostic_zip" name="zip" placeholder="700001" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_zip; endif;?>"/>
+                                                                            <input type="text" class="form-control" id="diagnostic_zip" name="diagnostic_zip" placeholder="700001" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_zip; endif;?>"/>
                                                                         </div>
                                                                     </aside>
                                                                     <div class="clearfix m-t-10">
-                                                                        <input type="text" class="form-control" id="diagnostic_address" name="diagnostic_address" placeholder="209, ABC Road, near XYZ Building " value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_address; endif;?>"/>
+                                                                        <input type="text" class="form-control" id="geocomplete" name="diagnostic_address" placeholder="209, ABC Road, near XYZ Building " value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_address; endif;?>"/>
                                                                     </div>
                                                                 </div>
                                                             </article>
@@ -202,7 +206,7 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
-                                                                            <input type="text" class="form-control" name="hospital_phn[]" id="diagnostic_phn<?php echo ($i+1);?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
+                                                                            <input type="text" class="form-control" name="diagnostic_phn[]" id="diagnostic_phn<?php echo ($i+1);?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
                                                                         </div>
 
 
@@ -242,767 +246,486 @@
                                                       
 
                                                         </div>
-                                                        <div class="col-md-6 p-b-20">
-                                                            <article class="clearfix">
-                                                                <article class="clearfix">
-                                                                    <h4>Awards Recognition
-                                                   <a id="editawards" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
-                                                </h4>
-                                                                    <hr/>
-                                                                    <ul class="ul-tick" id="detailawards">
-                                                                        <li>Special Achievement Awards</li>
-                                                                        <li>FICCI Healthcare Excillence Awards</li>
-                                                                        <li>Special Achievement Awards</li>
-                                                                        <li>FICCI Healthcare Excillence Awards</li>
-                                                                    </ul>
-                                                                    <form id="newawards" style="display:none">
-                                                                        <aside class="form-group m-lr-0 p-b-20 m-b-30">
-                                                                            <label for="cname" class="control-label col-lg-3 col-sm-4">Awards:</label>
-                                                                            <div class="col-lg-9 col-sm-8">
-                                                                                <aside class="row">
-                                                                                    <div class="col-md-10 col-sm-10 col-xs-10">
-                                                                                        <input type="text" class="form-control" name="awards" id="awards" placeholder="FICCI Healthcare Excillence Awards" />
-                                                                                    </div>
-                                                                                    <div class="col-md-2 col-sm-2 col-xs-2">
-                                                                                        <i class="fa fa-plus-circle fa-2x m-t-5 label-plus" title="Add More"></i>
-                                                                                    </div>
-
-
-                                                                                </aside>
-
-                                                                            </div>
-                                                                        </aside>
-                                                                    </form>
-                                                                </article>
-                                                                <aside class="clearfix">
-                                                                    <h4>Services
-                                                      <a id="editservices" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
-                                                   </h4>
-                                                                    <hr/>
-                                                                </aside>
-                                                                <section id="detailservices">
-                                                                    <ul class="ul-tick">
-                                                                        <li>Hemetology</li>
-                                                                        <li>Microbiology Blood Bank</li>
-                                                                        <li>Radiology</li>
-                                                                        <li>Loren</li>
-                                                                        <li>Loren Ipsum</li>
-                                                                        <li>Hemetology</li>
-                                                                        <li>Microbiology Blood Bank</li>
-                                                                        <li>Radiology</li>
-                                                                        <li>Loren</li>
-                                                                        <li>Loren Ipsum</li>
-                                                                    </ul>
-                                                                </section>
-                                                                <form>
-                                                                    <aside class="form-group m-lr-0" id="newservices" style="display:none">
-                                                                        <label for="cname" class="control-label col-lg-3 col-sm-4">Services:</label>
-                                                                        <div class="col-lg-9 col-sm-8">
-                                                                            <aside class="clearfix">
-                                                                                <div class="col-md-10 col-sm-10">
-
-                                                                                    <select class="selectpicker" data-width="100%" multiple>
-                                                                                        <option selected>Radiology</option>
-                                                                                        <option>Microbiology Blood Bank</option>
-                                                                                        <option selected>Loren</option>
-                                                                                        <option>Loren Ipsum</option>
-                                                                                    </select>
-                                                                                </div>
-
-                                                                            </aside>
-
-                                                                        </div>
-                                                                    </aside>
-                                                                </form>
-                                                            </article>
-                                                        </div>
-                                                </aside>
-                                                </div>
-                                        </article>
-                                    </section>
-                                    <!-- General Detail Ends -->
-                                    <!--diagnostic Starts -->
-                                    <section class="tab-pane fade in" id="diagnostic" ng-app="myApp">
-                                        <!-- first Section Start -->
-                                        <aside class="clearfix">
-
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Available</h3>
-
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-
-
-
-
-                                            <!-- first Section End -->
-
-
-                                            <section class="col-md-2 detailbox m-b-20 text-center">
-                                                <div class="m-t-150">
-                                                    <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-                                                </div>
-                                                <div class="m-t-50">
-
-                                                    <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-                                                </div>
-
-                                            </section>
-                                            <!-- second Section Start -->
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Diagnostic Categories Added</h3>
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-                                            <!-- second Section End -->
-
-                                        </aside>
-
-                                        <section class="clearfix detailbox m-b-20">
-                                            <div class="col-md-8">
-                                                <figure class="clearfix">
-                                                    <h3>Diagnostic Test Pricing Setup</h3>
-                                                    <article class="clearfix">
-
-                                                        <div class="input-group m-b-5">
-                                                            <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                            <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
-                                                        </div>
-                                                    </article>
-                                                </figure>
-
-
-                                                <aside class="table-responsive">
-                                                    <table class="table">
-
-                                                        <col style="width:70%">
-                                                            <col style="width:20%">
-                                                                <col style="width:10%">
-                                                                    <tbody>
-
-                                                                        <tr class="border-a-dull">
-                                                                            <th>Test Name</th>
-                                                                            <th>Price</th>
-                                                                            <th>Action</th>
-
-                                                                        </tr>
-                                                                    </tbody>
-                                                    </table>
-
-
-                                                    <article class="nicescroll mx-h-300">
-                                                        <table class="table">
-
-                                                            <col style="width:70%">
-                                                                <col style="width:20%">
-                                                                    <col style="width:10%">
-                                                                        <tbody>
-
-
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Cmplete Blood Count(CBC)
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            <tr>
-
-                                                                                <td>
-                                                                                    Blood Chemistry Test
-                                                                                </td>
-                                                                                <td>
-                                                                                    <i class="fa fa-inr"></i> 1200
-                                                                                </td>
-                                                                                <td>
-
-                                                                                    <a data-target="#myModal" data-toggle="modal" class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-
-                                                                                </td>
-                                                                            </tr>
-
-
-
-
-                                                                        </tbody>
-                                                        </table>
-                                                    </article>
-                                                </aside>
-
-                                            </div>
-
-                                            <div class="col-md-4">
-
-                                                <figure class="clearfix">
-                                                    <h3 class="pull-left ">Test Preparation Instruction</h3>
-                                                </figure>
-
-                                                <aside class="clearfix mx-h-400">
-
-                                                    <article class="nicescroll">
-                                                        <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-
-                                                        </p>
-
-                                                        <aside class="clearfix p-5">
-                                                            <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
-
-                                                        </aside>
-
-                                                    </article>
-                                                </aside>
-
-                                            </div>
-
-                                        </section>
-
-                                    </section>
-                                    <!-- diagnostic Ends -->
-                                    <!--Specialities Starts -->
-                                    <section class="tab-pane fade in" id="specialities">
-                                        <aside class="clearfix">
-
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Specialities Available</h3>
-
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-
-
-
-                                            <!-- first Section End -->
-
-
-                                            <section class="col-md-2 detailbox m-b-20 text-center">
-                                                <div class="m-t-150">
-                                                    <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-                                                </div>
-                                                <div class="m-t-50">
-
-                                                    <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-                                                </div>
-
-                                            </section>
-                                            <!-- second Section Start -->
-                                            <section class="col-md-5 detailbox m-b-20 diag" ng-app="myApp" ng-controller="diag-c-avail">
-                                                <aside class="bg-white">
-                                                    <figure class="clearfix">
-
-                                                        <h3>Specialities Added</h3>
-
-
-                                                        <article class="clearfix">
-
-                                                            <div class="input-group m-b-5">
-                                                                <span class="input-group-btn">
-                                                        <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-                                                        </span>
-                                                                <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2" ng-model="test">
-                                                            </div>
-                                                        </article>
-                                                    </figure>
-                                                    <div class="nicescroll mx-h-300">
-                                                        <div class="clearfix diag-detail">
-                                                            <ul>
-                                                                <li ng-repeat="x in names | filter:test">
-                                                                    {{ x }}
-                                                                </li>
-                                                            </ul>
-
-
-                                                        </div>
-                                                    </div>
-                                                </aside>
-                                            </section>
-                                            <!-- second Section End -->
-
-                                        </aside>
-                                    </section>
-                                    <!-- Specialities Ends -->
-                                    <!--Gllery Starts -->
-                                    <section class="tab-pane fade in" id="gallery">
-                                        <div class="fileUpload btn btn-sm btn-upload im-upload">
-                                            <span class="btn btn-appointment">Add More</span>
-                                            <input type="file" class="upload" id="uploadBtn">
-                                        </div>
-                                        <div class="clearfix">
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url();?>assets/images/hospital/h1.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url();?>assets/images/hospital/h2.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url();?>assets/images/hospital/h3.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url();?>assets/images/hospital/h4.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url();?>assets/images/hospital/h2.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                        </div>
-                                    </section>
-                                    <!--Gallery Ends -->
-
-                                    <!--Timeslot Starts -->
-                                    <section class="tab-pane fade in" id="timeslot">
-                                        <div class="col-md-10 p-b-20">
-                                            <form class="form-horizontal">
-                                                <aside id="session">
-                                                    <article class="clearfix m-t-10">
-                                                        <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="08:30 AM" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
-                                                            </div>
-                                                        </div>
-                                                    </article>
-                                                    <article class="clearfix m-t-10">
-                                                        <label for="" class="control-label col-md-4 col-sm-4">Afternoon Session :</label>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
-                                                            </div>
-                                                        </div>
-                                                    </article>
-                                                    <article class="clearfix m-t-10">
-                                                        <label for="" class="control-label col-md-4 col-sm-4">Evening Session :</label>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
-                                                            </div>
-                                                        </div>
-                                                    </article>
-                                                    <article class="clearfix m-t-10">
-                                                        <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
-                                                            <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:30 AM" />
-                                                            </div>
-                                                        </div>
-                                                    </article>
-                                                </aside>
-                                                <article class="clearfix ">
-                                                    <div class="col-md-12 m-t-20 m-b-20">
-                                                        <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
-                                                        <button class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit">Submit</button>
-                                                    </div>
-                                                </article>
-                                            </form>
-                                        </div>
-                                    </section>
-                                    <!-- Timeslot Ends -->
+                                                                    
+    <div class="col-md-6 p-b-20">
+        <article class="clearfix">
+                                                                
+       <!-- Awards Recognition  -->  
+            <article class="clearfix">
+                <h4>Awards Recognition
+<a id="editawards" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+</h4>
+                <hr/>
+                <aside class="clearfix" id="detailawards">
+                    <ul class="ul-tick" id="loadAwards">
+
+                    </ul>
+                       </aside>                                        
+                <form id="newawards" style="display:none">
+                    <aside class="form-group m-lr-0 p-b-20 m-b-30">
+                        <label for="cname" class="control-label col-lg-3 col-sm-4">Awards:</label>
+                        <div class="col-lg-9 col-sm-8">
+                            <aside class="row">
+                                <div class="col-md-10 col-sm-10 col-xs-10">
+                                    <input type="text" class="form-control" placeholder="FICCI Healthcare Excillence Awards" id="diagnostic_awardsName" name="diagnostic_awardsName"/>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                    <a onclick="addAwards()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus" title="Add More"></i></a>
+                                </div>
+
+
+                            </aside>
+                             <div id="totalAwards">
+                                                                               
+                             </div>
+
+                        </div>
+                    </aside>
+                </form>
+            </article>
+         <!-- Awards Recognition  --> 
+            <!-- Services  -->                            
+            <aside class="clearfix">
+                <h4>Services
+  <a id="editservices" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+</h4>
+                <hr/>
+            </aside>
+            <section id="detailservices">
+                <ul class="ul-tick" id="loadServices">
+ 
+                </ul>
+            </section>
+            <form>
+                <aside class="form-group m-lr-0" id="newservices" style="display:none">
+                    <label for="cname" class="control-label col-lg-3 col-sm-4">Services:</label>
+                    <div class="col-lg-9 col-sm-8">
+                        <aside class="row">
+                              <div class="col-md-10 col-sm-10 col-xs-10">
+                                    <input type="text" class="form-control" placeholder="Diagnostic Services" id="diagnostic_serviceName" name="diagnostic_serviceName"/>
+                                </div>
+                           
+
+                              <div class="col-md-2 col-sm-2 col-xs-2">
+                                    <a onclick="addServices()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus" title="Add More"></i></a>
+                                </div>
+                           
+
+                        </aside>
+                          <div id="totalServices">
+                                                                               
+                             </div>
+
+                    </div>
+                </aside>
+            </form>
+        </article>
+        <!-- Services  -->                            
+    </div>
+                                                                    
+        </aside>
+        </div>
+</article>
+</section>
+  <!-- General Detail Ends -->
+                                   
+                                   
+                <!--diagnostic Starts -->
+                <section class="tab-pane fade in diagdetail" id="diagnostic">
+               <!-- first Section Start -->
+               <aside class="clearfix">
+               <section class="col-md-5 detailbox m-b-20 diag" >
+               <aside class="bg-white">
+               <figure class="clearfix">
+               <h3>Diagnostic Categories Available</h3>
+               <article class="clearfix">
+               <div class="input-group m-b-5">
+               <span class="input-group-btn">
+               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+               </span>
+               <input type="text" id="search-text1" placeholder="search" class="form-control">
+               </div>
+               </article>
+               </figure>
+               <div class="nicescroll mx-h-400">
+               <div class="clearfix diag-detail">
+               <ul id="list1">
+               <li>Pet</li>
+               <li>Mri</li>
+               </ul>
+               </div>
+               </div>
+               </aside>
+               </section>
+               <!-- first Section End -->
+               <section class="col-md-2 detailbox m-b-20 text-center">
+               <div class="m-t-150">
+               <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
+               </div>
+               <div class="m-t-50">
+               <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
+               </div>
+               </section>
+               <!-- second Section Start -->
+               <section class="col-md-5 detailbox m-b-20 diag">
+               <aside class="bg-white">
+               <figure class="clearfix">
+               <h3>Diagnostic Categories Added</h3>
+               <article class="clearfix">
+               <div class="input-group m-b-5">
+               <span class="input-group-btn">
+               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+               </span>
+               <input type="text" id="search-text" placeholder="search" class="form-control">
+               </div>
+               </article>
+               </figure>
+               <div class="nicescroll mx-h-400">
+               <div class="clearfix diag-detail">
+               <ul id="list">
+               <li>Pet</li>
+               <li>Mri</li>
+               </ul>
+               </div>
+               </div>
+               </aside>
+               </section>
+               <!-- second Section End -->
+               </aside>
+               <section class="clearfix detailbox m-b-20">
+               <div class="col-md-8" ng-app="myApp" ng-controller="diag-c-avail">
+               <figure class="clearfix">
+               <h3>Diagnostic Test Pricing Setup</h3>
+               <article class="clearfix">
+               <div class="input-group m-b-5">
+               <span class="input-group-btn">
+               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+               </span>
+               <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
+               </div>
+               </article>
+               </figure>
+               <aside class="table-responsive">
+               <table class="table">
+               <col style="width:70%">
+               <col style="width:20%">
+               <col style="width:10%">
+               <tbody>
+               <tr class="border-a-dull">
+               <th>Test Name</th>
+               <th>Price</th>
+               <th>Action</th>
+               </tr>
+               </tbody>
+               </table>
+               <article class="nicescroll mx-h-300">
+               <table class="table">
+               <col style="width:70%">
+               <col style="width:20%">
+               <col style="width:10%">
+               <tbody>
+               <tr>
+               <td>
+               Cmplete Blood Count(CBC)
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Blood Chemistry Test
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Cmplete Blood Count(CBC)
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Blood Chemistry Test
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Cmplete Blood Count(CBC)
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Blood Chemistry Test
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Cmplete Blood Count(CBC)
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Blood Chemistry Test
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Cmplete Blood Count(CBC)
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               <tr>
+               <td>
+               Blood Chemistry Test
+               </td>
+               <td>
+               <i class="fa fa-inr"></i> 1200
+               </td>
+               <td>
+               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+               </td>
+               </tr>
+               </tbody>
+               </table>
+               </article>
+               </aside>
+               </div>
+               <div class="col-md-4">
+               <figure class="clearfix">
+               <h3 class="pull-left ">Test Preparation Instruction</h3>
+               </figure>
+               <aside class="clearfix mx-h-400">
+               <article class="nicescroll">
+               <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+               </p>
+               <aside class="clearfix p-5">
+               <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
+               </aside>
+               </article>
+               </aside>
+               </div>
+               </section>
+            </section>
+                                 <!-- diagnostic Ends -->
+                                 <!--Specialities Starts -->
+                                 <section class="tab-pane fade in" id="specialities">
+               <aside class="clearfix">
+               <section class="col-md-5 detailbox m-b-20 diag" >
+               <aside class="bg-white">
+               <figure class="clearfix">
+               <h3>Specialities Available</h3>
+               <article class="clearfix">
+               <div class="input-group m-b-5">
+               <span class="input-group-btn">
+               <button class="b-search waves-effect waves-light btn-success " type="button"><i class="fa fa-search"></i></button>
+               </span>
+               <input type="text" id="search-text2" placeholder="search" class="form-control">
+               </div>
+               </article>
+               </figure>
+               <div class="nicescroll mx-h-400">
+               <div class="clearfix diag-detail">
+               <ul id="list2">
+               <li>Pet</li>
+               <li>Mri</li>
+               </ul>
+               </div>
+               </div>
+               </aside>
+               </section>
+               <!-- first Section End -->
+               <section class="col-md-2 detailbox m-b-20 text-center">
+               <div class="m-t-150">
+               <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
+               </div>
+               <div class="m-t-50">
+               <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
+               </div>
+               </section>
+               <!-- second Section Start -->
+               <section class="col-md-5 detailbox m-b-20 diag">
+               <aside class="bg-white">
+               <figure class="clearfix">
+               <h3>Specialities Added</h3>
+               <article class="clearfix">
+               <div class="input-group m-b-5">
+               <span class="input-group-btn">
+               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+               </span>
+               <input type="text" id="search-text3" placeholder="search" class="form-control">
+               </div>
+               </article>
+               </figure>
+               <div class="nicescroll mx-h-400">
+               <div class="clearfix diag-detail">
+               <ul id="list3">
+               <li>Pet</li>
+               <li>Mri</li>
+               </ul>
+               </div>
+               </div>
+               </aside>
+               </section>
+               <!-- second Section End -->
+               </aside>
+            </section>
+                                 <!-- Specialities Ends -->         
+                                 <!--Gllery Starts -->
+                                 <section class="tab-pane fade in" id="gallery">
+                                     <div class="fileUpload btn btn-sm btn-upload im-upload">
+                                         <span class="btn btn-appointment avatar-view" >Add More</span>
+<!--                                             <input type="file" class="upload" id="uploadBtn"> -->
+                                     </div>
+                                      <input type="hidden" style="display:none;" class="no-display" id="file_action_url_gallery" name="file_action_url_gallery" value="<?php echo site_url('diagnostic/galleryUploadImage');?>">
+                                      <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo site_url('diagnostic/getGalleryImage/'.$this->uri->segment(3));?>">
+                                     <div class="clearfix" id="display_gallery">
+
+                                       <?php if(!empty($gallerys)){foreach($gallerys as $gallery){?>
+                                       <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                             <img width="210" class="thumbnail img-responsive" src="<?php echo base_url()?>/assets/diagnosticsImage/thumb/original/<?php echo $gallery->diagonsticImages_ImagesName ?>">
+                                             <a class="delete" onClick="deleteGalleryImage(<?php echo $gallery->diagonsticImages_id ?>)"> <i class="fa fa-times fa-2x"></i></a>
+                                         </aside>
+                                         <?php }}?>
+                                     </div>
+                                 </section>
+                                 <!--Gallery Ends -->
+
+                                 <!--Timeslot Starts -->
+                                 <section class="tab-pane fade in" id="timeslot">
+                                     <div class="col-md-10 p-b-20">
+                                         <form class="form-horizontal">
+                                             <aside id="session">
+                                                 <article class="clearfix m-t-10">
+                                                     <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="08:30 AM" />
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
+                                                         </div>
+                                                     </div>
+                                                 </article>
+                                                 <article class="clearfix m-t-10">
+                                                     <label for="" class="control-label col-md-4 col-sm-4">Afternoon Session :</label>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="12:30 PM" />
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
+                                                         </div>
+                                                     </div>
+                                                 </article>
+                                                 <article class="clearfix m-t-10">
+                                                     <label for="" class="control-label col-md-4 col-sm-4">Evening Session :</label>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="05:00 PM" />
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                         </div>
+                                                     </div>
+                                                 </article>
+                                                 <article class="clearfix m-t-10">
+                                                     <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="09:30 PM" />
+                                                         </div>
+                                                     </div>
+                                                     <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                         <div class="bootstrap-timepicker input-group w-full">
+                                                             <input id="timepicker4" type="text" class="form-control timepicker" value="06:30 AM" />
+                                                         </div>
+                                                     </div>
+                                                 </article>
+                                             </aside>
+                                             <article class="clearfix ">
+                                                 <div class="col-md-12 m-t-20 m-b-20">
+                                                     <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
+                                                     <button class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit">Submit</button>
+                                                 </div>
+                                             </article>
+                                         </form>
+                                     </div>
+                                 </section>
+                                 <!-- Timeslot Ends -->
                                     <!--Staff and Permission Starts -->
                                     <section class="tab-pane fade in" id="doctor">
                                         <article class="clearfix m-top-40 p-b-20">
                                             <aside class="table-responsive">
-                                                <table class="table all-doctor">
-                                                    <tbody>
+                                                <table class="table all-doctor" id="diagnostic_doctors" style="width:100%">
+                                                    <thead>
                                                         <tr class="border-a-dull">
                                                             <th>Photo</th>
                                                             <th>Name and Id</th>
-                                                            <th>Speciality</th>
+                                                             <th>Speciality</th>
+                                                            <th>Consulting fee</th>
                                                             <th>Experience</th>
-                                                            <th>Date of Joining</th>
                                                             <th>Phone</th>
                                                             <th>Action</th>
                                                         </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="<?php echo base_url();?>assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Alpesh Dhakad</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Surgury</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>20 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Nov, 2014</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="<?php echo base_url();?>assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Dr. Manoj Kumar</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Cardiology</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Jan, 2013</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="<?php echo base_url();?>assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Dr. Prabha Jha</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Eye Specialist</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>10 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Jan, 2013</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="<?php echo base_url();?>assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Alpesh Dhakad</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Surgury</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>20 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Nov, 2014</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Dr. Manoj Kumar</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Cardiology</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Jan, 2013</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <i class="fa fa-check-circle doc-online"></i>
-                                                                <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Dr. Prabha Jha</h6>
-                                                                <p>ACH089</p>
-                                                            </td>
-                                                            <td>
-                                                                <h6>Eye Specialist</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>10 Years</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>15 Jan, 2013</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6>9826000777</h6>
-                                                                <h6>0731-2349999</h6>
-                                                            </td>
-                                                            <td>
-                                                                <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                                                <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                                            </td>
-                                                        </tr>
-
-                                                    </tbody>
+                                                    </thead>
                                                 </table>
                                             </aside>
-                                            <article class="clearfix m-t-20 p-b-20">
+<!--                                            <article class="clearfix m-t-20 p-b-20">
                                                 <ul class="list-inline list-unstyled pull-right call-pagination">
                                                     <li class="disabled"><a href="#">Prev</a></li>
                                                     <li><a href="#">1</a></li>
@@ -1011,7 +734,7 @@
                                                     <li><a href="#">4</a></li>
                                                     <li><a href="#">Next</a></li>
                                                 </ul>
-                                            </article>
+                                            </article>-->
                                         </article>
 
                                     </section>
@@ -1019,6 +742,7 @@
 
                                     <!--Account Starts -->
                                     <section class="tab-pane fade in" id="account">
+                                    <form action="<?php echo site_url('diagnostic/updateAccount/'.$diagnosticData[0]->diagnostic_id);?>" method="post" name="diagnostic_account" id="diagnostic_account">
                                         <aside class="col-md-9 setting">
                                             <h4>Account Detail
                                                 <a id="editac"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
@@ -1027,69 +751,80 @@
                                             <div class="clearfix m-t-20 p-b-20 doctor-description" id="detailac">
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
-                                                    <p class="col-md-8 col-sm-7">abs@example.com</p>
+                                                    <p class="col-md-8 col-sm-7"><?php if(!empty($diagnosticData)): echo $diagnosticData[0]->users_email; endif;?></p>
                                                 </article>
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
-                                                    <p class="col-md-8 col-sm-7">+91 8077224467</p>
+                                                    <p class="col-md-8 col-sm-7"> <?php 
+                                                                    $explode= explode('|',$diagnosticData[0]->diagnostic_phn); 
+                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                                    <p>+<?php echo $explode[$i];?></p>
+                                                                   
+                                                                    <?php }?></p>
                                                 </article>
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Membership Type:</label>
-                                                    <p class="col-md-6 col-sm-5">General</p>
-                                                    <aside class="col-sm-2">
-                                                        <button class="btn btn-appointment waves-effect waves-light pull-right" type="button">Upgrade</button>
-                                                    </aside>
+                                                    <p class="col-md-6 col-sm-5"><?php if(!empty($diagnosticData)){ if($diagnosticData[0]->diagnostic_mbrTyp == 1){
+                                                    	echo"Life Time";
+                                                    }else{echo "Health Club";}};?></p>
+<!--                                                     <aside class="col-sm-2"> -->
+<!--                                                         <button class="btn btn-appointment waves-effect waves-light pull-right" type="button">Upgrade</button> -->
+<!--                                                     </aside> -->
                                                 </article>
-                                                <article class="clearfix m-b-10">
-                                                    <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
+<!--                                                 <article class="clearfix m-b-10"> -->
+<!--                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label> -->
 
-                                                    <aside class="col-md-5 col-sm-6">
-                                                        <form class="">
-                                                            <input type="password" name="password" class="form-control" placeholder="New Password" />
-                                                        </form>
-                                                    </aside>
-                                                </article>
+<!--                                                     <aside class="col-md-5 col-sm-6"> -->
+<!--                                                         <form class=""> -->
+<!--                                                             <input type="password" name="password" class="form-control" placeholder="New Password" /> -->
+<!--                                                         </form> -->
+<!--                                                     </aside> -->
+<!--                                                 </article> -->
                                             </div>
                                             <aside id="newac" style="display:none">
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Registered Email Id :</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input class="form-control" id="diagnosticCenter" name="email" type="email" required="" value="abc@gmail.com">
+                                                        <input class="form-control" id="users_email" name="users_email" type="text" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->users_email; endif;?>">
                                                         <div>
                                                 </article>
 
-                                                <article class="clearfix m-b-10">
-                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input class="form-control" id="diagnosticCenter" name="name" type="text" required="" value="Appolo Pharmacies">
-                                                        <div>
-                                                </article>
+<!--                                                 <article class="clearfix m-b-10"> -->
+<!--                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label> -->
+<!--                                                     <div class="col-md-8 col-sm-8"> -->
+                                                     
+<!--                                                         <div> -->
+<!--                                                 </article> -->
 
-                                                <article class="clearfix m-b-10 ">
-                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <aside class="row">
-                                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                                <select class="selectpicker" data-width="100%">
-                                                                    <option>+91</option>
-                                                                    <option>+1</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
-                                                                <input type="teL" class="form-control" name="mobile" id="mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="1112345678" />
+<!--                                                 <article class="clearfix m-b-10 "> -->
+<!--                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label> -->
+<!--                                                     <div class="col-md-8 col-sm-8"> -->
+<!--                                                         <aside class="row"> -->
+<!--                                                             <div class="col-md-3 col-sm-3 col-xs-12"> -->
+<!--                                                                 <select class="selectpicker" data-width="100%"> -->
+<!--                                                                     <option value="91">+91</option> -->
+<!--                                                                     <option value="1">+1</option> -->
+<!--                                                                 </select> -->
+<!--                                                             </div> -->
+<!--                                                             <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10"> -->
+                                                               
 
-                                                            </div>
-                                                            <p class="m-t-10">* If it is landline, include Std code with number </p>
-                                                        </aside>
-                                                    </div>
-                                                </article>
-
+<!--                                                             </div> -->
+<!--                                                             <p class="m-t-10">* If it is landline, include Std code with number </p> -->
+<!--                                                         </aside> -->
+<!--                                                     </div> -->
+<!--                                                 </article> -->
+									<input type="hidden" name="did_userId" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_usersId; endif;?>"/>
                                                 <article class="clearfix m-b-10">
                                                     <label for="cname" class="control-label col-md-4 col-sm-4">Membership Type:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <select class="selectpicker" data-width="100%" name="company">
-                                                            <option value=" " selected>General</option>
-                                                            <option value="male">Premium</option>
+                                                        <select class="selectpicker" data-width="100%" name="diagnostic_mbrTyp">
+                                                            <option value="1" <?php if(!empty($diagnosticData)){ if($diagnosticData[0]->diagnostic_mbrTyp == 1){
+                                                    	echo"selected";
+                                                    }}?>>Life Time</option>
+                                                            <option value="2" <?php if(!empty($diagnosticData)){ if($diagnosticData[0]->diagnostic_mbrTyp == 2){
+                                                    	echo"selected";
+                                                    }}?>>Health Club</option>
 
                                                         </select>
                                                     </div>
@@ -1099,7 +834,7 @@
 
                                                     <aside class="col-md-8 col-sm-8">
                                                         <form class="">
-                                                            <input type="password" name="password" class="form-control" placeholder="New Password" />
+                                                            <input type="password" name="users_password" class="form-control" placeholder="New Password" />
                                                         </form>
                                                     </aside>
                                                 </article>
@@ -1108,12 +843,12 @@
                                                 <article class="clearfix ">
                                                     <div class="col-md-12 m-t-20 m-b-20">
 
-                                                        <button type="button" class="btn btn-success waves-effect waves-light pull-right">Update</button>
+                                                        <input type="submit" name="submit" class="btn btn-success waves-effect waves-light pull-right" value="Update">
                                                     </div>
 
                                                 </article>
                                             </aside>
-
+						</form>	
                                     </section>
                                     <!-- Account Ends -->
 

@@ -4,25 +4,46 @@
         display:none;
     }
 </style>
+<?php $check= 0; 
+$id = $this->uri->segment(3); 
+if(!empty($id)){
+	$check = $this->uri->segment(3); 
+}else{
+	$check = 0 ;
+}?>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
+
 <?php $current = $this->router->fetch_method();
-if($current == 'detailDiagnostic'):?>
-<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>
-<?php else:?>
+if($current != 'detailDiagnostic'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/main.js"></script>
+<?php else:?>
+
+<!--<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>-->
+<script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
+
 <?php endif;?>
+
 <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/angular.min.js"></script>
+<!--<script src="<?php echo base_url();?>assets/js/angular.min.js"></script>-->
 <script src="<?php echo base_url();?>assets/js/pages/diagdetail.js"></script>
 <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
+<script> 
+     var urls = "<?php echo base_url()?>";
+     var diagnosticId = "<?php echo $check?>";
+</script>
 <script>
+     /**
+     * @project Qyura
+     * @description  geo location address
+     * @access public
+     */
       $(function(){
         $("#geocomplete").geocomplete({
           map: ".map_canvas",
@@ -35,9 +56,18 @@ if($current == 'detailDiagnostic'):?>
         });
       });
       
+    /**
+     * @project Qyura
+     * @description  city, state records
+     * @access public
+     */
+    
       $(document).ready(function(){
           fetchStates();
-            function fetchStates(){
+          loadAwards();
+          loadServices();
+          
+        function fetchStates(){
             
             var countryId = $('#countryId').val();
             var stateId = $('#StateId').val();
@@ -65,7 +95,7 @@ if($current == 'detailDiagnostic'):?>
                type: 'POST',
               data: {'stateId' : stateId , 'cityId' : cityId},
               success:function(datas){
-                console.log(datas);
+                //console.log(datas);
                   $('#diagnostic_cityId').html(datas);
                   $('#diagnostic_cityId').selectpicker('refresh');
                   $('#StateId').val(stateId);
@@ -77,7 +107,11 @@ if($current == 'detailDiagnostic'):?>
     </script>
 <script>
 
-    /*-- Selectpicker --*/
+    /**
+     * @project Qyura
+     * @description  datepicker
+     * @access public
+     */
     $('.selectpicker').selectpicker({
         style: 'btn-default',
         size: "auto",
@@ -87,7 +121,6 @@ if($current == 'detailDiagnostic'):?>
          $("#avatar-modal").modal('hide');
      }); 
     
-    var urls = "<?php echo base_url() ?>";
     function fetchCity(stateId) {
         $.ajax({
             url: urls + 'index.php/diagnostic/fetchCity',
@@ -101,11 +134,15 @@ if($current == 'detailDiagnostic'):?>
 
     }
 
-    // datatable get records
+    /**
+     * @project Qyura
+     * @description  datatable listing
+     * @access public
+     */
     $(document).ready(function () {
         var oTable = $('#diagnostic_datatable').DataTable({
              "processing": true,
-            "bServerSide": false,
+            "bServerSide": true,
              //"searching": true,
             "bLengthChange": false,
             "bProcessing": true,
@@ -137,20 +174,57 @@ if($current == 'detailDiagnostic'):?>
             oTable.draw();
         });
         $('#search').on('keyup', function () {
-            oTable.search($(this).val()).draw();
+            //oTable.search($(this).val()).draw();
+             oTable.draw();
             
         });
-
+        
+          /**
+            * @project Qyura
+            * @description  datatable listing
+            * @access public
+            */
+        var oTableDr = $('#diagnostic_doctors').DataTable({
+             "processing": true,
+            "bServerSide": false,
+            "bLengthChange": false,
+            "bProcessing": true,
+            "iDisplayLength": 10,
+            "sPaginationType": "full_numbers",
+            "columns": [
+                {"data": "doctors_img"},
+                {"data": "name"},
+                {"data": "specialityName"},
+                {"data": "consFee"},
+                {"data": "exp"},
+                {"data": "doctors_phn"},
+                {"data": "view"},
+            ],
+            "ajax": {
+                "url": urls + 'index.php/diagnostic/getDiagnosticDoctorsDl/'+diagnosticId,
+                "type": "POST",
+                "data": function (d) {
+                   
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                }
+            }
+        });
+        
     });
     
-    
+    /**
+     * @project Qyura
+     * @description  form validation
+     * @access public
+     */  
+     
     var urls = "<?php echo base_url()?>";
     var j = 1;
     var k = 1;
     var l =1;
     var n= 1;
     var m =1;
-   function fetchCity(stateId) {           
+    function fetchCityDetails(stateId) {           
       $.ajax({
           url : urls + 'index.php/diagnostic/fetchCity',
           type: 'POST',
@@ -321,4 +395,142 @@ if($current == 'detailDiagnostic'):?>
               } 
            });
         }
+        
+    /**
+     * @project Qyura
+     * @description award crud operation
+     * @access public
+     */   
+    
+    function addAwards(){
+        var dialAwards_awardsName = $.trim($('#diagnostic_awardsName').val());
+        if(dialAwards_awardsName != ''){
+            $.ajax({
+               url : urls + 'index.php/diagnostic/addDiagnosticAwards',
+               type: 'POST',
+              data: {'diagnosticId' : diagnosticId , 'diaAwards_awardsName' : dialAwards_awardsName },
+              success:function(datas){
+               // console.log(datas);
+                  loadAwards();
+                  $('#diagnostic_awardsName').val('');
+              }
+           });
+        }    
+    }
+    function editAwards(awardsId){
+         var edit_awardsName = $.trim($('#'+awardsId).val());
+        
+        if(edit_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/diagnostic/editDiagnosticAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId , 'diaAwards_awardsName' : edit_awardsName },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        }  
+    }
+    function deleteAwards(awardsId){
+        
+         $.ajax({
+               url : urls + 'index.php/diagnostic/deleteDiagnosticAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        
+    }
+    function loadAwards(){
+       
+        $('#loadAwards').load(urls + 'index.php/diagnostic/diagnosticAwards/'+diagnosticId,function () {
+           // alert('callback function ');
+        });
+        $('#totalAwards').load(urls + 'index.php/diagnostic/detailAwards/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+    }
+    
+    
+    /**
+     * @project Qyura
+     * @description service crud operation
+     * @access public
+     */
+    function addServices(){
+        var diagnostic_serviceName = $.trim($('#diagnostic_serviceName').val());
+        if(diagnostic_serviceName != ''){
+            $.ajax({
+               url : urls + 'index.php/diagnostic/addDiagnosticServices',
+               type: 'POST',
+              data: {'diagnosticId' : diagnosticId , 'service_name' : diagnostic_serviceName },
+              success:function(datas){
+               // console.log(datas);
+                  loadServices();
+                  $('#diagnostic_serviceName').val('');
+              }
+           });
+        }    
+    }
+    function editServices(awardsId){
+         var edit_awardsName = $.trim($('#'+awardsId).val());
+        
+        if(edit_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/diagnostic/editDiagnosticServices',
+               type: 'POST',
+              data: {'awardsId' : awardsId , 'service_name' : edit_awardsName },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        }  
+    }
+    function deleteServices(awardsId){
+        
+         $.ajax({
+               url : urls + 'index.php/diagnostic/deleteDiagnosticServices',
+               type: 'POST',
+              data: {'awardsId' : awardsId },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        
+    }
+    function loadServices(){
+       
+        $('#loadServices').load(urls + 'index.php/diagnostic/diagnosticServices/'+diagnosticId,function () {
+           // alert('callback function ');
+        });
+        $('#totalServices').load(urls + 'index.php/diagnostic/detailServices/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+    }
+    function deleteGalleryImage(id){
+	  if(confirm('Are you sure want to delete?')){	
+    	  $.ajax({
+              url : urls + 'index.php/diagnostic/deleteGalleryImage',
+              type: 'POST',
+             data: {'id' : id },
+             success:function(datas){
+                loadGallery();
+             }
+          });
+
+     }
+    }
+    function loadGallery(){
+    	$('#display_gallery').load(urls + 'index.php/diagnostic/getGalleryImage/'+diagnosticId,function () {
+
+         });
+    }
 </script>
