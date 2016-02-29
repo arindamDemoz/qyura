@@ -328,297 +328,295 @@
 </article>
 </section>
   <!-- General Detail Ends -->
-                                   
-                                   
-                <!--diagnostic Starts -->
-                <section class="tab-pane fade in diagdetail" id="diagnostic">
-               <!-- first Section Start -->
-               <aside class="clearfix">
-               <section class="col-md-5 detailbox m-b-20 diag" >
-               <aside class="bg-white">
-               <figure class="clearfix">
-               <h3>Diagnostic Categories Available</h3>
-               <article class="clearfix">
-               <div class="input-group m-b-5">
-               <span class="input-group-btn">
-               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-               </span>
-               <input type="text" id="search-text1" placeholder="search" class="form-control">
-               </div>
-               </article>
-               </figure>
-               <div class="nicescroll mx-h-400">
-               <div class="clearfix diag-detail">
-               <ul id="list1">
-               <li>Pet</li>
-               <li>Mri</li>
-               </ul>
-               </div>
-               </div>
-               </aside>
-               </section>
-               <!-- first Section End -->
-               <section class="col-md-2 detailbox m-b-20 text-center">
-               <div class="m-t-150">
-               <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-               </div>
-               <div class="m-t-50">
-               <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-               </div>
-               </section>
-               <!-- second Section Start -->
-               <section class="col-md-5 detailbox m-b-20 diag">
-               <aside class="bg-white">
-               <figure class="clearfix">
-               <h3>Diagnostic Categories Added</h3>
-               <article class="clearfix">
-               <div class="input-group m-b-5">
-               <span class="input-group-btn">
-               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-               </span>
-               <input type="text" id="search-text" placeholder="search" class="form-control">
-               </div>
-               </article>
-               </figure>
-               <div class="nicescroll mx-h-400">
-               <div class="clearfix diag-detail">
-               <ul id="list">
-               <li>Pet</li>
-               <li>Mri</li>
-               </ul>
-               </div>
-               </div>
-               </aside>
-               </section>
-               <!-- second Section End -->
-               </aside>
-               <section class="clearfix detailbox m-b-20">
-               <div class="col-md-8" ng-app="myApp" ng-controller="diag-c-avail">
-               <figure class="clearfix">
-               <h3>Diagnostic Test Pricing Setup</h3>
-               <article class="clearfix">
-               <div class="input-group m-b-5">
-               <span class="input-group-btn">
-               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-               </span>
-               <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
-               </div>
-               </article>
-               </figure>
-               <aside class="table-responsive">
-               <table class="table">
-               <col style="width:70%">
-               <col style="width:20%">
-               <col style="width:10%">
-               <tbody>
-               <tr class="border-a-dull">
-               <th>Test Name</th>
-               <th>Price</th>
-               <th>Action</th>
-               </tr>
-               </tbody>
-               </table>
-               <article class="nicescroll mx-h-300">
-               <table class="table">
-               <col style="width:70%">
-               <col style="width:20%">
-               <col style="width:10%">
-               <tbody>
-               <tr>
-               <td>
-               Cmplete Blood Count(CBC)
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Blood Chemistry Test
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Cmplete Blood Count(CBC)
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Blood Chemistry Test
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Cmplete Blood Count(CBC)
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Blood Chemistry Test
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Cmplete Blood Count(CBC)
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Blood Chemistry Test
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Cmplete Blood Count(CBC)
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               <tr>
-               <td>
-               Blood Chemistry Test
-               </td>
-               <td>
-               <i class="fa fa-inr"></i> 1200
-               </td>
-               <td>
-               <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-               </td>
-               </tr>
-               </tbody>
-               </table>
-               </article>
-               </aside>
-               </div>
-               <div class="col-md-4">
-               <figure class="clearfix">
-               <h3 class="pull-left ">Test Preparation Instruction</h3>
-               </figure>
-               <aside class="clearfix mx-h-400">
-               <article class="nicescroll">
-               <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-               </p>
-               <aside class="clearfix p-5">
-               <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
-               </aside>
-               </article>
-               </aside>
-               </div>
-               </section>
-            </section>
-                                 <!-- diagnostic Ends -->
-                                 <!--Specialities Starts -->
-                                 <section class="tab-pane fade in" id="specialities">
-               <aside class="clearfix">
-               <section class="col-md-5 detailbox m-b-20 diag" >
-               <aside class="bg-white">
-               <figure class="clearfix">
-               <h3>Specialities Available</h3>
-               <article class="clearfix">
-               <div class="input-group m-b-5">
-               <span class="input-group-btn">
-               <button class="b-search waves-effect waves-light btn-success " type="button"><i class="fa fa-search"></i></button>
-               </span>
-               <input type="text" id="search-text2" placeholder="search" class="form-control">
-               </div>
-               </article>
-               </figure>
-               <div class="nicescroll mx-h-400">
-               <div class="clearfix diag-detail">
-               <ul id="list2">
-               <li>Pet</li>
-               <li>Mri</li>
-               </ul>
-               </div>
-               </div>
-               </aside>
-               </section>
-               <!-- first Section End -->
-               <section class="col-md-2 detailbox m-b-20 text-center">
-               <div class="m-t-150">
-               <a href="#"><i class="fa fa-arrow-right s-add"></i></a>
-               </div>
-               <div class="m-t-50">
-               <a href="#"> <i class="fa fa-arrow-left s-add"></i></a>
-               </div>
-               </section>
-               <!-- second Section Start -->
-               <section class="col-md-5 detailbox m-b-20 diag">
-               <aside class="bg-white">
-               <figure class="clearfix">
-               <h3>Specialities Added</h3>
-               <article class="clearfix">
-               <div class="input-group m-b-5">
-               <span class="input-group-btn">
-               <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
-               </span>
-               <input type="text" id="search-text3" placeholder="search" class="form-control">
-               </div>
-               </article>
-               </figure>
-               <div class="nicescroll mx-h-400">
-               <div class="clearfix diag-detail">
-               <ul id="list3">
-               <li>Pet</li>
-               <li>Mri</li>
-               </ul>
-               </div>
-               </div>
-               </aside>
-               </section>
-               <!-- second Section End -->
-               </aside>
-            </section>
-                                 <!-- Specialities Ends -->         
+                       
+     <!--diagnostic Starts -->
+<section class="tab-pane fade in diagdetail" id="diagnostic">
+    <!-- first Section Start -->
+    <aside class="clearfix">
+        <section class="col-md-5 detailbox m-b-20 diag" >
+            <aside class="bg-white">
+                <figure class="clearfix">
+                    <h3>Diagnostic Categories Available</h3>
+                    <article class="clearfix">
+                        <div class="input-group m-b-5">
+                            <span class="input-group-btn">
+                                <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                            </span>
+                            <input type="text" id="search-text1" placeholder="search" class="form-control">
+                        </div>
+                    </article>
+                </figure>
+                
+                <div class="nicescroll mx-h-400">
+                    <div class="clearfix diag-detail">
+                        <ul id="list2">
+                        </ul>
+                    </div>
+                </div>
+                
+            </aside>
+        </section>
+        <!-- first Section End -->
+        <section class="col-md-2 detailbox m-b-20 text-center">
+            <div class="m-t-150">
+                <a onclick="addDiagnostic()"><i class="fa fa-arrow-right s-add"></i></a>
+            </div>
+            <div class="m-t-50">
+                <a onclick="revertDiagnostic()"> <i class="fa fa-arrow-left s-add"></i></a>
+            </div>
+        </section>
+        <!-- second Section Start -->
+        <section class="col-md-5 detailbox m-b-20 diag">
+            <aside class="bg-white">
+                <figure class="clearfix">
+                    <h3>Diagnostic Categories Added</h3>
+                    <article class="clearfix">
+                        <div class="input-group m-b-5">
+                            <span class="input-group-btn">
+                                <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                            </span>
+                            <input type="text" id="search-text" placeholder="search" class="form-control">
+                        </div>
+                    </article>
+                </figure>
+                
+                <div class="nicescroll mx-h-400">
+                    <div class="clearfix diag-detail">
+                        <ul id="list3">
+                        </ul>
+                    </div>
+                </div>
+                
+            </aside>
+        </section>
+        <!-- second Section End -->
+    </aside>
+    <section class="clearfix detailbox m-b-20">
+        <div class="col-md-8" ng-app="myApp" ng-controller="diag - c - avail">
+            <figure class="clearfix">
+                <h3>Diagnostic Test Pricing Setup</h3>
+                <article class="clearfix">
+                    <div class="input-group m-b-5">
+                        <span class="input-group-btn">
+                            <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                        </span>
+                        <input type="text" placeholder="Search" class="form-control" name="example-input1-group2" id="example-input1-group2">
+                    </div>
+                </article>
+            </figure>
+            <aside class="table-responsive">
+                <table class="table">
+                    <col style="width:70%">
+                    <col style="width:20%">
+                    <col style="width:10%">
+                    <tbody>
+                        <tr class="border-a-dull">
+                            <th>Test Name</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <article class="nicescroll mx-h-300">
+                    <table class="table">
+                        <col style="width:70%">
+                        <col style="width:20%">
+                        <col style="width:10%">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Cmplete Blood Count(CBC)
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Blood Chemistry Test
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Cmplete Blood Count(CBC)
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Blood Chemistry Test
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Cmplete Blood Count(CBC)
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Blood Chemistry Test
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Cmplete Blood Count(CBC)
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Blood Chemistry Test
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Cmplete Blood Count(CBC)
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Blood Chemistry Test
+                                </td>
+                                <td>
+                                    <i class="fa fa-inr"></i> 1200
+                                </td>
+                                <td>
+                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </aside>
+        </div>
+        <div class="col-md-4">
+            <figure class="clearfix">
+                <h3 class="pull-left ">Test Preparation Instruction</h3>
+            </figure>
+            <aside class="clearfix mx-h-400">
+                <article class="nicescroll">
+                    <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </p>
+                    <aside class="clearfix p-5">
+                        <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
+                    </aside>
+                </article>
+            </aside>
+        </div>
+    </section>
+</section>
+<!-- diagnostic Ends -->
+
+<!--Specialities Starts -->
+<section class="tab-pane fade in" id="specialities">
+    <aside class="clearfix">
+        <section class="col-md-5 detailbox m-b-20 diag" >
+            <aside class="bg-white">
+                <figure class="clearfix">
+                    <h3>Specialities Available</h3>
+                    <article class="clearfix">
+                        <div class="input-group m-b-5">
+                            <span class="input-group-btn">
+                                <button class="b-search waves-effect waves-light btn-success " type="button"><i class="fa fa-search"></i></button>
+                            </span>
+                            <input type="text" id="search-text2" placeholder="search" class="form-control">
+                        </div>
+                    </article>
+                </figure>
+                <div class="nicescroll mx-h-400">
+                    <div class="clearfix diag-detail">
+                        <ul id="list4">
+                            
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </section>
+        <!-- first Section End -->
+        <section class="col-md-2 detailbox m-b-20 text-center">
+            <div class="m-t-150">
+                <a onclick="addSpeciality()"><i class="fa fa-arrow-right s-add"></i></a>
+            </div>
+            <div class="m-t-50">
+                <a onclick="revertSpeciality()"> <i class="fa fa-arrow-left s-add"></i></a>
+            </div>
+        </section>
+        <!-- second Section Start -->
+        <section class="col-md-5 detailbox m-b-20 diag">
+            <aside class="bg-white">
+                <figure class="clearfix">
+                    <h3>Specialities Added</h3>
+                    <article class="clearfix">
+                        <div class="input-group m-b-5">
+                            <span class="input-group-btn">
+                                <button class="b-search waves-effect waves-light btn-success" type="button"><i class="fa fa-search"></i></button>
+                            </span>
+                            <input type="text" id="search-text3" placeholder="search" class="form-control">
+                        </div>
+                    </article>
+                </figure>
+                <div class="nicescroll mx-h-400">
+                    <div class="clearfix diag-detail">
+                        <ul id="list5">
+                            
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </section>
+        <!-- second Section End -->
+    </aside>
+</section>
+<!-- Specialities Ends -->         
                                  <!--Gllery Starts -->
                                  <section class="tab-pane fade in" id="gallery">
                                      <div class="fileUpload btn btn-sm btn-upload im-upload">

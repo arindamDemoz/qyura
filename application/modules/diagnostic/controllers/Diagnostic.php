@@ -688,4 +688,173 @@ class Diagnostic extends MY_Controller {
         echo $template;
         exit;
     }
+    
+    
+    
+    function diagnosticCategorys($diagnosticId){
+        
+        $Seleted =array (
+           'diagnosticsHasCat_id','diagnosticsHasCat_diagnosticId','diagnosticsHasCat_diagnosticsCatId'
+        );
+        $Where = array(
+            'diagnosticsHasCat_diagnosticId'=>$diagnosticId
+        );
+        $notIn = '';
+        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted,'qyura_diagnosticsHasCat',$Where);
+        foreach($hospitalData as $key=>$val){
+           $notIn []= $val->diagnosticsHasCat_diagnosticsCatId;
+            
+        }
+        
+        $selectTableData = array (
+           'diagnosticsCat_catId','diagnosticsCat_catName'
+        );
+        $wheres = array(
+           'diagnosticsCat_deleted' => 0
+            
+        );
+        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_diagnosticsCat',$wheres,$notIn,'diagnosticsCat_catId');
+        $specialist = '';
+        foreach($data as $key=>$val){
+        $specialist .='<li ><input type=checkbox class=diagonasticCheck name=speciality value='.$val->diagnosticsCat_catId.' /> '. $val->diagnosticsCat_catName .'</li>';
+           
+        }
+       
+        echo $specialist;
+        exit; 
+    }
+    
+    function diagnosticAllocatedCategorys($diagnosticId){
+        
+         $data = $this->diagnostic_model->fetchdiagnosticsDiagnosticCatData($diagnosticId);
+        $allocatedSpecialist = '';
+        foreach($data as $key=>$val){
+        $allocatedSpecialist .='<li >'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocSpeciality value='.$val->diagnosticsHasCat_id.' /></li>';
+           
+        }
+        echo $allocatedSpecialist;
+        exit;
+    }
+    
+    function addDiagnosticHasCategory(){
+          
+        $id = $this->input->post('diagnosticId');
+        $diagnosticsCat_diagnosticsCatId = $this->input->post('diagnosticsHasCat_diagnosticsCatId');
+        $insertData = array(
+            'diagnosticsHasCat_diagnosticsCatId' => $diagnosticsCat_diagnosticsCatId,
+            'diagnosticsHasCat_diagnosticId' => $id,
+            'creationTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+        $option = array(
+            'table'=>'qyura_diagnosticsHasCat',
+            'data'=> $insertData
+        );
+        $return = $this->diagnostic_model->customInsert($option);
+        echo $return;
+        exit;
+    }
+    
+    function revertDiagnosticHasCategory(){
+        $id = $this->input->post('diagnosticId');
+        $diagnosticsCat_id = $this->input->post('diagnosticsHasCat_id');
+        $diagonasticData = array(
+            'hospitalDiagnosticsCat_deleted' => 1,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $diagonasticWhere = array('diagnosticsHasCat_id' => $diagnosticsCat_id,
+            'diagnosticsHasCat_diagnosticId'=> $id);
+        
+        $option = array(
+            'table' => 'qyura_diagnosticsHasCat',
+            'where' => $diagonasticWhere
+        );
+        $return = $this->diagnostic_model->customDelete($option);
+       echo $return ;
+    }
+    
+    
+    
+    function diagnosticSpecialities($diagnosticId){
+        
+        $Seleted =array (
+           'diagnosticSpecialities_id','diagnosticSpecialities_diagnosticId','diagnosticSpecialities_specialitiesId'
+        );
+        $Where = array(
+            'diagnosticSpecialities_diagnosticId'=>$diagnosticId,
+            'diagnosticSpecialities_deleted' => 0
+        );
+        $notIn = '';
+        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted,'qyura_diagnosticSpecialities',$Where);
+        foreach($hospitalData as $key=>$val){
+           $notIn []= $val->diagnosticSpecialities_specialitiesId;
+            
+        }
+        
+        $selectTableData = array (
+           'specialities_id','specialities_name'
+        );
+        $wheres = array(
+            'specialities_deleted' => 0,
+            
+        );
+        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_specialities',$wheres,$notIn,'specialities_id');
+        $specialist = '';
+        foreach($data as $key=>$val){
+        $specialist .='<li ><input type=checkbox class=diagonasticSpecialCheck name=speciality value='.$val->specialities_id.' /> '. $val->specialities_name .'</li>';
+           
+        }
+       
+        echo $specialist;
+        exit; 
+    }
+    
+    function diagnosticAllocatedSpecialities($diagnosticId){
+        
+         $data = $this->diagnostic_model->fetchdiagnosticsSpecialityData($diagnosticId);
+        $allocatedSpecialist = '';
+        foreach($data as $key=>$val){
+        $allocatedSpecialist .='<li >'. $val->specialities_name .'<input type=checkbox class=diagonasticAllocSpecialCheck name=allocSpeciality value='.$val->diagnosticSpecialities_id.' /></li>';
+           
+        }
+        echo $allocatedSpecialist;
+        exit;
+    }
+    
+    function addSpeciality(){
+          
+        $id = $this->input->post('diagnosticId');
+        $diagnosticSpecialities_specialitiesId = $this->input->post('diagnosticSpecialities_specialitiesId');
+        $insertData = array(
+            'diagnosticSpecialities_specialitiesId' => $diagnosticSpecialities_specialitiesId,
+            'diagnosticSpecialities_diagnosticId' => $id,
+            'diagnosticSpecialities_deleted' => 0,
+            'creationTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+        $option = array(
+            'table'=>'qyura_diagnosticSpecialities',
+            'data'=> $insertData
+        );
+        $return = $this->diagnostic_model->customInsert($option);
+        echo $return;
+        exit;
+    }
+    
+    function revertSpeciality(){
+        $id = $this->input->post('diagnosticId');
+        $diagnosticSpecialities_id = $this->input->post('diagnosticSpecialities_id');
+        $diagonasticData = array(
+            'diagnosticSpecialities_deleted' => 1,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $diagonasticWhere = array('diagnosticSpecialities_id' => $diagnosticSpecialities_id,
+            'diagnosticSpecialities_diagnosticId'=> $id);
+        
+        $option = array(
+            'table' => 'qyura_diagnosticSpecialities',
+            'where' => $diagonasticWhere,
+            'data'=> $diagonasticData
+        );
+        $return = $this->diagnostic_model->customUpdate($option);
+       echo $return ;
+    }
 }

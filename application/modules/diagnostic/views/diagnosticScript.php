@@ -63,9 +63,12 @@ if($current != 'detailDiagnostic'):?>
      */
     
       $(document).ready(function(){
+          
           fetchStates();
           loadAwards();
           loadServices();
+          loadSpeciality();
+          loadDiagnostic();
           
         function fetchStates(){
             
@@ -532,5 +535,106 @@ if($current != 'detailDiagnostic'):?>
     	$('#display_gallery').load(urls + 'index.php/diagnostic/getGalleryImage/'+diagnosticId,function () {
 
          });
+    }
+    
+    
+   /**
+     * @project Qyura
+     * @description load diagnostic
+     * @access public
+     */
+    
+    function loadDiagnostic(){
+        $('#list2').load(urls + 'index.php/diagnostic/diagnosticCategorys/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+        $('#list3').load(urls + 'index.php/diagnostic/diagnosticAllocatedCategorys/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+    
+    } 
+    
+     function addDiagnostic(){
+         $('.diagonasticCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/diagnostic/addDiagnosticHasCategory',
+                    type: 'POST',
+                   data: {'diagnosticId' : diagnosticId , 'diagnosticsHasCat_diagnosticsCatId' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadDiagnostic();
+                   }
+                });
+            }
+            
+        });
+    }
+    
+      function revertDiagnostic(){
+         $('.diagonasticAllocCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/diagnostic/revertDiagnosticHasCategory',
+                    type: 'POST',
+                   data: {'diagnosticId' : diagnosticId , 'diagnosticsHasCat_id' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadDiagnostic();
+                   }
+                });
+            }
+            
+        });
+    }
+    
+    /**
+     * @project Qyura
+     * @description load speciality
+     * @access public
+     */
+    
+    function loadSpeciality(){
+        $('#list4').load(urls + 'index.php/diagnostic/diagnosticSpecialities/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+        $('#list5').load(urls + 'index.php/diagnostic/diagnosticAllocatedSpecialities/'+diagnosticId,function () {
+           // alert('callback function implementation');
+        });
+    
+    } 
+    
+     function addSpeciality(){
+         $('.diagonasticSpecialCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/diagnostic/addSpeciality',
+                    type: 'POST',
+                   data: {'diagnosticId' : diagnosticId , 'diagnosticSpecialities_specialitiesId' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadSpeciality();
+                   }
+                });
+            }
+            
+        });
+    }
+    
+      function revertSpeciality(){
+         $('.diagonasticAllocSpecialCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/diagnostic/revertSpeciality',
+                    type: 'POST',
+                   data: {'diagnosticId' : diagnosticId , 'diagnosticSpecialities_id' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadSpeciality();
+                   }
+                });
+            }
+            
+        });
     }
 </script>

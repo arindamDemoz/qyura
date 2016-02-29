@@ -134,7 +134,7 @@ class Diagnostic_model extends CI_Model {
 
     function fetchDiagnosticDataTables($condition = NULL) {
 
-        $imgUrl = base_url() . 'assets/diagnosticsImage/thumb/original/$1';
+        $imgUrl = base_url() . 'assets/diagnosticsImage/thumb/thumb_100/$1';
 
         $this->datatables->select('diag.diagnostic_id,diag.diagnostic_zip,diag.diagnostic_usersId,diag.diagnostic_name,diag.diagnostic_phn,diag.diagnostic_address,City.city_name,coalesce(diag.diagnostic_img, "noImage.png") as diagnostic_img,diag.diagnostic_cntPrsn,usr.users_email,diag.diagnostic_lat,diag.diagnostic_long,usr.users_id,diag.diagnostic_countryId,diag.diagnostic_stateId,diag.diagnostic_cityId');
         
@@ -311,6 +311,46 @@ class Diagnostic_model extends CI_Model {
         $this->db->update($table, $data);
 
         return $this->db->affected_rows();
+    }
+    
+    function fetchdiagnosticsDiagnosticCatData($diagnosticId){
+           
+         $this->db->select('Spl.diagnosticsCat_catName,Dspl.diagnosticsHasCat_id,Dspl.diagnosticsHasCat_diagnosticId,Dspl.diagnosticsHasCat_diagnosticsCatId');
+         
+        $this->db->from('qyura_diagnosticsHasCat AS Dspl');
+        $this->db->join('qyura_diagnosticsCat AS Spl','Spl.diagnosticsCat_catId = Dspl.diagnosticsHasCat_diagnosticsCatId','left');
+        
+        $this->db->where(array('Dspl.diagnosticsHasCat_diagnosticId' => $diagnosticId,'Spl.diagnosticsCat_deleted' => 0));
+        $this->db->order_by("Dspl.creationTime", "desc"); 
+        $data= $this->db->get();
+        return $data->result();
+      }
+      
+      function fetchdiagnosticsSpecialityData($diagnosticId){
+           
+         $this->db->select('Spl.specialities_name,Dspl.diagnosticSpecialities_id,Dspl.diagnosticSpecialities_specialitiesId,Dspl.diagnosticSpecialities_diagnosticId');
+         
+        $this->db->from('qyura_diagnosticSpecialities AS Dspl');
+        $this->db->join('qyura_specialities AS Spl','Spl.specialities_id = Dspl.diagnosticSpecialities_specialitiesId','left');
+        
+        $this->db->where(array('Dspl.diagnosticSpecialities_diagnosticId' => $diagnosticId,'Dspl.diagnosticSpecialities_deleted' => 0));
+        $this->db->order_by("Dspl.creationTime", "desc"); 
+        $data= $this->db->get();
+        return $data->result();
+      }
+      
+    function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
+
+        $this->db->select(implode(",",$select));
+        $this->db->from($tableName);
+        foreach($condition as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+        if(!empty($notIn))
+            $this->db->where_not_in($fieldName,$notIn);
+        $data= $this->db->get(); 
+      
+     return $data->result();
     }
 
 }
