@@ -155,11 +155,11 @@
                             <a href="dashboard.html" class="waves-effect"><i class="ion-ios7-keypad-outline"></i><span>Dashboard</span></a>
                         </li>
                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-hospital-o"></i> 
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'hospital'):echo"active";endif;?>" href="#"><i class="fa fa-hospital-o"></i> 
                             <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'hospital' && $this->router->fetch_method() != 'addHospital'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
+                                <li class="<?php if($this->router->fetch_method() == 'addHospital'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
                             </ul>
                         </li>
                           <li class="has_sub">
