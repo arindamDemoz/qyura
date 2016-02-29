@@ -11,11 +11,14 @@
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
  <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js">  </script>
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
-<?php $current = $this->router->fetch_method();
-if($current == 'detailBloodBank'):?>
-<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>
-<?php else:?>
+<?php  $current = $this->router->fetch_method();
+if($current != 'detailHospital'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/main.js"></script>
+<?php else:?>
+
+<!--<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>-->
+<script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
+
 <?php endif;?>
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
@@ -33,7 +36,14 @@ if($current == 'detailBloodBank'):?>
     <script>
         var resizefunc = [];
     </script>
-    <script> var hospitalId = <?php echo $hospitalId;?> </script>
+    <?php $check= 0; 
+$id = $this->uri->segment(3); 
+if(!empty($id)){
+	$check = $this->uri->segment(3); 
+}else{
+	$check = 0 ;
+}?>
+    <script> var hospitalId = <?php echo $check;?> </script>
 <script>
              /*-- Selectpicker --*/
 $('.selectpicker').selectpicker({
@@ -794,4 +804,23 @@ function addAwards(){
         }
         
         
+            function deleteGalleryImage(id){
+	  if(confirm('Are you sure want to delete?')){	
+    	  $.ajax({
+              url : urls + 'index.php/hospital/deleteGalleryImage',
+              type: 'POST',
+             data: {'id' : id },
+             success:function(datas){
+                loadGallery();
+             }
+          });
+
+     }
+    }
+    
+     function loadGallery(){
+    	$('#display_gallery').load(urls + 'index.php/hospital/getGalleryImage/'+hospitalId,function () {
+
+         });
+    }
     </script>

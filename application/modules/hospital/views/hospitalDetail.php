@@ -1,4 +1,4 @@
-
+Morning Session
 <body class="fixed-left">
    
 
@@ -912,33 +912,25 @@
                </section>
                                     <!-- Specialities Ends -->
                                     <!--Gllery Starts -->
-                                    <section class="tab-pane fade in" id="gallery">
+                                   <section class="tab-pane fade in" id="gallery">
                                         <div class="fileUpload btn btn-sm btn-upload im-upload">
-                                            <span class="btn btn-appointment">Add More</span>
-                                            <input type="file" class="upload" id="uploadBtn">
+                                            <span class="btn btn-appointment avatar-view">Add More</span>
+                                           <!-- <input type="file" class="upload" id="uploadBtn"> -->
+                                            
                                         </div>
-                                        <div class="clearfix" id="galleryImages">
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h1.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h3.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h4.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                            <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img class="thumbnail img-responsive" src="<?php echo base_url()?>assets/images/hospital/h2.jpg">
-                                                <a class="delete"> <i class="fa fa-times fa-2x"></i></a>
-                                            </aside>
-                                        </div>
+                                         <input type="hidden" style="display:none;" class="no-display" id="file_action_url_gallery" name="file_action_url_gallery" value="<?php echo site_url('hospital/galleryUploadImage');?>">
+                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo site_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
+                                          
+                                       <div class="clearfix" id="display_gallery">
+
+                                       <?php if(!empty($gallerys)){foreach($gallerys as $gallery){?>
+                                       <aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                             <img width="210" class="thumbnail img-responsive" src="<?php echo base_url()?>/assets/hospitalsImages/thumb/original/<?php echo $gallery->hospitalImages_ImagesName ?>">
+                                             <a class="delete" onClick="deleteGalleryImage(<?php echo $gallery->hospitalImages_id ?>)"> <i class="fa fa-times fa-2x"></i></a>
+                                         </aside>
+                                         <?php }}?>
+                                     </div>
+                                        
                                     </section>
                                     <!--Gallery Ends -->
                                     
@@ -1453,6 +1445,7 @@
                             </div>
                           </div>
                     </div>
+                     <?php echo $this->load->view('edit_upload_crop_modal');?>
                     <!-- Gallery Model Ends -->
    
   

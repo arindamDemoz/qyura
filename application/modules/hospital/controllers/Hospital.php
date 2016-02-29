@@ -40,6 +40,7 @@ class Hospital extends MY_Controller {
         $data['detailShow'] = 'block';
         $insurance_condition = '';
         $data['insurance']  = $this->Hospital_model->fetchInsurance($hospitalId);
+        $data['gallerys'] = $this->Hospital_model->customGet(array('table'=>'qyura_hospitalImages','where'=>array('hospitalImages_hospitalId'=>$hospitalId,'hospitalImages_deleted'=>0)));
         if(!empty($data['insurance'])){
             foreach ($data['insurance'] as $key => $val){
                $insurance_condition[]= $val->hospitalInsurance_insuranceId;
@@ -1078,4 +1079,91 @@ class Hospital extends MY_Controller {
        echo $diagonasticTest;
        exit;
    }
+   
+    /**
+     * @project Qyura
+     * @method galleryUploadImage
+     * @description add gallery image
+     * @access public
+     * @return boolean
+     */
+    function galleryUploadImage() {
+    
+    	if ($_POST['avatar_file']['name']) {
+    		$path = realpath(FCPATH . 'assets/hospitalsImages/');
+    		$upload_data = $this->input->post('avatar_data');
+    		$upload_data = json_decode($upload_data);
+    		$original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
+    
+    		if (empty($original_imagesname)) {
+    			$response = array('state' => 400, 'message' => $this->error_message);
+    		} else {
+    
+    			$option = array(
+    					'hospitalImages_ImagesName' => $original_imagesname,
+    					'hospitalImages_hospitalId'=> $this->input->post('avatar_id'),
+    					'creationTime' => strtotime(date("Y-m-d H:i:s"))
+    			);
+			$options = array(
+					'table'=> 'qyura_hospitalImages',
+					'data'=>$option
+			);
+			
+    			$response = $this->Hospital_model->customInsert($options);
+    			if ($response) {
+    				$response = array('state' => 200, 'message' => 'Successfully added gallery image');
+    			} else {
+    				$response = array('state' => 400, 'message' => 'Failed to added gallery image');
+    			}
+    		}
+    		echo json_encode($response);
+    	} else {
+    		$response = array('state' => 400, 'message' => 'Please select image');
+    		echo json_encode($response);
+    	}
+    }
+
+   
+    function getGalleryImage($id) {
+    	if (!empty($id)) {
+    		$gallery_template = '';
+    		$where = array(
+
+    				'hospitalImages_hospitalId'=> $id,
+    				'hospitalImages_deleted'=> 0
+    		);
+    		$options = array(
+    				'table'=> 'qyura_hospitalImages',
+    				'where'=>$where
+    		);
+    		$gallerys = $this->Hospital_model->customGet($options);
+    		if($gallerys){
+	    		foreach($gallerys as $gallery){
+	    			$gallery_template.='<aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img width="210" class="thumbnail img-responsive" src="'.base_url().'/assets/hospitalsImages/thumb/original/'.$gallery->hospitalImages_ImagesName.'">
+                                                <a class="delete" onClick="deleteGalleryImage('.$gallery->hospitalImages_id.')"> <i class="fa fa-times fa-2x"></i></a>
+                                            </aside>';
+	    		}
+    		}else{
+    			$gallery_template = 'Add Image';
+    		}
+    		echo $gallery_template;
+    		exit();
+    	}
+    }
+    
+    function deleteGalleryImage() {
+    	$id = $this->input->post('id');
+    	$updatedData = array('hospitalImages_deleted' => 1);
+    	$updatedDataWhere = array('hospitalImages_id' => $id);
+    
+    	$option = array(
+    			'table'=> 'qyura_hospitalImages',
+    			'where'=>$updatedDataWhere,
+    			'data'=>$updatedData
+    	);
+    	$return = $this->Hospital_model->customUpdate($option);
+    	echo $return;
+    	exit;
+    }
 }
