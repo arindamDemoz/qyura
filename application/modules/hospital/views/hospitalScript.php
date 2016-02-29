@@ -257,7 +257,7 @@ function addAwards(){
         if(hospitalAwards_awardsName != ''){
             
             $.ajax({
-               url : urls + 'index.php/hospital/addSpeciality',
+               url : urls + 'index.php/hospital/addHospitalAwards',
                type: 'POST',
               data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
               success:function(datas){
