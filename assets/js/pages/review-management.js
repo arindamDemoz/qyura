@@ -18,10 +18,6 @@
 
   });
 
-  var hideKeyboard = function () {
-      document.activeElement.blur();
-      $(".pickDate").blur();
-  };
 
   /*-- Pie Chart --*/
   google.load('visualization', '1', {
