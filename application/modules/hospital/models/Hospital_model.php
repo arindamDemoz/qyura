@@ -178,27 +178,30 @@ class Hospital_model extends CI_Model {
         
        $this->datatables->add_column('hospital_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'hospital_img');
        
-              $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
+       $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
        
-         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
+      $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
 
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
 
     }
     
-    function fetchTableData($select = array(),$tableName,$condition = array()){
+    function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
         //echo 
         $this->db->select(implode(",",$select));
         $this->db->from($tableName);
         foreach($condition as $key=>$val){
             $this->db->where($key, $val); 
         }
-        
+        if(!empty($notIn))
+            $this->db->where_not_in($fieldName,$notIn);
         $data= $this->db->get(); 
+      
      return $data->result();
       //echo $this->db->last_query(); exit;
     }
+    
     
     function fetchInsurance($hospitalId){
         $this->db->select('Hos.hospitalInsurance_id,Hos.hospitalInsurance_insuranceId,Insu.insurance_Name,Insu.insurance_img');
@@ -238,4 +241,27 @@ class Hospital_model extends CI_Model {
         //echo $this->db->last_query(); exit;
         return $data->result();
     }
+    
+      function fetchhospitalSpecialityData($hospitalId){
+         $this->db->select('Spl.specialities_name,Hspl.hospitalSpecialities_id,Hspl.hospitalSpecialities_specialitiesId');
+        $this->db->from('qyura_hospitalSpecialities AS Hspl');
+        $this->db->join('qyura_specialities AS Spl','Spl.specialities_id = Hspl.hospitalSpecialities_specialitiesId','left');
+        $this->db->where(array('Hspl.hospitalSpecialities_hospitalId' => $hospitalId,'Hspl.hospitalSpecialities_deleted' => 0,'Spl.specialities_deleted' => 0));
+        $this->db->order_by("Hspl.creationTime", "desc"); 
+        $data= $this->db->get(); 
+        //echo $this->db->last_query(); exit;
+        return $data->result();
+      }
+      function fetchhospitalDiagonasticData($hospitalId){
+         $this->db->select('Dia.diagnosticsCat_catName,Hdia.hospitalDiagnosticsCat_hospitalId,Hdia.hospitalDiagnosticsCat_id');
+        $this->db->from('qyura_diagnosticsCat AS Dia');
+        $this->db->join('qyura_hospitalDiagnosticsCat AS Hdia','Hdia.hospitalDiagnosticsCat_diagnosticsCatId = Dia.diagnosticsCat_catId','left');
+        $this->db->where(array('Hdia.hospitalDiagnosticsCat_hospitalId' => $hospitalId,'Hdia.hospitalDiagnosticsCat_deleted' => 0,'Dia.diagnosticsCat_deleted' => 0));
+        $this->db->order_by("Hdia.creationTime", "desc"); 
+        $data= $this->db->get(); 
+        //echo $this->db->last_query(); exit;
+        return $data->result();
+      }
+    
+
 }
