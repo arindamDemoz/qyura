@@ -1,6 +1,7 @@
 
 <body class="fixed-left">
    
+
     <!-- Start right Content here -->
         <div class="content-page" ng-app="myApp">
             <!-- Start content -->
@@ -438,7 +439,7 @@
                                                             <article class="clearfix m-b-10">
 
                                                               <div class="col-md-12">
-                                                              <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" onclick="return validationHospital();">Update</button>
+                                                              <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" onclick="return validationHospitalDetail();">Update</button>
                                                               </div>
 
                                                              </article>

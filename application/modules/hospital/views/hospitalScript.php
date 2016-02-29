@@ -129,7 +129,14 @@ function fetchCity(stateId) {
 		         
 		         loadSpeciality();
 		          loadDiagonastic();    
-                
+                $("#edit").click(function () {
+                 $("#detail").toggle();
+                    $("#newDetail").toggle();
+                });
+                $("#editdetail").click(function () {
+                    $("#detail").toggle();
+                    $("#newDetail").toggle();
+                });
             });
 
  function addDiagnostic(){
@@ -250,7 +257,7 @@ function addAwards(){
         if(hospitalAwards_awardsName != ''){
             
             $.ajax({
-               url : urls + 'index.php/hospital/addSpeciality',
+               url : urls + 'index.php/hospital/addHospitalAwards',
                type: 'POST',
               data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
               success:function(datas){
@@ -667,7 +674,7 @@ function addAwards(){
     </script> 
   <script>
       
-       function validationDetailHospital(){
+       function validationHospitalDetail(){
            
        //$("form[name='bloodDetail']").submit();
         var check= /^[a-zA-Z\s]+$/;

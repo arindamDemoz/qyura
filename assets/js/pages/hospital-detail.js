@@ -308,7 +308,7 @@ $(function () {
 });
 
 $("#edit").click(function () {
-    $("#detail").toggle();
+ $("#detail").toggle();
     $("#newDetail").toggle();
 });
 $("#editdetail").click(function () {
