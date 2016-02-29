@@ -72,7 +72,7 @@ class Bloodbank_model extends CI_Model {
     
     function fetchbloodBankDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/BloodBank/thumb/original/$1';    
+         $imgUrl = base_url().'assets/BloodBank/thumb/thumb_100/$1';    
          
      $this->datatables->select('blood.bloodBank_id,blood.users_id,blood.bloodBank_name,blood.bloodBank_phn,blood.bloodBank_add,City.city_name,'
                  . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long,blood.bloodBank_photo ');

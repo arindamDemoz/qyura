@@ -148,7 +148,7 @@ class Hospital_model extends CI_Model {
     }
         function fetchHospitalDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/hospitalsImages/thumb/original/$1'; 
+         $imgUrl = base_url().'assets/hospitalsImages/thumb/thumb_100/$1'; 
          
        $this->datatables->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
         Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.hospital_phn');
