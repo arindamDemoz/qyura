@@ -65,20 +65,13 @@ function fetchCity(stateId) {
                          // datatable get records
          $(document).ready(function () {
                 var oTable = $('#hospital_datatable').DataTable({
-                   /* "processing": true,
-                    "serverSide": true,
-                    "bFilter": false,
-                    "iDisplayStart ": 10,
-                     "bLengthChange": false,
-                    "bProcessing": true,
-                    "iDisplayLength": 10,
-                    "bPaginate": true,
-                    "sPaginationType": "full_numbers",*/
-                    "processing": true,
-                    "serverSide": true,
+                  "processing": true,
+                    "bServerSide": true,
+                   // "searching": true,
                     "bLengthChange": false,
                     "bProcessing": true,
                     "iDisplayLength": 10,
+                    "bPaginate": true,
                     "sPaginationType": "full_numbers",
 
                     "columns": [
@@ -109,7 +102,7 @@ function fetchCity(stateId) {
                   } );
                      $('#search').on('keyup', function() {
                         //oTable.draw();
-                         oTable.search($(this).val()).draw() ;
+                         oTable.columns( 5 ).search($(this).val()).draw() ;
                         
                   } );
 
@@ -141,7 +134,9 @@ function fetchCity(stateId) {
 
  function addDiagnostic(){
          $('.diagonasticCheck').each(function() {
+             
             if($(this).is(':checked')){
+                //alert($(this).val());
                 $.ajax({
                     url : urls + 'index.php/hospital/addDiagnostic',
                     type: 'POST',
@@ -257,7 +252,7 @@ function addAwards(){
         if(hospitalAwards_awardsName != ''){
             
             $.ajax({
-               url : urls + 'index.php/hospital/addSpeciality',
+               url : urls + 'index.php/hospital/addHospitalAwards',
                type: 'POST',
               data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
               success:function(datas){

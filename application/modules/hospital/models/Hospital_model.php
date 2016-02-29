@@ -148,10 +148,10 @@ class Hospital_model extends CI_Model {
     }
         function fetchHospitalDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/hospitalsImages/$1';    
+         $imgUrl = base_url().'assets/hospitalsImages/thumb/original/$1'; 
          
-       $this->datatables->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
-        Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId');
+       $this->datatables->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
+        Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.hospital_phn');
      $this->datatables->from('qyura_hospital AS Hos');
      $this->datatables->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
       $this->datatables->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
@@ -254,7 +254,7 @@ class Hospital_model extends CI_Model {
         return $data->result();
       }
       function fetchhospitalDiagonasticData($hospitalId){
-         $this->db->select('Dia.diagnosticsCat_catName,Hdia.hospitalDiagnosticsCat_hospitalId,Hdia.hospitalDiagnosticsCat_id');
+         $this->db->select('Dia.diagnosticsCat_catName,Hdia.hospitalDiagnosticsCat_hospitalId,Hdia.hospitalDiagnosticsCat_id,Hdia.hospitalDiagnosticsCat_diagnosticsCatId');
         $this->db->from('qyura_diagnosticsCat AS Dia');
         $this->db->join('qyura_hospitalDiagnosticsCat AS Hdia','Hdia.hospitalDiagnosticsCat_diagnosticsCatId = Dia.diagnosticsCat_catId','left');
         $this->db->where(array('Hdia.hospitalDiagnosticsCat_hospitalId' => $hospitalId,'Hdia.hospitalDiagnosticsCat_deleted' => 0,'Dia.diagnosticsCat_deleted' => 0));
