@@ -422,117 +422,9 @@
                         <col style="width:70%">
                         <col style="width:20%">
                         <col style="width:10%">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Cmplete Blood Count(CBC)
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click " data-original-title="" title="Edit Price">1200</a>
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Blood Chemistry Test
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Cmplete Blood Count(CBC)
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Blood Chemistry Test
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Cmplete Blood Count(CBC)
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Blood Chemistry Test
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Cmplete Blood Count(CBC)
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Blood Chemistry Test
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Cmplete Blood Count(CBC)
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Blood Chemistry Test
-                                </td>
-                                <td>
-                                    <i class="fa fa-inr"></i> 1200
-                                </td>
-                                <td>
-                                    <a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a>
-                                </td>
-                            </tr>
+                        <tbody id="loadTestDetail">
+                 
+                       
                         </tbody>
                     </table>
                 </article>
@@ -544,7 +436,7 @@
             </figure>
             <aside class="clearfix mx-h-400">
                 <article class="nicescroll">
-                    <p class="p-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    <p class="p-5" id="detailInstruction">
                     </p>
                     <aside class="clearfix p-5">
                         <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>

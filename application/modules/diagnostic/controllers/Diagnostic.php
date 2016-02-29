@@ -729,7 +729,7 @@ class Diagnostic extends MY_Controller {
          $data = $this->diagnostic_model->fetchdiagnosticsDiagnosticCatData($diagnosticId);
         $allocatedSpecialist = '';
         foreach($data as $key=>$val){
-        $allocatedSpecialist .='<li >'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocSpeciality value='.$val->diagnosticsHasCat_id.' /></li>';
+        $allocatedSpecialist .='<li onClick=getDignosticPrize('.$diagnosticId.','. $val->diagnosticsHasCat_diagnosticsCatId .')>'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocSpeciality value='.$val->diagnosticsHasCat_id.' /></li>';
            
         }
         echo $allocatedSpecialist;
@@ -771,8 +771,6 @@ class Diagnostic extends MY_Controller {
         $return = $this->diagnostic_model->customDelete($option);
        echo $return ;
     }
-    
-    
     
     function diagnosticSpecialities($diagnosticId){
         
@@ -857,4 +855,45 @@ class Diagnostic extends MY_Controller {
         $return = $this->diagnostic_model->customUpdate($option);
        echo $return ;
     }
+    
+    
+    function getDiagnosticPrizeList(){
+       $diagnosticId = $this->input->post('diagnosticId');
+       $categoryId = $this->input->post('categoryId');
+        $selectTableData = array (
+           'quotationDetailTests_testName','quotationDetailTests_price','quotationDetailTests_id'
+        );
+        $where = array(
+            'quotationDetailTests_diagnosticCatId' => $categoryId,
+            'quotationDetailTests_MIprofileId' => $diagnosticId,
+            'quotationDetailTests_deleted' => 0
+            
+        );
+       $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+
+       $diagonasticTest = '';
+        foreach($data as $key => $val){
+            $diagonasticTest .='<tr onclick = fetchInstruction('.$val->quotationDetailTests_id.')> <td>'.$val->quotationDetailTests_testName.'</td><td><i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">'.$val->quotationDetailTests_price.'</a>';
+         $diagonasticTest .= '</td><td><a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a></td></tr>';
+        }
+        echo $diagonasticTest;
+        exit;
+   }
+   
+    function detailDiagnosticInstruction(){
+       $quotationDetailTests_id = $this->input->post('quotationDetailTests_id');
+        $selectTableData = array (
+           'quotationDetailTests_instruction'
+        );
+        $where = array(
+            'quotationDetailTests_id' => $quotationDetailTests_id,
+           'quotationDetailTests_deleted' => 0
+            
+        );
+        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+       $diagonasticTest = $data[0]->quotationDetailTests_instruction;
+       echo $diagonasticTest;
+       exit;
+   }
+   
 }

@@ -637,4 +637,29 @@ if($current != 'detailDiagnostic'):?>
             
         });
     }
+    
+    
+    function getDignosticPrize(diagnosticId,categoryId){
+       
+        $.ajax({
+                    url : urls + 'index.php/diagnostic/getDiagnosticPrizeList',
+                    type: 'POST',
+                   data: {'diagnosticId' : diagnosticId , 'categoryId' : categoryId },
+                   success:function(datas){
+                    
+                       $('#loadTestDetail').html(datas);
+                   }
+                });
+    }
+      function fetchInstruction(digTestId){
+         $.ajax({
+                    url : urls + 'index.php/diagnostic/detailDiagnosticInstruction',
+                    type: 'POST',
+                   data: {'quotationDetailTests_id' : digTestId},
+                   success:function(datas){
+                    
+                       $('#detailInstruction').html(datas);
+                   }
+                });
+    }
 </script>
