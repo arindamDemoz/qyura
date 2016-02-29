@@ -129,7 +129,14 @@ function fetchCity(stateId) {
 		         
 		         loadSpeciality();
 		          loadDiagonastic();    
-                
+                $("#edit").click(function () {
+                 $("#detail").toggle();
+                    $("#newDetail").toggle();
+                });
+                $("#editdetail").click(function () {
+                    $("#detail").toggle();
+                    $("#newDetail").toggle();
+                });
             });
 
  function addDiagnostic(){
@@ -667,7 +674,7 @@ function addAwards(){
     </script> 
   <script>
       
-       function validationDetailHospital(){
+       function validationHospitalDetail(){
            
        //$("form[name='bloodDetail']").submit();
         var check= /^[a-zA-Z\s]+$/;
