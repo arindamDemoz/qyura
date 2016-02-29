@@ -14,8 +14,7 @@ class Hospital extends MY_Controller {
         $data = array();
         $data['allStates'] = $this->Hospital_model->fetchStates();
         $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
-       // print_r($data['hospitalData'] );exit;
-       // $this->load->view('HospitalListing',$data);
+      
        $data['hospitalId'] = 0;
         $this->load->super_admin_template('HospitalListing', $data, 'hospitalScript');
    }

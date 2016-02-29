@@ -1,7 +1,6 @@
 
 <body class="fixed-left">
    
-
     <!-- Start right Content here -->
         <div class="content-page" ng-app="myApp">
             <!-- Start content -->
