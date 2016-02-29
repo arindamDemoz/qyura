@@ -72,11 +72,10 @@ class Bloodbank_model extends CI_Model {
     
     function fetchbloodBankDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/BloodBank/thumb/original/$1';    
+         $imgUrl = base_url().'assets/BloodBank/thumb/thumb_100/$1';    
          
      $this->datatables->select('blood.bloodBank_id,blood.users_id,blood.bloodBank_name,blood.bloodBank_phn,blood.bloodBank_add,City.city_name,'
-                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long,'
-                  . "(CASE WHEN bloodBank_photo IS NULL OR bloodBank_photo = '' THEN 'noImage.png' ELSE bloodBank_photo END )AS bloodBank_photo ");
+                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long,blood.bloodBank_photo ');
          
      $this->datatables->from('qyura_bloodBank AS blood');
      $this->datatables->join('qyura_city AS City','City.city_id = blood.cityId','left');
@@ -105,7 +104,7 @@ class Bloodbank_model extends CI_Model {
      }
         $this->datatables->where(array('blood.bloodBank_deleted'=> 0));
         
-       //$this->datatables->add_column('bloodBank_photo', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'bloodBank_photo');
+       $this->datatables->add_column('bloodBank_photo', '<img class="img-responsive"  src='.$imgUrl.'>', 'bloodBank_photo');
        
               /*$this->datatables->add_column('open','08 AM-12 AM');
               $this->datatables->add_column('call','03 PM-08 PM');*/
