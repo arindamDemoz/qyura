@@ -1,5 +1,3 @@
-
-
 /*diagnostic list*/
 
 
@@ -258,24 +256,6 @@ $(document).ready(function() {
   
                     
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

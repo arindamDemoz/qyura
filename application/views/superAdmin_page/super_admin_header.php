@@ -5,20 +5,23 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="<?php echo base_url();?>assets/images/fevicon-m.ico" rel="shortcut icon">
     <title>Diagnostic Centre Detail</title>
-    <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
+    
     <link href="<?php echo base_url();?>assets/css/framework.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/datepicker.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/custom-g.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="<?php echo base_url();?>assets/vendor/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
     <!-- DataTables -->
      <link href="<?php echo base_url(); ?>assets/js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
     
     <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
-<!--    <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> -->
 
-    
+    <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery.dataTables.min.css"/> 
+   
+
 </head>
 
 <body class="fixed-left" id="crop-avatar">

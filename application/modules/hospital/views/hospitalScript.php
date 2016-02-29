@@ -9,6 +9,7 @@
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+ <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js">  </script>
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
 <?php $current = $this->router->fetch_method();
 if($current == 'detailBloodBank'):?>
@@ -21,9 +22,18 @@ if($current == 'detailBloodBank'):?>
 <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
  <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/pages/addHospital.js">
-    </script>
+<script src="<?php echo base_url();?>assets/js/pages/addHospital.js"> </script>
+<script src="<?php echo base_url(); ?>assets/js/pages/hospital-detail.js"></script>
+   <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script>
+    <!--<script src="<?php echo base_url(); ?>assets/js/angular.min.js"> </script>-->
+    
+    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>  
 
+    <script>
+        var resizefunc = [];
+    </script>
+    <script> var hospitalId = <?php echo $hospitalId;?> </script>
 <script>
              /*-- Selectpicker --*/
 $('.selectpicker').selectpicker({
@@ -32,7 +42,14 @@ $('.selectpicker').selectpicker({
     width: "100%"
 });
 
-var urls = "<?php echo base_url()?>";
+        var urls = "<?php echo base_url()?>";
+         var j = 1;
+         var k = 1;
+         var l = 1;
+         var n= 1;
+         var m = 1;
+         var p = 1;
+var stateIds = $.trim($('#StateId').val());
 function fetchCity(stateId) {           
            $.ajax({
                url : urls + 'index.php/hospital/fetchCity',
@@ -95,9 +112,250 @@ function fetchCity(stateId) {
                          oTable.search($(this).val()).draw() ;
                         
                   } );
+
+                  $(".bs-select").select2({ placeholder: "Select Insurance",
+		          allowClear: true
+		      });
+		        loadAwards();
+		        loadServices();
+		        var pharmacy_status = '';
+		        pharmacy_status = $('#pharmacy_status').val();
+		        var bloodbank_status = '';
+		        bloodbank_status = $('#bloodbank_status').val();
+		        if(bloodbank_status != '')
+		        $("#bloodbankbtn").trigger("click");
+		        if(bloodbank_status != '')
+		        $("#pharmacybtn").trigger("click");
+		         
+		         loadSpeciality();
+		          loadDiagonastic();    
                 
             });
 
+ function addDiagnostic(){
+         $('.diagonasticCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/hospital/addDiagnostic',
+                    type: 'POST',
+                   data: {'hospitalId' : hospitalId , 'hospitalDiagnosticsCat_diagnosticsCatId' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadDiagonastic();
+                   }
+                });
+            }
+            
+        });
+    }
+
+     function revertDiagnostic(){
+         $('.diagonasticAllocCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/hospital/revertDiagnostic',
+                    type: 'POST',
+                   data: {'hospitalId' : hospitalId , 'hospitalDiagnosticsCat_id' : $(this).val() },
+                   success:function(datas){
+                    
+                       loadDiagonastic();
+                   }
+                });
+            }
+            
+        });
+    }
+     function showDiagonasticDetail(hospitalId,categoryId){
+        $.ajax({
+                    url : urls + 'index.php/hospital/detailDiagnostic',
+                    type: 'POST',
+                   data: {'hospitalId' : hospitalId , 'categoryId' : categoryId },
+                   success:function(datas){
+                    
+                       $('#loadTestDetail').html(datas);
+                   }
+                });
+    }
+
+    function fetchInstruction(digTestId){
+         $.ajax({
+                    url : urls + 'index.php/hospital/detailDiagnosticInstruction',
+                    type: 'POST',
+                   data: {'quotationDetailTests_id' : digTestId},
+                   success:function(datas){
+                    
+                       $('#detailInstruction').html(datas);
+                   }
+                });
+    }
+    function loadDiagonastic(){
+        $('#list1').load(urls + 'index.php/hospital/hospitalDiagnostics/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+        
+        $('#list').load(urls + 'index.php/hospital/hospitalFetchDiagnostics/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+        $('#loadTestDetail').html('');
+    }
+    function sendSpeciality(){
+        var specialityId = [];
+        $('.specialityCheck').each(function() {
+            if($(this).is(':checked')){
+                $.ajax({
+                    url : urls + 'index.php/hospital/addSpeciality',
+                    type: 'POST',
+                   data: {'hospitalId' : hospitalId , 'hospitalSpecialities_specialitiesId' : $(this).val() },
+                   success:function(datas){
+                    
+                      loadSpeciality();
+                   }
+                });
+            }
+            
+        });
+    }
+    
+    function revertSpeciality(){
+        $('.specialityAllocCheck').each(function() {
+            if($(this).is(':checked')){
+                //alert($(this).val());
+                $.ajax({
+                    url : urls + 'index.php/hospital/revertSpeciality',
+                    type: 'POST',
+                   data: {'hospitalId' : hospitalId , 'hospitalSpecialities_id' : $(this).val() },
+                   success:function(datas){
+                    
+                      loadSpeciality();
+                   }
+                });
+            }
+            
+        });
+    }
+   
+    
+    function loadSpeciality(){
+     $('#list2').load(urls + 'index.php/hospital/hospitalSpecialities/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+        $('#list3').load(urls + 'index.php/hospital/hospitalAllocatedSpecialities/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+    
+    }  
+    
+function addAwards(){
+        var hospitalAwards_awardsName = $.trim($('#hospitalAwards_awardsName').val());
+        if(hospitalAwards_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/addSpeciality',
+               type: 'POST',
+              data: {'hospitalId' : hospitalId , 'hospitalAwards_awardsName' : hospitalAwards_awardsName },
+              success:function(datas){
+               // console.log(datas);
+                  loadAwards();
+                  $('#hospitalAwards_awardsName').val('');
+              }
+           });
+        }    
+    }
+    function editAwards(awardsId){
+         var edit_awardsName = $.trim($('#'+awardsId).val());
+        
+        if(edit_awardsName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/editHospitalAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId , 'hospitalAwards_awardsName' : edit_awardsName },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        }  
+    }
+    function deleteAwards(awardsId){
+        
+         $.ajax({
+               url : urls + 'index.php/hospital/deleteHospitalAwards',
+               type: 'POST',
+              data: {'awardsId' : awardsId },
+              success:function(datas){
+              console.log(datas);
+                  loadAwards();
+              }
+           });
+        
+    }
+    function loadAwards(){
+       
+        $('#loadAwards').load(urls + 'index.php/hospital/hospitalAwards/'+hospitalId,function () {
+           // alert('callback function ');
+        });
+        $('#totalAwards').load(urls + 'index.php/hospital/detailAwards/'+hospitalId,function () {
+           // alert('callback function implementation');
+        });
+    }
+    function loadServices(){
+        $('#loadServices').load(urls + 'index.php/hospital/hospitalServices/'+hospitalId,function (data) {
+            //alert('callback function implementation');
+            
+        });
+        $('#totalServices').load(urls + 'index.php/hospital/detailServices/'+hospitalId,function () {
+            //alert('callback function implementation');
+        });
+    }
+    function addServices(){
+        var hospitalServices_serviceName = $.trim($('#hospitalServices_serviceName').val());
+        //alert(hospitalServices_serviceName);
+        if(hospitalServices_serviceName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/addHospitalService',
+               type: 'POST',
+              data: {'hospitalId' : hospitalId , 'hospitalServices_serviceName' : hospitalServices_serviceName },
+              success:function(datas){
+               // console.log(datas);
+                  loadServices();
+                  $('#hospitalServices_serviceName').val('');
+              }
+           });
+        }    
+    }
+    
+    function editServices(serviceId){
+         var edit_serviceName = $.trim($('#'+serviceId).val());
+        
+        if(edit_serviceName != ''){
+            
+            $.ajax({
+               url : urls + 'index.php/hospital/editHospitalService',
+               type: 'POST',
+              data: {'serviceId' : serviceId , 'hospitalServices_serviceName' : edit_serviceName },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        }  
+    }
+    
+    function deleteServices(serviceId){
+        
+         $.ajax({
+               url : urls + 'index.php/hospital/deleteHospitalService',
+               type: 'POST',
+              data: {'serviceId' : serviceId },
+              success:function(datas){
+              console.log(datas);
+                  loadServices();
+              }
+           });
+        
+    }
     $('#date-3').datepicker();
 
     $(function () {
@@ -118,7 +376,7 @@ function fetchCity(stateId) {
         width: "100%"
     });
 
-    var urls = "<?php echo base_url() ?>";
+   
     function fetchCityList(stateId) {
         $.ajax({
             url: urls + 'index.php/hospital/fetchCity',
@@ -134,27 +392,6 @@ function fetchCity(stateId) {
 
     }
 
-  
-        var urls = "<?php echo base_url()?>";
-         var j = 1;
-         var k = 1;
-         var l = 1;
-         var n= 1;
-         var m = 1;
-         var p = 1;
-        function fetchCity(stateId) {           
-           $.ajax({
-               url : urls + 'index.php/hospital/fetchCity',
-               type: 'POST',
-              data: {'stateId' : stateId},
-              success:function(datas){
-                  $('#hospital_cityId').html(datas);
-                  $('#hospital_cityId').selectpicker('refresh');
-                  $('#StateId').val(stateId);
-              }
-           });
-           
-        }
         function countPhoneNumber(){
         if(j==10)
             return false;
@@ -428,3 +665,131 @@ function fetchCity(stateId) {
      }); 
      
     </script> 
+  <script>
+      
+       function validationDetailHospital(){
+           
+       //$("form[name='bloodDetail']").submit();
+        var check= /^[a-zA-Z\s]+$/;
+        var numcheck=/^[0-9]+$/;
+        //var emails = $.trim($('#users_email').val());
+        
+       
+         if($.trim($('#hospital_name').val()) === ''){
+                $('#hospital_name').addClass('bdr-error');
+                
+            }
+          
+            if($.trim($('#geocomplete').val()) === ''){
+               $("#geocomplete").addClass('bdr-error');
+               
+            }
+             if(!check.test(cpname)){
+                $('#hospital_cntPrsn').addClass('bdr-error');
+                
+            }
+
+            if( emails !== ''){
+                check_email(emails);
+            }
+            
+            return false;
+            
+            
+        }
+        function checkNumber(id){
+            var phone = $.trim($('#'+'hospital_phn'+id).val());
+            if(!($.isNumeric(phone))){
+             $('#'+'hospital_phn'+id).addClass('bdr-error');
+         }
+        }
+     
+       
+        function updateAccount(){
+          
+            var pswd = $.trim($("#users_password").val());
+            var cnfpswd = $.trim($("#cnfPassword").val());
+            var mobile = $('#users_mobile').val();
+            var emails = $('#users_email').val();
+            var user_tables_id = $('#user_tables_id').val();
+            var users_mobile = $('#users_mobile').val();
+            var returnValue = 0;
+           
+            var status = 1;
+            if(emails === ''){
+                $('#error-users_emailBlank').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(users_mobile === ''){
+                $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(pswd != ''){
+                if(pswd.length < 6){
+                    $('#users_password').addClass('bdr-error');
+                    $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+                   // $('#users_password').focus();
+                   status = 0;
+                }
+
+               if(pswd != cnfpswd){
+                    $('#cnfPassword').addClass('bdr-error');
+                    $('#error-cnfPassword').fadeIn().delay(3000).fadeOut('slow');
+
+                   // $('#cnfpassword').focus();
+                   status = 0;
+                }
+            }
+            if(status == 0)
+                return false;
+            else{
+                    var user_table_id = $('#user_tables_id').val();
+                    $.ajax({
+                        url : urls + 'index.php/hospital/check_email',
+                        type: 'POST',
+                       data: {'users_email' : emails,'user_table_id' : user_table_id },
+                       success:function(datas){
+                           //console.log(datas);
+                           if(datas == 0){
+                            
+                             $.ajax({
+                                    url : urls + 'index.php/hospital/updatePassword',
+                                    type: 'POST',
+                                   //data: {'currentPassword' : pswd,'existingPassword' : password,'user_tables_id' : user_tables_id}, password updated from another user except super admin
+                                   data: $('#acccountForm').serialize(),
+                                   success:function(insertData){
+                                       
+                                       console.log(insertData);
+
+                                       if(insertData == 1){
+                                     $('#users_password').val('');
+                                      $('#cnfPassword').val('');
+                                   
+                                    setTimeout(function(){
+                                      $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut(function() {
+                                      window.location.reload();
+                                                               
+                                        });
+                                       }, 4000);
+                                      
+                                        return true;
+                                      }
+                                     
+                                   } 
+                                });
+                       }
+                       else {
+                         $('#users_email').addClass('bdr-error');
+                         $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
+
+                        return false;
+                       }
+                       } 
+                    });
+                
+              
+            }
+        }
+        
+        
+    </script>
