@@ -18,15 +18,15 @@
   function CropAvatar($element) {
     this.$container = $element;
 
-    this.$avatarView = this.$container.find('.avatar-view');
+    this.$avatarView = this.$container.find('.avatar-view-gallery');
     this.$avatar = this.$avatarView.find('img');
-    this.$avatarModal = this.$container.find('#avatar-modal');
+    this.$avatarModal = this.$container.find('#avatar-modal-gallery');
     this.$loading = this.$container.find('.loading');
 
-    this.$avatarForm = this.$avatarModal.find('.avatar-form');
+    this.$avatarForm = this.$avatarModal.find('.avatar-form-gallery');
     this.$avatarUpload = this.$avatarForm.find('.avatar-upload');
-    this.$avatarSrc = this.$avatarForm.find('.avatar-src');
-    this.$avatarData = this.$avatarForm.find('.avatar-data');
+    this.$avatarSrc = this.$avatarForm.find('.avatar-src-gallery');
+    this.$avatarData = this.$avatarForm.find('.avatar-data-gallery');
     this.$avatarInput = this.$avatarForm.find('.avatar-input');
     this.$avatarSave = this.$avatarForm.find('.avatar-save');
     this.$avatarBtns = this.$avatarForm.find('.avatar-btns');

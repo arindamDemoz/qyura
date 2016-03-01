@@ -18,28 +18,28 @@ class Diagnostic extends MY_Controller {
         // $this->load->view('diagnosticlisting',$data);
         $this->load->super_admin_template('diagnosticlisting', $data, 'diagnosticScript');
     }
-    
-     /**
+
+    /**
      * @project Qyura
      * @method getDiagnosticDl
      * @description diagnostic datatable listing
      * @access public
      * @return array
      */
-
     function getDiagnosticDl() {
 
 
         echo $this->diagnostic_model->fetchDiagnosticDataTables();
     }
-     /**
+
+    /**
      * @project Qyura
      * @method getDiagnosticDoctorsDl
      * @description diagnostic doctor datatable listing
      * @access public
      * @return array
      */
-    function getDiagnosticDoctorsDl($diagonsticUserId){
+    function getDiagnosticDoctorsDl($diagonsticUserId) {
         echo $this->diagnostic_model->fetchDiagnosticDoctorDataTables($diagonsticUserId);
     }
 
@@ -50,13 +50,27 @@ class Diagnostic extends MY_Controller {
     }
 
     function detailDiagnostic($diagnosticId = '') {
+
         $data = array();
         // echo $diagnosticId;exit;
         $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
-        $data['gallerys'] = $this->diagnostic_model->customGet(array('table'=>'qyura_diagonsticsImages','where'=>array('diagonsticImages_diagonsticId'=>$diagnosticId,'diagonsticImages_deleted'=>0)));
+        $data['gallerys'] = $this->diagnostic_model->customGet(array('table' => 'qyura_diagonsticsImages', 'where' => array('diagonsticImages_diagonsticId' => $diagnosticId, 'diagonsticImages_deleted' => 0)));
         //print_r($data);exit;
         $data['allCountry'] = $this->diagnostic_model->fetchCountry();
         $data['allStates'] = $this->diagnostic_model->fetchStates();
+        
+        $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'where' => array(
+                        'diagnosticCenterTimeSlot_diagnosticId' => $diagnosticId,
+                        'diagnosticCenterTimeSlot_deleted' => 0
+                    )
+                );
+         $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
+       /// dump($data['AlltimeSlot']);
+         //echo date('h:i A',strtotime($data['AlltimeSlot'][1]->diagnosticCenterTimeSlot_endTime));
+        
+       // exit();
         $data['diagnosticId'] = $diagnosticId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
@@ -108,6 +122,13 @@ class Diagnostic extends MY_Controller {
         exit;
     }
 
+    /**
+     * @project Qyura
+     * @method SaveDiagnostic
+     * @description add diagnostic
+     * @access public
+     * @return boolean
+     */
     function SaveDiagnostic() {
 
         $this->load->library('form_validation');
@@ -267,9 +288,16 @@ class Diagnostic extends MY_Controller {
         exit;
     }
 
+    /**
+     * @project Qyura
+     * @method saveDetailDiagnostic
+     * @description edit diagnostic
+     * @access public
+     * @return boolean
+     */
     function saveDetailDiagnostic($diagnosticId) {
         //echo $diagnosticId;
-        
+
         $this->bf_form_validation->set_rules('diagnostic_name', 'Diagnostic Name', 'required|trim');
         $this->bf_form_validation->set_rules('diagnostic_countryId', 'Diagnostic Country', 'required|trim');
         $this->bf_form_validation->set_rules('diagnostic_stateId', 'Diagnostic StateId', 'required|trim');
@@ -325,9 +353,9 @@ class Diagnostic extends MY_Controller {
             }
         }
     }
-    
-    function updateAccount($diagnosticId){
-    	
+
+    function updateAccount($diagnosticId) {
+
         $this->bf_form_validation->set_rules('diagnostic_mbrTyp', 'Membership Type', 'required|trim');
         $this->bf_form_validation->set_rules('users_email', 'Users Email', 'required|valid_email|trim');
         $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required');
@@ -340,32 +368,35 @@ class Diagnostic extends MY_Controller {
             $data['detailShow'] = 'none';
             $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
         } else {
-        	
-        	$users_email = $this->input->post('users_email');
-        	$diagnostic_mbrTyp = $this->input->post('diagnostic_mbrTyp');
-        	$users_password = md5($this->input->post('users_password'));
-        	$user_id = $this->input->post('did_userId');
-        	$diagnosticInsert = array(
-        			'users_email' => $users_email,
-        			'users_password' => $users_password
-        	);
-        	$options = array(
-        			'data'=> $diagnosticInsert,
-        			'table'=>'qyura_users',
-        			'where'=> array('users_id'=>$user_id)
-        	);
-        	$response = $this->diagnostic_model->customUpdate($options);
-        	
-        	$options_dia = array(
-        			'data'=> array('diagnostic_mbrTyp'=>$diagnostic_mbrTyp),
-        			'table'=>'qyura_diagnostic',
-        			'where'=> array('diagnostic_id'=>$diagnosticId)
-        	);
-        	$response = $this->diagnostic_model->customUpdate($options_dia);
-        	if($response){
-        		$this->session->set_flashdata('message', 'Data updated successfully !');
-        		redirect("diagnostic/detailDiagnostic/$diagnosticId");
-        	}
+
+            $users_email = $this->input->post('users_email');
+            $diagnostic_mbrTyp = $this->input->post('diagnostic_mbrTyp');
+            $users_password = md5($this->input->post('users_password'));
+            $user_id = $this->input->post('did_userId');
+            $diagnosticInsert = array(
+                'users_email' => $users_email,
+                'users_password' => $users_password
+            );
+            $options = array(
+                'data' => $diagnosticInsert,
+                'table' => 'qyura_users',
+                'where' => array('users_id' => $user_id)
+            );
+            $response = $this->diagnostic_model->customUpdate($options);
+
+            $options_dia = array(
+                'data' => array('diagnostic_mbrTyp' => $diagnostic_mbrTyp),
+                'table' => 'qyura_diagnostic',
+                'where' => array('diagnostic_id' => $diagnosticId)
+            );
+            $response = $this->diagnostic_model->customUpdate($options_dia);
+            if ($response) {
+                $this->session->set_flashdata('message', 'Data updated successfully !');
+                redirect("diagnostic/detailDiagnostic/$diagnosticId");
+            }else{
+                 $this->session->set_flashdata('message', 'Data updated successfully !');
+                redirect("diagnostic/detailDiagnostic/$diagnosticId");
+            }
         }
     }
 
@@ -383,7 +414,7 @@ class Diagnostic extends MY_Controller {
             $upload_data = $this->input->post('avatar_data');
             $upload_data = json_decode($upload_data);
 
-            $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/diagnosticsImage/', './assets/diagnosticsImage/thumb/','diagnostic');
+            $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/diagnosticsImage/', './assets/diagnosticsImage/thumb/', 'diagnostic');
 
             if (empty($original_imagesname)) {
                 $response = array('state' => 400, 'message' => $this->error_message);
@@ -409,15 +440,15 @@ class Diagnostic extends MY_Controller {
             echo json_encode($response);
         }
     }
-    
+
     function getUpdateAvtar($id) {
-    	if (!empty($id)) {
-    		$data = $this->diagnostic_model->fetchdiagnosticData($id);
-    		echo "<img src='" . base_url() . "assets/diagnosticsImage/thumb/original/" . $data[0]->diagnostic_img . "'alt='' class='logo-img' />";
-    		exit();
-    	}
+        if (!empty($id)) {
+            $data = $this->diagnostic_model->fetchdiagnosticData($id);
+            echo "<img src='" . base_url() . "assets/diagnosticsImage/thumb/original/" . $data[0]->diagnostic_img . "'alt='' class='logo-img' />";
+            exit();
+        }
     }
-    
+
     /**
      * @project Qyura
      * @method galleryUploadImage
@@ -426,85 +457,90 @@ class Diagnostic extends MY_Controller {
      * @return boolean
      */
     function galleryUploadImage() {
-    
-    	if ($_POST['avatar_file']['name']) {
-    		$path = realpath(FCPATH . 'assets/diagnosticsImage/');
-    		$upload_data = $this->input->post('avatar_data');
-    		$upload_data = json_decode($upload_data);
-    		$original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/diagnosticsImage/', './assets/diagnosticsImage/thumb/','diagnostic');
-    
-    		if (empty($original_imagesname)) {
-    			$response = array('state' => 400, 'message' => $this->error_message);
-    		} else {
-    
-    			$option = array(
-    					'diagonsticImages_ImagesName' => $original_imagesname,
-    					'diagonsticImages_diagonsticId'=> $this->input->post('avatar_id'),
-    					'creationTime' => strtotime(date("Y-m-d H:i:s"))
-    			);
-			$options = array(
-					'table'=> 'qyura_diagonsticsImages              ',
-					'data'=>$option
-			);
-			
-    			$response = $this->diagnostic_model->customInsert($options);
-    			if ($response) {
-    				$response = array('state' => 200, 'message' => 'Successfully added gallery image');
-    			} else {
-    				$response = array('state' => 400, 'message' => 'Failed to added gallery image');
-    			}
-    		}
-    		echo json_encode($response);
-    	} else {
-    		$response = array('state' => 400, 'message' => 'Please select image');
-    		echo json_encode($response);
-    	}
+
+        if ($_POST['avatar_file_gallery']['name']) {
+            $path = realpath(FCPATH . 'assets/diagnosticsImage/');
+            $upload_data = $this->input->post('avatar_data_gallery');
+            $upload_data = json_decode($upload_data);
+            $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file_gallery', $path, 'assets/diagnosticsImage/', './assets/diagnosticsImage/thumb/', 'diagnostic');
+
+            if (empty($original_imagesname)) {
+                $response = array('state' => 400, 'message' => $this->error_message);
+            } else {
+
+                $option = array(
+                    'diagonsticImages_ImagesName' => $original_imagesname,
+                    'diagonsticImages_diagonsticId' => $this->input->post('avatar_id'),
+                    'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                );
+                $options = array(
+                    'table' => 'qyura_diagonsticsImages              ',
+                    'data' => $option
+                );
+
+                $response = $this->diagnostic_model->customInsert($options);
+                if ($response) {
+                    $response = array('state' => 200, 'message' => 'Successfully added gallery image');
+                } else {
+                    $response = array('state' => 400, 'message' => 'Failed to added gallery image');
+                }
+            }
+            echo json_encode($response);
+        } else {
+            $response = array('state' => 400, 'message' => 'Please select image');
+            echo json_encode($response);
+        }
     }
 
-   
     function getGalleryImage($id) {
-    	if (!empty($id)) {
-    		$gallery_template = '';
-    		$where = array(
-
-    				'diagonsticImages_diagonsticId'=> $id,
-    				'diagonsticImages_deleted'=> 0
-    		);
-    		$options = array(
-    				'table'=> 'qyura_diagonsticsImages',
-    				'where'=>$where
-    		);
-    		$gallerys = $this->diagnostic_model->customGet($options);
-    		if($gallerys){
-	    		foreach($gallerys as $gallery){
-	    			$gallery_template.='<aside class="col-md-3 col-sm-4 col-xs-6 show-image">
-                                                <img width="210" class="thumbnail img-responsive" src="'.base_url().'/assets/diagnosticsImage/thumb/original/'.$gallery->diagonsticImages_ImagesName.'">
-                                                <a class="delete" onClick="deleteGalleryImage('.$gallery->diagonsticImages_id.')"> <i class="fa fa-times fa-2x"></i></a>
+        if (!empty($id)) {
+            $gallery_template = '';
+            $where = array(
+                'diagonsticImages_diagonsticId' => $id,
+                'diagonsticImages_deleted' => 0
+            );
+            $options = array(
+                'table' => 'qyura_diagonsticsImages',
+                'where' => $where
+            );
+            $gallerys = $this->diagnostic_model->customGet($options);
+            if ($gallerys) {
+                foreach ($gallerys as $gallery) {
+                    $gallery_template.='<aside class="col-md-3 col-sm-4 col-xs-6 show-image">
+                                                <img width="210" class="thumbnail img-responsive" src="' . base_url() . '/assets/diagnosticsImage/thumb/original/' . $gallery->diagonsticImages_ImagesName . '">
+                                                <a class="delete" onClick="deleteGalleryImage(' . $gallery->diagonsticImages_id . ')"> <i class="fa fa-times fa-2x"></i></a>
                                             </aside>';
-	    		}
-    		}else{
-    			$gallery_template = 'Add Image';
-    		}
-    		echo $gallery_template;
-    		exit();
-    	}
+                }
+            } else {
+                $gallery_template = 'Add Image';
+            }
+            echo $gallery_template;
+            exit();
+        }
     }
-    
+
     function deleteGalleryImage() {
-    	$id = $this->input->post('id');
-    	$updatedData = array('diagonsticImages_deleted' => 1);
-    	$updatedDataWhere = array('diagonsticImages_id' => $id);
-    
-    	$option = array(
-    			'table'=> 'qyura_diagonsticsImages',
-    			'where'=>$updatedDataWhere,
-    			'data'=>$updatedData
-    	);
-    	$return = $this->diagnostic_model->customUpdate($option);
-    	echo $return;
-    	exit;
+        $id = $this->input->post('id');
+        $updatedData = array('diagonsticImages_deleted' => 1);
+        $updatedDataWhere = array('diagonsticImages_id' => $id);
+
+        $option = array(
+            'table' => 'qyura_diagonsticsImages',
+            'where' => $updatedDataWhere,
+            'data' => $updatedData
+        );
+        $return = $this->diagnostic_model->customUpdate($option);
+        echo $return;
+        exit;
     }
-    
+
+    /**
+     * @project Qyura
+     * @method addDiagnosticAwards
+     * @description add awards
+     * @access public
+     * @return array
+     */
     function addDiagnosticAwards() {
         $Id = $this->input->post('diagnosticId');
         $Awards_awardsName = $this->input->post('diaAwards_awardsName');
@@ -524,9 +560,9 @@ class Diagnostic extends MY_Controller {
         $updatedData = array('diagnosticAwards_awardsName' => $awardsName);
         $updatedDataWhere = array('diagnosticAwards_id' => $id);
         $option = array(
-            'table'=> 'qyura_diagnosticAwards',
-            'where'=> $updatedDataWhere,
-            'data'=> $updatedData
+            'table' => 'qyura_diagnosticAwards',
+            'where' => $updatedDataWhere,
+            'data' => $updatedData
         );
         $return = $this->diagnostic_model->customUpdate($option);
         echo $return;
@@ -537,11 +573,11 @@ class Diagnostic extends MY_Controller {
         $id = $this->input->post('awardsId');
         $updatedData = array('diagnosticAwards_deleted' => 1);
         $updatedDataWhere = array('diagnosticAwards_id' => $id);
-        
+
         $option = array(
-            'table'=> 'qyura_diagnosticAwards',
-            'where'=>$updatedDataWhere,
-            'data'=>$updatedData
+            'table' => 'qyura_diagnosticAwards',
+            'where' => $updatedDataWhere,
+            'data' => $updatedData
         );
         $return = $this->diagnostic_model->customUpdate($option);
         echo $return;
@@ -550,8 +586,8 @@ class Diagnostic extends MY_Controller {
 
     function diagnosticAwards($hospitalId) {
         $option = array(
-            'table'=>'qyura_diagnosticAwards',
-            'where'=> array('diagnosticAwards_diagnosticId'=>$hospitalId,'diagnosticAwards_deleted' => 0),
+            'table' => 'qyura_diagnosticAwards',
+            'where' => array('diagnosticAwards_diagnosticId' => $hospitalId, 'diagnosticAwards_deleted' => 0),
         );
         $dataAwards = $this->diagnostic_model->customGet($option);
         $showAwards = '';
@@ -568,8 +604,8 @@ class Diagnostic extends MY_Controller {
 
     function detailAwards($hospitalId) {
         $option = array(
-            'table'=>'qyura_diagnosticAwards',
-            'where'=> array('diagnosticAwards_diagnosticId'=>$hospitalId,'diagnosticAwards_deleted' => 0),
+            'table' => 'qyura_diagnosticAwards',
+            'where' => array('diagnosticAwards_diagnosticId' => $hospitalId, 'diagnosticAwards_deleted' => 0),
         );
         $dataAwards = $this->diagnostic_model->customGet($option);
         if ($dataAwards) {
@@ -595,9 +631,14 @@ class Diagnostic extends MY_Controller {
         echo $showTotalAwards;
         exit;
     }
-    
-    
-    
+
+    /**
+     * @project Qyura
+     * @method addDiagnosticServices
+     * @description add services
+     * @access public
+     * @return array
+     */
     function addDiagnosticServices() {
         $Id = $this->input->post('diagnosticId');
         $service_name = $this->input->post('service_name');
@@ -617,9 +658,9 @@ class Diagnostic extends MY_Controller {
         $updatedData = array('diagnosticServices_serviceName' => $awardsName);
         $updatedDataWhere = array('diagnosticServices_id' => $id);
         $option = array(
-            'table'=> 'qyura_diagnosticServices',
-            'where'=> $updatedDataWhere,
-            'data'=> $updatedData
+            'table' => 'qyura_diagnosticServices',
+            'where' => $updatedDataWhere,
+            'data' => $updatedData
         );
         $return = $this->diagnostic_model->customUpdate($option);
         echo $return;
@@ -630,11 +671,11 @@ class Diagnostic extends MY_Controller {
         $id = $this->input->post('awardsId');
         $updatedData = array('diagnosticServices_deleted' => 1);
         $updatedDataWhere = array('diagnosticServices_id' => $id);
-        
+
         $option = array(
-            'table'=> 'qyura_diagnosticServices',
-            'where'=>$updatedDataWhere,
-            'data'=>$updatedData
+            'table' => 'qyura_diagnosticServices',
+            'where' => $updatedDataWhere,
+            'data' => $updatedData
         );
         $return = $this->diagnostic_model->customUpdate($option);
         echo $return;
@@ -643,8 +684,8 @@ class Diagnostic extends MY_Controller {
 
     function diagnosticServices($id) {
         $option = array(
-            'table'=>'qyura_diagnosticServices',
-            'where'=> array('diagnosticServices_diagnosticId'=>$id,'diagnosticServices_deleted' => 0),
+            'table' => 'qyura_diagnosticServices',
+            'where' => array('diagnosticServices_diagnosticId' => $id, 'diagnosticServices_deleted' => 0),
         );
         $services = $this->diagnostic_model->customGet($option);
         $showServices = '';
@@ -661,8 +702,8 @@ class Diagnostic extends MY_Controller {
 
     function detailServices($id) {
         $option = array(
-            'table'=>'qyura_diagnosticServices',
-            'where'=> array('diagnosticServices_diagnosticId'=>$id,'diagnosticServices_deleted' => 0),
+            'table' => 'qyura_diagnosticServices',
+            'where' => array('diagnosticServices_diagnosticId' => $id, 'diagnosticServices_deleted' => 0),
         );
         $services = $this->diagnostic_model->customGet($option);
         if ($services) {
@@ -688,56 +729,57 @@ class Diagnostic extends MY_Controller {
         echo $template;
         exit;
     }
-    
-    
-    
-    function diagnosticCategorys($diagnosticId){
-        
-        $Seleted =array (
-           'diagnosticsHasCat_id','diagnosticsHasCat_diagnosticId','diagnosticsHasCat_diagnosticsCatId'
+
+    /**
+     * @project Qyura
+     * @method diagnosticCategorys
+     * @description add category
+     * @access public
+     * @return array
+     */
+    function diagnosticCategorys($diagnosticId) {
+
+        $Seleted = array(
+            'diagnosticsHasCat_id', 'diagnosticsHasCat_diagnosticId', 'diagnosticsHasCat_diagnosticsCatId'
         );
         $Where = array(
-            'diagnosticsHasCat_diagnosticId'=>$diagnosticId
+            'diagnosticsHasCat_diagnosticId' => $diagnosticId
         );
         $notIn = '';
-        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted,'qyura_diagnosticsHasCat',$Where);
-        foreach($hospitalData as $key=>$val){
-           $notIn []= $val->diagnosticsHasCat_diagnosticsCatId;
-            
+        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted, 'qyura_diagnosticsHasCat', $Where);
+        foreach ($hospitalData as $key => $val) {
+            $notIn [] = $val->diagnosticsHasCat_diagnosticsCatId;
         }
-        
-        $selectTableData = array (
-           'diagnosticsCat_catId','diagnosticsCat_catName'
+
+        $selectTableData = array(
+            'diagnosticsCat_catId', 'diagnosticsCat_catName'
         );
         $wheres = array(
-           'diagnosticsCat_deleted' => 0
-            
+            'diagnosticsCat_deleted' => 0
         );
-        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_diagnosticsCat',$wheres,$notIn,'diagnosticsCat_catId');
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_diagnosticsCat', $wheres, $notIn, 'diagnosticsCat_catId');
         $specialist = '';
-        foreach($data as $key=>$val){
-        $specialist .='<li ><input type=checkbox class=diagonasticCheck name=speciality value='.$val->diagnosticsCat_catId.' /> '. $val->diagnosticsCat_catName .'</li>';
-           
+        foreach ($data as $key => $val) {
+            $specialist .='<li ><input type=checkbox class=diagonasticCheck name=speciality value=' . $val->diagnosticsCat_catId . ' /> ' . $val->diagnosticsCat_catName . '</li>';
         }
-       
+
         echo $specialist;
-        exit; 
+        exit;
     }
-    
-    function diagnosticAllocatedCategorys($diagnosticId){
-        
-         $data = $this->diagnostic_model->fetchdiagnosticsDiagnosticCatData($diagnosticId);
+
+    function diagnosticAllocatedCategorys($diagnosticId) {
+
+        $data = $this->diagnostic_model->fetchdiagnosticsDiagnosticCatData($diagnosticId);
         $allocatedSpecialist = '';
-        foreach($data as $key=>$val){
-        $allocatedSpecialist .='<li onClick=getDignosticPrize('.$diagnosticId.','. $val->diagnosticsHasCat_diagnosticsCatId .')>'. $val->diagnosticsCat_catName .'<input type=checkbox class=diagonasticAllocCheck name=allocSpeciality value='.$val->diagnosticsHasCat_id.' /></li>';
-           
+        foreach ($data as $key => $val) {
+            $allocatedSpecialist .='<li onClick=getDignosticPrize(' . $diagnosticId . ',' . $val->diagnosticsHasCat_diagnosticsCatId . ')>' . $val->diagnosticsCat_catName . '<input type=checkbox class=diagonasticAllocCheck name=allocSpeciality value=' . $val->diagnosticsHasCat_id . ' /></li>';
         }
         echo $allocatedSpecialist;
         exit;
     }
-    
-    function addDiagnosticHasCategory(){
-          
+
+    function addDiagnosticHasCategory() {
+
         $id = $this->input->post('diagnosticId');
         $diagnosticsCat_diagnosticsCatId = $this->input->post('diagnosticsHasCat_diagnosticsCatId');
         $insertData = array(
@@ -746,80 +788,83 @@ class Diagnostic extends MY_Controller {
             'creationTime' => strtotime(date("Y-m-d H:i:s"))
         );
         $option = array(
-            'table'=>'qyura_diagnosticsHasCat',
-            'data'=> $insertData
+            'table' => 'qyura_diagnosticsHasCat',
+            'data' => $insertData
         );
         $return = $this->diagnostic_model->customInsert($option);
         echo $return;
         exit;
     }
-    
-    function revertDiagnosticHasCategory(){
+
+    function revertDiagnosticHasCategory() {
         $id = $this->input->post('diagnosticId');
         $diagnosticsCat_id = $this->input->post('diagnosticsHasCat_id');
         $diagonasticData = array(
             'hospitalDiagnosticsCat_deleted' => 1,
-            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
         );
         $diagonasticWhere = array('diagnosticsHasCat_id' => $diagnosticsCat_id,
-            'diagnosticsHasCat_diagnosticId'=> $id);
-        
+            'diagnosticsHasCat_diagnosticId' => $id);
+
         $option = array(
             'table' => 'qyura_diagnosticsHasCat',
             'where' => $diagonasticWhere
         );
         $return = $this->diagnostic_model->customDelete($option);
-       echo $return ;
+        echo $return;
     }
-    
-    function diagnosticSpecialities($diagnosticId){
-        
-        $Seleted =array (
-           'diagnosticSpecialities_id','diagnosticSpecialities_diagnosticId','diagnosticSpecialities_specialitiesId'
+
+    /**
+     * @project Qyura
+     * @method diagnosticSpecialities
+     * @description add specialities
+     * @access public
+     * @return array
+     */
+    function diagnosticSpecialities($diagnosticId) {
+
+        $Seleted = array(
+            'diagnosticSpecialities_id', 'diagnosticSpecialities_diagnosticId', 'diagnosticSpecialities_specialitiesId'
         );
         $Where = array(
-            'diagnosticSpecialities_diagnosticId'=>$diagnosticId,
+            'diagnosticSpecialities_diagnosticId' => $diagnosticId,
             'diagnosticSpecialities_deleted' => 0
         );
         $notIn = '';
-        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted,'qyura_diagnosticSpecialities',$Where);
-        foreach($hospitalData as $key=>$val){
-           $notIn []= $val->diagnosticSpecialities_specialitiesId;
-            
+        $hospitalData = $this->diagnostic_model->fetchTableData($Seleted, 'qyura_diagnosticSpecialities', $Where);
+        foreach ($hospitalData as $key => $val) {
+            $notIn [] = $val->diagnosticSpecialities_specialitiesId;
         }
-        
-        $selectTableData = array (
-           'specialities_id','specialities_name'
+
+        $selectTableData = array(
+            'specialities_id', 'specialities_name'
         );
         $wheres = array(
             'specialities_deleted' => 0,
-            
         );
-        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_specialities',$wheres,$notIn,'specialities_id');
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_specialities', $wheres, $notIn, 'specialities_id');
         $specialist = '';
-        foreach($data as $key=>$val){
-        $specialist .='<li ><input type=checkbox class=diagonasticSpecialCheck name=speciality value='.$val->specialities_id.' /> '. $val->specialities_name .'</li>';
-           
+        foreach ($data as $key => $val) {
+            $specialist .='<li ><input type=checkbox class=diagonasticSpecialCheck name=speciality value=' . $val->specialities_id . ' /> ' . $val->specialities_name . '</li>';
         }
-       
+
         echo $specialist;
-        exit; 
+        exit;
     }
-    
-    function diagnosticAllocatedSpecialities($diagnosticId){
-        
-         $data = $this->diagnostic_model->fetchdiagnosticsSpecialityData($diagnosticId);
+
+    function diagnosticAllocatedSpecialities($diagnosticId) {
+
+        $data = $this->diagnostic_model->fetchdiagnosticsSpecialityData($diagnosticId);
         $allocatedSpecialist = '';
-        foreach($data as $key=>$val){
-        $allocatedSpecialist .='<li >'. $val->specialities_name .'<input type=checkbox class=diagonasticAllocSpecialCheck name=allocSpeciality value='.$val->diagnosticSpecialities_id.' /></li>';
-           
+        foreach ($data as $key => $val) {
+            $allocatedSpecialist .='<li >' . $val->specialities_name . '<input type=checkbox class=diagonasticAllocSpecialCheck name=allocSpeciality value=' . $val->diagnosticSpecialities_id . ' /></li>';
         }
         echo $allocatedSpecialist;
         exit;
     }
-    
-    function addSpeciality(){
-          
+
+    function addSpeciality() {
+
         $id = $this->input->post('diagnosticId');
         $diagnosticSpecialities_specialitiesId = $this->input->post('diagnosticSpecialities_specialitiesId');
         $insertData = array(
@@ -829,71 +874,406 @@ class Diagnostic extends MY_Controller {
             'creationTime' => strtotime(date("Y-m-d H:i:s"))
         );
         $option = array(
-            'table'=>'qyura_diagnosticSpecialities',
-            'data'=> $insertData
+            'table' => 'qyura_diagnosticSpecialities',
+            'data' => $insertData
         );
         $return = $this->diagnostic_model->customInsert($option);
         echo $return;
         exit;
     }
-    
-    function revertSpeciality(){
+
+    function revertSpeciality() {
         $id = $this->input->post('diagnosticId');
         $diagnosticSpecialities_id = $this->input->post('diagnosticSpecialities_id');
         $diagonasticData = array(
             'diagnosticSpecialities_deleted' => 1,
-            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
         );
         $diagonasticWhere = array('diagnosticSpecialities_id' => $diagnosticSpecialities_id,
-            'diagnosticSpecialities_diagnosticId'=> $id);
-        
+            'diagnosticSpecialities_diagnosticId' => $id);
+
         $option = array(
             'table' => 'qyura_diagnosticSpecialities',
             'where' => $diagonasticWhere,
-            'data'=> $diagonasticData
+            'data' => $diagonasticData
         );
         $return = $this->diagnostic_model->customUpdate($option);
-       echo $return ;
+        echo $return;
     }
-    
-    
-    function getDiagnosticPrizeList(){
-       $diagnosticId = $this->input->post('diagnosticId');
-       $categoryId = $this->input->post('categoryId');
-        $selectTableData = array (
-           'quotationDetailTests_testName','quotationDetailTests_price','quotationDetailTests_id'
+
+    /**
+     * @project Qyura
+     * @method getDiagnosticPrizeList
+     * @description get prize quotation prize list
+     * @access public
+     * @return array
+     */
+    function getDiagnosticPrizeList() {
+        $diagnosticId = $this->input->post('diagnosticId');
+        $categoryId = $this->input->post('categoryId');
+        $selectTableData = array(
+            'quotationDetailTests_testName', 'quotationDetailTests_price', 'quotationDetailTests_id'
         );
         $where = array(
             'quotationDetailTests_diagnosticCatId' => $categoryId,
             'quotationDetailTests_MIprofileId' => $diagnosticId,
             'quotationDetailTests_deleted' => 0
-            
         );
-       $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
 
-       $diagonasticTest = '';
-        foreach($data as $key => $val){
-            $diagonasticTest .='<tr onclick = fetchInstruction('.$val->quotationDetailTests_id.')> <td>'.$val->quotationDetailTests_testName.'</td><td><i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">'.$val->quotationDetailTests_price.'</a>';
-         $diagonasticTest .= '</td><td><a class="btn btn-success waves-effect waves-light m-b-5 " href="#">Edit</a></td></tr>';
+        $diagonasticTest = '';
+
+        foreach ($data as $key => $val) {
+            $diagonasticTest .='<tr id=trload_' . $val->quotationDetailTests_id . ' onclick = fetchInstruction(' . $val->quotationDetailTests_id . ')> <td><div id=testName_' . $val->quotationDetailTests_id . '>' . $val->quotationDetailTests_testName . '</div><input class=form-control type=text style="display:none" value="' . $val->quotationDetailTests_testName . '" name=quotationDetailTests_testName_' . $val->quotationDetailTests_id . ' id=quotationDetailTests_testName_' . $val->quotationDetailTests_id . ' /></td><td><div id=testPrize_' . $val->quotationDetailTests_id . '> <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">' . round($val->quotationDetailTests_price) . '</a></div>';
+            $diagonasticTest .= '<input class=form-control style="display:none" type=text value="' . round($val->quotationDetailTests_price) . '" name=quotationDetailTests_price_' . $val->quotationDetailTests_id . ' id=quotationDetailTests_price_' . $val->quotationDetailTests_id . ' /></td><td><a id=testEdit_' . $val->quotationDetailTests_id . ' class="btn btn-success waves-effect waves-light m-b-5 " onClick="editFormTestPrize(' . $val->quotationDetailTests_id . ')">Edit</a><a style="display:none" id=testUpdate_' . $val->quotationDetailTests_id . ' class="btn btn-info waves-effect waves-light m-b-5 " onClick="FormTestPrizeSubmit(' . $val->quotationDetailTests_id . ')">Update</a></td></tr>';
         }
         echo $diagonasticTest;
         exit;
-   }
-   
-    function detailDiagnosticInstruction(){
-       $quotationDetailTests_id = $this->input->post('quotationDetailTests_id');
-        $selectTableData = array (
-           'quotationDetailTests_instruction'
+    }
+
+    /**
+     * @project Qyura
+     * @method detailDiagnosticInstruction
+     * @description view quotation prize data
+     * @access public
+     * @return array
+     */
+    function detailDiagnosticInstruction() {
+        $quotationDetailTests_id = $this->input->post('quotationDetailTests_id');
+        $selectTableData = array(
+            'quotationDetailTests_instruction'
         );
         $where = array(
             'quotationDetailTests_id' => $quotationDetailTests_id,
-           'quotationDetailTests_deleted' => 0
-            
+            'quotationDetailTests_deleted' => 0
         );
-        $data = $this->diagnostic_model->fetchTableData($selectTableData,'qyura_quotationDetailTests',$where);
-       $diagonasticTest = $data[0]->quotationDetailTests_instruction;
-       echo $diagonasticTest;
-       exit;
-   }
-   
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
+        $diagonasticTest = $data[0]->quotationDetailTests_instruction;
+        echo $diagonasticTest;
+        exit;
+    }
+
+    /**
+     * @project Qyura
+     * @method diagnosticAddTimeSlot
+     * @description add timeslot
+     * @access public
+     * @return array
+     */
+    function diagnosticAddTimeSlot($diagnosticId) {
+
+        $this->bf_form_validation->set_rules('morningStartTime', 'Morning Start Time', 'required|trim');
+        $this->bf_form_validation->set_rules('morningEndTime', 'Morning End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('afternoonStartTime', 'Afternoon End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('afternoonEndTime', 'Afternoon End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('eveningStartTime', 'Evening End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('eveningEndTime', 'Evening End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('nightStartTime', 'Night End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('nightEndTime', 'Night End Time', 'required|trim');
+
+        if ($this->bf_form_validation->run() === FALSE) {
+            $data = array();
+            $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
+            $data['diagnosticId'] = $diagnosticId;
+            $data['showTimeSlot'] = 'active';
+            $data['showTimeSlotBox'] = 'active';
+            $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
+        } else {
+
+            $morningSession = $this->input->post('morningSession');
+            $afternoonSession = $this->input->post('afternoonSession');
+            $eveningSession = $this->input->post('eveningSession');
+            $nightSession = $this->input->post('nightSession');
+
+            if ($_POST['morningStartTime'] && $_POST['morningEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId'),
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('morningStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('morningEndTime'))),
+                    'diagnosticCenterTimeSlot_sessionType' => $morningSession,
+                    'diagnosticCenterTimeSlot_deleted' => 0,
+                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                    'status' => 1
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData
+                );
+                $this->diagnostic_model->customInsert($option);
+            }
+
+            if ($_POST['afternoonStartTime'] && $_POST['afternoonEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId'),
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('afternoonStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('afternoonEndTime'))),
+                    'diagnosticCenterTimeSlot_sessionType' => $afternoonSession,
+                    'diagnosticCenterTimeSlot_deleted' => 0,
+                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                    'status' => 1
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData
+                );
+                $this->diagnostic_model->customInsert($option);
+            }
+
+            if ($_POST['eveningStartTime'] && $_POST['eveningEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId'),
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('eveningStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('eveningEndTime'))),
+                    'diagnosticCenterTimeSlot_sessionType' => $eveningSession,
+                    'diagnosticCenterTimeSlot_deleted' => 0,
+                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                    'status' => 1
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData
+                );
+                $this->diagnostic_model->customInsert($option);
+            }
+
+            if ($_POST['nightStartTime'] && $_POST['nightEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId'),
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('nightStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('nightEndTime'))),
+                    'diagnosticCenterTimeSlot_sessionType' => $nightSession,
+                    'diagnosticCenterTimeSlot_deleted' => 0,
+                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                    'status' => 1
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData
+                );
+                $this->diagnostic_model->customInsert($option);
+            }
+            $this->session->set_flashdata('message', 'Your Time Slot has been successfully update!');
+            redirect("diagnostic/detailDiagnostic/$diagnosticId");
+        }
+    }
+
+    function UpdateDiagnosticTimeSlot($diagnosticId){
+        
+        $this->bf_form_validation->set_rules('morningStartTime', 'Morning Start Time', 'required|trim');
+        $this->bf_form_validation->set_rules('morningEndTime', 'Morning End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('afternoonStartTime', 'Afternoon End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('afternoonEndTime', 'Afternoon End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('eveningStartTime', 'Evening End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('eveningEndTime', 'Evening End Time', 'required|trim');
+
+        $this->bf_form_validation->set_rules('nightStartTime', 'Night End Time', 'required|trim');
+        $this->bf_form_validation->set_rules('nightEndTime', 'Night End Time', 'required|trim');
+
+        if ($this->bf_form_validation->run() === FALSE) {
+            $data = array();
+            $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
+            $data['diagnosticId'] = $diagnosticId;
+            $data['showTimeSlot'] = 'active';
+            $data['showTimeSlotBox'] = 'active';
+            $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
+        } else {
+
+          
+            $morningSession = $this->input->post('morningSession');
+            $afternoonSession = $this->input->post('afternoonSession');
+            $eveningSession = $this->input->post('eveningSession');
+            $nightSession = $this->input->post('nightSession');
+
+            if ($_POST['morningStartTime'] && $_POST['morningEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+               
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('morningStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('morningEndTime')))
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData,
+                    'where' => array(
+                        'diagnosticCenterTimeSlot_sessionType' => $morningSession,
+                        'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
+                        )
+                );
+                $this->diagnostic_model->customUpdate($option);
+            }
+
+            if ($_POST['afternoonStartTime'] && $_POST['afternoonEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                 
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('afternoonStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('afternoonEndTime'))),
+
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData,
+                    'where' => array(
+                        'diagnosticCenterTimeSlot_sessionType' => $afternoonSession,
+                        'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
+                        )
+                );
+                $this->diagnostic_model->customUpdate($option);
+            }
+
+            if ($_POST['eveningStartTime'] && $_POST['eveningEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('eveningStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('eveningEndTime')))
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData,
+                    'where' => array(
+                        'diagnosticCenterTimeSlot_sessionType' => $eveningSession,
+                        'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
+                        )
+                    
+                );
+                $this->diagnostic_model->customUpdate($option);
+            }
+
+            if ($_POST['nightStartTime'] && $_POST['nightEndTime'] && $_POST['diagnosticId']) {
+                $insertData = array(
+                    'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('nightStartTime'))),
+                    'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('nightEndTime')))
+                );
+                $option = array(
+                    'table' => 'qyura_diagnosticCenterTimeSlot',
+                    'data' => $insertData,
+                    'where' => array(
+                        'diagnosticCenterTimeSlot_sessionType' => $nightSession,
+                        'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
+                        )
+                );
+                $this->diagnostic_model->customUpdate($option);
+            }
+            $this->session->set_flashdata('message', 'Your Time Slot has been successfully update!');
+            redirect("diagnostic/detailDiagnostic/$diagnosticId");
+        }
+    }
+    /**
+     * @project Qyura
+     * @method editDiagnosticQuotationDetailTests
+     * @description edit Diagnostic Quotation Detail Tests 
+     * @access public
+     * @return array
+     */
+    function editDiagnosticQuotationDetailTests() {
+        $diagnosticId = $this->input->post('diagnosticId');
+        $this->bf_form_validation->set_rules('quotationDetailTests_id', 'Test id', 'required|numeric|trim');
+        $this->bf_form_validation->set_rules('quotationDetailTests_testName', 'quotation test name', 'required|trim');
+        $this->bf_form_validation->set_rules('quotationDetailTests_price', 'quotation test prize', 'required|trim');
+        $message = "";
+        $status = 0;
+        if ($this->bf_form_validation->run() === FALSE) {
+
+            $status = 0;
+        } else {
+            $insertData = array(
+                'quotationDetailTests_testName' => $this->input->post('quotationDetailTests_testName'),
+                'quotationDetailTests_price' => $this->input->post('quotationDetailTests_price'),
+                'modifyTime' => strtotime(date("Y-m-d H:i:s")),
+            );
+            $where = array(
+                'quotationDetailTests_MIprofileId' => $diagnosticId,
+                'quotationDetailTests_id' => $this->input->post('quotationDetailTests_id')
+            );
+            $option = array(
+                'table' => 'qyura_quotationDetailTests',
+                'data' => $insertData,
+                'where' => $where
+            );
+            $response = $this->diagnostic_model->customUpdate($option);
+            if ($response) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+        }
+        echo $status;
+    }
+
+    /**
+     * @project Qyura
+     * @method getTestPrizeReload
+     * @description get Diagnostic Quotation Detail Tests
+     * @access public
+     * @return array
+     */
+    function getTestPrizeReload($quotationDetailTests_id) {
+        $selectTableData = array(
+            'quotationDetailTests_testName', 'quotationDetailTests_price', 'quotationDetailTests_id'
+        );
+        $where = array(
+            'quotationDetailTests_id' => $quotationDetailTests_id,
+            'quotationDetailTests_deleted' => 0
+        );
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
+
+
+        $diagonasticTest = '';
+
+        foreach ($data as $key => $val) {
+            $diagonasticTest .=' <td><div id=testName_' . $val->quotationDetailTests_id . '>' . $val->quotationDetailTests_testName . '</div><input class=form-control type=text style="display:none" value="' . $val->quotationDetailTests_testName . '" name=quotationDetailTests_testName_' . $val->quotationDetailTests_id . ' id=quotationDetailTests_testName_' . $val->quotationDetailTests_id . ' /></td><td><div id=testPrize_' . $val->quotationDetailTests_id . '> <i class="fa fa-inr"></i> <a data-title="Enter username" data-pk="1" data-type="text" id="username" href="#" class="editable editable-click editable-open" data-original-title="Edit Price" title="" aria-describedby="popover939766">' . round($val->quotationDetailTests_price) . '</a></div>';
+            $diagonasticTest .= '<input class=form-control style="display:none" type=text value="' . round($val->quotationDetailTests_price) . '" name=quotationDetailTests_price_' . $val->quotationDetailTests_id . ' id=quotationDetailTests_price_' . $val->quotationDetailTests_id . ' /></td><td><a id=testEdit_' . $val->quotationDetailTests_id . ' class="btn btn-success waves-effect waves-light m-b-5 " onClick="editFormTestPrize(' . $val->quotationDetailTests_id . ')">Edit</a><a style="display:none" id=testUpdate_' . $val->quotationDetailTests_id . ' class="btn btn-info waves-effect waves-light m-b-5 " onClick="FormTestPrizeSubmit(' . $val->quotationDetailTests_id . ')">Update</a></td>';
+        }
+        echo $diagonasticTest;
+        exit;
+    }
+      /**
+     * @project Qyura
+     * @method editDiagnosticQuatitationInstruction
+     * @description edit Diagnostic Quotation Detail instruction
+     * @access public
+     * @return array
+     */
+    
+    function editDiagnosticQuatitationInstruction(){
+            $insertData = array(
+                'quotationDetailTests_instruction' => $this->input->post('quotationDetailTests_Ins'),
+                'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+            );
+            $where = array(
+                'quotationDetailTests_id' => $this->input->post('quotationDetailTests_id')
+            );
+            $option = array(
+                'table' => 'qyura_quotationDetailTests',
+                'data' => $insertData,
+                'where' => $where
+            );
+            $response = $this->diagnostic_model->customUpdate($option);
+            if($response){
+                echo "successfully update";
+            }else{
+                echo"failed to update";
+            }
+    }
+      /**
+     * @project Qyura
+     * @method getTestInstructionReload
+     * @description get Diagnostic Quotation Detail instruction
+     * @access public
+     * @return array
+     */
+    function getTestInstructionReload($quotationDetailTests_id){
+         $selectTableData = array(
+            'quotationDetailTests_testName', 'quotationDetailTests_instruction', 'quotationDetailTests_id'
+        );
+        $where = array(
+            'quotationDetailTests_id' => $quotationDetailTests_id,
+            'quotationDetailTests_deleted' => 0
+        );
+        $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
+        echo $data[0]->quotationDetailTests_instruction;
+    }
+
 }

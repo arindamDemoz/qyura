@@ -23,7 +23,7 @@ if($current != 'detailDiagnostic'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/main.js"></script>
 <?php else:?>
 
-<!--<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>-->
+<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>
 <script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
 
 <?php endif;?>
@@ -145,7 +145,7 @@ if($current != 'detailDiagnostic'):?>
     $(document).ready(function () {
         var oTable = $('#diagnostic_datatable').DataTable({
              "processing": true,
-            "bServerSide": true,
+            "bServerSide": false,
              //"searching": true,
             "bLengthChange": false,
             "bProcessing": true,
@@ -177,8 +177,8 @@ if($current != 'detailDiagnostic'):?>
             oTable.draw();
         });
         $('#search').on('keyup', function () {
-            //oTable.search($(this).val()).draw();
-             oTable.draw();
+            oTable.search($(this).val()).draw();
+             //oTable.draw();
             
         });
         
@@ -250,122 +250,7 @@ if($current != 'detailDiagnostic'):?>
       $('#multiPreNumber'+j).selectpicker('refresh');
    }
 
-    function validationDiagnostic(){
-       // $("form[name='diagnosticForm']").submit();
-        var check= /^[a-zA-Z\s]+$/;
-        var numcheck=/^[0-9]+$/;
-        var RegExpression = /^[a-zA-Z\s]+$/;
-        var emails = $.trim($('#users_email').val());
-        var cpname = $.trim($('#diagnostic_cntPrsn').val());
-        
-        var pswd = $.trim($("#users_password").val());
-        var cnfpswd = $.trim($("#cnfpassword").val());
-        var mbl= $.trim($('#diagnostic_mblNo').val());
-        var phn= $.trim($('#diagnostic_phn1').val());
-        var myzip = $.trim($('#diagnostic_zip').val());
-        var cityId =$.trim($('#diagnostic_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
-        var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
-       
-    //debugger;
    
-            if($('#diagnostic_name').val()==''){
-                $('#diagnostic_name').addClass('bdr-error');
-                $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_name').focus();
-              // return false;
-            }
-          if($('#diagnostic_type').val()==''){
-                $('#diagnostic_type').addClass('bdr-error');
-                $('#error-diagnostic_type').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_type').focus();
-            }
-             if($.trim($('#diagnostic_countryId').val()) == ''){
-                $('#diagnostic_countryId').addClass('bdr-error');
-                $('#error-diagnostic_countryId').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_countryId').focus();
-            }
-           if(!$.isNumeric(stateIds)){
-               // console.log("in state");
-                $('#diagnostic_stateId').addClass('bdr-error');
-                $('#error-diagnostic_stateId').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_stateId').focus();
-            }
-            if(!$.isNumeric(cityId)){
-                $('#diagnostic_cityId').addClass('bdr-error');
-                $('#error-diagnostic_cityId').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_cityId').focus();
-            }
-           
-            if(!$.isNumeric(myzip)){
-                $('#diagnostic_zip').addClass('bdr-error');
-                $('#error-diagnostic_zip').fadeIn().delay(3000).fadeOut('slow');
-                // $('#hospital_zip').focus();
-            } 
-
-            if($("input[name='diagnostic_address']" ).val()==''){
-                $('#geocomplete').addClass('bdr-error');
-                $('#error-diagnostic_address').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_address').focus();
-            }
-            
-            if(!$.isNumeric(phn)){
-                $('#diagnostic_phn1').addClass('bdr-error');
-                $('#error-diagnostic_phn1').fadeIn().delay(3000).fadeOut('slow');
-                // $('#hospital_phn').focus();
-            }
-                     
-          
-            if(!RegExpression.test(cpname)){
-                $('#diagnostic_cntPrsn').addClass('bdr-error');
-                $('#error-diagnostic_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
-                // $('#hospital_cntPrsn').focus();
-            }
-            
-           
-            if($('#diagnostic_mbrTyp').val()==''){
-                $('#diagnostic_mbrTyp').addClass('bdr-error');
-                $('#error-diagnostic_mbrTyp').fadeIn().delay(3000).fadeOut('slow');
-               // $('#hospital_mmbrType').focus();
-            }
-            if($('#users_email').val()==''){
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
-               // $('#users_email').focus();
-            }
-           
-           /* else if(diagnostic_mblNo == ''){
-                $('#diagnostic_mblNo').addClass('bdr-error');
-                $('#error-diagnostic_mblNo').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#hospital_mblNo').focus();
-            }*/
-            if(!($.isNumeric(diagnostic_mblNo))){
-                $('#diagnostic_mblNo').addClass('bdr-error');
-                $('#error-diagnostic_mblNo').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#hospital_mblNo').focus();
-            }
-            if($('#users_password').val()=='' || pswd.length < 6){
-                $('#users_password').addClass('bdr-error');
-                $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
-               // $('#users_password').focus();
-            }
-            if($('#cnfPassword').val()=='' || pswd!= cnfpswd){
-                $('#cnfPassword').addClass('bdr-error');
-                $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#cnfpassword').focus();
-            }
-            
-               //debugger;
-        if(emails !=''){
-              check_email(emails);
-              return false;
-            }
-            return false;
-            
-        }
     function checkEmailFormat(){
                 var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
                 var email = $('#users_email').val();
@@ -594,7 +479,7 @@ if($current != 'detailDiagnostic'):?>
      * @access public
      */
     
-    function loadSpeciality(){
+     function loadSpeciality(){
         $('#list4').load(urls + 'index.php/diagnostic/diagnosticSpecialities/'+diagnosticId,function () {
            // alert('callback function implementation');
         });
@@ -621,7 +506,7 @@ if($current != 'detailDiagnostic'):?>
         });
     }
     
-      function revertSpeciality(){
+     function revertSpeciality(){
          $('.diagonasticAllocSpecialCheck').each(function() {
             if($(this).is(':checked')){
                 $.ajax({
@@ -639,7 +524,7 @@ if($current != 'detailDiagnostic'):?>
     }
     
     
-    function getDignosticPrize(diagnosticId,categoryId){
+     function getDignosticPrize(diagnosticId,categoryId){
        
         $.ajax({
                     url : urls + 'index.php/diagnostic/getDiagnosticPrizeList',
@@ -651,7 +536,7 @@ if($current != 'detailDiagnostic'):?>
                    }
                 });
     }
-      function fetchInstruction(digTestId){
+     function fetchInstruction(digTestId){
          $.ajax({
                     url : urls + 'index.php/diagnostic/detailDiagnosticInstruction',
                     type: 'POST',
@@ -659,7 +544,548 @@ if($current != 'detailDiagnostic'):?>
                    success:function(datas){
                     
                        $('#detailInstruction').html(datas);
+                       $("#quotationDetailTestsIns_id").val(digTestId);
+                       $("#quotationDetailTests_instruction_name").val(datas);
                    }
                 });
     }
+    
+    function timeSplit(time) {
+        var splitTime = time.split(":");
+        var hour = parseInt(splitTime[0]);
+        var min = parseInt(splitTime[1]);
+        hour = hour * 60;
+        var totalTime = hour + min;
+        return totalTime;
+
+    }
+
+    function editFormTestPrize(id){
+     
+       $("#testName_"+id).hide();
+       $("#testPrize_"+id).hide();
+       $("#testEdit_"+id).hide();
+       
+       $("#quotationDetailTests_testName_"+id).show();
+       $("#quotationDetailTests_price_"+id).show();
+       $("#testUpdate_"+id).show();
+       
+    }
+    
+    function FormTestPrizeSubmit(id){
+         var name = $("#quotationDetailTests_testName_"+id).val();
+         var prize =$("#quotationDetailTests_price_"+id).val();
+         var flag = 0;
+         var message ='';
+         if(name =="" || prize == ""){
+             flag = 1;
+             message = "Field can not be blank"; 
+         }
+         if(!$.isNumeric(prize)){
+             flag = 1;
+             message = "Prize should be number formate";
+         }
+         if(flag){
+             $(".errorMessage").html(message);
+             return false;
+         }else{
+             $(".errorMessage").html("");
+             $.ajax({
+                    url : urls + 'index.php/diagnostic/editDiagnosticQuotationDetailTests',
+                    type: 'POST',
+                   data: {'quotationDetailTests_id' : id,'quotationDetailTests_testName':name,'quotationDetailTests_price':prize,'diagnosticId' : diagnosticId},
+                   success:function(response){
+                       trPrizeListReload(id);
+                   }
+            });
+             
+         }
+    }
+    
+    function trPrizeListReload(id){
+          $('#trload_'+id).load(urls + 'index.php/diagnostic/getTestPrizeReload/'+id,function () {
+        });
+    }
+    
+    function checkTImeSlotValid(name){ 
+//        var message = "";
+//        var flag = 0;
+//        if(name == 'morning'){
+//            var morningStartTime = $("#morningStartTime").val();
+//            var morningEndTime = $("#morningEndTime").val();
+//            
+//            var time1 = timeSplit(morningStartTime);
+//            var time2 = timeSplit(morningEndTime);
+//            
+//            if(time1 > time2){
+//                flag = 1;
+//            }else{
+//                flag = 0;
+//            }
+//        }
+//        if(name == 'afternoon'){
+//            var startTime = $("#afternoonStartTime").val();
+//            var endTime = $("#afternoonEndTime").val();
+//            
+//            var time3 = timeSplit(startTime);
+//            var time4 = timeSplit(endTime);
+//            
+//            if(time3 > time4){
+//                flag = 1;
+//                 
+//            }else{
+//               flag = 0;
+//            }
+//        }
+//        if(name == 'evening'){
+//            var startTime = $("#eveningStartTime").val();
+//            var endTime = $("#eveningEndTime").val();
+//            
+//            var time3 = timeSplit(startTime);
+//            var time4 = timeSplit(endTime);
+//            
+//            if(time3 > time4){
+//                flag = 1;
+//            }else{
+//                 flag = 0;
+//            }
+//        }
+//        if(name == 'night'){
+//            var startTime = $("#nightStartTime").val();
+//            var endTime = $("#nightEndTime").val();
+//            
+//            var time3 = timeSplit(startTime);
+//            var time4 = timeSplit(endTime);
+//            
+//            if(time3 > time4){
+//                flag = 1;
+//            }else{
+//               flag = 0;
+//            }
+//        }
+//        if(flag == 0){
+//              $("#timeslotError").html("<h5 class='error'>End time always greater then start time</h5>");
+//              return false;
+//         }else{
+//             $("#timeslotError").html("");
+//             return true
+//         } 
+
+    }
+    
+    function updateDiagnosticTest(){
+
+      var quotationIns_id = $("#quotationDetailTestsIns_id").val();
+      var quotationDetail_Instruction = $("#quotationDetailTests_instruction_name").val();
+      $.ajax({
+                    url : urls + 'index.php/diagnostic/editDiagnosticQuatitationInstruction',
+                    type: 'POST',
+                   data: {'quotationDetailTests_id' : quotationIns_id,'quotationDetailTests_Ins':quotationDetail_Instruction},
+                   success:function(response){
+                          // $(".messageUpdateIns").html("<div class='alert alert-success'>"+response+"</div>");
+                           trPrizeInstructionReload(quotationIns_id);
+                           $("#myModal").modal('hide');
+                   }
+      });
+       
+    }
+    function trPrizeInstructionReload(id){
+          $('#detailInstruction').load(urls + 'index.php/diagnostic/getTestInstructionReload/'+id,function () {  
+              
+          });
+    }
+    
+    $(document).ready(function (){
+ 
+       $('#morningStartTime').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            
+            if(h < 6 && mer == 'AM')
+                $('#morningStartTime').timepicker('setTime', '6:00 AM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 718 )
+                $('#morningStartTime').timepicker('setTime', '6:00 AM');
+          });
+          
+          
+      $('#morningEndTime').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+           
+            if(h < 6 && mer == 'AM')
+                $('#morningEndTime').timepicker('setTime', '11:59 AM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 719 )
+                $('#morningEndTime').timepicker('setTime', '11:59 AM');
+          });
+          
+       $('#afternoonStartTime').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            m+=h*60;
+            
+            if(m < 719 && mer == 'AM'){
+                $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
+            }   
+            //convert hours into minutes
+            
+          // console.log(m);
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 358 )
+                $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
+          });
+          
+            $('#afternoonEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
+          });
+          
+                $('#eveningStartTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
+          });
+          
+           $('#eveningEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
+          });
+          
+           $('#nightStartTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
+          });
+          
+          
+           $('#nightEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
+          });
+          
+          
+    });
+    
+   
+     function validationDiagnostic(){
+       // $("form[name='diagnosticForm']").submit();
+        var check= /^[a-zA-Z\s]+$/;
+        var numcheck=/^[0-9]+$/;
+        var RegExpression = /^[a-zA-Z\s]+$/;
+        var emails = $.trim($('#users_email').val());
+        var cpname = $.trim($('#diagnostic_cntPrsn').val());
+        
+        var pswd = $.trim($("#users_password").val());
+        var cnfpswd = $.trim($("#cnfpassword").val());
+        var mbl= $.trim($('#diagnostic_mblNo').val());
+        var phn= $.trim($('#diagnostic_phn1').val());
+        var myzip = $.trim($('#diagnostic_zip').val());
+        var cityId =$.trim($('#diagnostic_cityId').val());
+        var stateIds = $.trim($('#StateId').val());
+        var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
+       
+    //debugger;
+   
+            if($('#diagnostic_name').val()==''){
+                $('#diagnostic_name').addClass('bdr-error');
+                $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_name').focus();
+              // return false;
+            }
+          if($('#diagnostic_type').val()==''){
+                $('#diagnostic_type').addClass('bdr-error');
+                $('#error-diagnostic_type').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_type').focus();
+            }
+             if($.trim($('#diagnostic_countryId').val()) == ''){
+                $('#diagnostic_countryId').addClass('bdr-error');
+                $('#error-diagnostic_countryId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_countryId').focus();
+            }
+           if(!$.isNumeric(stateIds)){
+               // console.log("in state");
+                $('#diagnostic_stateId').addClass('bdr-error');
+                $('#error-diagnostic_stateId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_stateId').focus();
+            }
+            if(!$.isNumeric(cityId)){
+                $('#diagnostic_cityId').addClass('bdr-error');
+                $('#error-diagnostic_cityId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_cityId').focus();
+            }
+           
+            if(!$.isNumeric(myzip)){
+                $('#diagnostic_zip').addClass('bdr-error');
+                $('#error-diagnostic_zip').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_zip').focus();
+            } 
+
+            if($("input[name='diagnostic_address']" ).val()==''){
+                $('#geocomplete').addClass('bdr-error');
+                $('#error-diagnostic_address').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_address').focus();
+            }
+            
+            if(!$.isNumeric(phn)){
+                $('#diagnostic_phn1').addClass('bdr-error');
+                $('#error-diagnostic_phn1').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_phn').focus();
+            }
+                     
+          
+            if(!RegExpression.test(cpname)){
+                $('#diagnostic_cntPrsn').addClass('bdr-error');
+                $('#error-diagnostic_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_cntPrsn').focus();
+            }
+            
+           
+            if($('#diagnostic_mbrTyp').val()==''){
+                $('#diagnostic_mbrTyp').addClass('bdr-error');
+                $('#error-diagnostic_mbrTyp').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_mmbrType').focus();
+            }
+            if($('#users_email').val()==''){
+                $('#users_email').addClass('bdr-error');
+                $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
+               // $('#users_email').focus();
+            }
+           
+           /* else if(diagnostic_mblNo == ''){
+                $('#diagnostic_mblNo').addClass('bdr-error');
+                $('#error-diagnostic_mblNo').fadeIn().delay(3000).fadeOut('slow');
+                
+               // $('#hospital_mblNo').focus();
+            }*/
+            if(!($.isNumeric(diagnostic_mblNo))){
+                $('#diagnostic_mblNo').addClass('bdr-error');
+                $('#error-diagnostic_mblNo').fadeIn().delay(3000).fadeOut('slow');
+                
+               // $('#hospital_mblNo').focus();
+            }
+            if($('#users_password').val()=='' || pswd.length < 6){
+                $('#users_password').addClass('bdr-error');
+                $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+               // $('#users_password').focus();
+            }
+            if($('#cnfPassword').val()=='' || pswd!= cnfpswd){
+                $('#cnfPassword').addClass('bdr-error');
+                $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
+                
+               // $('#cnfpassword').focus();
+            }
+            
+               //debugger;
+        if(emails !=''){
+              check_email(emails);
+              return false;
+            }
+            return false;
+            
+        }
+        
+      function validationDiagnosticEdit(){
+       // $("form[name='diagnosticForm']").submit();
+        var check= /^[a-zA-Z\s]+$/;
+        var numcheck=/^[0-9]+$/;
+        var RegExpression = /^[a-zA-Z\s]+$/;
+        var emails = $.trim($('#users_email').val());
+        var cpname = $.trim($('#diagnostic_cntPrsn').val());
+        
+       // var pswd = $.trim($("#users_password").val());
+       // var cnfpswd = $.trim($("#cnfpassword").val());
+        //var mbl= $.trim($('#diagnostic_mblNo').val());
+        var phn= $.trim($('#diagnostic_phn1').val());
+        var myzip = $.trim($('#diagnostic_zip').val());
+        var cityId =$.trim($('#diagnostic_cityId').val());
+        var stateIds = $.trim($('#StateId').val());
+        var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
+       
+   var ckeck = 1;
+            if($('#diagnosticCenter').val()==''){
+                $('#diagnostic_name').addClass('bdr-error');
+                $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
+               
+            }
+            
+            else if($.trim($('#diagnostic_countryId').val()) == ''){
+                $('#diagnostic_countryId').addClass('bdr-error');
+                $('#error-diagnostic_countryId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_countryId').focus();
+            
+            }
+          else if(!$.isNumeric(stateIds)){
+               // console.log("in state");
+                $('#diagnostic_stateId').addClass('bdr-error');
+                $('#error-diagnostic_stateId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_stateId').focus();
+              
+            }
+           else if(!$.isNumeric(cityId)){
+                $('#diagnostic_cityId').addClass('bdr-error');
+                $('#error-diagnostic_cityId').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_cityId').focus();
+            
+            }
+           
+            else if(!$.isNumeric(myzip)){
+                $('#diagnostic_zip').addClass('bdr-error');
+                $('#error-diagnostic_zip').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_zip').focus();
+              
+            } 
+
+            else if($("input[name='diagnostic_address']" ).val()==''){
+                $('#geocomplete').addClass('bdr-error');
+                $('#error-diagnostic_address').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_address').focus();
+              
+            }
+            
+            if(!$.isNumeric(phn)){
+                $('#diagnostic_phn1').addClass('bdr-error');
+                $('#error-diagnostic_phn1').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_phn').focus();
+              
+            }
+            
+            else if(!RegExpression.test(cpname)){
+                $('#diagnostic_cntPrsn').addClass('bdr-error');
+                $('#error-diagnostic_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
+                // $('#hospital_cntPrsn').focus();
+             
+            }
+            
+            else if($("#diagnostic_dsgn" ).val()==''){
+                $('#diagnostic_dsgn').addClass('bdr-error');
+                $('#error-diagnostic_dsgn').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_address').focus();
+               
+            }else{
+                return true;
+            }
+    
+          return false;      
+        }
+        
+        function validationDiagnosticEditAccount(){
+       // $("form[name='diagnosticForm']").submit();
+        var check= /^[a-zA-Z\s]+$/;
+        var numcheck=/^[0-9]+$/;
+        var RegExpression = /^[a-zA-Z\s]+$/;
+        var emails = $.trim($('#users_email').val());
+        //var cpname = $.trim($('#diagnostic_cntPrsn').val());
+        
+        var pswd = $.trim($("#users_password").val());
+       // var cnfpswd = $.trim($("#cnfpassword").val());
+       // var mbl= $.trim($('#diagnostic_mblNo').val());
+
+         if($('#users_email').val()==''){
+                $('#users_email').addClass('bdr-error');
+                $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');
+               // $('#users_email').focus();
+            }
+            else if($('#users_password').val()==''){
+                $('#users_password').addClass('bdr-error');
+                $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+               // $('#users_password').focus();
+            }else{
+                return false;
+            }
+    
+          return true;      
+        }
 </script>
+
+</body>
+</html>
