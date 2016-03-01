@@ -18,5 +18,3 @@ var resizefunc = [];
 
 <!--     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>-->
 
-</body>
-</html>
