@@ -265,7 +265,7 @@ $('.selectpicker').selectpicker({
     width: "100%"
 });
 
-$('.timepicker').timepicker();
+//$('.timepicker').timepicker();
 
 $("#allTime").click(function () {
     $("#session").fadeToggle();
