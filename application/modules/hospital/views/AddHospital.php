@@ -110,7 +110,7 @@
                                                     <label class="error" style="display:none;" id="error-hospital_cityId"> please select a city</label>
                                                 </div>
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10"> 
-                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" />
+                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" onkeypress="return isNumberKey(event)" />
                                                     <label class="error" style="display:none;" id="error-hospital_zip"> please enter a zip code</label>
 <label class="error" style="display:none;" id="error-hospital_zip_check">Please enter numeric digits only!</label>
                                                     <label class="error" > <?php echo form_error("hospital_zip"); ?></label>
@@ -139,7 +139,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-7 col-md-6 col-sm-7 col-xs-10 m-t-xs-10" id="multiPhoneNumber">
-                                                    <input type="text" class="form-control" name="hospital_phn[]" id="hospital_phn1" placeholder="9837000123" maxlength="10" />
+                                                    <input type="text" class="form-control" name="hospital_phn[]" id="hospital_phn1" placeholder="9837000123" maxlength="10" onkeypress="return isNumberKey(event)" />
                                                     <label class="error" style="display:none;" id="error-hospital_phn"> please enter a valid phone number</label>
                                                     <label class="error" > <?php echo form_error("hospital_phn"); ?></label>
                                                 </div>
@@ -240,7 +240,7 @@
                                                     <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
                                                     <div class="col-md-8 col-sm-8 text-right">
                                                         <label for="file-input2"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                    <input type="file" style="display:none;" class="no-display" id="file-input2" name="bloodBank_photo">
+                                                    <input  type="file" style="display:none;" class="no-display" id="file-input2" name="bloodBank_photo" onchange="ValidateSingleInput(this,'2','5');">
                                                        
                                                     </div>
                                                 </article>
@@ -258,7 +258,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="multiBloodbnkPhoneNumber">
-                                                                <input type="text" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn1" placeholder="9837000123" maxlength="10" onblur="bbphone()" />
+                                                                <input type="text" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn1" placeholder="9837000123" maxlength="10" onblur="bbphone()" onkeypress="return isNumberKey(event)" />
                                                                  <label class="error" style="display:none;" id="error-bloodBank_phone"> please Check your BloodBank Phone</label>
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
@@ -298,7 +298,7 @@
                                                     <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
                                                     <div class="col-md-8 col-sm-8 text-right">
                                                         <label for="file-input3"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                        <input type="file" style="display:none;" class="no-display" id="file-input3" name="pharmacy_img">
+                                                        <input type="file" style="display:none;" class="no-display" id="file-input3" name="pharmacy_img" onchange="ValidateSingleInput(this,'2','5');">
                                                     </div>
                                                 </article>
                                                 <article class="form-group m-lr-0">
@@ -312,7 +312,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="multipharmacyNumber" >
-                                                                <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" maxlength="10" onblur="phphone()"/>
+                                                                <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" maxlength="10" onblur="phphone()" onkeypress="return isNumberKey(event)"/>
                                                                 <label class="error" style="display:none;" id="error-pharmacy_phn1"> please Check your Pharmacy Phone</label>
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
@@ -349,7 +349,7 @@
                                                     <div class="col-md-8 col-sm-8 text-right">
                                                     
                                                       <label for="file-input4"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
-                                                        <input type="file" style="display:none;" class="no-display" id="file-input4" name='ambulance_img'>
+                                                        <input type="file" style="display:none;" class="no-display" id="file-input4" name='ambulance_img' onchange="ValidateSingleInput(this,'2','5');" >
                                                         
                                                  
                                                     </div>
@@ -365,7 +365,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-7 col-sm-7 col-xs-10 m-t-xs-10" id="phoneAmbulance">
-                                                                <input type="text" class="form-control" name="ambulance_phn[]" id="ambulance_phn1" placeholder="9837000123" maxlength="10" onblur="amphone()"/>
+                                                                <input type="text" class="form-control" name="ambulance_phn[]" id="ambulance_phn1" placeholder="9837000123" maxlength="10" onblur="amphone()" onkeypress="return isNumberKey(event)"/>
                                                                 <label class="error" style="display:none;" id="error-ambulance_phn1"> please Check your Ambulance Phone</label>
                                                             </div>
                                                             <div class="col-md-2 col-sm-2 col-xs-2 m-t-xs-10">
@@ -510,7 +510,7 @@
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Registered Mobile no. :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input type="text" class="form-control" id="hospital_mblNo" name="hospital_mblNo" placeholder="8880007755" maxlength="10" />
+                                            <input type="text" class="form-control" id="hospital_mblNo" name="hospital_mblNo" placeholder="8880007755" maxlength="10" onkeypress="return isNumberKey(event)" />
                                             <label class="error" style="display:none;" id="error-hospital_mblNo"> please enter your mobile number</label>
                                         <label class="error" style="display:none;" id="error-hospital_mblNo_check">please enter digits only!</label>
                                             <label class="error" > <?php echo form_error("hospital_mblNo"); ?></label>
@@ -547,7 +547,7 @@
                             <div class="col-md-12 m-t-20 m-b-20">
                                 <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
                 <div>
-                                <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" value="Submit" />
+                    <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" value="Submit" onclick="return validationHospital()" />
                 </div>
                             </div>
 
@@ -575,4 +575,5 @@
         <!-- End Right content here -->
   
     <!-- END wrapper -->
+
 

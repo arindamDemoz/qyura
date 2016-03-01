@@ -102,6 +102,3 @@
     <!-- End Right content here -->
     </div>
     <!-- END wrapper -->
-</body>
-
-</html>

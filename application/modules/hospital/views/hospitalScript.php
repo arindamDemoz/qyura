@@ -4,6 +4,15 @@
         display:none;
     }
 </style>
+
+<?php $check= 0; 
+$id = $this->uri->segment(3); 
+if(!empty($id)){
+	$check = $this->uri->segment(3); 
+}else{
+	$check = 0 ;
+}?>
+
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
@@ -11,6 +20,8 @@
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
  <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js">  </script>
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
+
+
 <?php  $current = $this->router->fetch_method();
 if($current != 'detailHospital'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/main.js"></script>
@@ -20,6 +31,7 @@ if($current != 'detailHospital'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
 
 <?php endif;?>
+
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
 <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
@@ -36,13 +48,6 @@ if($current != 'detailHospital'):?>
     <script>
         var resizefunc = [];
     </script>
-    <?php $check= 0; 
-$id = $this->uri->segment(3); 
-if(!empty($id)){
-	$check = $this->uri->segment(3); 
-}else{
-	$check = 0 ;
-}?>
     <script> var hospitalId = <?php echo $check;?> </script>
 <script>
              /*-- Selectpicker --*/
@@ -197,6 +202,8 @@ function fetchCity(stateId) {
                    success:function(datas){
                     
                        $('#detailInstruction').html(datas);
+                       $('#detailsAll').val(datas);
+                       $('#instructionId').val(digTestId);
                    }
                 });
     }
@@ -680,32 +687,38 @@ function addAwards(){
   <script>
       
        function validationHospitalDetail(){
-           
+       // alert('test');   
        //$("form[name='bloodDetail']").submit();
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
+        var cpname = $('#hospital_cntPrsn').val(); 
         //var emails = $.trim($('#users_email').val());
-        
+        var status = 1;
        
          if($.trim($('#hospital_name').val()) === ''){
                 $('#hospital_name').addClass('bdr-error');
-                
+                status=0;
             }
           
             if($.trim($('#geocomplete').val()) === ''){
                $("#geocomplete").addClass('bdr-error');
-               
+               status=0;
             }
              if(!check.test(cpname)){
                 $('#hospital_cntPrsn').addClass('bdr-error');
-                
-            }
-
-            if( emails !== ''){
-                check_email(emails);
+                status=0;
             }
             
+            /*if($.trim($('#pharmacy_phn1').val()) === ''){
+                $('#pharmacy_phn1').addClass('bdr-error');
+                status=0;
+            }
+          
+*/
+            if(status ==0)
             return false;
+        else
+            $("form[name='hospitalForm']").submit();
             
             
         }
@@ -804,7 +817,7 @@ function addAwards(){
         }
         
         
-            function deleteGalleryImage(id){
+       function deleteGalleryImage(id){
 	  if(confirm('Are you sure want to delete?')){	
     	  $.ajax({
               url : urls + 'index.php/hospital/deleteGalleryImage',
@@ -823,4 +836,301 @@ function addAwards(){
 
          });
     }
+        
+        
+   function ValidateSingleInput(oInput,id,option) {
+       //alert(oInput);
+    var _validFileExtensions;
+    if(id == '1'){
+        _validFileExtensions = [".pdf", ".doc", ".docx", ".rtf", ".text", ".html", ".ppt"];    
+    }
+    if(id == '2'){
+        _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];    
+    }
+    if(id == '3'){
+        _validFileExtensions = [".mp4", ".3gp", ".avi", ".wmi", ".mpeg", ".flv"];    
+    }
+    if(id == '4'){
+        _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png",".pdf", ".doc", ".docx", ".rtf", ".text", ".html", ".ppt"];    
+    }
+    
+        if (oInput.type == "file") {
+            var sFileName = oInput.value;
+            var countFile = oInput.files.length;
+            var fileName = oInput.files;
+            var k;
+            var fileSize;
+            var size = 0;
+            for (k = 0; k < countFile; k++) {
+                size = size + fileName[k].size;
+            }
+            if(option == '5'){
+                fileSize = 500000;
+            }else{
+                fileSize = 6291456;
+            }
+            if (size > fileSize) {
+                if(option == '5'){
+                    alert("Sorry, total allowed file size : -  500KB ");
+                }else{
+                    alert("Sorry, total allowed file size : -  6MB ");
+                }
+                oInput.value = "";
+                return false;
+            } else {
+             if (sFileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < _validFileExtensions.length; j++) {
+                    var sCurExtension = _validFileExtensions[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
+
+                if (!blnValid) {
+                    alert("Sorry,   '" + sFileName + "'   is invalid, allowed extensions are : -   " + _validFileExtensions.join(", "));
+                    oInput.value = "";
+                    return false;
+                }
+            }
+        }
+        }
+        return true;
+    }
+    
+     $(document).ready(function (){
+         
+         // morning
+       $('#timepickerMorStart').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            
+            if(h < 6 && mer == 'AM')
+                $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 718 )
+                $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+          });
+          
+          $('#timepickerMorEnd').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+           
+            if(h < 6 && mer == 'AM')
+                $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 719 )
+                $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+          });
+          
+          // morning end
+          
+          $('#timepickernoonStart').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            m+=h*60;
+            
+            if(m < 719 && mer == 'AM'){
+                $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+            }   
+            //convert hours into minutes
+            
+          // console.log(m);
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 358 )
+                $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+          });
+          
+            $('#timepickernoonEnd').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+                }   
+            //convert hours into minutes
+         
+                if( m > 359 )
+                    $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+          });
+          
+          
+      // Evening start
+       $('#timepickerEveStart').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            
+            if(h < 6 && mer == 'PM')
+                $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 659 )
+                $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+          });
+          
+          $('#timepickerEveEnd').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+           
+            if(h < 6 && mer == 'PM')
+                $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+            //convert hours into minutes
+            m+=h*60;
+            
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 659 )
+                $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+          });
+          
+          // Evening end
+          
+          
+           // Night start
+       $('#timepickerNgtStart').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            
+            if(h < 11 && mer == 'PM')
+                $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+            //convert hours into minutes
+            m+=h*60;
+         
+            if(m > 299 && mer == 'AM')
+                $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+            //10:15 = 10h*60m + 15m = 615 min
+           // alert(m);
+            
+          });
+          
+          
+       $('#timepickerNgtEnd').timepicker({
+        showMeridian: true,        
+        minuteStep: 1,
+        showInputs: true,        
+        }).on('hide.timepicker', function(e) {   
+             var h= e.time.hours;
+            var m= e.time.minutes;
+            var mer= e.time.meridian;
+            
+           //convert hours into minutes
+           
+            if((h > 5 && mer == 'AM') )
+                $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+            
+             m+=h*60;
+            //10:15 = 10h*60m + 15m = 615 min
+            if( (m < 661 && mer == 'PM') )
+                $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+          });
+          
+        
+          
+          // Night end
+          
+        })
+        
+        
+    function showDetail(id){
+       $('#preName_'+id).hide();
+       $('#actulName_'+id).show();
+       $('#prePrice_'+id).hide();
+       $('#actulPrice_'+id).show();
+       $('#editdata').hide();
+       $('#updateData').show();
+       
+    }
+    function sendDetail(id,hospitalId,categoryId){
+        var diagnosticName = $.trim($('#Names_'+id).val());
+        var diagnosticPrice = $.trim($('#price_'+id).val());
+        if(diagnosticName == '' || diagnosticPrice == '' )
+            console.log("Please fill field");
+        else
+        {
+            $.ajax({
+              url : urls + 'index.php/hospital/updateDiagonasticTest',
+              type: 'POST',
+             data: {'quotationDetailTests_testName' : diagnosticName ,'quotationDetailTests_price': diagnosticPrice,'quotationDetailTests_id': id },
+             success:function(datas){
+                showDiagonasticDetail(hospitalId,categoryId);
+             }
+          });
+        }
+    }
+    function changeInstruction(){
+        $('#detailInstruction').hide();
+        $('#detailsAll').show();
+        $('#instructionEdit').hide();
+        $('#instructionUpdate').show();
+    }
+    
+    function updateInstruction(){
+        var detailsAll = $.trim($('#detailsAll').val());
+        
+        var quotationDetailTests_id = $.trim($('#instructionId').val());
+        if(detailsAll == '' )
+            console.log("Please fill field");
+        else
+        {
+            $.ajax({
+              url : urls + 'index.php/hospital/updateDiagonasticInstruction',
+              type: 'POST',
+             data: {'quotationDetailTests_id' : quotationDetailTests_id ,'detailsAll': detailsAll },
+             success:function(datas){
+                $('#detailInstruction').show();
+                    $('#detailsAll').hide();
+                    $('#instructionEdit').show();
+                    $('#instructionUpdate').hide();
+                fetchInstruction(quotationDetailTests_id);
+             }
+          });
+        }
+    }
+        
     </script>
+</body>
+</html>

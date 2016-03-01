@@ -1,4 +1,4 @@
-Morning Session
+
 <body class="fixed-left">
    
 
@@ -397,7 +397,7 @@ Morning Session
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
+                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" onkeypress="return isNumberKey(event)" onblur="phphone()" />
                                                                         </div>
 
                                                                     </aside>
@@ -835,11 +835,15 @@ Morning Session
                                             </figure>
                                             <aside class="clearfix mx-h-400">
                                             <article class="nicescroll">
-                                            <p class="p-5" id="detailInstruction"></p>
+                                              <p class="p-5" id="detailInstruction"></p>
+                                            <textarea id="detailsAll" style="width:100%; height:150px; display:none;" > </textarea>    
                                              <!--<p class="p-5" id="detailInstruction">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                                             </p>-->
                                             <aside class="clearfix p-5">
-                                            <a href="#" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>
+                                                <input type="hidden" value="" id="instructionId" />
+                                                <a onclick="changeInstruction()" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" id="instructionEdit">Edit</a>
+                                                <a style="display:none;" onclick="updateInstruction()" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" id="instructionUpdate">Update</a>
+                                                <!--<a onclick="changeInstruction()" class="btn btn-success waves-effect waves-light m-b-5 p-abs " data-toggle="modal" data-target="#myModal">Edit</a>-->
                                             </aside>
                                             </article>
                                             </aside>
@@ -912,14 +916,14 @@ Morning Session
                </section>
                                     <!-- Specialities Ends -->
                                     <!--Gllery Starts -->
-                                   <section class="tab-pane fade in" id="gallery">
+                                    <section class="tab-pane fade in" id="gallery">
                                         <div class="fileUpload btn btn-sm btn-upload im-upload">
                                             <span class="btn btn-appointment avatar-view">Add More</span>
                                            <!-- <input type="file" class="upload" id="uploadBtn"> -->
                                             
                                         </div>
                                          <input type="hidden" style="display:none;" class="no-display" id="file_action_url_gallery" name="file_action_url_gallery" value="<?php echo site_url('hospital/galleryUploadImage');?>">
-                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo site_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
+                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo base_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
                                           
                                        <div class="clearfix" id="display_gallery">
 
@@ -936,21 +940,27 @@ Morning Session
                                     
                                     <!-- Timeslot start -->
                                       <!-- Timeslot Starts Section -->
-                                    <section class="tab-pane fade in" id="timeslot">
+                                  <section class="tab-pane fade in" id="timeslot">
                                         <div class="col-md-10 p-b-20">
-                                            <form class="form-horizontal">
+                                            <?php //echo '<pre>';
+                                             // print_r($AlltimeSlot);
+                                          //  echo '</pre>';
+                                          //  echo $AlltimeSlot[1]->hospitalTimeSlot_endTime;
+                                              if(empty($AlltimeSlot) || count($AlltimeSlot) == 0){
+                                            ?>
+                                            <form class="form-horizontal" action="<?php echo site_url("hospital/hospitalAddTimeSlot/$hospitalId"); ?>" method="post">
 
                                                 <aside id="session">
-                                                    <article class="clearfix m-t-10">
+                                                   <article class="clearfix m-t-10">
                                                         <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:00 AM" />
+                                                                <input id="timepickerMorStart" type="text" class="form-control timepicker" value="6:00 AM" name="morningStartTime" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="11:59 AM" />
+                                                                <input id="timepickerMorEnd" type="text" class="form-control timepicker" value="11:59 AM" name="morningEndTime" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -959,26 +969,27 @@ Morning Session
                                                         <label for="" class="control-label col-md-4 col-sm-4">Afternoon Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="12:00 PM" />
+                                                                <input id="timepickernoonStart" type="text" class="form-control timepicker" value="12:00 PM" name="afternoonStartTime" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="05:59 PM" />
+                                                                <input id="timepickernoonEnd" type="text" class="form-control timepicker" value="05:59 PM" name="afternoonEndTime" />
                                                             </div>
                                                         </div>
                                                     </article>
+
 
                                                     <article class="clearfix m-t-10">
                                                         <label for="" class="control-label col-md-4 col-sm-4">Evening Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="06:00 PM" />
+                                                                <input id="timepickerEveStart" type="text" class="form-control timepicker" value="06:00 PM" name="eveningStartTime" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="10:59 PM" />
+                                                                <input id="timepickerEveEnd" type="text" class="form-control timepicker" value="10:59 PM" name="eveningEndTime" />
                                                             </div>
                                                         </div>
                                                     </article>
@@ -987,17 +998,25 @@ Morning Session
                                                         <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="11:00 PM" />
+                                                                <input id="timepickerNgtStart" type="text" class="form-control timepicker" value="11:00 PM" name="nightStartTime" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 m-tb-xs-5">
                                                             <div class="bootstrap-timepicker input-group w-full">
-                                                                <input id="timepicker4" type="text" class="form-control timepicker" value="5:00 AM" />
+                                                                <input id="timepickerNgtEnd" type="text" class="form-control timepicker" value="5:00 AM" name="nightEndTime" />
                                                             </div>
                                                         </div>
                                                     </article>
 
                                                 </aside>
+                                                
+                                            <input type="hidden" name="morningSession" value="0">
+                                            <input type="hidden" name="afternoonSession" value="1">
+                                            <input type="hidden" name="eveningSession" value="2">
+                                            <input type="hidden" name="nightSession" value="3">
+                                            <input type="hidden" name="hospitalId" value="<?php echo $hospitalId ?>">
+                                       
+                                        
                                                 <article class="clearfix ">
                                                     <div class="col-md-12 m-t-20 m-b-20">
                                                         <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
@@ -1005,7 +1024,87 @@ Morning Session
                                                     </div>
                                                 </article>
                                             </form>
+                                            <?php }else{ ?>
+                                            
+                                               <form class="form-horizontal" action="<?php echo site_url("hospital/UpdateHospitalTimeSlot/$hospitalId"); ?>" method="post">
+
+                                                <aside id="session">
+                                                   <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Morning Session:</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerMorStart" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[0]->hospitalTimeSlot_startTime) && $AlltimeSlot[0]->hospitalTimeSlot_startTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[0]->hospitalTimeSlot_startTime)); }else{ echo '06:00 AM'; } ?> " name="morningStartTime" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerMorEnd" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[0]->hospitalTimeSlot_endTime) && $AlltimeSlot[0]->hospitalTimeSlot_endTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[0]->hospitalTimeSlot_endTime)); }else{ echo '11:59 AM'; } ?> " name="morningEndTime" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
+                                                    <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Afternoon Session :</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickernoonStart" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[1]->hospitalTimeSlot_startTime) && $AlltimeSlot[1]->hospitalTimeSlot_startTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[1]->hospitalTimeSlot_startTime) ); }else{ echo '12:00 PM'; } ?> " name="afternoonStartTime" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickernoonEnd" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[1]->hospitalTimeSlot_endTime) && $AlltimeSlot[1]->hospitalTimeSlot_endTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[1]->hospitalTimeSlot_endTime)); }else{ echo '5:59 PM'; } ?> " name="afternoonEndTime" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
+
+                                                    <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Evening Session :</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerEveStart" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[2]->hospitalTimeSlot_startTime) && $AlltimeSlot[2]->hospitalTimeSlot_startTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[2]->hospitalTimeSlot_startTime)); }else{ echo '06:00 PM'; } ?> " name="eveningStartTime" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerEveEnd" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[2]->hospitalTimeSlot_endTime) && $AlltimeSlot[2]->hospitalTimeSlot_endTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[2]->hospitalTimeSlot_endTime)); }else{ echo '10:59 PM'; } ?>" name="eveningEndTime" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
+                                                    <article class="clearfix m-t-10">
+                                                        <label for="" class="control-label col-md-4 col-sm-4">Night Session :</label>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerNgtStart" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[3]->hospitalTimeSlot_startTime) && $AlltimeSlot[3]->hospitalTimeSlot_startTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[3]->hospitalTimeSlot_startTime)); }else{ echo '11:00 PM'; } ?>" name="nightStartTime" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-4 m-tb-xs-5">
+                                                            <div class="bootstrap-timepicker input-group w-full">
+                                                                <input id="timepickerNgtEnd" type="text" class="form-control timepicker" value="<?php if(isset($AlltimeSlot[3]->hospitalTimeSlot_endTime) && $AlltimeSlot[3]->hospitalTimeSlot_endTime != '' ){ echo date('h:i:s A', strtotime($AlltimeSlot[3]->hospitalTimeSlot_endTime)); }else{ echo '05:00 AM'; } ?>" name="nightEndTime" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+
+                                                </aside>
+                                                
+                                            <input type="hidden" name="morningSession" value="0">
+                                            <input type="hidden" name="afternoonSession" value="1">
+                                            <input type="hidden" name="eveningSession" value="2">
+                                            <input type="hidden" name="nightSession" value="3">
+                                            <input type="hidden" name="hospitalId" value="<?php echo $hospitalId ?>">
+                                       
+                                        
+                                                <article class="clearfix ">
+                                                    <div class="col-md-12 m-t-20 m-b-20">
+                                                        <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
+                                                        <button class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit">Submit</button>
+                                                    </div>
+                                                </article>
+                                            </form>
+                                            <?php } ?>
                                         </div>
+                                       
                                     </section>
                                     <!-- Timeslot Ends -->
                                   
