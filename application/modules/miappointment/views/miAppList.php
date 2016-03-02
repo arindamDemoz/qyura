@@ -248,7 +248,7 @@
                                     </figure>
                                     <div class="clearfix m-t-30">
                                         <aside class="col-md-5 col-sm-5">
-                                            <div data-percent="21" class="chart easy-pie-chart-3" id="consulation">
+                                            <div data-percent="21" class="chart easy-pie-chart-3" id="consulationChart">
                                                 <span class="percent">21</span>
                                             <canvas height="110" width="110"></canvas></div>
                                             <p>Consultation</p>
@@ -258,7 +258,7 @@
                                             <i class="fa fa-level-down cl-gray"></i>
                                         </aside>
                                         <aside class="col-md-5 col-sm-5">
-                                            <div data-percent="77" class="chart easy-pie-chart-3" id="diagnostic">
+                                            <div data-percent="77" class="chart easy-pie-chart-3" id="diagnosticChart">
                                                 <span class="percent">77</span>
                                             <canvas height="110" width="110"></canvas></div>
                                             <p>Diagnostic</p>

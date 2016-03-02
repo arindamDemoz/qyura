@@ -93,3 +93,9 @@ defined('ROLE_DIAGNOSTICS')      OR define('ROLE_DIAGNOSTICS', 3); // highest au
 defined('ROLE_DOCTORE')      OR define('ROLE_DOCTORE', 4); // highest automatically-assigned error code
 defined('ROLE_PHARMACY')      OR define('ROLE_PHARMACY', 5); // highest automatically-assigned error code
 
+defined('BS_PRS_IMG_PATH')      OR define('BS_PRS_IMG_PATH', 'assets/prsImg'); // highest automatically-assigned error code
+defined('BS_REPO_PATH')      OR define('BS_REPO_PATH', 'assets/report'); // highest automatically-assigned error code
+defined('BS_PROF_PATH')      OR define('BS_PROF_PATH', 'assets/proImg'); // highest automatically-assigned error code
+defined('BS_HOSIMG_PATH')      OR define('BS_HOSIMG_PATH', 'assets/hospitalsImages'); // highest automatically-assigned error 
+defined('BS_DIAGIMG_PATH')      OR define('BS_DIAGIMG_PATH', 'assets/diagnosticsImage'); // highest automatically-assigned error
+

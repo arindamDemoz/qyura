@@ -21,6 +21,9 @@ class Quotation extends MyRest {
 
         $this->bf_form_validation->set_rules('familyId', 'Family Id', 'xss_clean|trim|numeric|max_length[11]|is_natural_no_zero');
         $this->bf_form_validation->set_rules('timeSlotId', 'TimeSlotId', 'xss_clean|trim|numeric|max_length[11]|is_natural_no_zero');
+        
+        $this->bf_form_validation->set_rules('preferedDate', 'Prefered Date', 'xss_clean|required|trim|max_length[11]|valid_date[y-m-d,-]|callback__check_current_date');
+        
         $this->form_validation->set_rules('prescription[]', 'prescription', 'required|xss_clean|trim|valid_base64_image');
 
         $this->prescriptionPath = realpath(FCPATH . 'assets/prsImg') . '/';
@@ -36,6 +39,8 @@ class Quotation extends MyRest {
             $diagCatId = isset($_POST['diagCatId']) ? $this->input->post('diagCatId') : '';
             $timeSlotId = isset($_POST['timeSlotId']) ? $this->input->post('timeSlotId') : '';
             $familyId = isset($_POST['familyId']) ? $this->input->post('familyId') : '';
+            $preferedDate = isset($_POST['preferedDate']) ? $this->input->post('preferedDate') : '';
+            
 
             $prescription = isset($_POST['prescription']) ? $this->input->post('prescription') : '';
 
@@ -46,6 +51,7 @@ class Quotation extends MyRest {
                     'quotation_familyId' => $familyId,
                     'quotation_diagnosticsCatId' => $diagCatId,
                     'quotation_timeSlotId' => $timeSlotId,
+                    'quotation_preferedDate'=> $preferedDate != '' ?strtotime($preferedDate):'',
                     'creationTime' => time()
                 ),
                 'table' => 'qyura_quotations'
@@ -238,6 +244,19 @@ class Quotation extends MyRest {
         }
 
         return TRUE;
+    }
+    
+    function _check_current_date($str_in = '')
+    {
+        $currentDate = strtotime(date("y-m-d"));
+        $prfDate = strtotime($str_in);
+        if ($prfDate >= $currentDate) {
+            return true;
+        } else {
+            dump($prfDate >= $currentDate);
+            $this->bf_form_validation->set_message('_check_current_date', 'date should be equal or greater then today');
+            return false;
+        }
     }
 
     function _checkTotalAmount($str_in = '') {

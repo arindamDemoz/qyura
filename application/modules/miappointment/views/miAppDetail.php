@@ -1,359 +1,343 @@
 
-        <!-- Start right Content here -->
-        <div class="content-page">
-            <!-- Start content -->
-            <div class="content">
-                <div class="container row">
-                    <div class="clearfix">
-                         <div class="col-md-12 text-success">
-                            <?php echo $this->session->flashdata('message'); ?>
-                         </div>
-                        <div class="col-md-12">
-                            <h3 class="pull-left page-title">Bloodbank Detail </h3>
-                            <a href="all-bloodbank.html" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
-                               
-                        </div>
-                    </div>
+<!-- Start right Content here -->
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container row">
+            <div class="clearfix">
+                <div class="col-md-12">
+                    <h3 class="pull-left page-title">Diagnostic Appointment Detail</h3>
+                    <a href="all-appointment.html" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
 
-                    <!-- Left Section Start -->
-                    <section class="col-md-12 detailbox m-t-10">
+                </div>
+            </div>
+
+            <!-- Main Div Start -->
+            <section class="clearfix detailbox">
 
 
-                        <div class="bg-white">
-                            <!-- Table Section Start -->
+                <div class="bg-white">
+                    <!-- Table Section Start -->
 
-                            <section class="col-md-12">
+                    <!-- Top Section Start -->
+                    <article class="clearfix p-t-20 appt-detail">
+                        <aside class="col-md-6 col-sm-6">
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">MI Name :</label>
+                                <p class="col-md-8"><?php echo isset($qtnDetail->MIname) ? $qtnDetail->MIname : ''; ?></p>
+                            </div>
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Appointment Id :</label>
+                                <p class="col-md-8"><?php echo isset($qtnDetail->orderId) ? $qtnDetail->orderId : ''; ?></p>
+                            </div>
 
-                                <aside class="clearfix m-bg-pic">
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">HMS Id :</label>
+                                <p class="col-md-8"><?php echo isset($qtnDetail->hmsId) ? $qtnDetail->hmsId : ''; ?></p>
+                            </div>
 
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Appointment Date :</label>
+                                <p class="col-md-8"><?php echo isset($qtnDetail->dateTime) ? date('M d,Y', $qtnDetail->dateTime) : ''; ?></p>
+                            </div>
 
-                                    <div class="bg-picture text-center">
-                                        <div class="bg-picture-overlay"></div>
-                                        <div class="profile-info-name">
-                                            <div class='pro-img'>
-                                                <!-- image -->
-                                                <?php if(!empty($bloodBankData[0]->bloodBank_photo)){
-                                                    ?>
-                                               <img src="<?php echo base_url()?>assets/BloodBank/thumb/original/<?php echo $bloodBankData[0]->bloodBank_photo; ?>" alt="" class="logo-img" />
-                                               <?php } else { ?>
-                                                 <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
-                                               <?php } ?>
-                                                 <article class="logo-up" style="display:none">
-                                                    <div class="fileUpload btn btn-sm btn-upload logo-Upload ">
-                                                        <span><i class="fa fa-cloud-upload fa-3x avatar-view"></i></span>
-                                                        <input type="hidden" style="display:none;" class="no-display" id="file_action_url" name="file_action_url" value="<?php echo site_url('bloodbank/editUploadImage');?>">
-                                                        <input type="hidden" style="display:none;" class="no-display" id="load_url" name="load_url" value="<?php echo site_url('bloodbank/getUpdateAvtar/'.$this->uri->segment(3));?>">
-                                                    </div>
-                                                </article>
-                                                <!-- description div -->
-                                                 <div class='pic-edit'>
-                                                    <h3><a id="picEdit" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
-                                                      <h3><a id="picEditClose" class="pull-center cl-white" title="Edit Logo"  style="display:none;"><i class="fa fa-times"></i></a></h3>
-                                                </div>
-                                                <!-- end description div -->
-                                            </div>
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Session :</label>
+                                <p class="col-md-8"><?php
+                                    if (isset($qtnDetail->timeSlot)) {
+                                        $timeSlot = explode('-', $qtnDetail->timeSlot);
+                                        if (is_array($timeSlot) && count($timeSlot) == 3) {
+                                            switch ($timeSlot[2]) {
+                                                case 0:
+                                                    $session = "Morning";
+                                                    break;
+                                                case 1:
+                                                    $session = "Afternoon";
+                                                    break;
+                                                case 2:
+                                                    $session = "Evening";
+                                                    break;
+                                                case 3:
+                                                    $session = "Night";
+                                                    break;
+                                                default:
+                                                    $session = "Session is not aloated";
+                                            }
+                                            echo $session . " | " . $timeSlot[0] . " - " . $timeSlot[1];
+                                        }
+                                    }
+                                    ?></p>
 
-                                            <h3 class="text-white"> <?php echo $bloodBankData[0]->bloodBank_name;?> </h3>
-                                            <h4> <?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?> </h4>
-
-                                        </div>
-
-                                    </div>
-                                    <!--/ meta -->
-
-                                </aside>
-                                <section class="clearfix hospitalBtn">
-                                    <div class="col-md-12">
-                                        <a href="#" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
-
-                                    </div>
-
-                                </section>
-                                <article class="text-center clearfix m-t-50">
-                                    <ul class="nav nav-tab nav-setting">
-                                        <li class="active">
-                                            <a data-toggle="tab" href="#general">General Detail</a>
-                                        </li>
-                                        <li class=" ">
-                                            <a data-toggle="tab" href="#ba">Blood Availability</a>
-                                        </li>
-
-                                        <li class=" ">
-                                            <a data-toggle="tab" href="#account">Account</a>
-                                        </li>
-
-                                    </ul>
-                                </article>
+                            </div>
 
 
-                                <article class="tab-content p-b-20 m-t-50">
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Final Time :</label>
+                                <p class="col-md-8"><?php echo isset($qtnDetail->dateTime) ? date('h:i A', $qtnDetail->dateTime) : ''; ?></p>
+                            </div>
 
-                                    <!-- General Detail Starts -->
-                                     <div class="map_canvas"></div>
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Status:</label>
+                                <p class="col-md-8">
+                                    <?php
+                                    if (isset($qtnDetail->bookStatus)) {
+                                        switch ($qtnDetail->bookStatus) {
+                                            case 0:
+                                                $bookStatus = "Pending";
+                                                break;
+                                            case 1:
+                                                $bookStatus = "Confirmed";
+                                                break;
+                                            case 2:
+                                                $bookStatus = "Completed";
+                                                break;
+                                            case 3:
+                                                $bookStatus = "Cancel";
+                                                break;
+                                            default:
+                                                $bookStatus = "Pending";
+                                        }
+                                        echo $bookStatus;
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Patient Remarks :</label>
+                                <p class="col-md-8"><?php echo 'Need discus'; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4">Instruction :</label>
+                                <?php
+                                if (isset($quotationTests) && $quotationTests != null) {
+                                    foreach ($quotationTests as $quotationTest) {
+                                        ?>
+                                        <p class="col-md-8"><?php echo $quotationTest->instruction; ?></p>
+                                        <?php
+                                    }
+                                }
+                                ?>
+
+                            </div>
+
+
+                        </aside>
+                        <aside class="col-md-6 col-sm-6">
+                            <div class="clearfix m-t-20">
+                                <article class="col-md-2 p-0 pull-right m-r-20">
+                                    <?php
+                                        $path = FCPATH . BS_PROF_PATH;
+                                        if (file_exists(realpath($path) . '/' . $userDetail->patientImg)) {
+                                            ?>
+                                            <img src="<?php echo base_url(BS_PROF_PATH); ?>/<?php echo $userDetail->patientImg  ?>" alt="" class="img-responsive patient-pic">
+                                            <?php
+                                        }
+                                    ?>
                                     
-                                    <section class="tab-pane fade in active" id="general">
-
-                                        <article class="detailbox">
-                                            <div class="bg-white mi-form-section">
-
-                                                <!-- Table Section End -->
-                                                <aside class="clearfix m-t-20 setting">
-                                                    <div class="col-md-8">
-                                                        <h4>Blood Bank Detail 
-                                                         <a  id="edit" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
-                                                        </h4>
-                                                        <hr/>
-                                                        <aside id="detail" style="display: <?php echo $detailShow;?>;">
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank Name :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left"> <?php echo $bloodBankData[0]->bloodBank_name;?> </p>
-                                                            </article>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
-                                                                <p class="col-md-8 col-sm-8 t-xs-left"><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?> </p>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <aside class="col-md-8 col-sm-8 text-right t-xs-left">
-                                                                    <?php 
-                                                                    $explode= explode('|',$bloodBankData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
-                                                                    <p>+<?php echo $explode[$i];?></p>
-                                                                   
-                                                                    <?php }?>
-                                                                    <!-- <p>+91-011-123456</p>
-                                                                    <p>+91-011-123456</p>
-                                                                    <p>+91-011-123456</p> -->
-                                                                </aside>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Email Id :</label>
-                                                                <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php echo $bloodBankData[0]->users_email;?> </p>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
-                                                                <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?> </p>
-                                                            </article>
-                                                        </aside>
-                                                         <form name="bloodDetail" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="bloodDetail" method="post">
-                                                        <aside id="newDetail" style="display:<?php echo $showStatus;?>;">
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank Name :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <input class="form-control" id="bloodBank_name" name="bloodBank_name" type="text" value="<?php echo $bloodBankData[0]->bloodBank_name;?>">
-                                                                    <label class="error" > <?php echo form_error("bloodBank_name"); ?></label>
-                                                                </div>
-                                                            </article>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <textarea class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
-                                                                    <label class="error" > <?php echo form_error("bloodBank_add"); ?></label>
-                                                                </div>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <?php 
-                                                                    $explodes= explode('|',$bloodBankData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
-                                                                    $moreExpolde = explode(' ',$explodes[$i]);?>
-                                                                    
-                                                                    
-                                                                    <aside class="row">
-                                                                        <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12">
-                                                                            <select class="selectpicker" data-width="100%" name="pre_number[]">
-                                                                                <option value="91" <?php if($moreExpolde[0] == '91'){ echo 'selected';}?>>+91</option>
-                                                                                <option value="1" <?php if($moreExpolde[0] == '1'){ echo 'selected';}?>>+1</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-10 m-t-xs-10">
-                                                                            <input type="text" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn<?php echo $i;?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
-                                                                        </div>
-                                                                       
-                                                                    </aside>
-                                                                    <br />
-                                                                    <?php $moreExpolde ='';}?>
-                                                               
-                                                                    <p class="m-t-10">* If it is landline, include Std code with number </p>
-                                                                </div>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Email Id :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                 <input class="form-control" id="users_email" name="users_email" type="email" value="<?php echo $bloodBankData[0]->users_email;?>" onblur="checkEmailFormatDetail()" />
-                                                                  <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>
-                                                                <label class="error" > <?php echo form_error("users_email"); ?></label>
-                                                                </div>
-                                                            </article>
-
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                 
-                                                                    <input class="form-control" id="bloodBank_cntPrsn" name="bloodBank_cntPrsn" type="text" value="<?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?>">
-                                        </div>                       <label class="error" > <?php echo form_error("bloodBank_cntPrsn"); ?></label>
-                                                            </article>
-
-
-                                                             <article class="clearfix m-b-10">
-
-                                                              <div class="col-md-12">
-                                                              <button type="submit" class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" onclick="return validationBloodbank();">Submit</button>
-                                                              </div>
-
-                                                             </article>
-                                                        </aside>
-                                                             <fieldset>
-                           
-                                                                <input name="lat" type="hidden" value="<?php echo $bloodBankData[0]->bloodBank_lat;?>">
-
-                                                               <!-- <label>Longitude</label> -->
-                                                                <input name="lng" type="hidden" value="<?php echo $bloodBankData[0]->bloodBank_long;?>">
-                                                                <input name="user_tables_id" id="user_tables_id" type="hidden" value="<?php echo $bloodBankData[0]->users_id;?>">
-                                                             </fieldset>  
-                                                        </form>  
-                                                    </div>
-
-                                                </aside>
-                                            </div>
-                                        </article>
-                                    </section>
-                                       
-                                    <!-- General Detail Ends -->
-
-                                    <!--diagnostic Starts -->
-                                    <section class="tab-pane fade in" id="ba">
-                                    <div class="clearfix">
-                                    <article class="col-md-8">
-                                    <aside class="table-responsive">
-                                       <table class="table">
-                                        <tr border-a-dull>
-                                        <th>Blood Group</th>
-                                        <th>Check Availability</th>
-                                        <th>Quantity</th>
-                                        </tr>
-                                        <tr>
-                                        <td><h6>O +ve</h6></td>
-                                        <td><aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="opve">
-                                                        <label>
-
-                                                        </label>
-                                                    </aside>
-                                            </td>
-                                        <td><h6 id="opveDetail" style="display:none">50 Unit</h6></td>
-                                        </tr>
-                                           
-                                        <tr>
-                                        <td><h6>O -ve</h6></td>
-                                        <td><aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="onve">
-                                                        <label>
-
-                                                        </label>
-                                                    </aside>
-                                            </td>
-                                        <td><h6 id="onveDetail" style="display:none">50 Unit</h6></td>
-                                        </tr>
-                                           
-                                         <tr>
-                                        <td><h6>A +ve</h6></td>
-                                        <td><aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="apve">
-                                                        <label>
-
-                                                        </label>
-                                                    </aside>
-                                            </td>
-                                        <td><h6 id="apveDetail" style="display:none">150 Unit</h6></td>
-                                        </tr>
-                                           
-                                        <tr>
-                                        <td><h6>A -ve</h6></td>
-                                        <td><aside class="checkbox checkbox-success m-t-5">
-                                                        <input type="checkbox" id="anve">
-                                                        <label>
-
-                                                        </label>
-                                                    </aside>
-                                            </td>
-                                        <td><h6 id="anveDetail" style="display:none">50 Unit</h6></td>
-                                        </tr>
-                                        </table>    
-                                    </aside>
-                                        </article>
-                                        </div>
-                                    </section>
-                                    <!-- diagnostic Ends -->
-
-                                  
-
-                                    <!--Account Starts -->
-                                    <section class="tab-pane fade in" id="account">
-                                        <div class="clearfix m-t-20 p-b-20 doctor-description">
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Email Id :</label>
-                                                <p class="col-md-8 col-sm-7"><?php echo $bloodBankData[0]->users_email; ?></p>
-                                            </article>
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
-                                                <p class="col-md-8 col-sm-7">+91 <?php if(isset($bloodBankData[0]->users_mobile)){ echo $bloodBankData[0]->users_mobile; } ?></p>
-                                            </article>
-                                            <form class="" name="passwordUpdate" id="passwordUpdate" action="<?php base_url();?>bloodbank/updatePassword">
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Change Password:</label>
-
-                                                <aside class="col-md-4 col-sm-4">
-                                                   
-                                                    <input type="password" name="users_password" class="form-control" placeholder="New Password" id="users_password" />
-                                                   
-                                                    <!-- <p><a class="m-t-10" href="#">Edit</a></p> -->
-                                                </aside>
-                                            </article>
-                                            
-                                            <article class="clearfix m-b-10">
-                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Confirm Password:</label>
-
-                                                <aside class="col-md-4 col-sm-4">
-                                                   
-                                                    <input type="password" name="cnfPassword" class="form-control" placeholder="Confirm Password" id="cnfPassword" />
-                                                   
-                                                    <p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>
-                                                    <p class="error" id="error-password_email_check" style="display:none;"> Server not respond properly!</p>
-                                                    <p class="text-success" style="display:none;" id="error-password_email_check_success"> Password Changed Successfully!</p>
-                                                </aside>
-                                            </article>
-                                               <!-- <input type="text" name="myPassword" id="myPassword" value="<?php if(isset($bloodBankData[0]->users_password)){ echo $bloodBankData[0]->users_password;}?>" /> -->
-                                            </form>      
-                                        </div>
-                                    </section>
-                                    <!-- Account Ends -->
-
                                 </article>
+                                <article class="col-md-5 text-right pull-right">
+                                    <h3><?php echo isset($userDetail->userName) ? $userDetail->userName : ''; ?></h3>
+                                    <p><?php
+                                        echo isset($userDetail->userGender) ? $userDetail->userName : '';
+                                        if (isset($userDetail->userGender)) {
+                                            switch ($userDetail->userGender) {
+                                                case 0:
+                                                    $userGender = "-";
+                                                    break;
+                                                case 1:
+                                                    $userGender = "Male";
+                                                    break;
+                                                case 2:
+                                                    $userGender = "Female";
+                                                    break;
+                                                case 3:
+                                                    $userGender = "Others";
+                                                    break;
+                                            } echo $userGender;
+                                        }
+                                        ?> | <?php echo isset($userDetail->userAge) ? $userDetail->userAge : ''; ?> Year</p>
+                                    <p><?php echo isset($userDetail->mobile) ? $userDetail->mobile : ''; ?></p>
+                                </article>
+                            </div>
+
+                            <div class="clearfix m-t-20">
+                                <article class="col-md-2 p-0 pull-right m-r-20">
+                                    
+                                    <?php
+                                        if($qtnDetail->type == 'hospital')
+                                        $path = FCPATH . BS_HOSIMG_PATH;
+                                        
+                                        if($qtnDetail->type == 'diagnostic')
+                                        $path = FCPATH . BS_DIAGIMG_PATH;
+                                        
+                                        
+                                        if (file_exists(realpath($path) . '/' . $qtnDetail->MIimg)) {
+                                            ?>
+                                            <img src="<?php echo base_url(BS_PROF_PATH); ?>/<?php echo $qtnDetail->MIimg  ?>" alt="" class="img-responsive patient-pic">
+                                            <?php
+                                        }
+                                    ?>
+                                    <img src="assets/images/dc.jpg" alt="" class="img-responsive patient-pic">
+                                </article>
+                                <article class="col-md-5 text-right pull-right">
+                                    <h3><?php echo isset($qtnDetail->MIname) ? $qtnDetail->MIname : ''; ?></h3>
+                                    <p><?php echo isset($qtnDetail->MImblNo) ? $qtnDetail->MImblNo : ''; ?></p>
+                                </article>
+                            </div>
+                            <div class="clearfix m-t-20 text-right">
+                                <button type="button" class="btn btn-danger waves-effect m-r-10">Cancel</button>
+                                <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Reschedule</button>
+                                <button type="submit" class="btn btn-appointment waves-effect waves-light m-tb-xs-3">Change Status</button>
+                            </div>
+                        </aside>
+                    </article>
+
+
+                    <!-- Top Secton Ends-->
+                    <hr class="hr-appt-detail" />
+
+                    <!-- Bottom Section Start -->
+                    <article class="clearfix m-r-20 p-b-20">
+                        <aside class="col-md-7">
+                            <div class="clearfix m-t-20">
+                                <h5 class="h5-title col-md-12">Patient Address :</h5>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Address :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($userDetail->address) ? $userDetail->address : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">City :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($userDetail->city_name) ? $userDetail->city_name : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Zip Code:</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($userDetail->pin) ? $userDetail->pin : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">State :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($userDetail->state_statename) ? $userDetail->state_statename : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Country :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($userDetail->country) ? $userDetail->country : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-20">
+                                <h5 class="h5-title col-md-12">Payment Detail :</h5>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Consultation Fee :</label>
+                                <p class="col-md-8 col-sm-8"><i class="fa fa-inr"></i><?php echo isset($qtnAmount->price) ? $qtnAmount->price : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Other Fee :</label>
+                                <p class="col-md-8 col-sm-8">0</p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Tax :</label>
+                                <p class="col-md-8 col-sm-8">5%</p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Total Payble Amount :</label>
+                                <p class="col-md-8 col-sm-8"><i class="fa fa-inr"> </i> <b><?php echo isset($qtnAmount->price) ? $qtnAmount->price : ''; ?></b></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Payment Status :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($qtnDetail->paymentStatus) ? $qtnDetail->paymentStatus : ''; ?></p>
+                            </div>
+
+                            <div class="clearfix m-t-10">
+                                <label class="col-md-4 col-sm-4">Payment Mode :</label>
+                                <p class="col-md-8 col-sm-8"><?php echo isset($qtnDetail->paymentMethod) ? $qtnDetail->paymentMethod : ''; ?></p>
+                            </div>
+
+                        </aside>
+                        <aside class="col-md-5">
+
+                            <section id="effect-3" class="effects clearfix">
+                                <div class="clearfix m-t-20">
+                                    <h5 class="h5-title col-md-12">Prescription :</h5>
+                                </div>
+
+                                <?php
+                                if (isset($quotationTests) && $quotationTests != null) {
+                                    foreach ($quotationTests as $quotationTest) {
+                                        $path = FCPATH . BS_PRS_IMG_PATH;
+                                        echo base_url(BS_PRS_IMG_PATH); ?>/<?php echo $quotationTest->prescription;
+                                        if (file_exists(realpath($path) . '/' . $quotationTest->prescription)) {
+                                            ?>
+                                            <article class="img m-t-20">
+                                                <img src="<?php echo base_url(BS_PRS_IMG_PATH); ?>/<?php echo $quotationTest->prescription; ?>" alt="">
+                                                <div class="overlay">
+                                                    <a href=""><i class="fa fa-search"></i></a>&nbsp;
+                                                    <a href="#"><i class="fa fa-download"></i></a>
+                                                    <a class="close-overlay hidden">x</a>
+                                                </div>
+                                            </article>
+                                            <?php
+                                        }
+                                    }
+                                }
+                                ?>
 
                             </section>
 
+                            <section id="effect-3" class="effects clearfix m-t-10">
+                                <div class="clearfix m-t-20">
+                                    <h5 class="h5-title col-md-12">Diagnostic Report :</h5>
+                                </div>
+                                
+                                <?php
+                                if (isset($quotationTests) && $quotationTests != null) {
+                                    foreach ($quotationTests as $quotationTest) {
+                                        $path = FCPATH . BS_REPO_PATH;
+                                        echo base_url(BS_PRS_IMG_PATH); ?>/<?php echo $quotationTest->report;
+                                        if (file_exists(realpath($path) . '/' . $quotationTest->report)) {
+                                            ?>
+                                            <article class="img m-t-20">
+                                                <img src="<?php echo base_url(BS_PRS_IMG_PATH); ?>/<?php echo $quotationTest->report; ?>" alt="">
+                                                <div class="overlay">
+                                                    <a href=""><i class="fa fa-search"></i></a>&nbsp;
+                                                    <a href="#"><i class="fa fa-download"></i></a>
+                                                    <a class="close-overlay hidden">x</a>
+                                                </div>
+                                            </article>
+                                            <?php
+                                        }
+                                    }
+                                }
+                                ?>
+                            </section>
+
+                        </aside>
+                    </article>
 
 
-                            <!-- Table Section End -->
-                            <article class="clearfix">
-
-                            </article>
-                        </div>
-
-                    </section>
-                    <!-- Left Section End -->
-
-
+                    <!-- Bottom Secton Ends-->
                 </div>
+            </section>
 
-                <!-- container -->
-            </div>
-            <!-- content -->
-            <?php echo $this->load->view('edit_upload_crop_modal');?>
+            <!-- container -->
+        </div>
+        <!-- content -->
+        <footer class="footer text-right">
+            2015 © Qyura.
+        </footer>
+    </div>
+    <!-- End Right content here -->
+</div>
+<!-- END wrapper -->
+<?php echo $this->load->view('edit_upload_crop_modal'); ?>
