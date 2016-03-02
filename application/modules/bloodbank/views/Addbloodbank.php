@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="map_canvas"></div>
-                    <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="bloodbankForm" method="post" action="<?php echo site_url(); ?>/bloodbank/SaveBloodbank" novalidate="novalidate" enctype="multipart/form-data" >
+                    <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="submitForm" method="post" action="<?php echo site_url(); ?>/bloodbank/SaveBloodbank" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="StateId" name="StateId" value="" />
                       
                         <!-- Left Section Start -->
@@ -173,7 +173,7 @@
                             <div class="bg-white clearfix">
                                 <!-- Feature Access Section Start -->
 
-                                <figure class="clearfix">
+<!--                                <figure class="clearfix">
                                     <h3>Feature Access</h3>
                                 </figure>
 
@@ -189,7 +189,7 @@
                                             </label>
                                         </aside>
                                     </div>
-                                </article>
+                                </article>-->
                                 <!-- Feature Access Section Start -->
 
 

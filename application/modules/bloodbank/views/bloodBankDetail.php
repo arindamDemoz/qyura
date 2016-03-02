@@ -138,19 +138,23 @@
                                                                 <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?> </p>
                                                             </article>
                                                         </aside>
-                                                         <form name="bloodDetail" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="bloodDetail" method="post">
+                                                         <form name="submitForm" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="submitForm" method="post">
                                                         <aside id="newDetail" style="display:<?php echo $showStatus;?>;">
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="bloodBank_name" name="bloodBank_name" type="text" value="<?php echo $bloodBankData[0]->bloodBank_name;?>">
+                                                                    <label class="error" style="display:none;" id="error-bloodBank_name"> please enter bloodbank name</label>
+                                            
                                                                     <label class="error" > <?php echo form_error("bloodBank_name"); ?></label>
                                                                 </div>
                                                             </article>
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
                                                                 <div class="col-md-8 col-sm-8">
-                                                                    <textarea class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
+                                                                    <textarea id="bloodBank_add" class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
+                                                                     <label class="error" style="display:none;" id="error-bloodBank_add"> please enter an address</label>
+                                         
                                                                     <label class="error" > <?php echo form_error("bloodBank_add"); ?></label>
                                                                 </div>
                                                             </article>
@@ -178,7 +182,7 @@
                                                                     </aside>
                                                                     <br />
                                                                     <?php $moreExpolde ='';}?>
-                                                               
+                                                                <label class="error" style="display:none;" id="error-bloodBank_phn"> please enter a valid phone number</label>
                                                                     <p class="m-t-10">* If it is landline, include Std code with number </p>
                                                                 </div>
                                                             </article>
@@ -188,6 +192,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                  <input class="form-control" id="users_email" name="users_email" type="email" value="<?php echo $bloodBankData[0]->users_email;?>" onblur="checkEmailFormatDetail()" />
                                                                   <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>
+                                                                  <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                                                 <label class="error" > <?php echo form_error("users_email"); ?></label>
                                                                 </div>
                                                             </article>
@@ -197,7 +202,9 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                  
                                                                     <input class="form-control" id="bloodBank_cntPrsn" name="bloodBank_cntPrsn" type="text" value="<?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?>">
+                                                                    <label class="error" style="display:none;" id="error-bloodBank_cntPrsn"> please enter contact person name</label>
                                         </div>                       <label class="error" > <?php echo form_error("bloodBank_cntPrsn"); ?></label>
+                                        
                                                             </article>
 
 

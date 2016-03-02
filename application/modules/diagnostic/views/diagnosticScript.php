@@ -258,11 +258,14 @@ if($current != 'detailDiagnostic'):?>
                         
                        $('#users_email').addClass('bdr-error');
                          $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');;
-                        // $('#users_email').focus();
+                        return false;
 
+                    }else{
+                        return true;
                     }
             }
         }   
+           
     function check_email(myEmail){
            $.ajax({
                url : urls + 'index.php/diagnostic/check_email',
@@ -803,60 +806,69 @@ if($current != 'detailDiagnostic'):?>
         var cpname = $.trim($('#diagnostic_cntPrsn').val());
         
         var pswd = $.trim($("#users_password").val());
-        var cnfpswd = $.trim($("#cnfpassword").val());
+        var cnfpswd = $.trim($("#cnfPassword").val());
         var mbl= $.trim($('#diagnostic_mblNo').val());
         var phn= $.trim($('#diagnostic_phn1').val());
         var myzip = $.trim($('#diagnostic_zip').val());
         var cityId =$.trim($('#diagnostic_cityId').val());
         var stateIds = $.trim($('#StateId').val());
         var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
-       
+        var status = 1;
     //debugger;
-   
+        var emailCheck =  checkEmailFormatValidation(emails);
+        
             if($('#diagnostic_name').val()==''){
                 $('#diagnostic_name').addClass('bdr-error');
                 $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_name').focus();
               // return false;
+              status = 0;
             }
           if($('#diagnostic_type').val()==''){
                 $('#diagnostic_type').addClass('bdr-error');
                 $('#error-diagnostic_type').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_type').focus();
+               status = 0;
             }
              if($.trim($('#diagnostic_countryId').val()) == ''){
                 $('#diagnostic_countryId').addClass('bdr-error');
                 $('#error-diagnostic_countryId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_countryId').focus();
+               status = 0;
             }
-           if(!$.isNumeric(stateIds)){
+           if(stateIds){
                // console.log("in state");
                 $('#diagnostic_stateId').addClass('bdr-error');
                 $('#error-diagnostic_stateId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_stateId').focus();
+               status = 0;
             }
             if(!$.isNumeric(cityId)){
                 $('#diagnostic_cityId').addClass('bdr-error');
                 $('#error-diagnostic_cityId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_cityId').focus();
+               status = 0;
             }
            
             if(!$.isNumeric(myzip)){
                 $('#diagnostic_zip').addClass('bdr-error');
                 $('#error-diagnostic_zip').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_zip').focus();
+                status = 0;
             } 
 
             if($("input[name='diagnostic_address']" ).val()==''){
                 $('#geocomplete').addClass('bdr-error');
                 $('#error-diagnostic_address').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_address').focus();
+               status = 0;
             }
             
             if(!$.isNumeric(phn)){
                 $('#diagnostic_phn1').addClass('bdr-error');
                 $('#error-diagnostic_phn1').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_phn').focus();
+                status = 0;
             }
                      
           
@@ -864,6 +876,7 @@ if($current != 'detailDiagnostic'):?>
                 $('#diagnostic_cntPrsn').addClass('bdr-error');
                 $('#error-diagnostic_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_cntPrsn').focus();
+                status = 0;
             }
             
            
@@ -871,11 +884,13 @@ if($current != 'detailDiagnostic'):?>
                 $('#diagnostic_mbrTyp').addClass('bdr-error');
                 $('#error-diagnostic_mbrTyp').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_mmbrType').focus();
+               status = 0;
             }
             if($('#users_email').val()==''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_email').focus();
+               status = 0;
             }
            
            /* else if(diagnostic_mblNo == ''){
@@ -887,23 +902,28 @@ if($current != 'detailDiagnostic'):?>
             if(!($.isNumeric(diagnostic_mblNo))){
                 $('#diagnostic_mblNo').addClass('bdr-error');
                 $('#error-diagnostic_mblNo').fadeIn().delay(3000).fadeOut('slow');
-                
+                status = 0;
                // $('#hospital_mblNo').focus();
             }
             if($('#users_password').val()=='' || pswd.length < 6){
                 $('#users_password').addClass('bdr-error');
                 $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_password').focus();
+               status = 0;
             }
+           
             if($('#cnfPassword').val()=='' || pswd!= cnfpswd){
                 $('#cnfPassword').addClass('bdr-error');
                 $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
-                
+                status = 0;
                // $('#cnfpassword').focus();
+            }
+            if(!emailCheck){
+                 status = 0;
             }
             
                //debugger;
-        if(emails !=''){
+        if(emails !='' && status == 1){
               check_email(emails);
               return false;
             }
@@ -927,7 +947,7 @@ if($current != 'detailDiagnostic'):?>
         var cityId =$.trim($('#diagnostic_cityId').val());
         var stateIds = $.trim($('#StateId').val());
         var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
-       
+        var emailCheck =  checkEmailFormatValidation(emails);
    var ckeck = 1;
             if($('#diagnosticCenter').val()==''){
                 $('#diagnostic_name').addClass('bdr-error');
@@ -988,12 +1008,30 @@ if($current != 'detailDiagnostic'):?>
                 $('#error-diagnostic_dsgn').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_address').focus();
                
+            }else if(!emailCheck){
+                return false; 
             }else{
                 return true;
             }
     
           return false;      
         }
+        
+        function checkEmailFormatValidation(email){
+       
+                var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                if(email!==''){
+                    if (!filter.test(email)){
+                        
+                       $('#users_email').addClass('bdr-error');
+                         $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');;
+                        return false;
+
+                    }else{
+                        return true;
+                    }
+            }
+        } 
         
       function validationDiagnosticEditAccount(){
        // $("form[name='diagnosticForm']").submit();
@@ -1006,7 +1044,8 @@ if($current != 'detailDiagnostic'):?>
         var pswd = $.trim($("#users_password").val());
        // var cnfpswd = $.trim($("#cnfpassword").val());
        // var mbl= $.trim($('#diagnostic_mblNo').val());
-
+        var emailCheck =  checkEmailFormatValidation(emails);
+          
          if($('#users_email').val()==''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');
@@ -1016,6 +1055,8 @@ if($current != 'detailDiagnostic'):?>
                 $('#users_password').addClass('bdr-error');
                 $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_password').focus();
+            }else if(!emails){
+                return false;
             }else{
                 return false;
             }
