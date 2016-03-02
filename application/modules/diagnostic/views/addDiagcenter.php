@@ -13,7 +13,7 @@
                     <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="diagnosticForm" method="post" action="<?php echo site_url(); ?>/diagnostic/SaveDiagnostic" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="countPnone" name="countPnone" value="1" />
                        <input type="hidden" id="StateId" name="StateId" value="" />
-                       <div><?php echo $this->session->flashdata('message'); ?>
+                       <div><?php echo $this->session->flashdata('message'); ?></div>
                         <!-- Left Section Start -->
                         <section class="col-md-6 detailbox">
                             <div class="bg-white mi-form-section">

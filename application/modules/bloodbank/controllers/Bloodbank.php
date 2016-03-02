@@ -216,7 +216,6 @@ class Bloodbank extends MY_Controller {
             $user_table_id = $this->input->post('user_table_id');
         }
         $email = $this->Bloodbank_model->fetchEmail($users_email, $user_table_id);
-        //echo $email;exit;
         echo $email;
         exit;
     }
