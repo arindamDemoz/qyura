@@ -677,7 +677,7 @@ class Hospital extends MY_Controller {
                    
                    */
                  if($response) {
-                     if($_POST['bloodbank_chk']==1){
+                     if(isset($_POST['bloodbank_chk'])==1){
                       
                        $bloodBank_phn = $this->input->post('bloodBank_phn');
                         $preblbankNo = $this->input->post('preblbankNo');
@@ -713,12 +713,12 @@ class Hospital extends MY_Controller {
                         $this->Hospital_model->UpdateTableData($bloodBankDetail,$bloodWhereUser,'qyura_bloodBank');
                        }  else {
                            
-                           unset($select,$conditions);
-                           $conditions = array();
-                            $conditions['hospital_usersId'] = $this->input->post('user_tables_id');
-                            $conditions['hospital_deleted'] = 0;
-                            $select = array('hospital_countryId,hospital_stateId,hospital_cityId');
-                           $bloodBankResult  = $this->Hospital_model->fetchTableData($select,'qyura_hospital',$conditions);
+                           //unset($select,$conditions);
+                           $conditionsSecond = array();
+                            $conditionsSecond['hospital_usersId'] = $this->input->post('user_tables_id');
+                            $conditionsSecond['hospital_deleted'] = 0;
+                            $selectSecond = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                           $bloodBankResult  = $this->Hospital_model->fetchTableData($selectSecond,'qyura_hospital',$conditionsSecond);
                            $bloodBankDetail['countryId'] = $bloodBankResult[0]->hospital_countryId;
                            $bloodBankDetail['stateId'] = $bloodBankResult[0]->hospital_stateId;
                            $bloodBankDetail['cityId'] = $bloodBankResult[0]->hospital_cityId;
@@ -730,8 +730,14 @@ class Hospital extends MY_Controller {
                        } 
                       
                   }
+                  else{
+                       $bloodWhereUser = array(
+                        'users_id' => $this->input->post('user_tables_id')
+                        );
+                        $this->Hospital_model->deleteTable('qyura_bloodBank',$bloodWhereUser);
+                  }
                   
-                     if($_POST['pharmacy_chk']==1){
+                     if(isset($_POST['pharmacy_chk'])==1){
                       
                        $pharmacy_phn = $this->input->post('pharmacy_phn');
                         $prePharmacy = $this->input->post('prePharmacy');
@@ -792,6 +798,12 @@ class Hospital extends MY_Controller {
                        }    
                       
                      
+                  }
+                  else{
+                        $pharmacyWhereUser = array(
+                            'pharmacy_usersId' => $this->input->post('user_tables_id')  
+                        );
+                        $this->Hospital_model->deleteTable('qyura_pharmacy',$pharmacyWhereUser);
                   }
                  $this->session->set_flashdata('message','Data updated successfully !');
                   redirect("hospital/detailHospital/$hospitalId");
