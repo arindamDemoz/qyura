@@ -161,22 +161,41 @@
     
     
 
-        public function date_range($startDate = false,$endDate = false){
-                  /* date range filtartion */
+    public function date_range1($startDate = false, $endDate = false) {
+        /* date range filtartion */
         $startDate = strtotime($startDate);
         $endDate = strtotime($endDate);
         $sWhere = '';
-        if((isset($startDate) && !empty($startDate)) OR (isset($endDate) && !empty($endDate))){
-       
-           if( $startDate != "" AND $endDate != ""){
-               $sWhere != '' ? $sWhere .= " AND (`date` >= $startDate && `date` <= $endDate)" : $sWhere .= "(`date` >= $startDate && `date` <= $endDate)";
+        if ((isset($startDate) && !empty($startDate)) OR ( isset($endDate) && !empty($endDate))) {
+
+            if ($startDate != "" AND $endDate != "") {
+                $sWhere != '' ? $sWhere .= " AND (`date` >= $startDate && `date` <= $endDate)" : $sWhere .= "(`date` >= $startDate && `date` <= $endDate)";
+            } elseif ($startDate != "") {
+                $sWhere != '' ? $sWhere .= " AND (`date` = $startDate)" : $sWhere .= "(`date` >= $startDate)";
+            } elseif ($endDate != "") {
+                $sWhere != '' ? $sWhere .= " AND (`date` = $endDate)" : $sWhere .= "(`date` <= $endDate)";
             }
-            elseif ($startDate != ""){
-               $sWhere != '' ?  $sWhere .= " AND (`date` = $startDate)" : $sWhere .= "(`date` >= $startDate)";
-            }elseif($endDate != ""){
-              $sWhere != '' ?  $sWhere .= " AND (`date` = $endDate)" : $sWhere .= "(`date` <= $endDate)";
-          }
-          $this->ci->db->where($sWhere);
+            
+            $this->ci->db->where($sWhere);
+        }
+    }
+    
+    public function date_range($startdateTime = false, $enddateTime = false,$colName='date') {
+        /* dateTime range filtartion */
+        $startdateTime = strtotime($startdateTime);
+        $enddateTime = strtotime($enddateTime);
+        $sWhere = '';
+        if ((isset($startdateTime) && !empty($startdateTime)) OR ( isset($enddateTime) && !empty($enddateTime))) {
+
+            if ($startdateTime != "" AND $enddateTime != "") {
+                $sWhere != '' ? $sWhere .= " AND ( {$colName} >= {$colName} && {$colName} <= '$enddateTime' )" : $sWhere .= "( {$colName} >= {$colName} && {$colName} <= '$enddateTime' )";
+            } elseif ($startdateTime != "") {
+                $sWhere != '' ? $sWhere .= " AND ( {$colName} = {$colName})" : $sWhere .= "( {$colName} >= {$colName})";
+            } elseif ($enddateTime != "") {
+                $sWhere != '' ? $sWhere .= " AND ( {$colName} = '$enddateTime' )" : $sWhere .= "( {$colName} <= '$enddateTime' )";
+            }
+            
+            $this->ci->db->where($sWhere);
         }
     }
 
@@ -334,19 +353,15 @@
     *
     * @return mixed
     */
-    private function get_ordering()
+     private function get_ordering()
     {
-
       $Data = $this->ci->input->post('columns');
-
-
       if ($this->ci->input->post('order'))
         foreach ($this->ci->input->post('order') as $key)
           if($this->check_cType())
             $this->ci->db->order_by($Data[$key['column']]['data'], $key['dir']);
           else
             $this->ci->db->order_by($this->columns[$key['column']] , $key['dir']);
-
     }
 
     /**
@@ -498,16 +513,16 @@
       foreach($this->joins as $val)
         $this->ci->db->join($val[0], $val[1], $val[2]);
 
+    
       foreach($this->where as $val)
         $this->ci->db->where($val[0], $val[1], $val[2]);
       
-      foreach($this->where as $val)
-        $this->ci->db->where($val[0], $val[1], $val[2]);
+      
       
       foreach($this->loadwhere as $val)
       {
           
-          //$this->ci->db->where($val[0], $val[1], $val[2]);
+          $this->ci->db->where($val[0], $val[1], $val[2]);
       }
         
 
