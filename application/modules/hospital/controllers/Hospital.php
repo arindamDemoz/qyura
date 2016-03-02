@@ -894,7 +894,7 @@ class Hospital extends MY_Controller {
         $return = $this->Hospital_model->UpdateTableData($userTableData,$where,'qyura_users');
         if(!empty($users_password))
         {
-            $encrypted = md5($currentPassword);
+            $encrypted = md5($users_password);
              $updateHospital= array(
                       'users_password'=>  $encrypted,
                         'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
