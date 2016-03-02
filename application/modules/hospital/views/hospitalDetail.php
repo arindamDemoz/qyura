@@ -41,10 +41,12 @@
                                                <?php } else { ?>
                                                  <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>
-                                                  <article class="logo-up" style="display:none">
+                                                   <article class="logo-up" style="display:none">
                                                     <div class="fileUpload btn btn-sm btn-upload logo-Upload">
-                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
-                                                        <input id="uploadBtn" type="file" class="upload" />
+                                                        <span><i class="fa fa-cloud-upload fa-3x avatar-view"></i></span>
+<!--                                                        <input id="uploadBtn" type="file" class="upload" />-->
+                                                         <input type="hidden" style="display:none;" class="no-display" id="file_action_url" name="file_action_url" value="<?php echo site_url('hospital/editUploadImage');?>">
+                                                         <input type="hidden" style="display:none;" class="no-display" id="load_url" name="load_url" value="<?php echo site_url('hospital/getUpdateAvtar/'.$this->uri->segment(3));?>">
                                                     </div>
                                                 </article>
                                                 <!-- description div -->
@@ -87,7 +89,7 @@
                                         <li class=" ">
                                             <a data-toggle="tab" href="#gallery">Gallery</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class="<?php if(isset($showTimeSlotBox) && !empty($showTimeSlotBox)){echo $showTimeSlotBox;}?>">
                                             <a data-toggle="tab" href="#timeslot">Time Slot</a>
                                         </li>
                                        <li class=" ">
@@ -918,12 +920,12 @@
                                     <!--Gllery Starts -->
                                     <section class="tab-pane fade in" id="gallery">
                                         <div class="fileUpload btn btn-sm btn-upload im-upload">
-                                            <span class="btn btn-appointment avatar-view">Add More</span>
+                                            <span class="btn btn-appointment avatar-view-gallery">Add More</span>
                                            <!-- <input type="file" class="upload" id="uploadBtn"> -->
                                             
                                         </div>
                                          <input type="hidden" style="display:none;" class="no-display" id="file_action_url_gallery" name="file_action_url_gallery" value="<?php echo site_url('hospital/galleryUploadImage');?>">
-                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo base_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
+                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo site_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
                                           
                                        <div class="clearfix" id="display_gallery">
 
@@ -1544,6 +1546,7 @@
                             </div>
                           </div>
                     </div>
+                     <?php echo $this->load->view('edit_gallery_crop_modal');?>
                      <?php echo $this->load->view('edit_upload_crop_modal');?>
                     <!-- Gallery Model Ends -->
    

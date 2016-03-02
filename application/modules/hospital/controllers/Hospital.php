@@ -1099,11 +1099,11 @@ class Hospital extends MY_Controller {
      */
     function galleryUploadImage() {
     
-    	if ($_POST['avatar_file']['name']) {
+    	if ($_POST['avatar_file_gallery']['name']) {
     		$path = realpath(FCPATH . 'assets/hospitalsImages/');
-    		$upload_data = $this->input->post('avatar_data');
+    		$upload_data = $this->input->post('avatar_data_gallery');
     		$upload_data = json_decode($upload_data);
-    		$original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
+    		$original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file_gallery', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
     
     		if (empty($original_imagesname)) {
     			$response = array('state' => 400, 'message' => $this->error_message);
@@ -1407,5 +1407,56 @@ class Hospital extends MY_Controller {
         $quotationWhere = array('quotationDetailTests_id' => $quotationDetailTests_id);
         $return = $this->Hospital_model->UpdateTableData($quotationData,$quotationWhere,'qyura_quotationDetailTests');
         echo $return;exit;
+    }
+    
+    
+           /**
+     * @project Qyura
+     * @method editUploadImage
+     * @description update details page image profile
+     * @access public
+     * @return boolean
+     */
+    function editUploadImage() {
+
+        if ($_POST['avatar_file']['name']) {
+            $path = realpath(FCPATH . 'assets/hospitalsImages/');
+            $upload_data = $this->input->post('avatar_data');
+            $upload_data = json_decode($upload_data);
+
+            $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/hospitalsImages/', './assets/hospitalsImages/thumb/','hospital');
+
+            if (empty($original_imagesname)) {
+                $response = array('state' => 400, 'message' => $this->error_message);
+            } else {
+
+                $option = array(
+                    'hospital_img' => $original_imagesname,
+                    'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+                );
+                $where = array(
+                    'hospital_id' => $this->input->post('avatar_id')
+                );
+                $response = $this->Hospital_model->UpdateTableData($option, $where, 'qyura_hospital');
+                if ($response) {
+                    $response = array('state' => 200, 'message' => 'Successfully update avtar');
+                } else {
+                    $response = array('state' => 400, 'message' => 'Failed to update avtar');
+                }
+            }
+            echo json_encode($response);
+        } else {
+            $response = array('state' => 400, 'message' => 'Please select avtar');
+            echo json_encode($response);
+        }
+    }
+
+    function getUpdateAvtar($id) {
+        if (!empty($id)) {
+             $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($id);
+           //  print_r($data); exit;
+            echo "<img src='" . base_url() . "assets/hospitalsImages/thumb/original/" . $data['hospitalData'][0]->hospital_img . "'alt='' class='logo-img' />";
+            exit();
+        }
     }
 }
