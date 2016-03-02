@@ -504,5 +504,14 @@ if($current == 'detailBloodBank'):?>
     $("#savebtn").click(function(){
          $("#avatar-modal").modal('hide');
      }); 
- 
+ function isNumberKey(evt, id) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        $("#" + id).html("Please enter number key");
+        return false;
+    } else {
+        $("#" + id).html('');
+        return true;
+    }
+}
 </script>

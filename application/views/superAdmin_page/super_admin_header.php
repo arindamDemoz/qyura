@@ -188,20 +188,21 @@
                                 <li class="<?php if($this->router->fetch_method() == 'Addbloodbank'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank">Add New Blood Bank</a></li>
                             </ul>
                         </li>
+                 
+                         <li class="has_sub">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'ambulance'):echo"active";endif;?>" href="#"><i class="fa fa-ambulance"></i> 
+                            <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li class="<?php if($this->router->fetch_class() == 'ambulance' && $this->router->fetch_method() != 'addAmbulance'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
+                                <li class="<?php if($this->router->fetch_method() == 'addAmbulance'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
+                            </ul>
+                        </li>
                         <li class="has_sub">
                             <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
                             <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
                                 <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
                                 <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
-                            </ul>
-                        </li>
-                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
-                            <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
                         <li class="has_sub">
