@@ -152,7 +152,7 @@
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
                                                                 <div class="col-md-8 col-sm-8">
-                                                                    <textarea id="bloodBank_add" class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
+                                                                    <textarea  class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
                                                                      <label class="error" style="display:none;" id="error-bloodBank_add"> please enter an address</label>
                                          
                                                                     <label class="error" > <?php echo form_error("bloodBank_add"); ?></label>
@@ -331,7 +331,8 @@
                                                    
                                                     <input type="password" name="cnfPassword" class="form-control" placeholder="Confirm Password" id="cnfPassword" />
                                                    
-                                                    <p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>
+                                                    <!--<p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>-->
+                                                    <p><button type="button" class="btn btn-success waves-effect waves-light pull-right m-t-10" onclick="updatePassword()">Edit</button></p>
                                                     <p class="error" id="error-password_email_check" style="display:none;"> Server not respond properly!</p>
                                                     <p class="text-success" style="display:none;" id="error-password_email_check_success"> Password Changed Successfully!</p>
                                                 </aside>

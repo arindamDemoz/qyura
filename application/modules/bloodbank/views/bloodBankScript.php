@@ -19,9 +19,8 @@ if($current == 'detailBloodBank'):?>
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
 <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
- <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
-
 <script>
      var urls = "<?php echo base_url()?>";
      
@@ -159,8 +158,8 @@ if($current == 'detailBloodBank'):?>
                 $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
-            if($('#bloodBank_add').val()==''){
-                $('#bloodBank_add').addClass('bdr-error');
+            if($('#geocomplete').val()==''){
+                $('#geocomplete').addClass('bdr-error');
                 $('#error-bloodBank_add').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
