@@ -395,5 +395,10 @@ class Hospital_model extends CI_Model {
         return $this->db->insert_id();
     }
     
+    function deleteTable($tableName,$where = array()){
+        $this->db->delete($tableName, $where); 
+        return TRUE;
+
+    }
 
 }
