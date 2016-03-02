@@ -740,7 +740,8 @@
 
                                     <!--Account Starts -->
                                     <section class="tab-pane fade in" id="account">
-                                    <form action="<?php echo site_url('diagnostic/updateAccount/'.$diagnosticData[0]->diagnostic_id);?>" method="post" name="diagnostic_account" id="diagnostic_account">
+                                    <form method="post" name="acccountForm" id="acccountForm">
+                                        <p class="text-success" style="display:none;" id="error-password_email_check_success"> Data Changed Successfully!</p>
                                         <aside class="col-md-9 setting">
                                             <h4>Account Detail
                                                 <a id="editac"  class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
@@ -753,12 +754,10 @@
                                                 </article>
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Registered Mobile Number:</label>
-                                                    <p class="col-md-8 col-sm-7"> <?php 
-                                                                    $explode= explode('|',$diagnosticData[0]->diagnostic_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
-                                                                    <p>+<?php echo $explode[$i];?></p>
-                                                                   
-                                                                    <?php }?></p>
+                                                    <p class="col-md-8 col-sm-7"> 
+                                                              
+                                                   <?php if(isset($diagnosticData[0]->users_mobile)): echo $diagnosticData[0]->users_mobile; endif;?>
+                                                                   </p>
                                                 </article>
                                                 <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-5">Membership Type:</label>
@@ -789,33 +788,26 @@
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
                                                         <div>
                                                 </article>
-
-<!--                                                 <article class="clearfix m-b-10"> -->
-<!--                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label> -->
-<!--                                                     <div class="col-md-8 col-sm-8"> -->
-                                                     
-<!--                                                         <div> -->
-<!--                                                 </article> -->
-
-<!--                                                 <article class="clearfix m-b-10 "> -->
-<!--                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label> -->
-<!--                                                     <div class="col-md-8 col-sm-8"> -->
-<!--                                                         <aside class="row"> -->
-<!--                                                             <div class="col-md-3 col-sm-3 col-xs-12"> -->
-<!--                                                                 <select class="selectpicker" data-width="100%"> -->
-<!--                                                                     <option value="91">+91</option> -->
-<!--                                                                     <option value="1">+1</option> -->
-<!--                                                                 </select> -->
-<!--                                                             </div> -->
-<!--                                                             <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10"> -->
-                                                               
-
-<!--                                                             </div> -->
-<!--                                                             <p class="m-t-10">* If it is landline, include Std code with number </p> -->
-<!--                                                         </aside> -->
-<!--                                                     </div> -->
-<!--                                                 </article> -->
-						<input type="hidden" name="did_userId" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_usersId; endif;?>"/>
+                                                
+						<input type="hidden" id="user_tables_id" name="user_table_id" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_usersId; endif;?>"/>
+                                                
+                                                
+                                                     <article class="clearfix m-b-10 ">
+                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Mobile Numbers :</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                   
+                                                         
+                                                <input type="teL" class="form-control" name="users_mobile" id="users_mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="<?php if(isset($diagnosticData[0]->users_mobile)){ echo $diagnosticData[0]->users_mobile; } ?>" />
+                                                                   <p class="error" id="error-users_mobile" style="display:none;"> Enter Mobile Number!</p>
+                                                         
+                                                            <!--<p class="m-t-10">* If it is landline, include Std code with number </p> -->
+                                                       
+                                                    </div>
+                                                </article>
+                                                
+                                                
+                                                
+                                                
                                                 <article class="clearfix m-b-10">
                                                     <label for="cname" class="control-label col-md-4 col-sm-4">Membership Type:</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -830,23 +822,34 @@
                                                         </select>
                                                     </div>
                                                 </article>
-                                                <article class="clearfix m-b-10">
+                                            <article class="clearfix m-b-10">
                                                     <label for="cemail" class="control-label col-md-4 col-sm-4">Change Password:</label>
 
                                                     <aside class="col-md-8 col-sm-8">
-                                                        <form class="">
-                                                            <input type="password" name="users_password" class="form-control" placeholder="New Password" id="users_password" required=""/>
-                                                            <label class="error" style="display:none;" id="error-users_password"> please enter password and it should be 6 chracter</label>
-                                            <label class="error" > <?php echo form_error("users_password"); ?></label>
-                                                        </form>
+                                                      
+                                                            <input type="password" name="users_password" id="users_password" class="form-control" placeholder="New Password" />
+                                                             <label class="error" style="display:none;" id="error-users_password"> please enter password and should be 6 character </label>
                                                     </aside>
                                                 </article>
+                                               <article class="clearfix m-b-10">
+                                                <label for="cemail" class="control-label col-md-4 col-sm-5">Confirm Password:</label>
+
+                                                <aside class="col-md-8 col-sm-8">
+                                                   
+                                                    <input type="password" name="cnfPassword" class="form-control" placeholder="Confirm Password" id="cnfPassword" />
+                                                   
+                                                    <!--<p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p> -->
+                                                     <label class="error" style="display:none;" id="error-cnfPassword"> Password and confirm password should be same </label>
+                                                  
+                                                   
+                                                </aside>
+                                            </article>
 
 
                                                 <article class="clearfix ">
                                                     <div class="col-md-12 m-t-20 m-b-20">
 
-                                                        <input type="submit" name="submit" class="btn btn-success waves-effect waves-light pull-right" value="Update" >
+                                                        <input type="button" name="submit" class="btn btn-success waves-effect waves-light pull-right" value="Update" onclick="updateAccount()">
                                                     </div>
 
                                                 </article>

@@ -5,11 +5,8 @@
     }
 </style>
 <?php $check= 0; 
-$id = $this->uri->segment(3); 
-if(!empty($id)){
-	$check = $this->uri->segment(3); 
-}else{
-	$check = 0 ;
+if(isset($diagnosticId) && !empty($diagnosticId)){
+    $check = $diagnosticId; 
 }?>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
@@ -145,12 +142,12 @@ if($current != 'detailDiagnostic'):?>
     $(document).ready(function () {
         var oTable = $('#diagnostic_datatable').DataTable({
              "processing": true,
-            "bServerSide": false,
+            "bServerSide": true,
              //"searching": true,
             "bLengthChange": false,
             "bProcessing": true,
             "iDisplayLength": 10,
-            //"bPaginate": true,
+            "bPaginate": true,
             "sPaginationType": "full_numbers",
             "columns": [
                 {"data": "diagnostic_img"},
@@ -177,7 +174,8 @@ if($current != 'detailDiagnostic'):?>
             oTable.draw();
         });
         $('#search').on('keyup', function () {
-            oTable.search($(this).val()).draw();
+            oTable.columns( 5 ).search($(this).val()).draw();
+            //oTable.search($(this).val()).draw();
              //oTable.draw();
             
         });
@@ -252,6 +250,7 @@ if($current != 'detailDiagnostic'):?>
 
    
     function checkEmailFormat(){
+       
                 var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
                 var email = $('#users_email').val();
                 if(email!==''){
@@ -608,68 +607,6 @@ if($current != 'detailDiagnostic'):?>
     }
     
     function checkTImeSlotValid(name){ 
-//        var message = "";
-//        var flag = 0;
-//        if(name == 'morning'){
-//            var morningStartTime = $("#morningStartTime").val();
-//            var morningEndTime = $("#morningEndTime").val();
-//            
-//            var time1 = timeSplit(morningStartTime);
-//            var time2 = timeSplit(morningEndTime);
-//            
-//            if(time1 > time2){
-//                flag = 1;
-//            }else{
-//                flag = 0;
-//            }
-//        }
-//        if(name == 'afternoon'){
-//            var startTime = $("#afternoonStartTime").val();
-//            var endTime = $("#afternoonEndTime").val();
-//            
-//            var time3 = timeSplit(startTime);
-//            var time4 = timeSplit(endTime);
-//            
-//            if(time3 > time4){
-//                flag = 1;
-//                 
-//            }else{
-//               flag = 0;
-//            }
-//        }
-//        if(name == 'evening'){
-//            var startTime = $("#eveningStartTime").val();
-//            var endTime = $("#eveningEndTime").val();
-//            
-//            var time3 = timeSplit(startTime);
-//            var time4 = timeSplit(endTime);
-//            
-//            if(time3 > time4){
-//                flag = 1;
-//            }else{
-//                 flag = 0;
-//            }
-//        }
-//        if(name == 'night'){
-//            var startTime = $("#nightStartTime").val();
-//            var endTime = $("#nightEndTime").val();
-//            
-//            var time3 = timeSplit(startTime);
-//            var time4 = timeSplit(endTime);
-//            
-//            if(time3 > time4){
-//                flag = 1;
-//            }else{
-//               flag = 0;
-//            }
-//        }
-//        if(flag == 0){
-//              $("#timeslotError").html("<h5 class='error'>End time always greater then start time</h5>");
-//              return false;
-//         }else{
-//             $("#timeslotError").html("");
-//             return true
-//         } 
 
     }
     
@@ -1058,7 +995,7 @@ if($current != 'detailDiagnostic'):?>
           return false;      
         }
         
-        function validationDiagnosticEditAccount(){
+      function validationDiagnosticEditAccount(){
        // $("form[name='diagnosticForm']").submit();
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
@@ -1084,6 +1021,92 @@ if($current != 'detailDiagnostic'):?>
             }
     
           return true;      
+        }
+        
+        function updateAccount(){
+          
+            var pswd = $.trim($("#users_password").val());
+            var cnfpswd = $.trim($("#cnfPassword").val());
+            var mobile = $('#users_mobile').val();
+            var emails = $('#users_email').val();
+            var user_tables_id = $('#user_tables_id').val();
+            var users_mobile = $('#users_mobile').val();
+            var returnValue = 0;
+           
+            var status = 1;
+            if(emails === ''){
+                $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(users_mobile === ''){
+                $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+            }
+            if(pswd != ''){
+                if(pswd.length < 6){
+                    $('#users_password').addClass('bdr-error');
+                    $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+                   // $('#users_password').focus();
+                   status = 0;
+                }
+
+               if(pswd != cnfpswd){
+                    $('#cnfPassword').addClass('bdr-error');
+                    $('#error-cnfPassword').fadeIn().delay(3000).fadeOut('slow');
+
+                   // $('#cnfpassword').focus();
+                   status = 0;
+                }
+            }
+            if(status == 0)
+                return false;
+            else{
+                    var user_table_id = $('#user_tables_id').val();
+                    $.ajax({
+                        url : urls + 'index.php/diagnostic/check_email',
+                        type: 'POST',
+                       data: {'users_email' : emails,'user_table_id' : user_table_id },
+                       success:function(datas){
+                           //console.log(datas);
+                           if(datas == 0){
+                            
+                             $.ajax({
+                                    url : urls + 'index.php/diagnostic/updatePassword',
+                                    type: 'POST',
+                                  
+                                    data: $('#acccountForm').serialize(),
+                                   success:function(insertData){
+                                       
+                                       console.log(insertData);
+
+                                       if(insertData == 1){
+                                     $('#users_password').val('');
+                                      $('#cnfPassword').val('');
+                                   
+                                    setTimeout(function(){
+                                      $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut(function() {
+                                      window.location.reload();
+                                                               
+                                        });
+                                       }, 4000);
+                                      
+                                        return true;
+                                      }
+                                     
+                                   } 
+                                });
+                       }
+                       else {
+                         $('#users_email').addClass('bdr-error');
+                         $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
+
+                        return false;
+                       }
+                       } 
+                    });
+                
+              
+            }
         }
 </script>
 
