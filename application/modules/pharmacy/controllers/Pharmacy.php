@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pharmacy extends CI_Controller {
+class Pharmacy extends MY_Controller {
 
      public function __construct() {
        parent:: __construct();
@@ -17,7 +17,8 @@ class Pharmacy extends CI_Controller {
        //print_r($data['pharmacyData']);
        //exit;
        
-        $this->load->view('pharmacyListing',$data);
+       // $this->load->view('pharmacyListing',$data);
+        $this->load->super_admin_template('pharmacyListing', $data,'pharmacy_script');
    }
     function getPharmacyDl(){
 
@@ -26,9 +27,10 @@ class Pharmacy extends CI_Controller {
  
    }
    function addPharmacy(){
-   		$data = array();
+   	$data = array();
         $data['allStates'] = $this->Pharmacy_model->fetchStates();
-        $this->load->view('addPharmacy',$data);
+        $this->load->super_admin_template('addPharmacy', $data,'pharmacy_script');
+       //$this->load->view('addPharmacy',$data);
    }
    function detailPharmacy($pharmacyId=''){
        $data = array();
@@ -36,7 +38,8 @@ class Pharmacy extends CI_Controller {
         $data['pharmacyId'] = $pharmacyId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
-        $this->load->view('pharmacyDetail',$data);
+      //  $this->load->view('pharmacyDetail',$data);
+        $this->load->super_admin_template('pharmacyDetail', $data,'pharmacy_script');
    }
    function fetchCity(){
        //echo "fdadas";exit;
@@ -67,48 +70,32 @@ class Pharmacy extends CI_Controller {
    
         $this->bf_form_validation->set_rules('pharmacy_mmbrTyp', 'Membership Type', 'required|trim');
       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
-        if (empty($_FILES['pharmacy_img']['name']))
-         {
-             $this->bf_form_validation->set_rules('pharmacy_img', 'File', 'required');
-        }
+       
         if ($this->bf_form_validation->run() === FALSE) {
           //echo validation_errors();
           //exit;
              $data = array();
              $data['allStates'] = $this->Pharmacy_model->fetchStates();
-            $this->load->view('addPharmacy',$data);
+             $this->load->super_admin_template('addPharmacy', $data,'pharmacy_script');
          }
          else {
              
-             $imagesname='';
-              if ($_FILES['pharmacy_img']['name'] ) {
-             $path = realpath(FCPATH.'assets/pharmacyImages/');
-             $temp = explode(".", $_FILES["pharmacy_img"]["name"]);
-                $newfilename = 'Pharmacy_'.round(microtime(true)) . '.' . end($temp);
-                $config['upload_path'] = $path;
-                $config['allowed_types'] = 'jpg|jpeg|gif|png';
-                $config['max_size'] = '5000';
-                $config['max_width']  = '1024';
-                $config['max_height']  = '768';
-                $config['file_name'] = $newfilename;
-              
-                $this->load->library('upload', $config);
-                $this->upload->initialize($config);
-               if ( ! $this->upload->do_upload('pharmacy_img'))
-                {
-                    $data = array();
-                    $data['allStates'] = $this->Pharmacy_model->fetchStates();
-                    $this->session->set_flashdata('valid_upload', $this->upload->display_errors());
-                    $this->load->view('addPharmacy',$data);
-                    return false;
-                 }
-                else
-                {
-                    $imagesname = $newfilename;
+           $imagesname = "";
+            if ($_FILES['avatar_file']['name']) {
+                $path = realpath(FCPATH . 'assets/pharmacyImages/');
+                $upload_data = $this->input->post('avatar_data');
+                $upload_data = json_decode($upload_data);
+                $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/pharmacyImages/', './assets/pharmacyImages/thumb/','pharmacy');
 
+                if (empty($original_imagesname)) {
+                    $data['allStates'] = $this->Pharmacy_model->fetchStates();
+                    $this->session->set_flashdata('valid_upload', $this->error_message);
+                    $this->load->super_admin_template('addPharmacy', $data, 'pharmacy_script');
+                    return false;
+                } else {
+                    $imagesname = $original_imagesname;
                 }
-                
-              } 
+            }
               
                //echo $imagesname;exit;
                 $pharmacy_phn = $this->input->post('pharmacy_phn');
@@ -145,8 +132,8 @@ class Pharmacy extends CI_Controller {
                      'pharmacy_zip' => $pharmacy_zip,
                      'pharmacy_27Src' => $isEmergency,
                      'pharmacy_img' => $imagesname,
-                    'creationTime' => strtotime(date("Y-m-d H:i:s")),
-                   'pharmacy_phn' => $finalNumber,
+                     'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                     'pharmacy_phn' => $finalNumber,
                     'pharmacy_lat' => $this->input->post('lat'),
                     'pharmacy_long' => $this->input->post('lng'),
                     'pharmacy_type'  => $this->input->post('pharmacyType') 
@@ -273,6 +260,57 @@ class Pharmacy extends CI_Controller {
                  }
                }
          }
+    }
+    
+    
+               /**
+     * @project Qyura
+     * @method editUploadImage
+     * @description update details page image profile
+     * @access public
+     * @return boolean
+     */
+    function editUploadImage() {
+
+        if ($_POST['avatar_file']['name']) {
+            $path = realpath(FCPATH . 'assets/pharmacyImages/');
+            $upload_data = $this->input->post('avatar_data');
+            $upload_data = json_decode($upload_data);
+
+            $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/pharmacyImages/', './assets/pharmacyImages/thumb/','pharmacy');
+
+            if (empty($original_imagesname)) {
+                $response = array('state' => 400, 'message' => $this->error_message);
+            } else {
+
+                $option = array(
+                    'pharmacy_img' => $original_imagesname,
+                    'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+                );
+                $where = array(
+                    'pharmacy_id' => $this->input->post('avatar_id')
+                );
+                $response = $this->Pharmacy_model->UpdateTableData($option, $where, 'qyura_pharmacy');
+                if ($response) {
+                    $response = array('state' => 200, 'message' => 'Successfully update avtar');
+                } else {
+                    $response = array('state' => 400, 'message' => 'Failed to update avtar');
+                }
+            }
+            echo json_encode($response);
+        } else {
+            $response = array('state' => 400, 'message' => 'Please select avtar');
+            echo json_encode($response);
+        }
+    }
+
+    function getUpdateAvtar($id) {
+        if (!empty($id)) {
+             $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($id);
+           //  print_r($data); exit;
+            echo "<img src='" . base_url() . "assets/pharmacyImages/thumb/original/" . $data['pharmacyData'][0]->pharmacy_img . "'alt='' class='logo-img' />";
+            exit();
+        }
     }
     
 }  
