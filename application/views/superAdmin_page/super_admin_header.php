@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="<?php echo base_url();?>assets/images/fevicon-m.ico" rel="shortcut icon">
-    <title>Diagnostic Centre Detail</title>
+    <title>Qyura | <?php if(isset($title) && !empty($title)): echo ucwords($title); endif; ?></title>
     
     <link href="<?php echo base_url();?>assets/css/framework.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/css/datepicker.css" rel="stylesheet">
@@ -189,19 +189,19 @@
                             </ul>
                         </li>
                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'pharmacy'):echo"active";endif;?>" href="#"><i class="fa fa-medkit"></i> 
                             <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'pharmacy' && $this->router->fetch_method() != 'addPharmacy'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'pharmacy' && $this->router->fetch_method() == 'addPharmacy'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
                             </ul>
                         </li>
-                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
+                          <li class="has_sub">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'ambulance'):echo"active";endif;?>" href="#"><i class="fa fa-ambulance"></i> 
                             <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'ambulance' && $this->router->fetch_method() != 'addAmbulance'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
+                                <li class="<?php if($this->router->fetch_method() == 'addAmbulance'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
                         <li class="has_sub">
