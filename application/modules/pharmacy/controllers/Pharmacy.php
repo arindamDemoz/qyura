@@ -18,6 +18,7 @@ class Pharmacy extends MY_Controller {
        //exit;
        
        // $this->load->view('pharmacyListing',$data);
+        $data['title'] = 'All Pharmacy';
         $this->load->super_admin_template('pharmacyListing', $data,'pharmacy_script');
    }
     function getPharmacyDl(){
@@ -29,6 +30,7 @@ class Pharmacy extends MY_Controller {
    function addPharmacy(){
    	$data = array();
         $data['allStates'] = $this->Pharmacy_model->fetchStates();
+        $data['title'] = 'Add Pharmacy';
         $this->load->super_admin_template('addPharmacy', $data,'pharmacy_script');
        //$this->load->view('addPharmacy',$data);
    }
@@ -38,6 +40,7 @@ class Pharmacy extends MY_Controller {
         $data['pharmacyId'] = $pharmacyId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
+        $data['title'] = 'Pharmacy Detail';
       //  $this->load->view('pharmacyDetail',$data);
         $this->load->super_admin_template('pharmacyDetail', $data,'pharmacy_script');
    }
@@ -308,7 +311,7 @@ class Pharmacy extends MY_Controller {
         if (!empty($id)) {
              $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($id);
            //  print_r($data); exit;
-            echo "<img src='" . base_url() . "assets/pharmacyImages/thumb/original/" . $data['pharmacyData'][0]->pharmacy_img . "'alt='' class='logo-img' />";
+            echo "<img src='" . base_url() . "assets/pharmacyImages/" . $data['pharmacyData'][0]->pharmacy_img . "'alt='' class='logo-img' />";
             exit();
         }
     }
