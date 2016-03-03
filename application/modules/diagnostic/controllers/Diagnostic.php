@@ -52,13 +52,13 @@ class Diagnostic extends MY_Controller {
     function detailDiagnostic($diagnosticId = '') {
 
         $data = array();
-        // echo $diagnosticId;exit;
+        
         $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
         $data['gallerys'] = $this->diagnostic_model->customGet(array('table' => 'qyura_diagonsticsImages', 'where' => array('diagonsticImages_diagonsticId' => $diagnosticId, 'diagonsticImages_deleted' => 0)));
-        //print_r($data);exit;
+        
         $data['allCountry'] = $this->diagnostic_model->fetchCountry();
         $data['allStates'] = $this->diagnostic_model->fetchStates();
-        
+        $data['diagnosticId'] = $diagnosticId;
         $option = array(
                     'table' => 'qyura_diagnosticCenterTimeSlot',
                     'where' => array(
@@ -66,11 +66,7 @@ class Diagnostic extends MY_Controller {
                         'diagnosticCenterTimeSlot_deleted' => 0
                     )
                 );
-         $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
-       /// dump($data['AlltimeSlot']);
-         //echo date('h:i A',strtotime($data['AlltimeSlot'][1]->diagnosticCenterTimeSlot_endTime));
-        
-       // exit();
+        $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
         $data['diagnosticId'] = $diagnosticId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
@@ -224,13 +220,13 @@ class Diagnostic extends MY_Controller {
                 );
                 $this->diagnostic_model->insertUsersRoles($insertusersRoles);
 
-                $insertData['diagnostic_usersId'] = $diagnostic_usersId;
+               // $insertData['diagnostic_usersId'] = $diagnostic_usersId;
                 $insertData = array(
                     'diagnostic_name' => $diagnostic_name,
                     'diagnostic_address' => $diagnostic_address,
                     'diagnostic_cntPrsn' => $diagnostic_cntPrsn,
                     'diagnostic_phn' => $finalNumber,
-                    //'diagnostic_dsgn'=> $diagnostic_dsgn,
+                    'diagnostic_usersId'=> $diagnostic_usersId,
                     'diagnostic_mbrTyp' => $diagnostic_mmbrTyp,
                     'diagnostic_countryId' => $diagnostic_countryId,
                     'diagnostic_stateId' => $diagnostic_stateId,
@@ -244,7 +240,7 @@ class Diagnostic extends MY_Controller {
                     'diagnostic_long' => $this->input->post('lng'),
                     'inherit_status' => 1
                 );
-                // print_r($insertData);exit;
+                // dump($insertData);exit;
                 $diagnosticId = $this->diagnostic_model->insertDiagnostic($insertData);
             }
             $this->session->set_flashdata('message', 'Data inserted successfully !');
@@ -544,7 +540,7 @@ class Diagnostic extends MY_Controller {
     function addDiagnosticAwards() {
         $Id = $this->input->post('diagnosticId');
         $Awards_awardsName = $this->input->post('diaAwards_awardsName');
-        $awardData = array('diagnosticAwards_awardsName' => $Awards_awardsName, 'diagnosticAwards_diagnosticId' => $Id);
+        $awardData = array('diagnosticAwards_awardsName' => $Awards_awardsName, 'diagnosticAwards_diagnosticId' => $Id,'creationTime'=>strtotime(date("Y-m-d H:i:s")));
         $option = array(
             'table' => 'qyura_diagnosticAwards',
             'data' => $awardData
@@ -613,7 +609,7 @@ class Diagnostic extends MY_Controller {
             foreach ($dataAwards as $key => $val) {
                 $showTotalAwards .= '<div class="row m-t-10">
         <div class="col-md-8 col-sm-8 col-xs-8">
-           <input type="text" class="form-control" name="hospitalAwards_awardsName" id=' . $val->diagnosticAwards_id . ' value=' . $val->diagnosticAwards_awardsName . ' placeholder="FICCI Healthcare " />
+           <input type="text" class="form-control" name="hospitalAwards_awardsName" id=' . $val->diagnosticAwards_id . ' value="' . $val->diagnosticAwards_awardsName . '" placeholder="FICCI Healthcare " />
          </div>
            <div class="col-md-2 col-sm-2 col-xs-2">
             <a onclick="editAwards(' . $val->diagnosticAwards_id . ')"><i class="fa fa-pencil-square-o fa-2x m-t-5 label-plus" title="Edit Awards"></i></a>
@@ -642,7 +638,7 @@ class Diagnostic extends MY_Controller {
     function addDiagnosticServices() {
         $Id = $this->input->post('diagnosticId');
         $service_name = $this->input->post('service_name');
-        $data = array('diagnosticServices_serviceName' => $service_name, 'diagnosticServices_diagnosticId' => $Id);
+        $data = array('diagnosticServices_serviceName' => $service_name, 'diagnosticServices_diagnosticId' => $Id,'diagnosticServices_deleted'=>0 ,'creationTime'=>strtotime(date("Y-m-d H:i:s")));
         $option = array(
             'table' => 'qyura_diagnosticServices',
             'data' => $data
@@ -655,7 +651,7 @@ class Diagnostic extends MY_Controller {
     function editDiagnosticServices() {
         $id = $this->input->post('awardsId');
         $awardsName = $this->input->post('service_name');
-        $updatedData = array('diagnosticServices_serviceName' => $awardsName);
+        $updatedData = array('diagnosticServices_serviceName' => $awardsName,'modifyTime'=>strtotime(date("Y-m-d H:i:s")));
         $updatedDataWhere = array('diagnosticServices_id' => $id);
         $option = array(
             'table' => 'qyura_diagnosticServices',
@@ -711,7 +707,7 @@ class Diagnostic extends MY_Controller {
             foreach ($services as $key => $val) {
                 $template .= '<div class="row m-t-10">
         <div class="col-md-8 col-sm-8 col-xs-8">
-           <input type="text" class="form-control" name="digAwards_ServiceName" id=' . $val->diagnosticServices_id . ' value=' . $val->diagnosticServices_serviceName . ' placeholder="FICCI Healthcare " />
+           <input type="text" class="form-control" name="digAwards_ServiceName" id=' . $val->diagnosticServices_id . ' value="' . $val->diagnosticServices_serviceName . '" placeholder="FICCI Healthcare " />
          </div>
            <div class="col-md-2 col-sm-2 col-xs-2">
             <a onclick="editServices(' . $val->diagnosticServices_id . ')"><i class="fa fa-pencil-square-o fa-2x m-t-5 label-plus" title="Edit Awards"></i></a>
@@ -1274,6 +1270,49 @@ class Diagnostic extends MY_Controller {
         );
         $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
         echo $data[0]->quotationDetailTests_instruction;
+    }
+    
+    function updatePassword(){
+        
+
+        $users_email = $this->input->post('users_email');
+        $user_tables_id = $this->input->post('user_table_id');
+        $users_password = $this->input->post('users_password');
+        
+        $users_mobile = $this->input->post('users_mobile');
+        $diagnostic_mbrTyp = $this->input->post('diagnostic_mbrTyp');
+       
+      
+        $where = array(
+                        'users_id' => $user_tables_id
+                    );
+        $userTableData = array(
+            'users_mobile' => $users_mobile,
+            'users_email' => $users_email,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $return = $this->diagnostic_model->UpdateTableData($userTableData,$where,'qyura_users');
+        if(!empty($users_password))
+        {
+            $encrypted = md5($users_password);
+             $update= array(
+                      'users_password'=>  $encrypted,
+                        'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
+                    );
+
+                   
+                $return = $this->diagnostic_model->UpdateTableData($update,$where,'qyura_users');
+        }    
+        
+        $Data = array(
+            'diagnostic_mbrTyp' => $diagnostic_mbrTyp,
+            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+        );
+        $Wheres = array('diagnostic_usersId' => $user_tables_id);
+        $return = $this->diagnostic_model->UpdateTableData($Data,$Wheres,'qyura_diagnostic');
+       echo $return ;
+        //echo $encrypted;
+        exit;
     }
 
 }

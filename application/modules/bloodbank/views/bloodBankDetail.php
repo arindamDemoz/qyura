@@ -138,19 +138,23 @@
                                                                 <p class="col-md-8  col-sm-8 text-right t-xs-left"> <?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?> </p>
                                                             </article>
                                                         </aside>
-                                                         <form name="bloodDetail" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="bloodDetail" method="post">
+                                                         <form name="submitForm" action="<?php echo site_url('bloodbank/saveDetailBloodBank/'.$bloodBankId); ?>" id="submitForm" method="post">
                                                         <aside id="newDetail" style="display:<?php echo $showStatus;?>;">
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Blood Bank Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="bloodBank_name" name="bloodBank_name" type="text" value="<?php echo $bloodBankData[0]->bloodBank_name;?>">
+                                                                    <label class="error" style="display:none;" id="error-bloodBank_name"> please enter bloodbank name</label>
+                                            
                                                                     <label class="error" > <?php echo form_error("bloodBank_name"); ?></label>
                                                                 </div>
                                                             </article>
                                                             <article class="clearfix m-b-10">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
                                                                 <div class="col-md-8 col-sm-8">
-                                                                    <textarea class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
+                                                                    <textarea  class="form-control" id="geocomplete" name="bloodBank_add" type="text" ><?php if(isset($bloodBankData[0]->bloodBank_add)){ echo $bloodBankData[0]->bloodBank_add; }?></textarea>
+                                                                     <label class="error" style="display:none;" id="error-bloodBank_add"> please enter an address</label>
+                                         
                                                                     <label class="error" > <?php echo form_error("bloodBank_add"); ?></label>
                                                                 </div>
                                                             </article>
@@ -178,7 +182,7 @@
                                                                     </aside>
                                                                     <br />
                                                                     <?php $moreExpolde ='';}?>
-                                                               
+                                                                <label class="error" style="display:none;" id="error-bloodBank_phn"> please enter a valid phone number</label>
                                                                     <p class="m-t-10">* If it is landline, include Std code with number </p>
                                                                 </div>
                                                             </article>
@@ -188,6 +192,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                  <input class="form-control" id="users_email" name="users_email" type="email" value="<?php echo $bloodBankData[0]->users_email;?>" onblur="checkEmailFormatDetail()" />
                                                                   <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>
+                                                                  <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                                                 <label class="error" > <?php echo form_error("users_email"); ?></label>
                                                                 </div>
                                                             </article>
@@ -197,7 +202,9 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                  
                                                                     <input class="form-control" id="bloodBank_cntPrsn" name="bloodBank_cntPrsn" type="text" value="<?php if(isset($bloodBankData[0]->bloodBank_cntPrsn)){ echo $bloodBankData[0]->bloodBank_cntPrsn; }?>">
+                                                                    <label class="error" style="display:none;" id="error-bloodBank_cntPrsn"> please enter contact person name</label>
                                         </div>                       <label class="error" > <?php echo form_error("bloodBank_cntPrsn"); ?></label>
+                                        
                                                             </article>
 
 
@@ -238,7 +245,7 @@
                                         <th>Check Availability</th>
                                         <th>Quantity</th>
                                         </tr>
-                                        <tr>
+                                     <!--   <tr>
                                         <td><h6>O +ve</h6></td>
                                         <td><aside class="checkbox checkbox-success m-t-5">
                                                         <input type="checkbox" id="opve">
@@ -247,7 +254,17 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="opveDetail" style="display:none">50 Unit</h6></td>
+                                       
+                                        <td><h6 id="opveDetail" style="display:none"> <span id="detailbu">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu">Cancle</button>
+                                                                    </span>
+                                                </h6></td>
                                         </tr>
                                            
                                         <tr>
@@ -259,7 +276,18 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="onveDetail" style="display:none">50 Unit</h6></td>
+                                        <td><h6 id="onveDetail" style="display:none">
+                                                <span id="detailbu1">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu1 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu1" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu1">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu1">Cancle</button>
+                                                                    </span>
+                                            
+                                            </h6></td>
                                         </tr>
                                            
                                          <tr>
@@ -271,7 +299,15 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="apveDetail" style="display:none">150 Unit</h6></td>
+                                        <td><h6 id="apveDetail" style="display:none"> <span id="detailbu2">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu2 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu2" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu2">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu2">Cancle</button>
+                                                                    </span></h6></td>
                                         </tr>
                                            
                                         <tr>
@@ -283,8 +319,42 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="anveDetail" style="display:none">50 Unit</h6></td>
+                                        <td><h6 id="anveDetail" style="display:none"> <span id="detailbu3">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu3 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu3" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu3">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu3">Cancle</button>
+                                                                    </span></h6></td>
+                                        </tr> -->
+                                        
+                                       <?php foreach($bloodBankCatData as $key=>$val){
+                                        $id= $val->bloodCatBank_id; ?>
+                                        <tr>
+                                        <td><h6><?php echo $val->bloodCat_name;?></h6></td>
+                                        <td><aside class="checkbox checkbox-success m-t-5">
+                                                        <input type="checkbox" id="anve_<?php echo $id; ?>" onclick="openBloodUnit(<?php echo $id; ?>)">
+                                                        <label>
+
+                                                        </label>
+                                                    </aside>
+                                            </td>
+                                        <td><h6 id="anveDetail_<?php echo $id; ?>" style="display:none"> <span id="detailbu_<?php echo $id; ?>">
+                                                    <span id="unitshow_<?php echo $id; ?>"> <?php echo $val->bloodCatBank_Unit;?></span> Unit
+                                         <a class="cl-pencil editbu_<?php echo $id;?> m-l-20" onclick="anchorClick(<?php echo $id;?>)"><i class="fa fa-pencil"></i></a>
+                                         </span>
+                                         <span id="newbu_<?php echo $id;?>" style="display:none">
+                                             <input type="text" class="shortinp" id ="unit_<?php echo $id;?>" value="<?php echo $val->bloodCatBank_Unit;?>" onkeypress="return isNumberKey(event)" maxlength="4" />
+                                         <button type="button" class="btn btn-xs btn-success" onclick="updateBloodUnit(<?php echo $id;?>)">Save</button>
+                                         <button type="button" class="btn btn-xs btn-danger" onclick="anchorClick(<?php echo $id;?>)">Cancle</button>
+                                         </span></h6></td>
                                         </tr>
+
+
+
+                                        <?php } ?>
                                         </table>    
                                     </aside>
                                         </article>
@@ -324,7 +394,8 @@
                                                    
                                                     <input type="password" name="cnfPassword" class="form-control" placeholder="Confirm Password" id="cnfPassword" />
                                                    
-                                                    <p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>
+                                                    <!--<p><a class="m-t-10" href="javascript:void(0)" onclick="updatePassword()">Edit</a></p>-->
+                                                    <p><button type="button" class="btn btn-success waves-effect waves-light pull-right m-t-10" onclick="updatePassword()">Edit</button></p>
                                                     <p class="error" id="error-password_email_check" style="display:none;"> Server not respond properly!</p>
                                                     <p class="text-success" style="display:none;" id="error-password_email_check_success"> Password Changed Successfully!</p>
                                                 </aside>

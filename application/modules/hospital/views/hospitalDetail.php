@@ -41,13 +41,16 @@
                                                <?php } else { ?>
                                                  <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>
-                                                  <article class="logo-up" style="display:none">
+                                                   <article class="logo-up" style="display:none">
                                                     <div class="fileUpload btn btn-sm btn-upload logo-Upload">
-                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
-                                                        <input id="uploadBtn" type="file" class="upload" />
+                                                        <span><i class="fa fa-cloud-upload fa-3x avatar-view"></i></span>
+<!--                                                        <input id="uploadBtn" type="file" class="upload" />-->
+                                                         <input type="hidden" style="display:none;" class="no-display" id="file_action_url" name="file_action_url" value="<?php echo site_url('hospital/editUploadImage');?>">
+                                                         <input type="hidden" style="display:none;" class="no-display" id="load_url" name="load_url" value="<?php echo site_url('hospital/getUpdateAvtar/'.$this->uri->segment(3));?>">
                                                     </div>
                                                 </article>
                                                 <!-- description div -->
+                                                
                                                 <div class='pic-edit'>
                                                     <h3><a id="picEdit" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
                                                     <h3><a id="picEditClose" class="pull-center cl-white" title="Cancel"  style="display:none;"><i class="fa fa-times"></i></a></h3>
@@ -87,7 +90,7 @@
                                         <li class=" ">
                                             <a data-toggle="tab" href="#gallery">Gallery</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class="<?php if(isset($showTimeSlotBox) && !empty($showTimeSlotBox)){echo $showTimeSlotBox;}?>">
                                             <a data-toggle="tab" href="#timeslot">Time Slot</a>
                                         </li>
                                        <li class=" ">
@@ -918,12 +921,12 @@
                                     <!--Gllery Starts -->
                                     <section class="tab-pane fade in" id="gallery">
                                         <div class="fileUpload btn btn-sm btn-upload im-upload">
-                                            <span class="btn btn-appointment avatar-view">Add More</span>
+                                            <span class="btn btn-appointment avatar-view-gallery">Add More</span>
                                            <!-- <input type="file" class="upload" id="uploadBtn"> -->
                                             
                                         </div>
                                          <input type="hidden" style="display:none;" class="no-display" id="file_action_url_gallery" name="file_action_url_gallery" value="<?php echo site_url('hospital/galleryUploadImage');?>">
-                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo base_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
+                                          <input type="hidden" style="display:none;" class="no-display" id="load_url_gallery" name="load_url_gallery" value="<?php echo site_url('hospital/getGalleryImage/'.$this->uri->segment(3));?>">
                                           
                                        <div class="clearfix" id="display_gallery">
 
@@ -1114,193 +1117,21 @@
 
                                     <article class="clearfix m-top-40 p-b-20">
                            <aside class="table-responsive">
-                              <table class="table all-doctor">
-                                 <tbody>
-                                    <tr class="border-a-dull">
-                                       <th>Photo</th>
-                                       <th>Name and Id</th>
-                                       <th>Speciality</th>
-                                       <th>Experience</th>
-                                       <th>Date of Joining</th>
-                                       <th>Phone</th>
-                                       <th>Action</th>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Alpesh Dhakad</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Surgury</h6>
-                                       </td>
-                                       <td>
-                                          <h6>20 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Nov, 2014</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Manoj Kumar</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Cardiology</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Prabha Jha</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Eye Specialist</h6>
-                                       </td>
-                                       <td>
-                                          <h6>10 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-1.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Alpesh Dhakad</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Surgury</h6>
-                                       </td>
-                                       <td>
-                                          <h6>20 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Nov, 2014</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-2.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Manoj Kumar</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Cardiology</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <i class="fa fa-check-circle doc-online"></i>
-                                          <h6><img src="assets/images/doctor/doc-3.jpg" alt="" class="img-responsive" /></h6>
-                                       </td>
-                                       <td>
-                                          <h6>Dr. Prabha Jha</h6>
-                                          <p>ACH089</p>
-                                       </td>
-                                       <td>
-                                          <h6>Eye Specialist</h6>
-                                       </td>
-                                       <td>
-                                          <h6>10 Years</h6>
-                                       </td>
-                                       <td>
-                                          <h6>15 Jan, 2013</h6>
-                                       </td>
-                                       <td>
-                                          <h6>9826000777</h6>
-                                          <h6>0731-2349999</h6>
-                                       </td>
-                                       <td>
-                                          <h6><a href="doctor-profile.html" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">View Detail</a></h6>
-                                          <a href="edit-doctor.html" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>
-                                       </td>
-                                    </tr>
-                    
-                                </tbody>
+                              <table class="table all-doctor" id="hospital_doctors">
+                                 <thead>
+                                        <tr class="border-a-dull">
+                                            <th>Photo</th>
+                                            <th>Name and Id</th>
+                                             <th>Speciality</th>
+                                            <th>Consulting fee</th>
+                                            <th>Experience</th>
+                                            <th>Phone</th>
+                                            <th>Action</th>
+                                        </tr>
+                                     </thead>
                               </table>
                            </aside>
-                            <article class="clearfix m-t-20 p-b-20">
-                        <ul class="list-inline list-unstyled pull-right call-pagination">
-                           <li class="disabled"><a href="#">Prev</a></li>
-                           <li><a href="#">1</a></li>
-                           <li class="active"><a href="#">2</a></li>
-                           <li><a href="#">3</a></li>
-                           <li><a href="#">4</a></li>
-                           <li><a href="#">Next</a></li>
-                        </ul>
-                     </article>                              
+                                                   
                         </article>
                                     </section>
                                     <!-- All Doctors Ends -->
@@ -1544,6 +1375,7 @@
                             </div>
                           </div>
                     </div>
+                     <?php echo $this->load->view('edit_gallery_crop_modal');?>
                      <?php echo $this->load->view('edit_upload_crop_modal');?>
                     <!-- Gallery Model Ends -->
    

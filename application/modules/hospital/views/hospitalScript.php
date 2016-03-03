@@ -27,7 +27,7 @@ if($current != 'detailHospital'):?>
 <script src="<?php echo base_url(); ?>assets/cropper/main.js"></script>
 <?php else:?>
 
-<!--<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>-->
+<script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>
 <script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
 
 <?php endif;?>
@@ -146,6 +146,40 @@ function fetchCity(stateId) {
                     $("#newDetail").toggle();
                 });
             });
+            
+            
+                      /**
+            * @project Qyura
+            * @description  datatable listing
+            * @access public
+            */
+        var oTableDr = $('#hospital_doctors').DataTable({
+             "processing": true,
+            "bServerSide": false,
+            "bLengthChange": false,
+            "bProcessing": true,
+            "iDisplayLength": 10,
+            "sPaginationType": "full_numbers",
+            "columns": [
+                {"data": "doctors_img"},
+                {"data": "name"},
+                {"data": "specialityName"},
+                {"data": "consFee"},
+                {"data": "exp"},
+                {"data": "doctors_phn"},
+                {"data": "view"},
+            ],
+            "ajax": {
+                "url": urls + 'index.php/diagnostic/getDiagnosticDoctorsDl/'+ hospitalId,
+                "type": "POST",
+                "data": function (d) {
+                   
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                }
+            }
+        });
+        
+    
 
  function addDiagnostic(){
          $('.diagonasticCheck').each(function() {
@@ -533,32 +567,38 @@ function addAwards(){
         var stateIds = $.trim($('#StateId').val());
         var hospital_mblNo = $.trim($('#hospital_mblNo').val());
         var aboutUs = $.trim($('#hospital_aboutUs').val());
+        var status = 1;
   // alert(aboutUs);
             if($('#hospital_name').val()==''){
                 $('#hospital_name').addClass('bdr-error');
                 $('#error-hospital_name').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
                 //return false;
                // $('#hospital_name').focus();
             }
           if($('#hospital_type').val()==''){
                 $('#hospital_type').addClass('bdr-error');
                 $('#error-hospital_type').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_type').focus();
             }
             if($.trim($('#hospital_countryId').val()) == ''){
                 $('#hospital_countryId').addClass('bdr-error');
                 $('#error-hospital_countryId').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_countryId').focus();
             }
           if(!$.isNumeric(stateIds)){
                // console.log("in state");
                 $('#hospital_stateId').addClass('bdr-error');
                 $('#error-hospital_stateId').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_stateId').focus();
             }
            if(!$.isNumeric(cityId)){
                 $('#hospital_cityId').addClass('bdr-error');
                 $('#error-hospital_cityId').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_cityId').focus();
             }
            
@@ -566,51 +606,60 @@ function addAwards(){
                 
                 $('#hospital_zip').addClass('bdr-error');
                 $('#error-hospital_zip').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 // $('#hospital_zip').focus();
             } 
 
            if($("input[name='hospital_address']" ).val()==''){
                 $('#hospital_address').addClass('bdr-error');
                 $('#error-hospital_address').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_address').focus();
             }
             
           if(!$.isNumeric(phn)){
                 $('#hospital_phn1').addClass('bdr-error');
                 $('#error-hospital_phn').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 // $('#hospital_phn').focus();
             }
             
             if(!check.test(hsname)){
                 $('#hospitalServices_serviceName1').addClass('bdr-error');
                 $('#error-hospitalServices_serviceName').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 // $('#hospitalServices_serviceName1').focus();
             }
            
            if(!check.test(cpname)){
                 $('#hospital_cntPrsn').addClass('bdr-error');
                 $('#error-hospital_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 // $('#hospital_cntPrsn').focus();
             }
             if(!check.test(dsgn)){
                 $('#hospital_dsgn').addClass('bdr-error');
                 $('#error-hospital_dsgn').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                
                // $('#hospital_dsgn').focus();
             }
             if($('#hospital_mmbrTyp').val()==''){
                 $('#hospital_mmbrTyp').addClass('bdr-error');
                 $('#error-hospital_mmbrTyp').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_mmbrType').focus();
             }
             if(aboutUs === ''){
                 $('#hospital_aboutUs').addClass('bdr-error');
                 $('#error-hospital_aboutUs').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#hospital_aboutUs').focus();
             }
             if($('#users_email').val()==''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#users_email').focus();
             }
            
@@ -618,22 +667,25 @@ function addAwards(){
            if(!($.isNumeric(hospital_mblNo))){
                 $('#hospital_mblNo').addClass('bdr-error');
                 $('#error-hospital_mblNo').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 
                // $('#hospital_mblNo').focus();
             }
            if($('#users_password').val()=='' || pswd.length < 6){
                 $('#users_password').addClass('bdr-error');
                 $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                // $('#users_password').focus();
             }
             if($('#cnfPassword').val()=='' || pswd!= cnfpswd){
                 $('#cnfPassword').addClass('bdr-error');
                 $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
                 
                // $('#cnfpassword').focus();
             }
                //debugger;
-        if(emails !=''){
+        if(emails !='' &&  status == 1){
               check_email(emails);
               return false;
             }

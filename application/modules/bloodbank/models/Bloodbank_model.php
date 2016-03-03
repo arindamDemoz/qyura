@@ -135,6 +135,40 @@ class Bloodbank_model extends CI_Model {
         //echo $this->db->last_query();exit;
          return TRUE;
     }
-     
+    
+    function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
+        //echo 
+        $this->db->select(implode(",",$select));
+        $this->db->from($tableName);
+        foreach($condition as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+        if(!empty($notIn))
+            $this->db->where_not_in($fieldName,$notIn);
+        $data= $this->db->get(); 
+      
+     return $data->result();
+      //echo $this->db->last_query(); exit;
+    }
+    function insertTableData($tableName , $insertData = array()){
+        $this->db->insert($tableName, $insertData); 
+      
+        $insert_id = $this->db->insert_id();
+        //echo $this->db->last_query(); exit;
+        return  $insert_id;
+    }
+    
+    function fetchbloodBankCategoryData( $condition = NULL){
+         $this->db->select('Blood.bloodCat_name,Bllcat.bloodCatBank_id,Bllcat.bloodCatBank_Unit,Bllcat.bloodBank_id');
+     $this->db->from('qyura_bloodCat AS Blood');
+     $this->db->join('qyura_bloodCatBank AS Bllcat','Bllcat.bloodCats_id = Blood.bloodCat_id','right');
+     foreach($condition as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+      // $this->db->order_by("blood.creationTime", "desc"); 
+      $data= $this->db->get(); 
+    // echo $this->db->last_query();exit;
+     return $data->result();
+    }
 }   
 

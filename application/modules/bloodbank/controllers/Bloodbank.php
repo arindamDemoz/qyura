@@ -16,6 +16,7 @@ class Bloodbank extends MY_Controller {
         $data = array();
         $data['allStates'] = $this->Bloodbank_model->fetchStates();
         $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData();
+        $data['title'] = 'BloodBank';
         $this->load->super_admin_template('bloodBankList', $data, 'bloodBankScript');
     }
 
@@ -39,6 +40,7 @@ class Bloodbank extends MY_Controller {
     function Addbloodbank() {
         $data = array();
         $data['allStates'] = $this->Bloodbank_model->fetchStates();
+        $data['title'] = 'Add BloodBank';
         $this->load->super_admin_template('Addbloodbank', $data, 'bloodBankScript');
     }
 
@@ -50,12 +52,23 @@ class Bloodbank extends MY_Controller {
      * @param bloodBankId
      * @return array
      */
-    function detailBloodBank($bloodBankId = '') {
+   function detailBloodBank($bloodBankId = '') {
         $data = array();
         $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData($bloodBankId);
         $data['bloodBankId'] = $bloodBankId;
+        $bllodBankSelect=array('users_id');
+        $bllodBankCondition = array('bloodBank_id' => $bloodBankId);
+        $Blooddata = $this->Bloodbank_model->fetchTableData($bllodBankSelect,'qyura_bloodBank',$bllodBankCondition);
+        $conditions = array();
+        
+        $conditions['Bllcat.bloodBank_id'] = $Blooddata[0]->users_id;
+        $conditions['Blood.bloodCat_deleted'] = 0;
+        $select = array('Bllcat.bloodCatBank_id','Bllcat.bloodCatBank_Unit','Blood.bloodCat_name');
+         $data['bloodBankCatData'] = $this->Bloodbank_model->fetchbloodBankCategoryData($conditions);
+        // $this->Bloodbank_model->fetchbloodBankCategoryData();        
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
+        $data['title'] = 'BloodBank';
         $this->load->super_admin_template('bloodBankDetail', $data, 'bloodBankScript');
     }
 
@@ -109,6 +122,7 @@ class Bloodbank extends MY_Controller {
         if ($this->bf_form_validation->run($this) === FALSE) {
             $data = array();
             $data['allStates'] = $this->Bloodbank_model->fetchStates();
+            $data['title'] = 'Add BloodBank';
             $this->load->super_admin_template('Addbloodbank', $data, 'bloodBankScript');
             return false;
         } else {
@@ -192,8 +206,23 @@ class Bloodbank extends MY_Controller {
                     'bloodBank_long' => $this->input->post('lng'),
                     'users_id' => $bloodbank_usersId
                 );
-
                 $bloodBankId = $this->Bloodbank_model->insertBloodBank($insertData);
+                            $conditions = array();
+                             $conditions['bloodCat_deleted'] = 0;
+                            $select = array('bloodCat_name','bloodCat_id');
+                            $bloodBankCatData = $this->Bloodbank_model->fetchTableData($select,'qyura_bloodCat',$conditions);
+                      
+                            foreach ($bloodBankCatData as $key => $val){
+                                $bloodCatData = array(
+                                   'bloodBank_id'=>  $bloodbank_usersId,
+                                   'bloodCats_id' => $val->bloodCat_id,
+                                   'bloodCatBank_Unit' => 0,
+                                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                                );
+                                $this->Hospital_model->insertTableData('qyura_bloodCatBank',$bloodCatData);
+                                $bloodCatData='';
+                            }
+                
             }
             $this->session->set_flashdata('message', 'Data inserted successfully !');
             redirect('bloodbank/Addbloodbank');
@@ -216,7 +245,6 @@ class Bloodbank extends MY_Controller {
             $user_table_id = $this->input->post('user_table_id');
         }
         $email = $this->Bloodbank_model->fetchEmail($users_email, $user_table_id);
-        //echo $email;exit;
         echo $email;
         exit;
     }
@@ -239,10 +267,25 @@ class Bloodbank extends MY_Controller {
         if ($this->bf_form_validation->run() === FALSE) {
 
             $data = array();
-            $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData($bloodBankId);
-            $data['bloodBankId'] = $bloodBankId;
+           /* $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData($bloodBankId);
+            $data['bloodBankId'] = $bloodBankId; */
             $data['showStatus'] = 'block';
             $data['detailShow'] = 'none';
+            
+            $data['bloodBankData'] = $this->Bloodbank_model->fetchbloodBankData($bloodBankId);
+            $data['bloodBankId'] = $bloodBankId;
+            $bllodBankSelect=array('users_id');
+            $bllodBankCondition = array('bloodBank_id' => $bloodBankId);
+            $Blooddata = $this->Bloodbank_model->fetchTableData($bllodBankSelect,'qyura_bloodBank',$bllodBankCondition);
+            $conditions = array();
+        
+            $conditions['Bllcat.bloodBank_id'] = $Blooddata[0]->users_id;
+            $conditions['Blood.bloodCat_deleted'] = 0;
+            $select = array('Bllcat.bloodCatBank_id','Bllcat.bloodCatBank_Unit','Blood.bloodCat_name');
+            $data['bloodBankCatData'] = $this->Bloodbank_model->fetchbloodBankCategoryData($conditions);
+            
+            
+            $data['title'] = 'BloodBank';
             // $this->load->view('bloodBankDetail', $data);
             $this->load->super_admin_template('bloodBankDetail', $data, 'bloodBankScript');
         } else {
@@ -407,6 +450,22 @@ class Bloodbank extends MY_Controller {
         $img = str_replace('[removed]', '', $img);
         $data = base64_decode($img);
         return $data;
+    }
+    
+    function bloodUnitUpdate(){
+        $bloodCatBank_id = $this->input->post('bloodCatBank_id');
+        $bloodCatBank_Unit = $this->input->post('bloodCatBank_Unit');
+        $updateBloodBank = array(
+            'bloodCatBank_Unit' => $bloodCatBank_Unit,
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+
+        $where = array(
+            'bloodCatBank_id' => $bloodCatBank_id
+        );
+        $return = $this->Bloodbank_model->UpdateTableData($updateBloodBank, $where, 'qyura_bloodCatBank');
+        echo $return;
+        exit;
     }
 
 }

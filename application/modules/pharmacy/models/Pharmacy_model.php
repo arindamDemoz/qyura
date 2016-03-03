@@ -21,19 +21,21 @@ class Pharmacy_model extends CI_Model {
         return $this->db->get()->result();
     }
     function fetchEmail($email,$usersId = NULL){
-        $this->db->select('users_email');
+       $this->db->select('users_email');
         $this->db->from('qyura_users');
+        $this->db->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId = qyura_users.users_id','left');
         if($usersId) {
-            $this->db->where('users_id !=',$usersId);
+            $this->db->where('qyura_users.users_id !=',$usersId);
         }
-         $this->db->where('users_email',$email); 
+        $this->db->where('qyura_usersRoles.usersRoles_roleId',5);
+         $this->db->where('qyura_users.users_email',$email); 
        $result = $this->db->get();
-       // return $this->db->last_query();
+       //return $this->db->last_query();
        
         if($result->num_rows() > 0)
             return 1;
         else             
-            return 0; 
+            return 0;  
     } 
         
     function insertPharmacyUser($insertData){
@@ -52,7 +54,7 @@ class Pharmacy_model extends CI_Model {
         return  $insert_id;
     }
     function fetchpharmacyData($condition = NULL){
-         $this->db->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
+         $this->db->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name, (CASE pharmacy_type  WHEN  1 THEN "Medicine" WHEN 2 THEN "Homyopathic" WHEN  3 THEN "Herbal" END) as pharmacy_type, pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn, (CASE pharmacy_mmbrTyp WHEN 1 THEN "Life Time" WHEN 2 THEN "Health Club" END) AS pharmacy_mmbrTyp ,usr.users_id,usr.users_email, (CASE pharmacy_27Src WHEN 0 THEN "No" WHEN 1 THEN "Yes"  END) as pharmacy_27Src ,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
         $this->db->from('qyura_pharmacy AS pharmacy');
         $this->db->join('qyura_city AS City','City.city_id = pharmacy.pharmacy_cityId','left');
         $this->db->join('qyura_users AS usr','usr.users_id = pharmacy.pharmacy_usersId','left');
@@ -86,7 +88,7 @@ class Pharmacy_model extends CI_Model {
             
          $imgUrl = base_url().'assets/pharmacyImages/$1';    
          
-         $this->datatables->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
+         $this->datatables->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address, TRIM( TRAILING "|" FROM pharmacy_phn) as pharmacy_phn ,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
         $this->datatables->from('qyura_pharmacy AS pharmacy');
         $this->datatables->join('qyura_city AS City','City.city_id = pharmacy.pharmacy_cityId','left');
         $this->datatables->join('qyura_users AS usr','usr.users_id = pharmacy.pharmacy_usersId','left');
@@ -116,7 +118,7 @@ class Pharmacy_model extends CI_Model {
        
               $this->datatables->add_column('pharmacy_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'pharmacy_address');
        
-         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="pharmacy/detailPharmacy/$1">View Detail</a> <a href="#" class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>', 'pharmacy_id');
+         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="pharmacy/detailPharmacy/$1">View Detail</a> <a href="#"  class="btn btn-success waves-effect waves-light m-b-5 applist-btn hide">Edit Detail</a>', 'pharmacy_id');
 
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
