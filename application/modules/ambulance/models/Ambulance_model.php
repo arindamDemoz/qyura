@@ -111,6 +111,7 @@ class Ambulance_model extends CI_Model {
         isset($states) && $states != '' ? $this->datatables->where('ambulance_stateId', $states) : '';
         
       
+        $this->datatables->order_by('ambulance_id');
         
  if($condition)
         $this->datatables->where(array('ambulance.ambulance_id'=> $condition));

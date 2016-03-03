@@ -15,6 +15,7 @@ class Ambulance extends MY_Controller {
         $data = array();
         $data['allStates'] = $this->Ambulance_model->fetchStates();
         $data['ambulanceData'] = $this->Ambulance_model->fetchambulanceData();
+        $data['title'] = 'Ambulance';
         $this->load->super_admin_template('ambulanceListing', $data, 'ambulanceScript');
     }
 
@@ -29,6 +30,7 @@ class Ambulance extends MY_Controller {
         $data['ambulanceId'] = $ambulanceId;
         $data['editdetail'] = 'none';
         $data['detail'] = 'block';
+        $data['title'] = (!empty($data['ambulanceData'][0]->ambulance_name)) ? $data['ambulanceData'][0]->ambulance_name: "Ambulance Details";
         $this->load->super_admin_template('ambulanceDetail', $data, 'ambulanceScript');
     }
 
@@ -96,6 +98,7 @@ class Ambulance extends MY_Controller {
     function addAmbulance() {
         $data = array();
         $data['allStates'] = $this->Ambulance_model->fetchStates();
+        $data['title'] = "Add Ambulance";
         $this->load->super_admin_template('addAmbulance', $data, 'ambulanceScript');
     }
 
@@ -135,6 +138,7 @@ class Ambulance extends MY_Controller {
 
             $data = array();
             $data['allStates'] = $this->Ambulance_model->fetchStates();
+            $data['title'] = 'Add Ambulance';
             $this->load->super_admin_template('addAmbulance', $data, 'ambulanceScript');
         } else {
 
@@ -309,7 +313,7 @@ class Ambulance extends MY_Controller {
                 'where'=> array('ambulance_id' => $id)
             );
             $data = $this->Ambulance_model->customGet($option);
-            echo "<img src='" . base_url() . "assets/diagnosticsImage/thumb/original/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />";
+            echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/original/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />";
             exit();
         }
     }

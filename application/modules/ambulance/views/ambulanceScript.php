@@ -235,11 +235,13 @@ if($current == 'detailAmbulance'):?>
          $(document).ready(function () {
                 var oTable = $('#ambulance_datatable').DataTable({
                     "processing": true,
-                    "serverSide": true,
+                    "bServerSide": true,
+                   // "searching": true,
                     "bLengthChange": false,
-                    "bFilter": false,
-                    "iDisplayStart ": 10,
-                    "iDisplayLength" : 12,
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    "bPaginate": true,
+                    "sPaginationType": "full_numbers",
                     "columns": [
                         {"data": "ambulance_img"},
                         {"data": "ambulance_name"},
