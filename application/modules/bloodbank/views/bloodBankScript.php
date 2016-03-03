@@ -505,4 +505,69 @@ if($current == 'detailBloodBank'):?>
          $("#avatar-modal").modal('hide');
      }); 
  
+ $("#picEditClose").click(function () {
+    $(".logo-up").hide();
+    $(".logo-img").show();
+    $("#picEdit").show();
+    $("#picEditClose").hide();
+
+});
+function isNumberKey(evt, id) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        $("#" + id).html("Please enter number key");
+        return false;
+    } else {
+        $("#" + id).html('');
+        return true;
+    }
+}
 </script>
+ <script>
+   /* $(".editbu").click(function () {
+    $("#detailbu").toggle();
+    $("#newbu").toggle();
+    });
+    
+    $(".editbu1").click(function () {
+    $("#detailbu1").toggle();
+    $("#newbu1").toggle();
+    });
+    
+    $(".editbu2").click(function () {
+    $("#detailbu2").toggle();
+    $("#newbu2").toggle();
+    });
+    
+    $(".editbu3").click(function () {
+    $("#detailbu3").toggle();
+    $("#newbu3").toggle();
+    });*/
+    
+    function openBloodUnit(id){
+        $('#anveDetail_'+id).show();
+    }
+    
+    function anchorClick(id){
+        $("#detailbu_"+id).toggle();
+          $("#newbu_"+id).toggle();
+    }
+    function updateBloodUnit(id){
+        var bloodUnit = $('#unit_'+id).val();
+        if(bloodUnit != ''){
+        $.ajax({
+               url : urls + 'index.php/bloodbank/bloodUnitUpdate',
+               type: 'POST',
+              data: {'bloodCatBank_id' : id,'bloodCatBank_Unit' : bloodUnit},
+              success:function(datas){
+                  if(datas){
+                   $('#unitshow_'+id).html(bloodUnit);
+                   anchorClick(id);
+                   return true;
+              }
+             
+              } 
+           });
+       }   
+    }
+    </script>
