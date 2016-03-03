@@ -8,6 +8,7 @@ class Hospital extends MY_Controller {
        parent:: __construct();
        $this->load->model('Hospital_model');
         $this->load->library('datatables');
+        $this->load->model('Bloodbank_model');
    }
    
   function index(){
@@ -458,6 +459,22 @@ class Hospital extends MY_Controller {
                            $this->Hospital_model->insertUsersRoles($insertusersRoles);
                          
                            unset($insertusersRoles);
+                           
+                            $conditions = array();
+                             $conditions['bloodCat_deleted'] = 0;
+                            $select = array('bloodCat_name','bloodCat_id');
+                            $bloodBankCatData = $this->Bloodbank_model->fetchTableData($select,'qyura_bloodCat',$conditions);
+                      
+                            foreach ($bloodBankCatData as $key => $val){
+                                $bloodCatData = array(
+                                   'bloodBank_id'=>  $hospital_usersId,
+                                   'bloodCats_id' => $val->bloodCat_id,
+                                   'bloodCatBank_Unit' => 0,
+                                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                                );
+                                $this->Hospital_model->insertTableData('qyura_bloodCatBank',$bloodCatData);
+                                $bloodCatData='';
+                            }
                       }
                   }
                   
@@ -726,6 +743,22 @@ class Hospital extends MY_Controller {
                            $bloodBankDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
                             $bloodBankDetail['inherit_status']= 1;
                             $bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
+                            
+                            $conditions = array();
+                             $conditions['bloodCat_deleted'] = 0;
+                            $select = array('bloodCat_name','bloodCat_id');
+                            $bloodBankCatData = $this->Bloodbank_model->fetchTableData($select,'qyura_bloodCat',$conditions);
+                      
+                            foreach ($bloodBankCatData as $key => $val){
+                                $bloodCatData = array(
+                                   'bloodBank_id'=>  $this->input->post('user_tables_id'),
+                                   'bloodCats_id' => $val->bloodCat_id,
+                                   'bloodCatBank_Unit' => 0,
+                                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                                );
+                                $this->Hospital_model->insertTableData('qyura_bloodCatBank',$bloodCatData);
+                                $bloodCatData='';
+                            }
                          
                        } 
                       
@@ -735,7 +768,13 @@ class Hospital extends MY_Controller {
                         'users_id' => $this->input->post('user_tables_id')
                         );
                         $this->Hospital_model->deleteTable('qyura_bloodBank',$bloodWhereUser);
+                        
+                        $bloodCatDataDelete = array(
+                                   'bloodBank_id'=>  $this->input->post('user_tables_id'),
+                                   );
+                       $this->Hospital_model->deleteTable('qyura_bloodCatBank',$bloodCatDataDelete);     
                   }
+                  
                   
                      if(isset($_POST['pharmacy_chk'])==1){
                       

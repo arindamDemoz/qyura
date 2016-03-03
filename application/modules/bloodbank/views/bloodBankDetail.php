@@ -245,7 +245,7 @@
                                         <th>Check Availability</th>
                                         <th>Quantity</th>
                                         </tr>
-                                        <tr>
+                                     <!--   <tr>
                                         <td><h6>O +ve</h6></td>
                                         <td><aside class="checkbox checkbox-success m-t-5">
                                                         <input type="checkbox" id="opve">
@@ -254,7 +254,17 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="opveDetail" style="display:none">50 Unit</h6></td>
+                                       
+                                        <td><h6 id="opveDetail" style="display:none"> <span id="detailbu">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu">Cancle</button>
+                                                                    </span>
+                                                </h6></td>
                                         </tr>
                                            
                                         <tr>
@@ -266,7 +276,18 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="onveDetail" style="display:none">50 Unit</h6></td>
+                                        <td><h6 id="onveDetail" style="display:none">
+                                                <span id="detailbu1">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu1 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu1" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu1">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu1">Cancle</button>
+                                                                    </span>
+                                            
+                                            </h6></td>
                                         </tr>
                                            
                                          <tr>
@@ -278,7 +299,15 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="apveDetail" style="display:none">150 Unit</h6></td>
+                                        <td><h6 id="apveDetail" style="display:none"> <span id="detailbu2">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu2 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu2" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu2">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu2">Cancle</button>
+                                                                    </span></h6></td>
                                         </tr>
                                            
                                         <tr>
@@ -290,8 +319,42 @@
                                                         </label>
                                                     </aside>
                                             </td>
-                                        <td><h6 id="anveDetail" style="display:none">50 Unit</h6></td>
+                                        <td><h6 id="anveDetail" style="display:none"> <span id="detailbu3">
+                                                                     50 Unit
+                                                                     <a class="cl-pencil editbu3 m-l-20"><i class="fa fa-pencil"></i></a>
+                                                                    </span>
+                                                                    <span id="newbu3" style="display:none">
+                                                                    <input type="text" class="shortinp" value="50"  />
+                                                                    <button type="button" class="btn btn-xs btn-success editbu3">Save</button>
+                                                                    <button type="button" class="btn btn-xs btn-danger editbu3">Cancle</button>
+                                                                    </span></h6></td>
+                                        </tr> -->
+                                        
+                                       <?php foreach($bloodBankCatData as $key=>$val){
+                                        $id= $val->bloodCatBank_id; ?>
+                                        <tr>
+                                        <td><h6><?php echo $val->bloodCat_name;?></h6></td>
+                                        <td><aside class="checkbox checkbox-success m-t-5">
+                                                        <input type="checkbox" id="anve_<?php echo $id; ?>" onclick="openBloodUnit(<?php echo $id; ?>)">
+                                                        <label>
+
+                                                        </label>
+                                                    </aside>
+                                            </td>
+                                        <td><h6 id="anveDetail_<?php echo $id; ?>" style="display:none"> <span id="detailbu_<?php echo $id; ?>">
+                                                    <span id="unitshow_<?php echo $id; ?>"> <?php echo $val->bloodCatBank_Unit;?></span> Unit
+                                         <a class="cl-pencil editbu_<?php echo $id;?> m-l-20" onclick="anchorClick(<?php echo $id;?>)"><i class="fa fa-pencil"></i></a>
+                                         </span>
+                                         <span id="newbu_<?php echo $id;?>" style="display:none">
+                                             <input type="text" class="shortinp" id ="unit_<?php echo $id;?>" value="<?php echo $val->bloodCatBank_Unit;?>" onkeypress="return isNumberKey(event)" maxlength="4" />
+                                         <button type="button" class="btn btn-xs btn-success" onclick="updateBloodUnit(<?php echo $id;?>)">Save</button>
+                                         <button type="button" class="btn btn-xs btn-danger" onclick="anchorClick(<?php echo $id;?>)">Cancle</button>
+                                         </span></h6></td>
                                         </tr>
+
+
+
+                                        <?php } ?>
                                         </table>    
                                     </aside>
                                         </article>

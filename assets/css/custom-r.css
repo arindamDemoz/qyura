@@ -1161,9 +1161,6 @@ table.top-doctor tr td h6 img {
     font-size: 15px;
     font-weight: 600;
 }
-<<<<<<< HEAD
-=======
-
 
 /* -- Upload Button -- */
 
@@ -1478,4 +1475,10 @@ aside.show-image a.delete {
   opacity:1;
   visibility:visible;
 }
->>>>>>> 0649ebb1cd1a1f84ba69b16ba205af381cb494cb
+.m-l-20{margin-left:20px;} 
+
+.shortinp{    width: 60px;
+    height: 25px;
+    margin-right: 10px;
+    padding-left: 5px;
+}
