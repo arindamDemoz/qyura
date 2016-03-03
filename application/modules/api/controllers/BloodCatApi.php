@@ -49,7 +49,7 @@ class BloodCatApi extends MyRest {
             $notIn = explode(',', $notIn);
 
            
-            $where = array('quera_bloodCatBank.bloodCats_id='=> $catId,'qyura_bloodBank.bloodBank_deleted'=>0);
+            $where = array('qyura_bloodCatBank.bloodCats_id='=> $catId,'qyura_bloodBank.bloodBank_deleted'=>0);
             $this->db
                     ->select('`qyura_bloodBank`.`bloodBank_id`, `qyura_bloodBank`.`bloodBank_name`, `qyura_bloodBank`.`bloodBank_add`,`qyura_bloodBank`.`bloodBank_lat`,`qyura_bloodBank`.`bloodBank_long`,
                     `qyura_bloodBank`.`bloodBank_photo`,
@@ -59,8 +59,8 @@ class BloodCatApi extends MyRest {
                     ->from('qyura_bloodBank')
                     ->join('qyura_usersRoles', 'qyura_usersRoles.usersRoles_userId=qyura_bloodBank.users_id','left')
                     ->join('qyura_hospital', 'qyura_usersRoles.usersRoles_parentId=qyura_hospital.hospital_usersId','left')
-                    ->join('quera_bloodCatBank', 'quera_bloodCatBank.bloodBank_id=qyura_bloodBank.bloodBank_id','left')
-                    ->join('qyura_bloodCat', 'qyura_bloodCat.bloodCat_id=quera_bloodCatBank.bloodCats_id','left')
+                    ->join('qyura_bloodCatBank', 'qyura_bloodCatBank.bloodBank_id=qyura_bloodBank.bloodBank_id','left')
+                    ->join('qyura_bloodCat', 'qyura_bloodCat.bloodCat_id=qyura_bloodCatBank.bloodCats_id','left')
                      ->where($where)
                     ->limit(DATA_LIMIT)
                     ->having(array('distance <=' => 5));
