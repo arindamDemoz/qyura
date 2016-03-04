@@ -316,4 +316,25 @@ class Pharmacy extends MY_Controller {
         }
     }
     
+     function createCSV(){
+       $pharmacy_stateId = $this->input->post('pharmacy_stateId');
+       $pharmacy_cityId = $this->input->post('pharmacy_cityId');
+      
+       if($pharmacy_stateId != '' && $pharmacy_stateId != null)
+        $pharmacy_stateId = $this->input->post('pharmacy_stateId');
+       if($pharmacy_cityId != '' && $pharmacy_cityId != null)
+        $pharmacy_cityId = $this->input->post('pharmacy_cityId');
+       
+        $where=array('pharmacy_deleted'=> 0,'pharmacy_cityId'=> $pharmacy_cityId,'pharmacy_stateId'=>$pharmacy_stateId);
+       // print_r($where); exit;
+        $array[]= array('Image Name','Pharmacy Name','City','Phone Number','Address');
+        $data = $this->Pharmacy_model->createCSVdata($where);
+       
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'PharmacyDetail.csv');
+        return True;
+        exit;
+    }
+    
 }  

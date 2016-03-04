@@ -124,5 +124,39 @@ class Pharmacy_model extends CI_Model {
         // echo $this->datatables->last_query();
 
     }
+    
+     function createCSVdata($where){
+        $imgUrl = base_url() . 'assets/pharmacyImages/thumb/original/';
+         $this->db->select('pharmacy_img,pharmacy_name,city_name,SUBSTRING(pharmacy_phn, 1, CHAR_LENGTH(pharmacy_phn)-1)AS phone,pharmacy_address');
+        $this->db->from('qyura_pharmacy');
+        $this->db->join('qyura_city','city_id = pharmacy_cityId','left');
+        foreach($where as $key=>$val){
+           
+            if($where[$key] === 0){
+            $this->db->where($key, $val); 
+            }
+            if($where[$key] != ''){
+            $this->db->where($key, $val); 
+            }
+        }
+    
+        $data= $this->db->get(); 
+       // echo $this->db->last_query(); exit;
+        $result= array();
+       // echo "<pre>";print_r($result);echo"</pre>";
+       //exit;
+        //echo $this->db->last_query();
+        $i=1;
+        foreach($data->result() as $key=>$val){
+            $result[$i]['pharmacy_img'] = $imgUrl.$val->pharmacy_img;
+            $result[$i]['pharmacy_name'] = $val->pharmacy_name;
+            $result[$i]['city_name'] = $val->city_name;
+            $result[$i]['phone'] = $val->phone;
+            $result[$i]['pharmacy_address'] = $val->pharmacy_address;
+           $i++;
+        }
+         return $result;
+        
+      }
 }   
 

@@ -441,6 +441,22 @@ $("#picEditClose").click(function () {
 
 
 });
+
+
+     function createCSV(){
+         var pharmacy_stateId = '';
+         var pharmacy_cityId = '';
+         pharmacy_stateId = $('#pharmacy_stateId').val();
+         pharmacy_cityId = $('#pharmacy_cityId').val();
+         $.ajax({
+              url : urls + 'index.php/pharmacy/createCSV',
+              type: 'POST',
+             data: {'pharmacy_stateId' : pharmacy_stateId ,'pharmacy_cityId': pharmacy_cityId },
+             success:function(datas){
+                console.log(datas)
+             }
+          });
+     }  
  </script>   
 
 

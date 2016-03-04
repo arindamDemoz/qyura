@@ -243,11 +243,12 @@
                             </ul>
                         </li>
                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Healthcare Packag.</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'healthcare'):echo"active";endif;?>" href="#"><i class="fa fa-newspaper-o"></i><span>Healthcare Packag</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="health-packages.html">Healthcare Package</a></li>
-                                <li><a href="add-health-package.html">Add New Package</a></li>
-                                <li><a href="health-package-booking.html">Package Booking</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'healthcare' && $this->router->fetch_method() != 'addHealthpkg'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/healthcare">Healthcare Package</a></li>
+                                
+                                <li class="<?php if($this->router->fetch_class() == 'healthcare' && $this->router->fetch_method() == 'addHealthpkg'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/healthcare/addHealthpkg">Add New Package</a></li>
+                                <li><a href="<?php echo base_url();?>index.php/healthcare">Package Booking</a></li>
                             </ul>
                         </li>
                         <li class="has_sub">

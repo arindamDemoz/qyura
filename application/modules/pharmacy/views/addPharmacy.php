@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="map_canvas"></div>
-                     <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="pharmacyForm" method="post" action="<?php echo site_url(); ?>/pharmacy/SavePharmacy" novalidate="novalidate" enctype="multipart/form-data" >
+                     <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="pharmacyForm" method="post" action="<?php echo site_url(); ?>/healthcare/SavePharmacy" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="StateId" name="StateId" value="" />
                        
                         <!-- Left Section Start -->
