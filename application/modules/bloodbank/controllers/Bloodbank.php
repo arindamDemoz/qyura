@@ -427,23 +427,6 @@ class Bloodbank extends MY_Controller {
         }
     }
 
-    function uploadImages($imageName, $folderName, $newName) {
-        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
-        $config['upload_path'] = $path;
-        //echo $config['upload_path']; 
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '5000';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '768';
-        $config['file_name'] = $newName;
-        //$field_name = $_FILES['hospital_photo']['name'];
-
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
-        $this->upload->do_upload($imageName);
-        return TRUE;
-    }
-
     function getImageBase64Code($img) {
         $img = str_replace('data:image/png;base64,', '', $img);
         $img = str_replace(' ', '+', $img);
@@ -485,6 +468,69 @@ class Bloodbank extends MY_Controller {
        
         array_to_csv($arrayFinal,'BloodbankDetail.csv');
         return True;
+        exit;
+    }
+    
+    function uploadImages($imageName, $folderName, $newName) {
+        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
+        $config['upload_path'] = $path;
+        //echo $config['upload_path']; 
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['max_size'] = '1024';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '540';
+        $config['file_name'] = $newName;
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload($imageName)) {
+
+            $data ['error'] = $this->upload->display_errors();
+            $data ['status'] = 0;
+            return $data;
+        } else {
+            $data['imageData'] = $this->upload->data();
+            $data ['status'] = 1;
+            return $data;
+        }
+    }
+
+  function bloodbankBackgroundUpload($bloodBankId) {
+          if (isset($_FILES["file"]["name"])) {
+
+            $temp = explode(".", $_FILES['file']["name"]);
+            $microtime = round(microtime(true));
+            $imageName = "bloodbank";
+            $newfilename = "" . $imageName . "_" . $microtime . '.' . end($temp);
+            $uploadData = $this->uploadImages('file', 'BloodBank', $newfilename);
+            if ($uploadData['status']) {
+                $imageName = $uploadData['imageData']['file_name'];
+
+                    $data = array('bloodBank_background_img' => $imageName);
+                    $where = array('bloodBank_id' => $bloodBankId);
+             
+                $response = $this->Bloodbank_model->UpdateTableData($data,$where,'qyura_bloodBank');
+                if ($response) {
+                    $result = array('status' => 200, 'messsage' => "successfully update image");
+                    echo json_encode($result);
+                }
+            } else {
+                $result = array('status' => 400, 'messsage' => $uploadData['error']);
+                echo json_encode($result);
+            }
+        }
+    }
+    
+    function getBackgroundImage($bloodBankId) {
+        $select = array('bloodBank_background_img');
+        $where = array('bloodBank_id' => $bloodBankId);
+
+        $response = $this->Bloodbank_model->fetchTableData($select,'qyura_bloodBank',$where);
+        if ($response) {
+          echo  $image = base_url().'assets/BloodBank/'.$response[0]->bloodBank_background_img;
+        
+
+        }
         exit;
     }
 
