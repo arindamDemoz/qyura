@@ -6,9 +6,9 @@ class Hospital extends MY_Controller {
     
    public function __construct() {
        parent:: __construct();
-       $this->load->model('Hospital_model');
+       $this->load->model(array('Hospital_model','bloodbank/Bloodbank_model'));
         $this->load->library('datatables');
-        $this->load->model('Bloodbank_model');
+               
    }
    
   function index(){
@@ -274,7 +274,7 @@ class Hospital extends MY_Controller {
         $stateId = $this->input->post('stateId');
         $cityData = $this->Hospital_model->fetchCity($stateId);
         $cityOption = '';
-        $cityOption .='<option value=>Select Your City</option>';
+       // $cityOption .='<option value=>Select Your City</option>';
         foreach($cityData as $key=>$val ) {
             $cityOption .= '<option value='.$val->city_id.'>'. strtoupper($val->city_name).'</option>';
         }
@@ -1526,4 +1526,26 @@ class Hospital extends MY_Controller {
             exit();
         }
     }
+    
+    function createCSV(){
+       
+        $hospital_stateId ='';
+        $hospital_cityId ='';
+       if(isset($_POST['hospital_stateId']))
+        $hospital_stateId = $this->input->post('hospital_stateId');
+       if(isset($_POST['hospital_cityId']))
+        $hospital_cityId = $this->input->post('hospital_cityId');
+       
+        $where=array('hospital_deleted'=> 0,'hospital_cityId'=> $hospital_cityId,'hospital_stateId'=>$hospital_stateId);
+        $array[]= array('Image Name','Hospital Name','City','Phone Number','Address');
+        $data = $this->Hospital_model->createCSVdata($where);
+       
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'HospitalDetail.csv');
+        return True;
+        exit;
+    }
+    
+  
 }

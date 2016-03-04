@@ -1,5 +1,5 @@
 <style type="text/css">
-    #datatable_bloodbank_filter
+    #hospital_datatable_filter
     {
         display:none;
     }
@@ -14,7 +14,7 @@ if(!empty($id)){
 }?>
 
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
-<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+<!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
@@ -34,8 +34,7 @@ if($current != 'detailHospital'):?>
 
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
-<script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
- <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
 <script src="<?php echo base_url();?>assets/js/pages/addHospital.js"> </script>
 <script src="<?php echo base_url(); ?>assets/js/pages/hospital-detail.js"></script>
@@ -88,14 +87,18 @@ function fetchCity(stateId) {
                     "iDisplayLength": 10,
                     "bPaginate": true,
                     "sPaginationType": "full_numbers",
-
+                    "columnDefs": [{
+                    "targets": [0, 5],
+                    "orderable": false
+                }],
+            
                     "columns": [
-                        {"data": "hospital_img"},
-                        {"data": "hospital_name"},
+                        {"data": "hospital_img" , "searchable": false, "order": false,orderable: false, width: "8%" },
+                        {"data": "hospital_name", "searchable": false, "order": false},
                         {"data": "city_name"},
                         {"data": "hospital_phn"},
                         {"data": "hospital_address"},
-                        {"data": "view"},
+                        {"data": "view","searchable": false, "order": false,orderable: false, width: "8%" },
                     ],
                     
                     "ajax": {
@@ -155,7 +158,7 @@ function fetchCity(stateId) {
             */
         var oTableDr = $('#hospital_doctors').DataTable({
              "processing": true,
-            "bServerSide": false,
+            "bServerSide": true,
             "bLengthChange": false,
             "bProcessing": true,
             "iDisplayLength": 10,
@@ -169,6 +172,7 @@ function fetchCity(stateId) {
                 {"data": "doctors_phn"},
                 {"data": "view"},
             ],
+        
             "ajax": {
                 "url": urls + 'index.php/diagnostic/getDiagnosticDoctorsDl/'+ hospitalId,
                 "type": "POST",
@@ -1183,6 +1187,20 @@ function addAwards(){
         }
     }
         
+     function createCSV(){
+         var hospital_stateId = '';
+         var hospital_cityId = '';
+         hospital_stateId = $('#hospital_stateId').val();
+         hospital_cityId = $('#hospital_cityId').val();
+         $.ajax({
+              url : urls + 'index.php/hospital/createCSV',
+              type: 'POST',
+             data: {'hospital_stateId' : hospital_stateId ,'hospital_cityId': hospital_cityId },
+             success:function(datas){
+                console.log(datas)
+             }
+          });
+     }   
     </script>
 </body>
 </html>

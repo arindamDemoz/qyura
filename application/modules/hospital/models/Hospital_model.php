@@ -431,5 +431,38 @@ class Hospital_model extends CI_Model {
 
         return $this->datatables->generate();
     }
+    
+    function createCSVdata($where){
+        $imgUrl = base_url() . 'assets/hospitalImages/thumb/original/';
+         $this->db->select('hospital_img,hospital_name,city_name,hospital_phn,hospital_address');
+        $this->db->from('qyura_hospital');
+        $this->db->join('qyura_city','city_id = hospital_cityId','left');
+        foreach($where as $key=>$val){
+           
+            if($where[$key] === 0){
+            $this->db->where($key, $val); 
+            }
+            if($where[$key] != ''){
+            $this->db->where($key, $val); 
+            }
+        }
+    
+        $data= $this->db->get(); 
+        $result= array();
+       // echo "<pre>";print_r($result);echo"</pre>";
+       //exit;
+        //echo $this->db->last_query();
+        $i=1;
+        foreach($data->result() as $key=>$val){
+            $result[$i]['hospital_img'] = $imgUrl.$val->hospital_img;
+            $result[$i]['hospital_name'] = $val->hospital_name;
+            $result[$i]['city_name'] = $val->city_name;
+            $result[$i]['hospital_phn'] = $val->hospital_phn;
+            $result[$i]['hospital_address'] = $val->hospital_address;
+           $i++;
+        }
+         return $result;
+        
+      }
 
 }
