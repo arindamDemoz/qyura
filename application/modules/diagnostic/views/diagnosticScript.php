@@ -9,7 +9,6 @@ if(isset($diagnosticId) && !empty($diagnosticId)){
     $check = $diagnosticId; 
 }?>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
-<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
@@ -28,9 +27,21 @@ if($current != 'detailDiagnostic'):?>
 <script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js"></script>
 <!--<script src="<?php echo base_url();?>assets/js/angular.min.js"></script>-->
 <script src="<?php echo base_url();?>assets/js/pages/diagdetail.js"></script>
-<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>
+<!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>-->
+<script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
+
+   <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script>
+    <!--<script src="<?php echo base_url(); ?>assets/js/angular.min.js"> </script>-->
+    
+
+
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
+
+    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script> 
+<!--     <script src="<?php echo base_url();?>assets/js/fileUpload/fileinput.js" type="text/javascript"></script> -->
+    
 <script> 
      var urls = "<?php echo base_url()?>";
      var diagnosticId = "<?php echo $check?>";
@@ -61,6 +72,7 @@ if($current != 'detailDiagnostic'):?>
     
       $(document).ready(function(){
           
+ 
           fetchStates();
           loadAwards();
           loadServices();
@@ -243,8 +255,9 @@ if($current != 'detailDiagnostic'):?>
             return false;
       j = parseInt(j)+parseInt(1); 
       $('#countPnone').val(j);
-      $('#multiPhoneNumber').append('<input type=text class=form-control name=diagnostic_phn[] placeholder=9837000123 maxlength="10" id=diagnostic_phn'+j + ' />');
-     $('#multiPreNumber').append('<select class=selectpicker data-width=100% name=pre_number[] id=multiPreNumber'+j+'><option value=91>+91</option><option value=1>+1</option></select>');
+      $('#multiPhoneNumber').append('<input type=text class=form-control name=diagnostic_phn[] placeholder=9837000123 maxlength="10" id=diagnostic_phn'+j + ' onkeypress="return isNumberKey(event)" />');
+      
+     $('#multiPreNumber').append('</br><select class=selectpicker data-width=100% name=pre_number[] id=multiPreNumber'+j+'><option value=91>+91</option><option value=1>+1</option></select>');
       $('#multiPreNumber'+j).selectpicker('refresh');
    }
 
@@ -824,7 +837,15 @@ if($current != 'detailDiagnostic'):?>
               // return false;
               status = 0;
             }
-          if($('#diagnostic_type').val()==''){
+            
+          if($('#diagnostic_dsgn').val()==''){
+                $('#diagnostic_dsgn').addClass('bdr-error');
+                $('#error-diagnostic_dsgn').fadeIn().delay(3000).fadeOut('slow');
+               // $('#hospital_type').focus();
+               status = 0;
+            }
+            
+            if($('#diagnostic_type').val()==''){
                 $('#diagnostic_type').addClass('bdr-error');
                 $('#error-diagnostic_type').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_type').focus();
@@ -1125,11 +1146,13 @@ if($current != 'detailDiagnostic'):?>
                                       $('#cnfPassword').val('');
                                    
                                     setTimeout(function(){
-                                      $('#error-password_email_check_success').fadeIn().delay(4000).fadeOut(function() {
+                                      $('#users_password').removeClass('bdr-error');
+                                      $('#cnfPassword').removeClass('bdr-error');
+                                      $('#error-password_email_check_success').fadeIn().delay(3000).fadeOut(function() {
                                       window.location.reload();
                                                                
                                         });
-                                       }, 4000);
+                                       }, 3000);
                                       
                                         return true;
                                       }
@@ -1160,6 +1183,72 @@ if($current != 'detailDiagnostic'):?>
         return true;
     }
 }
+
+ function backgroundImageReload(id){
+          $('.bg-picture').load(urls + 'index.php/diagnostic/getBackgroundImage/'+id,function () {
+        });
+    }
+
+$(document).ready(function (e) {
+    
+    $("#uploadimage").on('submit',(function(e) {
+            e.preventDefault();
+            $("#messageErrors").empty();
+            $('#loading').show();
+            $.ajax({
+            url: urls + 'index.php/diagnostic/diagnosticBackgroundUpload/'+diagnosticId, // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+                var obj = jQuery.parseJSON(data);
+                if(obj.status == 200){
+                     $("#messageErrors").html("<div class='alert alert-success'>"+obj.messsage+"</div>");
+                      backgroundImageReload(diagnosticId);
+                      $("#changeBg").modal('hide');
+                    
+                }else{
+                    $("#messageErrors").html("<div class='alert alert-danger'>"+obj.messsage+"</div>");
+                }
+
+            }
+            });
+    }));
+// Function to preview image after validation
+
+    
+$("#uploadBtnDd").change(function() {
+
+$("#messageErrors").empty(); // To remove the previous error message
+    var file = this.files[0];
+    var imagefile = file.type;
+    var match= ["image/jpeg","image/png","image/jpg"];
+    if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+    {
+    $('#previewing').attr('src','noimage.png');
+    $("#messageErrors").html("<div class='alert alert-danger'><p id='error'>Please Select A valid Image File</p><span id='error_message'>Only jpeg, jpg and png Images type allowed</span></div>");
+    return false;
+    }
+    else
+    {
+    var reader = new FileReader();
+    reader.onload = imageIsLoaded;
+    reader.readAsDataURL(this.files[0]);
+    }
+    });
+
+function imageIsLoaded(e) {
+    $("#file").css("color","green");
+    $('#image_preview').css("display", "block");
+    $('#previewing').attr('src', e.target.result);
+    $('#previewing').attr('width', '500px');
+    $('#previewing').attr('height', '230px');
+}
+});
+
 </script>
 
 </body>

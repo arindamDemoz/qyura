@@ -16,6 +16,7 @@ class Diagnostic extends MY_Controller {
         $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData();
         //print_r($data['diagnosticData'] );exit;
         // $this->load->view('diagnosticlisting',$data);
+        $data['title'] = 'Diagnostic';
         $this->load->super_admin_template('diagnosticlisting', $data, 'diagnosticScript');
     }
 
@@ -46,30 +47,32 @@ class Diagnostic extends MY_Controller {
     function addDiagnostic() {
         $data = array();
         $data['allStates'] = $this->diagnostic_model->fetchStates();
+        $data['title'] = 'Add Diagnostic';
         $this->load->super_admin_template('addDiagcenter', $data, 'diagnosticScript');
     }
 
     function detailDiagnostic($diagnosticId = '') {
 
         $data = array();
-        
+
         $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
         $data['gallerys'] = $this->diagnostic_model->customGet(array('table' => 'qyura_diagonsticsImages', 'where' => array('diagonsticImages_diagonsticId' => $diagnosticId, 'diagonsticImages_deleted' => 0)));
-        
+
         $data['allCountry'] = $this->diagnostic_model->fetchCountry();
         $data['allStates'] = $this->diagnostic_model->fetchStates();
         $data['diagnosticId'] = $diagnosticId;
         $option = array(
-                    'table' => 'qyura_diagnosticCenterTimeSlot',
-                    'where' => array(
-                        'diagnosticCenterTimeSlot_diagnosticId' => $diagnosticId,
-                        'diagnosticCenterTimeSlot_deleted' => 0
-                    )
-                );
+            'table' => 'qyura_diagnosticCenterTimeSlot',
+            'where' => array(
+                'diagnosticCenterTimeSlot_diagnosticId' => $diagnosticId,
+                'diagnosticCenterTimeSlot_deleted' => 0
+            )
+        );
         $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
         $data['diagnosticId'] = $diagnosticId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
+        $data['title'] = (!empty($data['diagnosticData'])) ? $data['diagnosticData'][0]->diagnostic_name : "Diagnostic Details";
         $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
     }
 
@@ -138,7 +141,7 @@ class Diagnostic extends MY_Controller {
 
         $this->bf_form_validation->set_rules('diagnostic_cntPrsn', 'Contact Person', 'required|trim');
         $this->bf_form_validation->set_rules('diagnostic_mbrTyp', 'Membership Type', 'required|trim');
-
+        $this->bf_form_validation->set_rules('diagnostic_dsgn', 'Designation', 'required|trim');
 
         $this->bf_form_validation->set_rules('diagnostic_mblNo', 'Diagnostic Mobile No', 'required|trim');
 
@@ -153,6 +156,7 @@ class Diagnostic extends MY_Controller {
         if ($this->bf_form_validation->run() === FALSE) {
             $data = array();
             $data['allStates'] = $this->diagnostic_model->fetchStates();
+            $data['title'] = "Add Diagnostic";
             $this->load->super_admin_template('addDiagcenter', $data, 'diagnosticScript');
         } else {
 
@@ -197,6 +201,7 @@ class Diagnostic extends MY_Controller {
             $diagnostic_cityId = $this->input->post('diagnostic_cityId');
             $diagnostic_mblNo = $this->input->post('diagnostic_mblNo');
             $diagnostic_zip = $this->input->post('diagnostic_zip');
+            $diagnostic_dsgn = $this->input->post('diagnostic_dsgn');
 
 
             $users_email = $this->input->post('users_email');
@@ -220,13 +225,14 @@ class Diagnostic extends MY_Controller {
                 );
                 $this->diagnostic_model->insertUsersRoles($insertusersRoles);
 
-               // $insertData['diagnostic_usersId'] = $diagnostic_usersId;
+                // $insertData['diagnostic_usersId'] = $diagnostic_usersId;
                 $insertData = array(
                     'diagnostic_name' => $diagnostic_name,
+                    'diagnostic_dsgn' => $diagnostic_dsgn,
                     'diagnostic_address' => $diagnostic_address,
                     'diagnostic_cntPrsn' => $diagnostic_cntPrsn,
                     'diagnostic_phn' => $finalNumber,
-                    'diagnostic_usersId'=> $diagnostic_usersId,
+                    'diagnostic_usersId' => $diagnostic_usersId,
                     'diagnostic_mbrTyp' => $diagnostic_mmbrTyp,
                     'diagnostic_countryId' => $diagnostic_countryId,
                     'diagnostic_stateId' => $diagnostic_stateId,
@@ -246,23 +252,6 @@ class Diagnostic extends MY_Controller {
             $this->session->set_flashdata('message', 'Data inserted successfully !');
             redirect('diagnostic/addDiagnostic');
         }
-    }
-
-    function uploadImages($imageName, $folderName, $newName) {
-        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
-        $config['upload_path'] = $path;
-        //echo $config['upload_path']; 
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '5000';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '768';
-        $config['file_name'] = $newName;
-        //$field_name = $_FILES['hospital_photo']['name'];
-
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
-        $this->upload->do_upload($imageName);
-        return TRUE;
     }
 
     function getImageBase64Code($img) {
@@ -310,6 +299,7 @@ class Diagnostic extends MY_Controller {
             $data['showStatus'] = 'block';
             $data['detailShow'] = 'none';
             // $this->load->view('diagnosticDetail', $data);
+            $data['title'] = (!empty($data['diagnosticData'])) ? $data['diagnosticData'][0]->diagnostic_name : "Diagnostic Details";
             $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
         } else {
             $diagnostic_phn = $this->input->post('diagnostic_phn');
@@ -362,6 +352,7 @@ class Diagnostic extends MY_Controller {
             $data['diagnosticId'] = $diagnosticId;
             $data['showStatus'] = 'block';
             $data['detailShow'] = 'none';
+            $data['title'] = (!empty($data['diagnosticData'])) ? $data['diagnosticData'][0]->diagnostic_name : "Diagnostic Details";
             $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
         } else {
 
@@ -389,8 +380,8 @@ class Diagnostic extends MY_Controller {
             if ($response) {
                 $this->session->set_flashdata('message', 'Data updated successfully !');
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
-            }else{
-                 $this->session->set_flashdata('message', 'Data updated successfully !');
+            } else {
+                $this->session->set_flashdata('message', 'Data updated successfully !');
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
             }
         }
@@ -540,7 +531,7 @@ class Diagnostic extends MY_Controller {
     function addDiagnosticAwards() {
         $Id = $this->input->post('diagnosticId');
         $Awards_awardsName = $this->input->post('diaAwards_awardsName');
-        $awardData = array('diagnosticAwards_awardsName' => $Awards_awardsName, 'diagnosticAwards_diagnosticId' => $Id,'creationTime'=>strtotime(date("Y-m-d H:i:s")));
+        $awardData = array('diagnosticAwards_awardsName' => $Awards_awardsName, 'diagnosticAwards_diagnosticId' => $Id, 'creationTime' => strtotime(date("Y-m-d H:i:s")));
         $option = array(
             'table' => 'qyura_diagnosticAwards',
             'data' => $awardData
@@ -638,7 +629,7 @@ class Diagnostic extends MY_Controller {
     function addDiagnosticServices() {
         $Id = $this->input->post('diagnosticId');
         $service_name = $this->input->post('service_name');
-        $data = array('diagnosticServices_serviceName' => $service_name, 'diagnosticServices_diagnosticId' => $Id,'diagnosticServices_deleted'=>0 ,'creationTime'=>strtotime(date("Y-m-d H:i:s")));
+        $data = array('diagnosticServices_serviceName' => $service_name, 'diagnosticServices_diagnosticId' => $Id, 'diagnosticServices_deleted' => 0, 'creationTime' => strtotime(date("Y-m-d H:i:s")));
         $option = array(
             'table' => 'qyura_diagnosticServices',
             'data' => $data
@@ -651,7 +642,7 @@ class Diagnostic extends MY_Controller {
     function editDiagnosticServices() {
         $id = $this->input->post('awardsId');
         $awardsName = $this->input->post('service_name');
-        $updatedData = array('diagnosticServices_serviceName' => $awardsName,'modifyTime'=>strtotime(date("Y-m-d H:i:s")));
+        $updatedData = array('diagnosticServices_serviceName' => $awardsName, 'modifyTime' => strtotime(date("Y-m-d H:i:s")));
         $updatedDataWhere = array('diagnosticServices_id' => $id);
         $option = array(
             'table' => 'qyura_diagnosticServices',
@@ -1056,8 +1047,8 @@ class Diagnostic extends MY_Controller {
         }
     }
 
-    function UpdateDiagnosticTimeSlot($diagnosticId){
-        
+    function UpdateDiagnosticTimeSlot($diagnosticId) {
+
         $this->bf_form_validation->set_rules('morningStartTime', 'Morning Start Time', 'required|trim');
         $this->bf_form_validation->set_rules('morningEndTime', 'Morning End Time', 'required|trim');
 
@@ -1079,7 +1070,7 @@ class Diagnostic extends MY_Controller {
             $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
         } else {
 
-          
+
             $morningSession = $this->input->post('morningSession');
             $afternoonSession = $this->input->post('afternoonSession');
             $eveningSession = $this->input->post('eveningSession');
@@ -1087,7 +1078,6 @@ class Diagnostic extends MY_Controller {
 
             if ($_POST['morningStartTime'] && $_POST['morningEndTime'] && $_POST['diagnosticId']) {
                 $insertData = array(
-               
                     'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('morningStartTime'))),
                     'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('morningEndTime')))
                 );
@@ -1097,17 +1087,15 @@ class Diagnostic extends MY_Controller {
                     'where' => array(
                         'diagnosticCenterTimeSlot_sessionType' => $morningSession,
                         'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
-                        )
+                    )
                 );
                 $this->diagnostic_model->customUpdate($option);
             }
 
             if ($_POST['afternoonStartTime'] && $_POST['afternoonEndTime'] && $_POST['diagnosticId']) {
                 $insertData = array(
-                 
                     'diagnosticCenterTimeSlot_startTime' => date('H:i:s', strtotime($this->input->post('afternoonStartTime'))),
                     'diagnosticCenterTimeSlot_endTime' => date('H:i:s', strtotime($this->input->post('afternoonEndTime'))),
-
                 );
                 $option = array(
                     'table' => 'qyura_diagnosticCenterTimeSlot',
@@ -1115,7 +1103,7 @@ class Diagnostic extends MY_Controller {
                     'where' => array(
                         'diagnosticCenterTimeSlot_sessionType' => $afternoonSession,
                         'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
-                        )
+                    )
                 );
                 $this->diagnostic_model->customUpdate($option);
             }
@@ -1131,8 +1119,7 @@ class Diagnostic extends MY_Controller {
                     'where' => array(
                         'diagnosticCenterTimeSlot_sessionType' => $eveningSession,
                         'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
-                        )
-                    
+                    )
                 );
                 $this->diagnostic_model->customUpdate($option);
             }
@@ -1148,7 +1135,7 @@ class Diagnostic extends MY_Controller {
                     'where' => array(
                         'diagnosticCenterTimeSlot_sessionType' => $nightSession,
                         'diagnosticCenterTimeSlot_diagnosticId' => $this->input->post('diagnosticId')
-                        )
+                    )
                 );
                 $this->diagnostic_model->customUpdate($option);
             }
@@ -1156,6 +1143,7 @@ class Diagnostic extends MY_Controller {
             redirect("diagnostic/detailDiagnostic/$diagnosticId");
         }
     }
+
     /**
      * @project Qyura
      * @method editDiagnosticQuotationDetailTests
@@ -1225,43 +1213,44 @@ class Diagnostic extends MY_Controller {
         echo $diagonasticTest;
         exit;
     }
-      /**
+
+    /**
      * @project Qyura
      * @method editDiagnosticQuatitationInstruction
      * @description edit Diagnostic Quotation Detail instruction
      * @access public
      * @return array
      */
-    
-    function editDiagnosticQuatitationInstruction(){
-            $insertData = array(
-                'quotationDetailTests_instruction' => $this->input->post('quotationDetailTests_Ins'),
-                'modifyTime' => strtotime(date("Y-m-d H:i:s"))
-            );
-            $where = array(
-                'quotationDetailTests_id' => $this->input->post('quotationDetailTests_id')
-            );
-            $option = array(
-                'table' => 'qyura_quotationDetailTests',
-                'data' => $insertData,
-                'where' => $where
-            );
-            $response = $this->diagnostic_model->customUpdate($option);
-            if($response){
-                echo "successfully update";
-            }else{
-                echo"failed to update";
-            }
+    function editDiagnosticQuatitationInstruction() {
+        $insertData = array(
+            'quotationDetailTests_instruction' => $this->input->post('quotationDetailTests_Ins'),
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+        );
+        $where = array(
+            'quotationDetailTests_id' => $this->input->post('quotationDetailTests_id')
+        );
+        $option = array(
+            'table' => 'qyura_quotationDetailTests',
+            'data' => $insertData,
+            'where' => $where
+        );
+        $response = $this->diagnostic_model->customUpdate($option);
+        if ($response) {
+            echo "successfully update";
+        } else {
+            echo"failed to update";
+        }
     }
-      /**
+
+    /**
      * @project Qyura
      * @method getTestInstructionReload
      * @description get Diagnostic Quotation Detail instruction
      * @access public
      * @return array
      */
-    function getTestInstructionReload($quotationDetailTests_id){
-         $selectTableData = array(
+    function getTestInstructionReload($quotationDetailTests_id) {
+        $selectTableData = array(
             'quotationDetailTests_testName', 'quotationDetailTests_instruction', 'quotationDetailTests_id'
         );
         $where = array(
@@ -1271,48 +1260,112 @@ class Diagnostic extends MY_Controller {
         $data = $this->diagnostic_model->fetchTableData($selectTableData, 'qyura_quotationDetailTests', $where);
         echo $data[0]->quotationDetailTests_instruction;
     }
-    
-    function updatePassword(){
-        
+
+    function updatePassword() {
+
 
         $users_email = $this->input->post('users_email');
         $user_tables_id = $this->input->post('user_table_id');
         $users_password = $this->input->post('users_password');
-        
+
         $users_mobile = $this->input->post('users_mobile');
         $diagnostic_mbrTyp = $this->input->post('diagnostic_mbrTyp');
-       
-      
+
+
         $where = array(
-                        'users_id' => $user_tables_id
-                    );
+            'users_id' => $user_tables_id
+        );
         $userTableData = array(
             'users_mobile' => $users_mobile,
             'users_email' => $users_email,
-            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
         );
-        $return = $this->diagnostic_model->UpdateTableData($userTableData,$where,'qyura_users');
-        if(!empty($users_password))
-        {
+        $return = $this->diagnostic_model->UpdateTableData($userTableData, $where, 'qyura_users');
+        if (!empty($users_password)) {
             $encrypted = md5($users_password);
-             $update= array(
-                      'users_password'=>  $encrypted,
-                        'modifyTime'=> strtotime(date("Y-m-d H:i:s"))  
-                    );
+            $update = array(
+                'users_password' => $encrypted,
+                'modifyTime' => strtotime(date("Y-m-d H:i:s"))
+            );
 
-                   
-                $return = $this->diagnostic_model->UpdateTableData($update,$where,'qyura_users');
-        }    
-        
+
+            $return = $this->diagnostic_model->UpdateTableData($update, $where, 'qyura_users');
+        }
+
         $Data = array(
             'diagnostic_mbrTyp' => $diagnostic_mbrTyp,
-            'modifyTime'=> strtotime(date("Y-m-d H:i:s"))
+            'modifyTime' => strtotime(date("Y-m-d H:i:s"))
         );
         $Wheres = array('diagnostic_usersId' => $user_tables_id);
-        $return = $this->diagnostic_model->UpdateTableData($Data,$Wheres,'qyura_diagnostic');
-       echo $return ;
+        $return = $this->diagnostic_model->UpdateTableData($Data, $Wheres, 'qyura_diagnostic');
+        echo $return;
         //echo $encrypted;
         exit;
+    }
+
+    function uploadImages($imageName, $folderName, $newName) {
+        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
+        $config['upload_path'] = $path;
+        //echo $config['upload_path']; 
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['max_size'] = '1024';
+        $config['max_width'] = '1600';
+        $config['max_height'] = '540';
+        $config['file_name'] = $newName;
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload($imageName)) {
+
+            $data ['error'] = $this->upload->display_errors();
+            $data ['status'] = 0;
+            return $data;
+        } else {
+            $data['imageData'] = $this->upload->data();
+            $data ['status'] = 1;
+            return $data;
+        }
+    }
+
+    function diagnosticBackgroundUpload($diagnosticId) {
+
+        if (isset($_FILES["file"]["name"])) {
+
+            $temp = explode(".", $_FILES['file']["name"]);
+            $microtime = round(microtime(true));
+            $imageName = "diagnostic";
+            $newfilename = "" . $imageName . "_" . $microtime . '.' . end($temp);
+            $uploadData = $this->uploadImages('file', 'diagnosticsImage', $newfilename);
+            if ($uploadData['status']) {
+                $imageName = $uploadData['imageData']['file_name'];
+
+                $option = array(
+                    'table' => 'qyura_diagnostic',
+                    'data' => array('diagnostic_background_img' => $imageName),
+                    'where' => array('diagnostic_id' => $diagnosticId)
+                );
+                $response = $this->diagnostic_model->customUpdate($option);
+                if ($response) {
+                    $result = array('status' => 200, 'messsage' => "successfully update image");
+                    echo json_encode($result);
+                }
+            } else {
+                $result = array('status' => 400, 'messsage' => $uploadData['error']);
+                echo json_encode($result);
+            }
+        }
+    }
+
+    function getBackgroundImage($diagnosticId) {
+        $option = array(
+            'table' => 'qyura_diagnostic',
+            'select' => 'diagnostic_background_img',
+            'where' => array('diagnostic_id' => $diagnosticId)
+        );
+        $response = $this->diagnostic_model->customGet($option);
+        if ($response) {
+            dump($response);
+        }
     }
 
 }

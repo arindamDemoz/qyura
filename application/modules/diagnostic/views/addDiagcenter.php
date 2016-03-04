@@ -13,7 +13,7 @@
                     <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="diagnosticForm" method="post" action="<?php echo site_url(); ?>/diagnostic/SaveDiagnostic" novalidate="novalidate" enctype="multipart/form-data" >
                         <input type="hidden" id="countPnone" name="countPnone" value="1" />
                        <input type="hidden" id="StateId" name="StateId" value="" />
-                       <div><?php echo $this->session->flashdata('message'); ?></div>
+                       <div class="col-md-12 text-success"><?php echo $this->session->flashdata('message'); ?></div>
                         <!-- Left Section Start -->
                         <section class="col-md-6 detailbox">
                             <div class="bg-white mi-form-section">
@@ -37,7 +37,7 @@
 <!--                                            <input type="file" style="display:none;" class="no-display" id="file-input" name="diagnostic_img">-->
                                              <label class="error" > <?php echo form_error("diagnostic_img"); ?></label>
                                             <label class="error" > <?php echo $this->session->flashdata('valid_upload'); ?></label>
-                                            <img src="" width="70" height="65" class="image-preview-show"/>
+                                            <img style="border:1px solid #777777;" src="<?php echo base_url();?>assets/images/noImage.png" width="70" height="65" class="image-preview-show"/>
                                              
                                         </div>
                                     </article>
@@ -110,10 +110,10 @@
                                                         <option value ='91'>+91</option>
                                                         <option value ='1'>+1</option>
                                                     </select>
-                                                    </div>
-
+                                             </div>
+                                           
                                                 <div class="col-lg-7 col-md-6 col-sm-7 col-xs-10 m-t-xs-10" id="multiPhoneNumber">
-                                                    <input type="text" class="form-control" name="diagnostic_phn[]" id="diagnostic_phn1" placeholder="9837000123" maxlength="10"/>
+                                                    <input type="text" class="form-control" name="diagnostic_phn[]" id="diagnostic_phn1" placeholder="9837000123" maxlength="10" onkeypress="return isNumberKey(event)"/>
                                                     <label class="error" style="display:none;" id="error-diagnostic_phn1"> please enter a valid phone number</label>
                                                     <label class="error" > <?php echo form_error("diagnostic_phn1"); ?></label>
                                                 </div>
@@ -132,6 +132,15 @@
                                             <label class="error" > <?php echo form_error("diagnostic_cntPrsn"); ?></label>
                                         </div>
                                     </article>
+                                    
+                                       <article class="form-group m-lr-0 ">
+                                        <label class="control-label col-md-4 col-sm-4" for="cemail">Designation :</label>
+                                        <div class="col-md-8 col-sm-8">
+                                        <input  class="form-control" type="text" required="" name="diagnostic_dsgn" id="diagnostic_dsgn">
+                                         <label class="error" style="display:none;" id="error-diagnostic_dsgn"> please enter the  contact person designation</label>
+                                        <label class="error" > <?php echo form_error("diagnostic_dsgn"); ?></label>
+                                        </div>
+                                        </article>
 
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Membership Type :</label>
@@ -310,7 +319,7 @@
                         </section>
                         <section class="clearfix ">
                             <div class="col-md-12 m-t-20 m-b-20">
-                                <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
+                                <button type="reset" class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
                                 <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" onclick="return validationDiagnostic()" value="Submit" />
                             </div>
 
