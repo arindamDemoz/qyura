@@ -28,7 +28,8 @@ class MY_Controller extends CI_Controller
         $this->loader = '<div style="width:100%; text-align:center;"><div><img src="' . base_url() . 'images/ajax-loader.gif" /></div></div>';
         $this->small_loader = '<div><img src="' . base_url() . 'images/loader.gif" /></div>';
         $this->access_denied = $this->session->flashdata('access_denied');
-
+        $this->load->helper(array('csv','download'));
+ 
         /*if ($this->input->is_ajax_request()) {
             if (!$this->ion_auth->logged_in()) {
                 if (!($this->router->fetch_class() == 'auth' && ($this->router->fetch_method() == 'loginAjax' || $this->router->fetch_method() == 'forgotPasswordAjax'))) {
