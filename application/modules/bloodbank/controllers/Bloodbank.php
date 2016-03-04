@@ -85,7 +85,7 @@ class Bloodbank extends MY_Controller {
         $stateId = $this->input->post('stateId');
         $cityData = $this->Bloodbank_model->fetchCity($stateId);
         $cityOption = '';
-        $cityOption .='<option value=>Select Your City</option>';
+        //$cityOption .='<option value=>Select Your City</option>';
         foreach ($cityData as $key => $val) {
             $cityOption .= '<option value=' . $val->city_id . '>' . strtoupper($val->city_name) . '</option>';
         }
@@ -465,6 +465,26 @@ class Bloodbank extends MY_Controller {
         );
         $return = $this->Bloodbank_model->UpdateTableData($updateBloodBank, $where, 'qyura_bloodCatBank');
         echo $return;
+        exit;
+    }
+    
+    function createCSV(){
+       
+        $stateId='';
+        $cityId ='';
+       if(isset($_POST['stateId']))
+        $stateId = $this->input->post('stateId');
+       if(isset($_POST['cityId']))
+        $cityId = $this->input->post('cityId');
+       
+        $where=array('bloodBank_deleted'=> 0,'cityId'=> $cityId,'stateId'=>$stateId);
+        $array[]= array('Image Name','BloodBank Name','City','Phone Number','Address');
+        $data = $this->Bloodbank_model->createCSVdata($where);
+       
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'BloodbankDetail.csv');
+        return True;
         exit;
     }
 

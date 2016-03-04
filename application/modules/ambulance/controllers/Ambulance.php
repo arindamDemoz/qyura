@@ -31,6 +31,14 @@ class Ambulance extends MY_Controller {
         $data['editdetail'] = 'none';
         $data['detail'] = 'block';
         $data['title'] = (!empty($data['ambulanceData'][0]->ambulance_name)) ? $data['ambulanceData'][0]->ambulance_name: "Ambulance Details";
+        
+        $option = array(
+            'table' => 'qyura_ambulance',
+            'select' => 'ambulance_background_img',
+            'where' => array('ambulance_id' => $ambulanceId)
+        );
+        $data['backgroundImage'] = $this->Ambulance_model->customGet($option);
+        
         $this->load->super_admin_template('ambulanceDetail', $data, 'ambulanceScript');
     }
 
@@ -232,7 +240,7 @@ class Ambulance extends MY_Controller {
         }
     }
 
-    function uploadImages($imageName, $folderName, $newName) {
+    /*function uploadImages($imageName, $folderName, $newName) {
         $path = realpath(FCPATH . 'assets/' . $folderName . '/');
         $config['upload_path'] = $path;
         //echo $config['upload_path']; 
@@ -247,7 +255,7 @@ class Ambulance extends MY_Controller {
         $this->upload->initialize($config);
         $this->upload->do_upload($imageName);
         return TRUE;
-    }
+    }*/
 
     function getImageBase64Code($img) {
         $img = str_replace('data:image/png;base64,', '', $img);
@@ -315,6 +323,92 @@ class Ambulance extends MY_Controller {
             $data = $this->Ambulance_model->customGet($option);
             echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/original/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />";
             exit();
+        }
+    }
+    
+      function createCSV(){
+       
+        $stateId ='';
+        $cityId ='';
+       if(isset($_POST['ambulance_stateId']))
+        $stateId = $this->input->post('ambulance_stateId');
+       if(isset($_POST['ambulance_cityId']))
+        $cityId = $this->input->post('ambulance_cityId');
+       
+        $where=array('ambulance_deleted'=> 0,'ambulance_cityId'=> $cityId,'ambulance_stateId'=>$stateId);
+        $array[]= array('Image Name','Ambulance Name','City','Phone Number','Address');
+        $data = $this->Ambulance_model->createCSVdata($where);
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'AmbulanceDetail.csv');
+        return True;
+        exit;
+    }
+    
+      function uploadImages($imageName, $folderName, $newName) {
+        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
+        $config['upload_path'] = $path;
+        //echo $config['upload_path']; 
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['max_size'] = '1024';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '540';
+        $config['file_name'] = $newName;
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload($imageName)) {
+
+            $data ['error'] = $this->upload->display_errors();
+            $data ['status'] = 0;
+            return $data;
+        } else {
+            $data['imageData'] = $this->upload->data();
+            $data ['status'] = 1;
+            return $data;
+        }
+    }
+    
+    function setBackgroundUpload($id) {
+
+        if (isset($_FILES["file"]["name"])) {
+
+            $temp = explode(".", $_FILES['file']["name"]);
+            $microtime = round(microtime(true));
+            $imageName = "ambulance";
+            $newfilename = "" . $imageName . "_" . $microtime . '.' . end($temp);
+            $uploadData = $this->uploadImages('file', 'ambulanceImages', $newfilename);
+            if ($uploadData['status']) {
+                $imageName = $uploadData['imageData']['file_name'];
+
+                $option = array(
+                    'table' => 'qyura_ambulance',
+                    'data' => array('ambulance_background_img' => $imageName),
+                    'where' => array('ambulance_id' => $id)
+                );
+                $response = $this->Ambulance_model->customUpdate($option);
+                if ($response) {
+                    $result = array('status' => 200, 'messsage' => "successfully update image");
+                    echo json_encode($result);
+                }
+            } else {
+                $result = array('status' => 400, 'messsage' => $uploadData['error']);
+                echo json_encode($result);
+            }
+        }
+    }
+
+    function getBackgroundImage($id) {
+        $option = array(
+            'table' => 'qyura_ambulance',
+            'select' => 'ambulance_background_img',
+            'where' => array('ambulance_id' => $id)
+        );
+        $response = $this->Ambulance_model->customGet($option);
+        if ($response) {
+          echo  $image = base_url().'assets/ambulanceImages/'.$response[0]->ambulance_background_img;
+        
+
         }
     }
 

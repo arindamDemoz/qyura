@@ -86,7 +86,7 @@ class Ambulance_model extends CI_Model {
     
     function fetchAmbulanceDataTables( $condition = NULL){
             
-         $imgUrl = base_url().'assets/ambulanceImages/$1';    
+         $imgUrl = base_url().'assets/ambulanceImages/thumb/thumb_100/$1';    
          
          $this->datatables->select('ambulance.ambulance_id,ambulance.ambulance_usersId,City.city_name,ambulance.ambulance_name,ambulance.ambulance_address,ambulance.ambulance_phn,ambulance.ambulance_img,'
                  . 'usr.users_email,usr.users_password ,ambulance.ambulance_cntPrsn,ambulance.ambulance_lat,ambulance.ambulance_long,usr.users_mobile'
@@ -223,6 +223,58 @@ class Ambulance_model extends CI_Model {
 
 
         return $query->result();
+    }
+    
+    function createCSVdata($where){
+        $imgUrl = base_url() . 'assets/ambulanceImages/thumb/original/';
+        $this->db->select('ambulance_img,ambulance_name,city_name,ambulance_phn,ambulance_address');
+        $this->db->from('qyura_ambulance');
+        $this->db->join('qyura_city','city_id = ambulance_cityId','left');
+        foreach($where as $key=>$val){
+           
+            if($where[$key] === 0){
+            $this->db->where($key, $val); 
+            }
+            if($where[$key] != ''){
+            $this->db->where($key, $val); 
+            }
+        }
+    
+        $data= $this->db->get(); 
+        $result= array();
+        $i=1;
+        foreach($data->result() as $key=>$val){
+            $result[$i]['ambulance_img'] = $imgUrl.$val->ambulance_img;
+            $result[$i]['ambulance_name'] = $val->ambulance_name;
+            $result[$i]['city_name'] = $val->city_name;
+            $result[$i]['ambulance_phn'] = $val->ambulance_phn;
+            $result[$i]['ambulance_address'] = $val->ambulance_address;
+           $i++;
+        }
+         return $result;
+        
+      }
+      
+          //Function for update
+    public function customUpdate($options) {
+        $table = false;
+        $where = false;
+        $orwhere = false;
+        $data = false;
+
+        extract($options);
+
+        if (!empty($where)) {
+            $this->db->where($where);
+        }
+
+        // using or condition in where  
+        if (!empty($orwhere)) {
+            $this->db->or_where($orwhere);
+        }
+        $this->db->update($table, $data);
+
+        return $this->db->affected_rows();
     }
 }   
 

@@ -16,7 +16,7 @@
 
                         <!-- Form Section Start -->
                         <article class="row p-b-10">
-                            <form>
+                            <form name="csvDownload" id="" action="<?php echo site_url('ambulance/createCSV'); ?>" method="post">
 
                                  <aside class="col-lg-1 col-md-2 col-sm-2">
                                     <a href="<?php echo base_url();?>index.php/ambulance/addAmbulance" class="btn btn-appointment waves-effect waves-light" title="Add New Ambulance"><i class="fa fa-plus"></i> Add</a>
@@ -24,7 +24,7 @@
                                 <aside class="col-md-3 col-sm-3">
                                     <select class="selectpicker" data-width="100%" name="ambulance_stateId" id="ambulance_stateId" data-size="4" onchange ="fetchCity(this.value)">
 
-                                                        <option value=" ">Select State</option>
+                                                        <option value="">Select State</option>
                                                        <?php foreach($allStates as $key=>$val) {?>
                                                         <option value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
                                                          <?php }?>
@@ -43,7 +43,7 @@
                                     </div>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 pull-right">
-                                    <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit">Export</button>
+   <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit" onclick="createCSV()">Export</button>
                                 </aside>
 
                             </form>

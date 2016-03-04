@@ -92,7 +92,7 @@ if($current != 'detailDiagnostic'):?>
               success:function(datas){
                 //console.log(datas);
                   $('#diagnostic_stateId').html(datas);
-                $('#diagnostic_stateId').selectpicker('refresh');
+                  $('#diagnostic_stateId').selectpicker('refresh');
                   fetchCityOnload(stateId);
                   //$('#StateId').val(stateId);
               }
@@ -175,14 +175,14 @@ if($current != 'detailDiagnostic'):?>
                 "data": function (d) {
                     d.cityId = $("#diagnostic_cityId").val();
                     d.bloodBank_name = $("#search").val();
-                    if ($("#hospital_stateId").val() != ' ') {
-                        d.hosStateId = $("#hospital_stateId").val();
+                    if ($("#diagnostic_stateId").val() != ' ') {
+                        d.hosStateId = $("#diagnostic_stateId").val();
                     }
                     d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
                 }
             }
         });
-        $('#diagnostic_cityId,#hospital_stateId').change(function () {
+        $('#diagnostic_cityId,#diagnostic_stateId').change(function () {
             oTable.draw();
         });
         $('#search').on('keyup', function () {
@@ -969,7 +969,8 @@ if($current != 'detailDiagnostic'):?>
         var stateIds = $.trim($('#StateId').val());
         var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
         var emailCheck =  checkEmailFormatValidation(emails);
-   var ckeck = 1;
+        var ckeck = 1;
+   
             if($('#diagnosticCenter').val()==''){
                 $('#diagnostic_name').addClass('bdr-error');
                 $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
@@ -1183,10 +1184,21 @@ if($current != 'detailDiagnostic'):?>
         return true;
     }
 }
-
- function backgroundImageReload(id){
-          $('.bg-picture').load(urls + 'index.php/diagnostic/getBackgroundImage/'+id,function () {
-        });
+    
+  function changebackgroundImage(id){
+           $.ajax({
+            url: urls + 'index.php/diagnostic/getBackgroundImage/'+id, // Url to which the request is send
+            type: "POST",            
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+              $('.bg-picture').css("background-image", "url("+data+")");   
+            }
+               
+          });
+    
     }
 
 $(document).ready(function (e) {
@@ -1207,7 +1219,7 @@ $(document).ready(function (e) {
                 var obj = jQuery.parseJSON(data);
                 if(obj.status == 200){
                      $("#messageErrors").html("<div class='alert alert-success'>"+obj.messsage+"</div>");
-                      backgroundImageReload(diagnosticId);
+                      changebackgroundImage(diagnosticId);
                       $("#changeBg").modal('hide');
                     
                 }else{
@@ -1248,6 +1260,22 @@ function imageIsLoaded(e) {
     $('#previewing').attr('height', '230px');
 }
 });
+
+  function createCSV(){
+         var stateId = '';
+         var cityId = '';
+         stateId = $('#diagnostic_stateId').val();
+         cityId = $('#diagnostic_cityId').val();
+         $.ajax({
+              url : urls + 'index.php/diagnostic/createCSV',
+              type: 'POST',
+             data: {'diagnostic_stateId' : stateId ,'diagnostic_cityId': cityId },
+             success:function(datas){
+                console.log(datas)
+             }
+          });
+     } 
+
 
 </script>
 
