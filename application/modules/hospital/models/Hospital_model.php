@@ -111,7 +111,7 @@ class Hospital_model extends CI_Model {
     function fetchHospitalData($conditionId = NULL){
        $this->db->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
         Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.isEmergency,Blood.bloodBank_name,Blood.bloodBank_phn
-        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn,usr.users_mobile,Hos.hospital_mmbrTyp');
+        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn,usr.users_mobile,Hos.hospital_mmbrTyp,Hos.hospital_background_img');
      $this->db->from('qyura_hospital AS Hos');
      $this->db->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
       $this->db->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
@@ -198,7 +198,7 @@ class Hospital_model extends CI_Model {
         if(!empty($notIn))
             $this->db->where_not_in($fieldName,$notIn);
         $data= $this->db->get(); 
-      
+      //echo $this->db->last_query(); exit;
      return $data->result();
       //echo $this->db->last_query(); exit;
     }

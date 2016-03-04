@@ -5,13 +5,14 @@
     }
 </style>
 
-<?php $check= 0; 
-$id = $this->uri->segment(3); 
-if(!empty($id)){
-	$check = $this->uri->segment(3); 
-}else{
-	$check = 0 ;
+
+<?php 
+$check= 0; 
+if(isset($hospitalId) && !empty($hospitalId)){
+    $check = $hospitalId; 
 }?>
+
+?>
 
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
@@ -46,8 +47,8 @@ if($current != 'detailHospital'):?>
 
     <script>
         var resizefunc = [];
+        var hospitalId = <?php echo $check;?> 
     </script>
-    <script> var hospitalId = <?php echo $check;?> </script>
 <script>
              /*-- Selectpicker --*/
 $('.selectpicker').selectpicker({
@@ -1201,6 +1202,81 @@ function addAwards(){
              }
           });
      }   
+     
+     $(document).ready(function (e) {
+    
+    $("#uploadimage").on('submit',(function(e) {
+            e.preventDefault();
+            $("#messageErrors").empty();
+            $('#loading').show();
+            $.ajax({
+            url: urls +'index.php/hospital/hospitalBackgroundUpload/'+hospitalId, // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+                var obj = jQuery.parseJSON(data);
+                if(obj.status == 200){
+                     $("#messageErrors").html("<div class='alert alert-success'>"+obj.messsage+"</div>");
+                      changebackgroundImage(hospitalId);
+                      $("#changeBg").modal('hide');
+                    
+                }else{
+                    $("#messageErrors").html("<div class='alert alert-danger'>"+obj.messsage+"</div>");
+                }
+
+            }
+            });
+    }));
+// Function to preview image after validation
+
+    
+$("#uploadBtnDd").change(function() {
+
+$("#messageErrors").empty(); // To remove the previous error message
+    var file = this.files[0];
+    var imagefile = file.type;
+    var match= ["image/jpeg","image/png","image/jpg"];
+    if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+    {
+    $('#previewing').attr('src','noimage.png');
+    $("#messageErrors").html("<div class='alert alert-danger'><p id='error'>Please Select A valid Image File</p><span id='error_message'>Only jpeg, jpg and png Images type allowed</span></div>");
+    return false;
+    }
+    else
+    {
+    var reader = new FileReader();
+    reader.onload = imageIsLoaded;
+    reader.readAsDataURL(this.files[0]);
+    }
+    });
+
+function imageIsLoaded(e) {
+    $("#file").css("color","green");
+    $('#image_preview').css("display", "block");
+    $('#previewing').attr('src', e.target.result);
+    $('#previewing').attr('width', '500px');
+    $('#previewing').attr('height', '230px');
+}
+});
+function changebackgroundImage(id){
+           $.ajax({
+            url: urls+'index.php/hospital/getBackgroundImage/'+hospitalId, // Url to which the request is send
+            type: "POST",            
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+              $('.bg-picture').css("background-image", "url("+data+")");   
+            }
+               
+          });
+    
+    }
     </script>
 </body>
 </html>

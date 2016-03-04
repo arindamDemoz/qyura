@@ -867,60 +867,7 @@ class Hospital extends MY_Controller {
          }
     }
 
-    
-    function uploadImages ($imageName,$folderName,$newName){
-                $path = realpath(FCPATH.'assets/'.$folderName.'/');
-                 $config['upload_path'] = $path;
-            //echo $config['upload_path']; 
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']	= '500'; // in kb
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                $config['file_name'] = $newName;
-                //$field_name = $_FILES['hospital_photo']['name'];
-               
-		$this->load->library('upload', $config);
-                $this->upload->initialize($config);
-              // $this->upload->do_upload($imageName);
-               
-               if ($this->upload->do_upload($imageName)) {
-                //If image upload in folder, set also this value in "$image_data".
-                   $image_data = $this->upload->data();
-                    return TRUE;
-                }else{
-                    $upload_error['upload_error'] = array('error' => $this->upload->display_errors()); 
-                    $msg = '';
-                    if(!empty($upload_error) && count($upload_error) > 0){
-                        foreach ($upload_error as $key => $value) {
-                             $msg .= $value['error'].'In '.$folderName;
-                        }
-                        
-                    }
-                    $this->session->set_flashdata('message',$msg);
-                    redirect('hospital/addHospital');
-                    return FALSE;
-                }
-              // print_r($image_data);
-            /*   $img = $this->uploadResizeImage($image_data);
-               print_r($img);
-               exit();
-               
-                $config['image_library'] = 'gd2';
-                $config['create_thumb'] = TRUE;
-                $config['maintain_ratio'] = TRUE;
-                $config['width'] = 75;
-                $config['height'] = 50;
-
-               
-	       $this->load->library('image_lib', $config); 
-               $this->image_lib->initialize($config);
-              if ( !$this->image_lib->resize($image_data)){
-		echo $this->image_lib->display_errors();
-	    }
-               return TRUE; */
-
-    }
-    
+ 
    
     function updatePassword(){
          //echo "here";exit;
@@ -1546,6 +1493,66 @@ class Hospital extends MY_Controller {
         return True;
         exit;
     }
+    function uploadImages($imageName, $folderName, $newName) {
+        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
+        $config['upload_path'] = $path;
+        //echo $config['upload_path']; 
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['max_size'] = '1024';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '540';
+        $config['file_name'] = $newName;
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload($imageName)) {
+
+            $data ['error'] = $this->upload->display_errors();
+            $data ['status'] = 0;
+            return $data;
+        } else {
+            $data['imageData'] = $this->upload->data();
+            $data ['status'] = 1;
+            return $data;
+        }
+    }
+
+  function hospitalBackgroundUpload($hospitalId) {
+          if (isset($_FILES["file"]["name"])) {
+
+            $temp = explode(".", $_FILES['file']["name"]);
+            $microtime = round(microtime(true));
+            $imageName = "hospital";
+            $newfilename = "" . $imageName . "_" . $microtime . '.' . end($temp);
+            $uploadData = $this->uploadImages('file', 'hospitalsImages', $newfilename);
+            if ($uploadData['status']) {
+                $imageName = $uploadData['imageData']['file_name'];
+
+                    $data = array('hospital_background_img' => $imageName);
+                    $where = array('hospital_id' => $hospitalId);
+             
+                $response = $this->Hospital_model->UpdateTableData($data,$where,'qyura_hospital');
+                if ($response) {
+                    $result = array('status' => 200, 'messsage' => "successfully update image");
+                    echo json_encode($result);
+                }
+            } else {
+                $result = array('status' => 400, 'messsage' => $uploadData['error']);
+                echo json_encode($result);
+            }
+        }
+    }
     
-  
+    function getBackgroundImage($hospitalId) {
+        $select = array('hospital_background_img');
+        $where = array('hospital_id' => $hospitalId);
+
+        $response = $this->Hospital_model->fetchTableData($select,'qyura_hospital',$where);
+        if ($response) {
+          echo  $image = base_url().'assets/hospitalsImages/'.$response[0]->hospital_background_img;
+        
+
+        }
+        exit;
+    }
 }
