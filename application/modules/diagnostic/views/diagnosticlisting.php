@@ -16,13 +16,13 @@
 
                 <!-- Form Section Start -->
                 <article class="row p-b-10">
-                    <form>
+                    <form name="csvDownload" id="" action="<?php echo site_url('diagnostic/createCSV'); ?>" method="post">
 
                         <aside class="col-lg-1 col-md-2 col-sm-2">
                             <a href="<?php echo base_url(); ?>index.php/diagnostic/addDiagnostic" class="btn btn-appointment waves-effect waves-light" title="Add New Diagnostic Center"><i class="fa fa-plus"></i> Add</a>
                         </aside>
                         <aside class="col-md-3 col-sm-3">
-                            <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" data-size="4" onchange ="fetchCity(this.value)">
+                            <select class="selectpicker" data-width="100%" name="diagnostic_stateId" id="diagnostic_stateId" data-size="4" onchange ="fetchCity(this.value)">
 
                                 <option value=" ">Select State</option>
                                 <?php foreach ($allStates as $key => $val) { ?>
@@ -43,7 +43,7 @@
                             </div>
                         </aside>
                         <aside class="col-md-2 col-sm-2 pull-right">
-                            <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit">Export</button>
+   <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit" onclick="createCSV()">Export</button>
                         </aside>
 
                     </form>

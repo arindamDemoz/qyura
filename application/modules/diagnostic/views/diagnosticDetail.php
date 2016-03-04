@@ -19,7 +19,8 @@
                             <!-- Table Section Start -->
                             <section class="col-md-12">
                                 <aside class="clearfix m-bg-pic">
-                                    <div class="bg-picture text-center">
+                                    
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($backgroundImage) && !empty($backgroundImage)): echo base_url().'assets/diagnosticsImage/'.$backgroundImage[0]->diagnostic_background_img; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
@@ -186,7 +187,7 @@
                                                      <label class="error" > <?php echo form_error("diagnostic_cityId"); ?></label>
                                                                         </div>
                                                                         <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                                            <input type="text" class="form-control" id="diagnostic_zip" name="diagnostic_zip" placeholder="700001" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_zip; endif;?>"/>
+                                                                            <input type="text" class="form-control" id="diagnostic_zip" name="diagnostic_zip" placeholder="700001" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_zip; endif;?>" onkeypress="return isNumberKey(event)"/>
                                                                              <label class="error" style="display:none;" id="error-diagnostic_zip"> please enter a zip code</label>
 
                                                     <label class="error" > <?php echo form_error("diagnostic_zip"); ?></label>
@@ -216,7 +217,7 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
-                                                                            <input type="text" class="form-control" name="diagnostic_phn[]" id="diagnostic_phn<?php echo ($i+1);?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
+                                                                            <input type="text" class="form-control" name="diagnostic_phn[]" id="diagnostic_phn<?php echo ($i+1);?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onkeypress="return isNumberKey(event)"/>
                                                                         </div>
 
 

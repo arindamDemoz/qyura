@@ -69,6 +69,14 @@ class Diagnostic extends MY_Controller {
             )
         );
         $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
+        
+        $options = array(
+            'table' => 'qyura_diagnostic',
+            'select' => 'diagnostic_background_img',
+            'where' => array('diagnostic_id' => $diagnosticId)
+        );
+        $data['backgroundImage'] = $this->diagnostic_model->customGet($options);
+        
         $data['diagnosticId'] = $diagnosticId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
@@ -249,7 +257,7 @@ class Diagnostic extends MY_Controller {
                 // dump($insertData);exit;
                 $diagnosticId = $this->diagnostic_model->insertDiagnostic($insertData);
             }
-            $this->session->set_flashdata('message', 'Data inserted successfully !');
+            $this->session->set_flashdata('message', 'Record has been saved successfully!');
             redirect('diagnostic/addDiagnostic');
         }
     }
@@ -334,7 +342,7 @@ class Diagnostic extends MY_Controller {
             $response = '';
             $response = $this->diagnostic_model->UpdateTableData($updateDiagnostic, $where, 'qyura_diagnostic');
             if ($response) {
-                $this->session->set_flashdata('message', 'Data updated successfully !');
+                $this->session->set_flashdata('message', 'Record has been updated successfully!');
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
             }
         }
@@ -378,10 +386,10 @@ class Diagnostic extends MY_Controller {
             );
             $response = $this->diagnostic_model->customUpdate($options_dia);
             if ($response) {
-                $this->session->set_flashdata('message', 'Data updated successfully !');
+                $this->session->set_flashdata('message', 'Record has been updated successfully!');
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
             } else {
-                $this->session->set_flashdata('message', 'Data updated successfully !');
+                $this->session->set_flashdata('message', 'Record has been updated failed!');
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
             }
         }
@@ -467,7 +475,7 @@ class Diagnostic extends MY_Controller {
 
                 $response = $this->diagnostic_model->customInsert($options);
                 if ($response) {
-                    $response = array('state' => 200, 'message' => 'Successfully added gallery image');
+                    $response = array('state' => 200, 'message' => 'Record has been saved successfully');
                 } else {
                     $response = array('state' => 400, 'message' => 'Failed to added gallery image');
                 }
@@ -1309,7 +1317,7 @@ class Diagnostic extends MY_Controller {
         //echo $config['upload_path']; 
         $config['allowed_types'] = 'jpg|png|jpeg';
         $config['max_size'] = '1024';
-        $config['max_width'] = '1600';
+        $config['max_width'] = '1024';
         $config['max_height'] = '540';
         $config['file_name'] = $newName;
 
@@ -1364,8 +1372,30 @@ class Diagnostic extends MY_Controller {
         );
         $response = $this->diagnostic_model->customGet($option);
         if ($response) {
-            dump($response);
+          echo  $image = base_url().'assets/diagnosticsImage/'.$response[0]->diagnostic_background_img;
+        
+
         }
+    }
+    
+      function createCSV(){
+       
+        $stateId ='';
+        $cityId ='';
+       if(isset($_POST['diagnostic_stateId']))
+        $stateId = $this->input->post('diagnostic_stateId');
+       if(isset($_POST['diagnostic_cityId']))
+        $cityId = $this->input->post('diagnostic_cityId');
+       
+        $where=array('diagnostic_deleted'=> 0,'diagnostic_cityId'=> $cityId,'diagnostic_stateId'=>$stateId);
+        $array[]= array('Image Name','Diagnostic Name','City','Phone Number','Address');
+        $data = $this->diagnostic_model->createCSVdata($where);
+
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'DiagnosticDetail.csv');
+        return True;
+        exit;
     }
 
 }
