@@ -400,5 +400,36 @@ class Hospital_model extends CI_Model {
         return TRUE;
 
     }
+    
+    function fetchHospitalDoctorDataTables($hospitalUserId){
+        
+        $imgUrl = base_url() . 'assets/hospitalImages/$1';
+        
+      $this->datatables->select('doctors_userId userId,qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, " ",  qyura_doctors.doctors_lName) AS name, qyura_doctors.doctors_img imUrl, qyura_doctors.doctors_consultaionFee as consFee, qyura_specialities.specialities_name as specialityName,qyura_doctors.doctors_phn,qyura_doctors.doctors_img,qyura_doctors.doctors_id,qyura_doctors.doctors_mobile,qyura_doctors.doctors_unqId,( FROM_UNIXTIME(qyura_professionalExp.professionalExp_end,"%Y") - FROM_UNIXTIME(qyura_professionalExp.professionalExp_start,"%Y"))  AS exp');
+        
+                $this->datatables->from('qyura_usersRoles');
+                              
+                $this->datatables->join('qyura_doctors','qyura_doctors.doctors_userId = qyura_usersRoles.usersRoles_userId', 'left');
+  
+
+                $this->datatables->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left');
+
+                    
+                $this->datatables->join('qyura_doctorSpecialities', 'qyura_doctorSpecialities.doctorSpecialities_doctorsId = qyura_doctors.doctors_id', 'left');
+                $this->datatables->join('qyura_specialities', 'qyura_specialities.specialities_id = qyura_doctorSpecialities.doctorSpecialities_specialitiesId', 'left');
+                     
+        
+         $this->datatables->where(array('doctors_deleted' => 0, 'usersRoles_roleId' => 4, 'usersRoles_parentId'=> $hospitalUserId));
+
+        $this->datatables->add_column('exp', '$1 Years', 'exp');
+        $this->datatables->add_column('name', '$1</br>$2', 'name,doctors_unqId');
+        $this->datatables->add_column('consFee', "<i class='fa fa-inr'></i> $1", 'consFee');
+        
+        $this->datatables->add_column('doctors_img', '<img class="img-responsive" height="80px;" width="80px;" src=' . $imgUrl . '>', 'doctors_img');
+
+        $this->datatables->add_column('view', '<a disabled class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="#">View Detail</a>', 'doctors_id');
+
+        return $this->datatables->generate();
+    }
 
 }

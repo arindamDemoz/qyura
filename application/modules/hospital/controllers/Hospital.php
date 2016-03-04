@@ -15,7 +15,7 @@ class Hospital extends MY_Controller {
         $data = array();
         $data['allStates'] = $this->Hospital_model->fetchStates();
         $data['hospitalData'] = $this->Hospital_model->fetchHospitalData();
-      
+        $data['title'] = 'All Hospital';
         $data['hospitalId'] = 0;
         $this->load->super_admin_template('HospitalListing', $data, 'hospitalScript');
    }
@@ -25,9 +25,22 @@ class Hospital extends MY_Controller {
         echo $this->Hospital_model->fetchHospitalDataTables();
  
    }
+
+    /**
+     * @project Qyura
+     * @method getDiagnosticDoctorsDl
+     * @description diagnostic doctor datatable listing
+     * @access public
+     * @return array
+     */
+    function getHospitalDoctorsDl($hospitalUserId) {
+        echo $this->Hospital_model->fetchDiagnosticDoctorDataTables($hospitalUserId);
+    }
+    
    function addHospital(){
        $data = array();
        $data['allStates'] = $this->Hospital_model->fetchStates();
+       $data['title'] = 'Add Hospital';
        $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
    }
    function detailHospital($hospitalId=''){
@@ -63,6 +76,7 @@ class Hospital extends MY_Controller {
         
        // $this->load->super_admin_template('hospitalDetail', $data, 'bloodBankScript');
         //$this->load->view('hospitalDetail',$data);
+        $data['title'] = 'Hospital Detail';
         $this->load->super_admin_template('hospitalDetail', $data, 'hospitalScript');
    }
    function hospitalAwards($hospitalId){
@@ -295,6 +309,7 @@ class Hospital extends MY_Controller {
          if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['allStates'] = $this->Hospital_model->fetchStates();
+             $data['title'] = 'Add Hospital';
              $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
          }
          else {
@@ -309,6 +324,7 @@ class Hospital extends MY_Controller {
                 if (empty($original_imagesname)) {
                     $data['allStates'] = $this->Bloodbank_model->fetchStates();
                     $this->session->set_flashdata('valid_upload', $this->error_message);
+                    $data['title'] = 'Add Hospital';
                     $this->load->super_admin_template('AddHospital', $data, 'hospitalScript');
                     return false;
                 } else {

@@ -146,6 +146,40 @@ function fetchCity(stateId) {
                     $("#newDetail").toggle();
                 });
             });
+            
+            
+                      /**
+            * @project Qyura
+            * @description  datatable listing
+            * @access public
+            */
+        var oTableDr = $('#hospital_doctors').DataTable({
+             "processing": true,
+            "bServerSide": false,
+            "bLengthChange": false,
+            "bProcessing": true,
+            "iDisplayLength": 10,
+            "sPaginationType": "full_numbers",
+            "columns": [
+                {"data": "doctors_img"},
+                {"data": "name"},
+                {"data": "specialityName"},
+                {"data": "consFee"},
+                {"data": "exp"},
+                {"data": "doctors_phn"},
+                {"data": "view"},
+            ],
+            "ajax": {
+                "url": urls + 'index.php/diagnostic/getDiagnosticDoctorsDl/'+ hospitalId,
+                "type": "POST",
+                "data": function (d) {
+                   
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                }
+            }
+        });
+        
+    
 
  function addDiagnostic(){
          $('.diagonasticCheck').each(function() {

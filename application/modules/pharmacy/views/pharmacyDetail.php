@@ -34,9 +34,9 @@
                                                 <!-- image -->
                                                 <?php if(!empty($pharmacyData[0]->pharmacy_img)){
                                                     ?>
-                                               <img src="<?php echo base_url()?>assets/pharmacyImages/<?php echo $pharmacyData[0]->pharmacy_img; ?>" alt="" class="img-responsive" />
+                                               <img src="<?php echo base_url()?>assets/pharmacyImages/<?php echo $pharmacyData[0]->pharmacy_img; ?>" alt=""  class="logo-img" />
                                                <?php } else { ?>
-                                                 <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="img-responsive" />
+                                                 <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>
                                                  
                                                   <article class="logo-up" style="display:none">
@@ -62,6 +62,8 @@
                                         </div>
 
                                     </div>
+                                    
+                                    
                                     <!--/ meta -->
 
                                 </aside>

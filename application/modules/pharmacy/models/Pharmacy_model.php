@@ -88,7 +88,7 @@ class Pharmacy_model extends CI_Model {
             
          $imgUrl = base_url().'assets/pharmacyImages/$1';    
          
-         $this->datatables->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
+         $this->datatables->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name,pharmacy.pharmacy_type,pharmacy.pharmacy_address, TRIM( TRAILING "|" FROM pharmacy_phn) as pharmacy_phn ,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn,pharmacy.pharmacy_mmbrTyp,usr.users_id,usr.users_email,pharmacy.pharmacy_27Src,pharmacy.pharmacy_lat,pharmacy.pharmacy_long');
         $this->datatables->from('qyura_pharmacy AS pharmacy');
         $this->datatables->join('qyura_city AS City','City.city_id = pharmacy.pharmacy_cityId','left');
         $this->datatables->join('qyura_users AS usr','usr.users_id = pharmacy.pharmacy_usersId','left');

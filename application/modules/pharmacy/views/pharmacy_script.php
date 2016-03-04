@@ -12,6 +12,8 @@ if(!empty($id)){
 
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
 
+<script src="<?php echo base_url(); ?>assets/js/table2excel.js"></script>
+
 <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
     <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
@@ -312,7 +314,21 @@ $('.selectpicker').selectpicker({
                     "bFilter": false,
                     "iDisplayStart ": 10,
                     "iDisplayLength" : 12,
-                    "columns": [
+                     dom: 'Bfrtip',
+                     "buttons": [
+                        {
+                            extend: 'collection',
+                            text: 'Export',
+                            buttons: [
+                                'copy',
+                                'excel',
+                                'csv',
+                                'pdf',
+                                'print'
+                            ]
+                        }
+                        ],
+                     "columns": [
                         {"data": "pharmacy_img"},
                         {"data": "pharmacy_name"},
                         {"data": "city_name"},
