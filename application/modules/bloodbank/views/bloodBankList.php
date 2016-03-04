@@ -15,14 +15,14 @@
 
                         <!-- Form Section Start -->
                         <article class="row p-b-10">
-                            <form>
+                            <form name="csvDownload" id="" action="<?php echo site_url('bloodbank/createCSV'); ?>" method="post">
                                <aside class="col-lg-1 col-md-2 col-sm-2">
                                     <a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank" class="btn btn-appointment waves-effect waves-light" title="Add New Blood Bank"><i class="fa fa-plus"></i> Add </a>
                                 </aside>
                                 <aside class="col-md-2 col-sm-2 m-t-xs-2">
-                                                    <select class="selectpicker" data-width="100%" name="hospital_stateId" id="hospital_stateId" data-size="4" onchange ="fetchCityList(this.value)">
+                                                    <select class="selectpicker" data-width="100%" name="stateId" id="stateId" data-size="4" onchange ="fetchCityList(this.value)">
 
-                                                        <option value=" ">Select State</option>
+                                                        <option value="">Select State</option>
                                                        <?php foreach($allStates as $key=>$val) {?>
                                                         <option value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
                                                          <?php }?>
@@ -30,8 +30,9 @@
                                                    
                                  </aside>
                                 <aside class="col-md-3 col-sm-3 m-tb-xs-3">
-                                    <select type="text" name="hospital_cityId" class="selectpicker" data-width="100%"  placeholder="Search" id="hospital_cityId" data-size="4" />
-                                   <!-- <option>Delhi</option>
+                                    <select type="text" name="cityId" class="selectpicker" data-width="100%"  placeholder="Search" id="cityId" data-size="4" />
+                                   <option value=>Select Your City</option>
+                                    <!-- <option>Delhi</option>
                                     <option>Kolkata</option> -->
                                     </select>
                                 </aside>

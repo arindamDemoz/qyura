@@ -170,5 +170,35 @@ class Bloodbank_model extends CI_Model {
     // echo $this->db->last_query();exit;
      return $data->result();
     }
+    function createCSVdata($where){
+        $imgUrl = base_url() . 'assets/BloodBank/thumb/original/';
+         $this->db->select('bloodBank_photo,bloodBank_name,city_name,SUBSTRING(bloodBank_phn, 1, CHAR_LENGTH(bloodBank_phn)-1)AS phone ,bloodBank_add');
+        $this->db->from('qyura_bloodBank');
+        $this->db->join('qyura_city','city_id = cityId','left');
+        foreach($where as $key=>$val){
+           
+            if($where[$key] === 0){
+            $this->db->where($key, $val); 
+            }
+            if($where[$key] != ''){
+            $this->db->where($key, $val); 
+            }
+        }
+    
+        $data= $this->db->get(); 
+         
+        $result= array();
+        $i=1;
+        foreach($data->result() as $key=>$val){
+            $result[$i]['bloodBank_photo'] = $imgUrl.$val->bloodBank_photo;
+            $result[$i]['bloodBank_name'] = $val->bloodBank_name;
+            $result[$i]['city_name'] = $val->city_name;
+            $result[$i]['bloodBank_phn'] = $val->phone;
+            $result[$i]['bloodBank_add'] = $val->bloodBank_add;
+           $i++;
+        }
+         return $result;
+        
+      }
 }   
 

@@ -403,7 +403,7 @@ class Hospital_model extends CI_Model {
     
     function fetchHospitalDoctorDataTables($hospitalUserId){
         
-        $imgUrl = base_url() . 'assets/hospitalImages/$1';
+        $imgUrl = base_url() . 'assets/hospitalImages/thumb/thumb_100/$1';
         
       $this->datatables->select('doctors_userId userId,qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, " ",  qyura_doctors.doctors_lName) AS name, qyura_doctors.doctors_img imUrl, qyura_doctors.doctors_consultaionFee as consFee, qyura_specialities.specialities_name as specialityName,qyura_doctors.doctors_phn,qyura_doctors.doctors_img,qyura_doctors.doctors_id,qyura_doctors.doctors_mobile,qyura_doctors.doctors_unqId,( FROM_UNIXTIME(qyura_professionalExp.professionalExp_end,"%Y") - FROM_UNIXTIME(qyura_professionalExp.professionalExp_start,"%Y"))  AS exp');
         
@@ -434,7 +434,7 @@ class Hospital_model extends CI_Model {
     
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/hospitalImages/thumb/original/';
-         $this->db->select('hospital_img,hospital_name,city_name,hospital_phn,hospital_address');
+         $this->db->select('hospital_img,hospital_name,city_name,SUBSTRING(hospital_phn, 1, CHAR_LENGTH(hospital_phn)-1)AS phone,hospital_address');
         $this->db->from('qyura_hospital');
         $this->db->join('qyura_city','city_id = hospital_cityId','left');
         foreach($where as $key=>$val){
@@ -449,15 +449,12 @@ class Hospital_model extends CI_Model {
     
         $data= $this->db->get(); 
         $result= array();
-       // echo "<pre>";print_r($result);echo"</pre>";
-       //exit;
-        //echo $this->db->last_query();
         $i=1;
         foreach($data->result() as $key=>$val){
             $result[$i]['hospital_img'] = $imgUrl.$val->hospital_img;
             $result[$i]['hospital_name'] = $val->hospital_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['hospital_phn'] = $val->hospital_phn;
+            $result[$i]['hospital_phn'] = $val->phone;
             $result[$i]['hospital_address'] = $val->hospital_address;
            $i++;
         }

@@ -5,7 +5,7 @@
     }
 </style>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
-<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+<!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
@@ -64,7 +64,7 @@ if($current == 'detailBloodBank'):?>
             ],
         });
 
-        $('#hospital_cityId,#hospital_stateId').change(function () {
+        $('#cityId,#stateId').change(function () {
             oTable.draw();
         });
         $('#search').on('keyup', function () {
@@ -99,8 +99,8 @@ if($current == 'detailBloodBank'):?>
             type: 'POST',
             data: {'stateId': stateId},
             success: function (datas) {
-                $('#hospital_cityId').html(datas);
-                $('#hospital_cityId').selectpicker('refresh');
+                $('#cityId').html(datas);
+                $('#cityId').selectpicker('refresh');
 
             }
         });
@@ -505,11 +505,20 @@ if($current == 'detailBloodBank'):?>
          $("#avatar-modal").modal('hide');
      }); 
  
- $("#picEditClose").click(function () {
+ $("#picEdit").click(function () {
+    $(".logo-img").hide();
+    $(".logo-up").show();
+    $("#picEdit").hide();
+    $("#picEditClose").show();
+
+});
+
+$("#picEditClose").click(function () {
     $(".logo-up").hide();
     $(".logo-img").show();
     $("#picEdit").show();
     $("#picEditClose").hide();
+
 
 });
 function isNumberKey(evt, id) {
