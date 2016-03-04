@@ -26,7 +26,7 @@
                                 <aside class="clearfix m-bg-pic">
 
 
-                                    <div class="bg-picture text-center">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($backgroundImage) && !empty($backgroundImage)): echo base_url().'assets/ambulanceImages/'.$backgroundImage[0]->ambulance_background_img; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                        <div class='pro-img'>
@@ -65,7 +65,7 @@
                                 </aside>
                                 <section class="clearfix hospitalBtn">
                                     <div class="col-md-12">
-                                        <a href="#" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="modal" data-target="#changeBg" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
 
                                     </div>
 
@@ -260,7 +260,43 @@
 
                     </section>
                     <!-- Left Section End -->
+ <div id="changeBg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Change Background</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <div id="messageErrors"></div>
+                                        <form class="form-horizontal" id="uploadimage" action="" method="post" enctype="multipart/form-data">
 
+                         <div id="image_preview"> <img id="previewing" src="<?php echo base_url();?>assets/images/hospital.jpg" class="img-responsive center-block" /></div>
+                         
+
+                                            <article class="form-group m-lr-0 ">
+                                                <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Background :</label>
+                                                <div class="col-md-8 col-sm-8 text-right">
+                                                    <input disabled="disabled" class="showUpload" id="uploadFileDd" >
+                                                    <div class="fileUpload btn btn-sm btn-upload">
+                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                        <input type="file" name="file" class="upload" id="uploadBtnDd">
+                                                    </div>
+                                                </div>
+                                            </article>
+<!--<h4 id='loading' >loading..</h4>-->
+                                            <article class="clearfix m-t-20">
+                                                <button type="submit" name="submit" class="btn btn-primary pull-right waves-effect waves-light bg-btn m-r-20">Upload</button>
+                                            </article>
+                                        </form>
+                                    </div>
+
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                    </div>
 
                 </div>
 

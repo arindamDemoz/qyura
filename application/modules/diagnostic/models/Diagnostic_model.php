@@ -103,7 +103,7 @@ class Diagnostic_model extends CI_Model {
     
     function fetchDiagnosticDoctorDataTables($diagonsticUserId){
         
-        $imgUrl = base_url() . 'assets/doctorsImages/$1';
+        $imgUrl = base_url() . 'assets/doctorsImages/thumb/thumb_100/$1';
         
       $this->datatables->select('doctors_userId userId,qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, " ",  qyura_doctors.doctors_lName) AS name, qyura_doctors.doctors_img imUrl, qyura_doctors.doctors_consultaionFee as consFee, qyura_specialities.specialities_name as specialityName,qyura_doctors.doctors_phn,qyura_doctors.doctors_img,qyura_doctors.doctors_id,qyura_doctors.doctors_mobile,qyura_doctors.doctors_unqId,( FROM_UNIXTIME(qyura_professionalExp.professionalExp_end,"%Y") - FROM_UNIXTIME(qyura_professionalExp.professionalExp_start,"%Y"))  AS exp');
         
@@ -352,5 +352,34 @@ class Diagnostic_model extends CI_Model {
       
      return $data->result();
     }
-
+    
+    function createCSVdata($where){
+        $imgUrl = base_url() . 'assets/diagnosticsImage/thumb/original/';
+        $this->db->select('diagnostic_img,diagnostic_name,city_name,diagnostic_phn,diagnostic_address');
+        $this->db->from('qyura_diagnostic');
+        $this->db->join('qyura_city','city_id = diagnostic_cityId','left');
+        foreach($where as $key=>$val){
+           
+            if($where[$key] === 0){
+            $this->db->where($key, $val); 
+            }
+            if($where[$key] != ''){
+            $this->db->where($key, $val); 
+            }
+        }
+    
+        $data= $this->db->get(); 
+        $result= array();
+        $i=1;
+        foreach($data->result() as $key=>$val){
+            $result[$i]['diagnostic_img'] = $imgUrl.$val->diagnostic_img;
+            $result[$i]['diagnostic_name'] = $val->diagnostic_name;
+            $result[$i]['city_name'] = $val->city_name;
+            $result[$i]['diagnostic_phn'] = $val->diagnostic_phn;
+            $result[$i]['diagnostic_address'] = $val->diagnostic_address;
+           $i++;
+        }
+         return $result;
+        
+      }
 }
