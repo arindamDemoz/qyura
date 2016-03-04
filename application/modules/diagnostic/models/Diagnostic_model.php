@@ -355,7 +355,7 @@ class Diagnostic_model extends CI_Model {
     
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/diagnosticsImage/thumb/original/';
-        $this->db->select('diagnostic_img,diagnostic_name,city_name,diagnostic_phn,diagnostic_address');
+        $this->db->select('diagnostic_img,diagnostic_name,city_name,SUBSTRING(diagnostic_phn, 1, CHAR_LENGTH(diagnostic_phn)-1)AS phone,diagnostic_address');
         $this->db->from('qyura_diagnostic');
         $this->db->join('qyura_city','city_id = diagnostic_cityId','left');
         foreach($where as $key=>$val){
@@ -375,7 +375,7 @@ class Diagnostic_model extends CI_Model {
             $result[$i]['diagnostic_img'] = $imgUrl.$val->diagnostic_img;
             $result[$i]['diagnostic_name'] = $val->diagnostic_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['diagnostic_phn'] = $val->diagnostic_phn;
+            $result[$i]['diagnostic_phn'] = $val->phone;
             $result[$i]['diagnostic_address'] = $val->diagnostic_address;
            $i++;
         }
