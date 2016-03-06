@@ -619,13 +619,13 @@ function addAwards(){
                // $('#hospital_cityId').focus();
             }
            
-            if(!$.isNumeric(myzip)){
+            /*if(!$.isNumeric(myzip)){
                 
                 $('#hospital_zip').addClass('bdr-error');
                 $('#error-hospital_zip').fadeIn().delay(3000).fadeOut('slow');
                  status = 0;
                 // $('#hospital_zip').focus();
-            } 
+            } */
             if(myzip .length < 6){
                  $('#hospital_zip').addClass('bdr-error');
                 $('#error-hospital_zip_long').fadeIn().delay(3000).fadeOut('slow');

@@ -1084,7 +1084,7 @@ if($current != 'detailDiagnostic'):?>
         var phn= $.trim($('#diagnostic_phn1').val());
         var myzip = $.trim($('#diagnostic_zip').val());
         var cityId =$.trim($('#diagnostic_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
+        var stateIds = $.trim($('#diagnostic_stateId').val());
         var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
         var diagName = $.trim($('#diagnostic_name').val());
         var designations = $.trim($('#diagnostic_dsgn').val());
@@ -1119,9 +1119,8 @@ if($current != 'detailDiagnostic'):?>
                // $('#hospital_countryId').focus();
                status = 0;
             }
-           if(stateIds){
-               // console.log("in state");
-                $('#diagnostic_stateId').addClass('bdr-error');
+           if(stateIds === ''){
+               $('#diagnostic_stateId').addClass('bdr-error');
                 $('#error-diagnostic_stateId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_stateId').focus();
                status = 0;
@@ -1133,13 +1132,17 @@ if($current != 'detailDiagnostic'):?>
                status = 0;
             }
            
-            if(!$.isNumeric(myzip)){
+            /*if(!$.isNumeric(myzip)){
                 $('#diagnostic_zip').addClass('bdr-error');
                 $('#error-diagnostic_zip').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_zip').focus();
                 status = 0;
-            } 
-
+            } */
+            if(myzip .length < 6){
+                 $('#hospital_zip').addClass('bdr-error');
+                $('#error-diagnostic_zip_long').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
+            }  
             if($("input[name='diagnostic_address']" ).val()==''){
                 $('#geocomplete').addClass('bdr-error');
                 $('#error-diagnostic_address').fadeIn().delay(3000).fadeOut('slow');

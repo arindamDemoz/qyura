@@ -391,6 +391,7 @@ class Hospital extends MY_Controller {
                     'users_password'=> $users_password,
                    'users_ip_address' => $this->input->ip_address(),
                    'users_mobile'=> $this->input->post('hospital_mblNo'),
+                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
                 );
               
                  
