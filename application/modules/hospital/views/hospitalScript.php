@@ -48,6 +48,12 @@ if($current != 'detailHospital'):?>
     <script>
         var resizefunc = [];
         var hospitalId = <?php echo $check;?> 
+        
+        
+$("#edit").click(function () {
+ $("#detail").toggle();
+    $("#newDetail").toggle();
+});
     </script>
 <script>
              /*-- Selectpicker --*/
@@ -131,12 +137,12 @@ function fetchCity(stateId) {
 		        loadAwards();
 		        loadServices();
 		        var pharmacy_status = '';
-		        pharmacy_status = $('#pharmacy_status').val();
+		        pharmacy_status = $.trim($('#pharmacy_status').val());
 		        var bloodbank_status = '';
-		        bloodbank_status = $('#bloodbank_status').val();
+		        bloodbank_status = $.trim($('#bloodbank_status').val());
 		        if(bloodbank_status != '')
 		        $("#bloodbankbtn").trigger("click");
-		        if(bloodbank_status != '')
+		        if(pharmacy_status != '')
 		        $("#pharmacybtn").trigger("click");
 		         
 		         loadSpeciality();
@@ -575,11 +581,11 @@ function addAwards(){
         var phn= $.trim($('#hospital_phn1').val());
         var myzip = $.trim($('#hospital_zip').val());
         var cityId =$.trim($('#hospital_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
+        var stateIds = $.trim($('#hospital_stateId').val());
         var hospital_mblNo = $.trim($('#hospital_mblNo').val());
         var aboutUs = $.trim($('#hospital_aboutUs').val());
         var status = 1;
-  // alert(aboutUs);
+         
             if($('#hospital_name').val()==''){
                 $('#hospital_name').addClass('bdr-error');
                 $('#error-hospital_name').fadeIn().delay(3000).fadeOut('slow');
@@ -599,14 +605,14 @@ function addAwards(){
                  status = 0;
                // $('#hospital_countryId').focus();
             }
-          if(!$.isNumeric(stateIds)){
+          if(stateIds === ''){
                // console.log("in state");
                 $('#hospital_stateId').addClass('bdr-error');
                 $('#error-hospital_stateId').fadeIn().delay(3000).fadeOut('slow');
                  status = 0;
                // $('#hospital_stateId').focus();
             }
-           if(!$.isNumeric(cityId)){
+           if(cityId === ''){
                 $('#hospital_cityId').addClass('bdr-error');
                 $('#error-hospital_cityId').fadeIn().delay(3000).fadeOut('slow');
                  status = 0;
@@ -620,7 +626,11 @@ function addAwards(){
                  status = 0;
                 // $('#hospital_zip').focus();
             } 
-
+            if(myzip .length < 6){
+                 $('#hospital_zip').addClass('bdr-error');
+                $('#error-hospital_zip_long').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
+            }  
            if($("input[name='hospital_address']" ).val()==''){
                 $('#hospital_address').addClass('bdr-error');
                 $('#error-hospital_address').fadeIn().delay(3000).fadeOut('slow');

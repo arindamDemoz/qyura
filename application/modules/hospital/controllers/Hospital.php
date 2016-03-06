@@ -341,6 +341,9 @@ class Hospital extends MY_Controller {
                   $finalNumber = '';
                 for($i= 0;$i < $countPnone ;$i++) {
                     if($hospital_phn[$i] != '' && $pre_number[$i] !='') {
+                        if($i == ($countPnone)-1)
+                          $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i];
+                        else        
                        $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i].'|'; 
                     }
                     
