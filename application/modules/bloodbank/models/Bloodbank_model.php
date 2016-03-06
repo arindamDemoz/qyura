@@ -55,7 +55,7 @@ class Bloodbank_model extends CI_Model {
     
     function fetchbloodBankData( $condition = NULL){
          $this->db->select('blood.bloodBank_id,blood.users_id,blood.bloodBank_name,blood.bloodBank_phn,blood.bloodBank_add,City.city_name,'
-                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long');
+                 . 'blood.bloodBank_photo,usr.users_email,usr.users_password ,blood.bloodBank_cntPrsn,blood.bloodBank_lat,blood.bloodBank_long,blood.bloodBank_background_img');
      $this->db->from('qyura_bloodBank AS blood');
      $this->db->join('qyura_city AS City','City.city_id = blood.cityId','left');
      $this->db->join('qyura_users AS usr','usr.users_id = blood.users_id','left');

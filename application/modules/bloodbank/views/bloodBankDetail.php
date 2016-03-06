@@ -10,7 +10,7 @@
                          </div>
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">Bloodbank Detail </h3>
-                            <a href="all-bloodbank.html" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
+                            <a href="<?php echo site_url('bloodbank');?>" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
                                
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                                 <aside class="clearfix m-bg-pic">
 
 
-                                    <div class="bg-picture text-center">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($bloodBankData[0]->bloodBank_background_img) && !empty($bloodBankData[0]->bloodBank_background_img)): echo base_url().'assets/BloodBank/'.$bloodBankData[0]->bloodBank_background_img; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
@@ -62,12 +62,11 @@
                                     <!--/ meta -->
 
                                 </aside>
-                                <section class="clearfix hospitalBtn">
+                                 <section class="clearfix hospitalBtn">
                                     <div class="col-md-12">
-                                        <a href="#" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="modal" data-target="#changeBg" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
 
                                     </div>
-
                                 </section>
                                 <article class="text-center clearfix m-t-50">
                                     <ul class="nav nav-tab nav-setting">
@@ -427,4 +426,44 @@
                 <!-- container -->
             </div>
             <!-- content -->
+            <!--Change Logo-->
+                    <div id="changeBg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Change Background</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <div id="messageErrors"></div>
+                                        <form class="form-horizontal" id="uploadimage" action="" method="post" enctype="multipart/form-data">
+
+                         <div id="image_preview"> <img id="previewing" src="<?php echo base_url();?>assets/images/hospital.jpg" class="img-responsive center-block" /></div>
+                         
+
+                                            <article class="form-group m-lr-0 ">
+                                                <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Background :</label>
+                                                <div class="col-md-8 col-sm-8 text-right">
+                                                    <input disabled="disabled" class="showUpload" id="uploadFileDd" >
+                                                    <div class="fileUpload btn btn-sm btn-upload">
+                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                        <input type="file" name="file" class="upload" id="uploadBtnDd">
+                                                    </div>
+                                                </div>
+                                            </article>
+<!--<h4 id='loading' >loading..</h4>-->
+                                            <article class="clearfix m-t-20">
+                                                <button type="submit" name="submit" class="btn btn-primary pull-right waves-effect waves-light bg-btn m-r-20">Upload</button>
+                                            </article>
+                                        </form>
+                                    </div>
+
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                    </div>
+                    <!-- /Change Logo -->
             <?php echo $this->load->view('edit_upload_crop_modal');?>
+                    <?php echo $this->load->view('edit_gallery_crop_modal');?>

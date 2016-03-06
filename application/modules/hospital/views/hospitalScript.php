@@ -5,13 +5,14 @@
     }
 </style>
 
-<?php $check= 0; 
-$id = $this->uri->segment(3); 
-if(!empty($id)){
-	$check = $this->uri->segment(3); 
-}else{
-	$check = 0 ;
+
+<?php 
+$check= 0; 
+if(isset($hospitalId) && !empty($hospitalId)){
+    $check = $hospitalId; 
 }?>
+
+?>
 
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
@@ -46,8 +47,8 @@ if($current != 'detailHospital'):?>
 
     <script>
         var resizefunc = [];
+        var hospitalId = <?php echo $check;?> 
     </script>
-    <script> var hospitalId = <?php echo $check;?> </script>
 <script>
              /*-- Selectpicker --*/
 $('.selectpicker').selectpicker({
@@ -186,17 +187,20 @@ function fetchCity(stateId) {
     
 
  function addDiagnostic(){
+
          $('.diagonasticCheck').each(function() {
              
             if($(this).is(':checked')){
-                //alert($(this).val());
+                $(this).removeClass( "diagonasticCheck diagonasticCheck1" );
                 $.ajax({
                     url : urls + 'index.php/hospital/addDiagnostic',
                     type: 'POST',
+                    async : false,
                    data: {'hospitalId' : hospitalId , 'hospitalDiagnosticsCat_diagnosticsCatId' : $(this).val() },
                    success:function(datas){
                     
                        loadDiagonastic();
+                       
                    }
                 });
             }
@@ -248,17 +252,20 @@ function fetchCity(stateId) {
     function loadDiagonastic(){
         $('#list1').load(urls + 'index.php/hospital/hospitalDiagnostics/'+hospitalId,function () {
            // alert('callback function implementation');
-        });
+       });    
         
         $('#list').load(urls + 'index.php/hospital/hospitalFetchDiagnostics/'+hospitalId,function () {
            // alert('callback function implementation');
         });
         $('#loadTestDetail').html('');
+        
     }
     function sendSpeciality(){
         var specialityId = [];
         $('.specialityCheck').each(function() {
+            
             if($(this).is(':checked')){
+                $(this).removeClass( "specialityCheck specialityCheck1" );
                 $.ajax({
                     url : urls + 'index.php/hospital/addSpeciality',
                     type: 'POST',
@@ -975,25 +982,46 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 718 )
                 $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+            
+                var preTime =$('#timepickerMorEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+            }
           });
           
           $('#timepickerMorEnd').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
         }).on('hide.timepicker', function(e) {   
              var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
-           
-            if(h < 6 && mer == 'AM')
+           var preTime =$('#timepickerMorStart').val();
+          var splits = preTime.split(" ");
+          var secondSplit = splits[0].split(":");
+           var preMiutes = secondSplit[1];
+           var preHours = secondSplit[0];
+          var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+          
+            if(h < 6 && mer == 'AM'){
                 $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+            }
             //convert hours into minutes
             m+=h*60;
             
             //10:15 = 10h*60m + 15m = 615 min
-            if( m > 719 )
+            if( mer == 'PM' || h > 12 ){
                 $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+            }
+            if(totalpreMiutes > m){
+               $('#timepickerMorEnd').timepicker('setTime', '11:59 AM'); 
+            }
           });
           
           // morning end
@@ -1017,6 +1045,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 358 )
                 $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+            
+            var preTime =$('#timepickernoonEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+            }
           });
           
             $('#timepickernoonEnd').timepicker({
@@ -1029,6 +1067,13 @@ function addAwards(){
                 var mer= e.time.meridian;
                 m+=h*60;
                
+                var preTime =$('#timepickernoonStart').val();
+                var splits = preTime.split(" ");
+                var secondSplit = splits[0].split(":");
+                var preMiutes = secondSplit[1];
+                var preHours = secondSplit[0];
+                var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+          
                 if(m < 719 && mer == 'AM'){
                     $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
                 }   
@@ -1036,6 +1081,10 @@ function addAwards(){
          
                 if( m > 359 )
                     $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+                
+                 if(totalpreMiutes > m){
+                $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+            }
           });
           
           
@@ -1057,6 +1106,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 659 )
                 $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+            
+            var preTime =$('#timepickerEveEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+            }
           });
           
           $('#timepickerEveEnd').timepicker({
@@ -1067,7 +1126,12 @@ function addAwards(){
              var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
-           
+           var preTime =$('#timepickerEveStart').val();
+           var splits = preTime.split(" ");
+           var secondSplit = splits[0].split(":");
+            var preMiutes = secondSplit[1];
+            var preHours = secondSplit[0];
+            var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
             if(h < 6 && mer == 'PM')
                 $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
             //convert hours into minutes
@@ -1076,6 +1140,10 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 659 )
                 $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+            
+            if(totalpreMiutes > m){
+                $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+            }
           });
           
           // Evening end
@@ -1097,9 +1165,23 @@ function addAwards(){
             m+=h*60;
          
             if(m > 299 && mer == 'AM')
-                $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
-            //10:15 = 10h*60m + 15m = 615 min
-           // alert(m);
+                $('#timepickerNgtEnd').timepicker('setTime', '11:00 PM');
+             var preTime =$('#timepickerEveEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+             if(mer== 'PM' && splits[1] == 'PM'){
+                if(totalpreMiutes < m){
+                   $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+               }
+            }
+            if(mer== 'AM' && splits[1] == 'AM'){
+                if(totalpreMiutes < m){
+                   $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+               }
+             }
             
           });
           
@@ -1113,6 +1195,12 @@ function addAwards(){
             var m= e.time.minutes;
             var mer= e.time.meridian;
             
+            var preTime =$('#timepickerNgtStart').val();
+           var splits = preTime.split(" ");
+           var secondSplit = splits[0].split(":");
+            var preMiutes = secondSplit[1];
+            var preHours = secondSplit[0];
+            var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
            //convert hours into minutes
            
             if((h > 5 && mer == 'AM') )
@@ -1122,6 +1210,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( (m < 661 && mer == 'PM') )
                 $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+            if(mer== 'PM' && splits[1] == 'PM'){
+                if(totalpreMiutes > m){
+                   $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+               }
+            }
+            if(mer== 'AM' && splits[1] == 'AM'){
+                if(totalpreMiutes > m){
+                   $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+               }
+             }
           });
           
         
@@ -1201,6 +1299,81 @@ function addAwards(){
              }
           });
      }   
+     
+     $(document).ready(function (e) {
+    
+    $("#uploadimage").on('submit',(function(e) {
+            e.preventDefault();
+            $("#messageErrors").empty();
+            $('#loading').show();
+            $.ajax({
+            url: urls +'index.php/hospital/hospitalBackgroundUpload/'+hospitalId, // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+                var obj = jQuery.parseJSON(data);
+                if(obj.status == 200){
+                     $("#messageErrors").html("<div class='alert alert-success'>"+obj.messsage+"</div>");
+                      changebackgroundImage(hospitalId);
+                      $("#changeBg").modal('hide');
+                    
+                }else{
+                    $("#messageErrors").html("<div class='alert alert-danger'>"+obj.messsage+"</div>");
+                }
+
+            }
+            });
+    }));
+// Function to preview image after validation
+
+    
+$("#uploadBtnDd").change(function() {
+
+$("#messageErrors").empty(); // To remove the previous error message
+    var file = this.files[0];
+    var imagefile = file.type;
+    var match= ["image/jpeg","image/png","image/jpg"];
+    if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+    {
+    $('#previewing').attr('src','noimage.png');
+    $("#messageErrors").html("<div class='alert alert-danger'><p id='error'>Please Select A valid Image File</p><span id='error_message'>Only jpeg, jpg and png Images type allowed</span></div>");
+    return false;
+    }
+    else
+    {
+    var reader = new FileReader();
+    reader.onload = imageIsLoaded;
+    reader.readAsDataURL(this.files[0]);
+    }
+    });
+
+function imageIsLoaded(e) {
+    $("#file").css("color","green");
+    $('#image_preview').css("display", "block");
+    $('#previewing').attr('src', e.target.result);
+    $('#previewing').attr('width', '500px');
+    $('#previewing').attr('height', '230px');
+}
+});
+function changebackgroundImage(id){
+           $.ajax({
+            url: urls+'index.php/hospital/getBackgroundImage/'+hospitalId, // Url to which the request is send
+            type: "POST",            
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData:false,        // To send DOMDocument or non processed data file it is set to false
+            success: function(data)   // A function to be called if request succeeds
+            {
+              $('.bg-picture').css("background-image", "url("+data+")");   
+            }
+               
+          });
+    
+    }
     </script>
 </body>
 </html>
