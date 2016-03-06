@@ -653,7 +653,7 @@
                                             <!-- first Section End -->
                                             <section class="col-md-2 detailbox m-b-20 text-center">
                                             <div class="m-t-150">
-                                            <a onclick="addDiagnostic()"><i class="fa fa-arrow-right s-add"></i></a>
+                                            <a onclick="addDiagnostic()" id="addDiagnosticB"><i class="fa fa-arrow-right s-add"></i></a>
                                             </div>
                                             <div class="m-t-50">
                                             <a onclick="revertDiagnostic()"> <i class="fa fa-arrow-left s-add"></i></a>

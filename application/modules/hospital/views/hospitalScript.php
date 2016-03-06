@@ -187,6 +187,9 @@ function fetchCity(stateId) {
     
 
  function addDiagnostic(){
+            setTimeout(function(){
+               $('#addDiagnosticB').prop("disabled", false);
+           }, 300);
          $('.diagonasticCheck').each(function() {
              
             if($(this).is(':checked')){
@@ -194,6 +197,7 @@ function fetchCity(stateId) {
                 $.ajax({
                     url : urls + 'index.php/hospital/addDiagnostic',
                     type: 'POST',
+                    async : false,
                    data: {'hospitalId' : hospitalId , 'hospitalDiagnosticsCat_diagnosticsCatId' : $(this).val() },
                    success:function(datas){
                     
@@ -976,25 +980,46 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 718 )
                 $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+            
+                var preTime =$('#timepickerMorEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickerMorStart').timepicker('setTime', '6:00 AM');
+            }
           });
           
           $('#timepickerMorEnd').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
         }).on('hide.timepicker', function(e) {   
              var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
-           
-            if(h < 6 && mer == 'AM')
+           var preTime =$('#timepickerMorStart').val();
+          var splits = preTime.split(" ");
+          var secondSplit = splits[0].split(":");
+           var preMiutes = secondSplit[1];
+           var preHours = secondSplit[0];
+          var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+          
+            if(h < 6 && mer == 'AM'){
                 $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+            }
             //convert hours into minutes
             m+=h*60;
             
             //10:15 = 10h*60m + 15m = 615 min
-            if( m > 719 )
+            if( mer == 'PM' || h > 12 ){
                 $('#timepickerMorEnd').timepicker('setTime', '11:59 AM');
+            }
+            if(totalpreMiutes > m){
+               $('#timepickerMorEnd').timepicker('setTime', '11:59 AM'); 
+            }
           });
           
           // morning end
@@ -1018,6 +1043,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 358 )
                 $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+            
+            var preTime =$('#timepickernoonEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickernoonStart').timepicker('setTime', '12:00 PM');
+            }
           });
           
             $('#timepickernoonEnd').timepicker({
@@ -1030,6 +1065,13 @@ function addAwards(){
                 var mer= e.time.meridian;
                 m+=h*60;
                
+                var preTime =$('#timepickernoonStart').val();
+                var splits = preTime.split(" ");
+                var secondSplit = splits[0].split(":");
+                var preMiutes = secondSplit[1];
+                var preHours = secondSplit[0];
+                var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+          
                 if(m < 719 && mer == 'AM'){
                     $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
                 }   
@@ -1037,6 +1079,10 @@ function addAwards(){
          
                 if( m > 359 )
                     $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+                
+                 if(totalpreMiutes > m){
+                $('#timepickernoonEnd').timepicker('setTime', '05:59 PM');
+            }
           });
           
           
@@ -1058,6 +1104,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 659 )
                 $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+            
+            var preTime =$('#timepickerEveEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+              if(totalpreMiutes < m){
+               $('#timepickerEveStart').timepicker('setTime', '6:00 PM');
+            }
           });
           
           $('#timepickerEveEnd').timepicker({
@@ -1068,7 +1124,12 @@ function addAwards(){
              var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
-           
+           var preTime =$('#timepickerEveStart').val();
+           var splits = preTime.split(" ");
+           var secondSplit = splits[0].split(":");
+            var preMiutes = secondSplit[1];
+            var preHours = secondSplit[0];
+            var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
             if(h < 6 && mer == 'PM')
                 $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
             //convert hours into minutes
@@ -1077,6 +1138,10 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( m > 659 )
                 $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+            
+            if(totalpreMiutes > m){
+                $('#timepickerEveEnd').timepicker('setTime', '10:59 PM');
+            }
           });
           
           // Evening end
@@ -1098,9 +1163,23 @@ function addAwards(){
             m+=h*60;
          
             if(m > 299 && mer == 'AM')
-                $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
-            //10:15 = 10h*60m + 15m = 615 min
-           // alert(m);
+                $('#timepickerNgtEnd').timepicker('setTime', '11:00 PM');
+             var preTime =$('#timepickerEveEnd').val();
+              var splits = preTime.split(" ");
+              var secondSplit = splits[0].split(":");
+               var preMiutes = secondSplit[1];
+               var preHours = secondSplit[0];
+              var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
+             if(mer== 'PM' && splits[1] == 'PM'){
+                if(totalpreMiutes < m){
+                   $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+               }
+            }
+            if(mer== 'AM' && splits[1] == 'AM'){
+                if(totalpreMiutes < m){
+                   $('#timepickerNgtStart').timepicker('setTime', '11:00 PM');
+               }
+             }
             
           });
           
@@ -1114,6 +1193,12 @@ function addAwards(){
             var m= e.time.minutes;
             var mer= e.time.meridian;
             
+            var preTime =$('#timepickerNgtStart').val();
+           var splits = preTime.split(" ");
+           var secondSplit = splits[0].split(":");
+            var preMiutes = secondSplit[1];
+            var preHours = secondSplit[0];
+            var totalpreMiutes = parseInt(preHours * 60) + parseInt(preMiutes);
            //convert hours into minutes
            
             if((h > 5 && mer == 'AM') )
@@ -1123,6 +1208,16 @@ function addAwards(){
             //10:15 = 10h*60m + 15m = 615 min
             if( (m < 661 && mer == 'PM') )
                 $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+            if(mer== 'PM' && splits[1] == 'PM'){
+                if(totalpreMiutes > m){
+                   $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+               }
+            }
+            if(mer== 'AM' && splits[1] == 'AM'){
+                if(totalpreMiutes > m){
+                   $('#timepickerNgtEnd').timepicker('setTime', '05:00 AM');
+               }
+             }
           });
           
         

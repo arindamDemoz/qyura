@@ -7,6 +7,7 @@
     <!-- END wrapper -->
 <script>
 var resizefunc = [];
+
 </script>
      <script src="<?php echo base_url();?>assets/jquery-1.8.2.min.js"> </script>
      <script src="<?php echo base_url();?>assets/js/framework.js"></script>
@@ -17,4 +18,16 @@ var resizefunc = [];
      
 
 <!--     <script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>-->
+        
+ <script>
+     
+     $('#search').bind('keypress', function(e)
+    {
+       if(e.keyCode == 13)
+       {
+          return false;
+       }
+    });
+</script>       
+        
 
