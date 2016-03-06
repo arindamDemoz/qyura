@@ -187,13 +187,11 @@ function fetchCity(stateId) {
     
 
  function addDiagnostic(){
-            setTimeout(function(){
-               $('#addDiagnosticB').prop("disabled", false);
-           }, 300);
+
          $('.diagonasticCheck').each(function() {
              
             if($(this).is(':checked')){
-                //alert($(this).val());
+                $(this).removeClass( "diagonasticCheck diagonasticCheck1" );
                 $.ajax({
                     url : urls + 'index.php/hospital/addDiagnostic',
                     type: 'POST',
@@ -202,6 +200,7 @@ function fetchCity(stateId) {
                    success:function(datas){
                     
                        loadDiagonastic();
+                       
                    }
                 });
             }
@@ -253,17 +252,20 @@ function fetchCity(stateId) {
     function loadDiagonastic(){
         $('#list1').load(urls + 'index.php/hospital/hospitalDiagnostics/'+hospitalId,function () {
            // alert('callback function implementation');
-        });
+       });    
         
         $('#list').load(urls + 'index.php/hospital/hospitalFetchDiagnostics/'+hospitalId,function () {
            // alert('callback function implementation');
         });
         $('#loadTestDetail').html('');
+        
     }
     function sendSpeciality(){
         var specialityId = [];
         $('.specialityCheck').each(function() {
+            
             if($(this).is(':checked')){
+                $(this).removeClass( "specialityCheck specialityCheck1" );
                 $.ajax({
                     url : urls + 'index.php/hospital/addSpeciality',
                     type: 'POST',
