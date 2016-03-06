@@ -20,7 +20,7 @@
                             <section class="col-md-12">
                                 <aside class="clearfix m-bg-pic">
                                     
-                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($backgroundImage) && !empty($backgroundImage)): echo base_url().'assets/diagnosticsImage/'.$backgroundImage[0]->diagnostic_background_img; endif;?>')">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($diagnosticData) && !empty($diagnosticData[0]->diagnostic_background_img)): echo base_url().'assets/diagnosticsImage/'.$diagnosticData[0]->diagnostic_background_img; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
@@ -61,33 +61,33 @@
                                 </section>
                                 <article class="text-center clearfix m-t-50">
                                     <ul class="nav nav-tab nav-setting">
-                                        <li class="active">
+                                        <li class="<?php if(isset($active) && $active == 'general'){echo "active";}?>">
                                             <a data-toggle="tab" href="#general">General Detail</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class=" <?php if(isset($active) && $active == 'diag'){echo "active";}?>">
                                             <a data-toggle="tab" href="#diagnostic">Diagnostics</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class=" <?php if(isset($active) && $active == 'specialities'){echo "active";}?>">
                                             <a data-toggle="tab" href="#specialities">Specialities</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class="<?php if(isset($active) && $active == 'gallery'){echo "active";}?>">
                                             <a data-toggle="tab" href="#gallery">Gallery</a>
                                         </li>
-                                        <li class="<?php if(isset($showTimeSlotBox) && !empty($showTimeSlotBox)){echo $showTimeSlotBox;}?>">
+                                        <li class="<?php if(isset($active) && $active == 'timeslot'){echo "active";}?>">
                                             <a data-toggle="tab" href="#timeslot">Time Slot</a>
                                         </li>
 
-                                        <li class=" ">
+                                        <li class=" <?php if(isset($active) && $active == 'doctor'){echo "active";}?>">
                                             <a data-toggle="tab" href="#doctor">Doctor</a>
                                         </li>
-                                        <li class=" ">
+                                        <li class=" <?php if(isset($active) && $active == 'account'){echo "active";}?>">
                                             <a data-toggle="tab" href="#account">Account</a>
                                         </li>
                                     </ul>
                                 </article>
                                 <article class="tab-content m-t-50" ng-app="myApp">
                                     <!-- General Detail Starts -->
-                                    <section class="tab-pane fade in active" id="general">
+                                    <section class="tab-pane fade in <?php if(isset($active) && $active == 'general'){echo "active";}?>" id="general">
                                         <article class="detailbox">
                                             <div class="bg-white mi-form-section">
                                                 <!-- Table Section End -->
@@ -152,7 +152,8 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Diagnostic Centre Name:</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="diagnosticCenter" name="diagnostic_name" type="text" required="" value="<?php if(!empty($diagnosticData)): echo $diagnosticData[0]->diagnostic_name; endif;?>">
-                                                                    <label class="error" style="display:none;" id="error-diagnostic_name"> please enter diagnostic name!</label>
+                                                                    <label class="error" style="display:none;" id="error-diagnostic_name"> please enter diagnostic name only alphabet character's!</label>
+                                                                    
                                                                     <div>
                                                             </article>
                                                             <article class="clearfix m-b-10">
@@ -347,7 +348,7 @@
   <!-- General Detail Ends -->
                        
      <!--diagnostic Starts -->
-<section class="tab-pane fade in diagdetail" id="diagnostic">
+<section class="tab-pane fade in diagdetail <?php if(isset($active) && $active == 'diag'){echo "active";}?>" id="diagnostic">
     <!-- first Section Start -->
     <aside class="clearfix">
         <section class="col-md-5 detailbox m-b-20 diag" >
@@ -376,10 +377,10 @@
         <!-- first Section End -->
         <section class="col-md-2 detailbox m-b-20 text-center">
             <div class="m-t-150">
-                <a onclick="addDiagnostic()"><i class="fa fa-arrow-right s-add"></i></a>
+                <a onclick="addDiagnostic()" id="addDiagnosticeArrow"><i class="fa fa-arrow-right s-add"></i></a>
             </div>
             <div class="m-t-50">
-                <a onclick="revertDiagnostic()"> <i class="fa fa-arrow-left s-add"></i></a>
+                <a onclick="revertDiagnostic()" id="revertDiagnosticeArrow"> <i class="fa fa-arrow-left s-add"></i></a>
             </div>
         </section>
         <!-- second Section Start -->
@@ -529,7 +530,7 @@
 </section>
 <!-- Specialities Ends -->         
 <!--Gllery Starts -->
-<section class="tab-pane fade in" id="gallery">
+<section class="tab-pane fade in <?php if(isset($active) && $active == 'gallery'){echo "active";}?>" id="gallery">
     <div class="fileUpload btn btn-sm btn-upload im-upload">
         <span class="btn btn-appointment avatar-view-gallery" >Add More</span>
 <!--                                             <input type="file" class="upload" id="uploadBtn"> -->
@@ -549,7 +550,7 @@
 <!--Gallery Ends -->
 
                                  <!--Timeslot Starts -->
-  <section class="tab-pane fade in <?php if(isset($showTimeSlot) && !empty($showTimeSlot)){echo $showTimeSlot;}?>" id="timeslot">
+  <section class="tab-pane fade in <?php if(isset($active) && $active == 'timeslot'){echo "active";}?>" id="timeslot">
                                      <div class="col-md-10 p-b-20">
                                          
                                          <?php if(isset($AlltimeSlot) && !empty($AlltimeSlot)):?>
@@ -717,7 +718,7 @@
                                  <!-- Timeslot Ends -->
                                  
                                     <!--Staff and Permission Starts -->
-                                    <section class="tab-pane fade in" id="doctor">
+                                    <section class="tab-pane fade in <?php if(isset($active) && $active == 'doctor'){echo "active";}?>" id="doctor">
                                         <article class="clearfix m-top-40 p-b-20">
                                             <aside class="table-responsive">
                                                 <table class="table all-doctor" id="diagnostic_doctors" style="width:100%">
@@ -740,7 +741,7 @@
                                     <!-- Staff and Permission Ends -->
 
                                     <!--Account Starts -->
-                                    <section class="tab-pane fade in" id="account">
+                                    <section class="tab-pane fade in <?php if(isset($active) && $active == 'account'){echo "active";}?>" id="account">
                                     <form method="post" name="acccountForm" id="acccountForm">
                                         <p class="text-success" style="display:none;" id="error-password_email_check_success"> Data Changed Successfully!</p>
                                         <aside class="col-md-9 setting">
@@ -799,7 +800,7 @@
                                                    
                                                          
                                                 <input type="teL" class="form-control" name="users_mobile" id="users_mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="<?php if(isset($diagnosticData[0]->users_mobile)){ echo $diagnosticData[0]->users_mobile; } ?>" />
-                                                                   <p class="error" id="error-users_mobile" style="display:none;"> Enter Mobile Number!</p>
+                                                                   <label class="error" id="error-users_mobile" style="display:none;"> Enter Mobile Number</label>
                                                          
                                                             <!--<p class="m-t-10">* If it is landline, include Std code with number </p> -->
                                                        

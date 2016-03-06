@@ -2,27 +2,109 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ambulance extends MY_Controller {
+class Medicart extends MY_Controller {
 
     public function __construct() {
         parent:: __construct();
-        $this->load->model('Ambulance_model');
+        $this->load->model('medicart_model');
         $this->load->library('form_validation');
         $this->load->library('datatables');
     }
 
     function index() {
-        $data = array();
-        $data['allStates'] = $this->Ambulance_model->fetchStates();
-        $data['ambulanceData'] = $this->Ambulance_model->fetchambulanceData();
-        $data['title'] = 'Ambulance';
-        $this->load->super_admin_template('ambulanceListing', $data, 'ambulanceScript');
+        $option = array(
+            'select'=>'city_id,city_name',
+            'table'=> 'qyura_city',
+            'order_by' => array("city_name", "asc")
+        );
+        $data['allCity'] = $this->medicart_model->customGet($option);
+        $data['title'] = 'Medicart';
+        $this->load->super_admin_template('medicartOfferListing', $data, 'medicartScript');
     }
 
-    function getAmbulanceDl() {
+    function getMedicartDl() {
 
-        echo $this->Ambulance_model->fetchAmbulanceDataTables();
+        echo $this->medicart_model->fetchMedicartDataTables();
     }
+    
+    function getMedicartEnquiriesDl() {
+
+        echo $this->medicart_model->fetchMedicartEnquiriesDataTables();
+    }
+    
+     function getMedicartBookingDl() {
+
+        echo $this->medicart_model->fetchMedicartBookingDataTables();
+    }
+    
+    function bookingRequest(){
+        $option = array(
+            'select'=>'city_id,city_name',
+            'table'=> 'qyura_city',
+            'order_by' => array("city_name", "asc")
+        );
+        $data['allCity'] = $this->medicart_model->customGet($option);
+        $data['title'] = 'Medicart booking';
+        $this->load->super_admin_template('bookingRequestListing', $data, 'medicartScript');
+    }
+    
+    function enquiries(){
+        $option = array(
+            'select'=>'city_id,city_name',
+            'table'=> 'qyura_city',
+            'order_by' => array("city_name", "asc")
+        );
+        $data['allCity'] = $this->medicart_model->customGet($option);
+        $data['title'] = 'Medicart enquiries';
+        $this->load->super_admin_template('enquiryListing', $data, 'medicartScript');
+    }
+    
+    
+    function addOffer(){
+        $option = array(
+            'select'=>'city_id,city_name',
+            'table'=> 'qyura_city',
+            'order_by' => array("city_name", "asc")
+        );
+        $data['allCity'] = $this->medicart_model->customGet($option);
+        $data['title'] = 'add Offer';
+        $this->load->super_admin_template('addOffer', $data, 'medicartScript'); 
+    }
+    
+      function getHospital(){
+        //echo "fdadas";exit;
+        $cityId = $this->input->post('cityId');
+        $hosData = $this->Healthcare_model->fetchHospital($cityId);
+        $hosOption = '';
+        $hosOption .='<option value=>Select Hospital</option>';
+        if(!empty($hosData)){
+            foreach($hosData as $key=>$val ) {
+                $hosOption .= '<option value='.$val->hospital_usersId.'>'. strtoupper($val->hospital_name).'</option>';
+            }
+        }
+       echo $hosOption;
+        exit;
+    }
+    
+     function getDiagno(){
+        //echo "fdadas";exit;
+        $cityId = $this->input->post('cityId');
+        $diagnoData = $this->Healthcare_model->fetchDiagnostic($cityId);
+        $diOption = '';
+        $diOption .='<option value=>Select Diagnostic</option>';
+        if(!empty($diagnoData)){
+            foreach($diagnoData as $key=>$val ) {
+                $diOption .= '<option value='.$val->diagnostic_usersId.'>'. strtoupper($val->diagnostic_name).'</option>';
+            }
+        }
+       echo $diOption;
+        exit;
+    }
+    
+    
+    
+    
+    
 
     function detailAmbulance($ambulanceId) {
         $data = array();

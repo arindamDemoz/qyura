@@ -51,7 +51,7 @@ class Diagnostic extends MY_Controller {
         $this->load->super_admin_template('addDiagcenter', $data, 'diagnosticScript');
     }
 
-    function detailDiagnostic($diagnosticId = '') {
+    function detailDiagnostic($diagnosticId = '',$active='general') {
 
         $data = array();
 
@@ -70,16 +70,11 @@ class Diagnostic extends MY_Controller {
         );
         $data['AlltimeSlot'] = $this->diagnostic_model->customGet($option);
         
-        $options = array(
-            'table' => 'qyura_diagnostic',
-            'select' => 'diagnostic_background_img',
-            'where' => array('diagnostic_id' => $diagnosticId)
-        );
-        $data['backgroundImage'] = $this->diagnostic_model->customGet($options);
         
         $data['diagnosticId'] = $diagnosticId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
+        $data['active'] = $active;
         $data['title'] = (!empty($data['diagnosticData'])) ? $data['diagnosticData'][0]->diagnostic_name : "Diagnostic Details";
         $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
     }
@@ -305,7 +300,7 @@ class Diagnostic extends MY_Controller {
             $data['diagnosticData'] = $this->diagnostic_model->fetchdiagnosticData($diagnosticId);
             $data['diagnosticId'] = $diagnosticId;
             $data['showStatus'] = 'block';
-            $data['detailShow'] = 'none';
+            $data['active'] = 'general';
             // $this->load->view('diagnosticDetail', $data);
             $data['title'] = (!empty($data['diagnosticData'])) ? $data['diagnosticData'][0]->diagnostic_name : "Diagnostic Details";
             $this->load->super_admin_template('diagnosticDetail', $data, 'diagnosticScript');
@@ -343,7 +338,7 @@ class Diagnostic extends MY_Controller {
             $response = $this->diagnostic_model->UpdateTableData($updateDiagnostic, $where, 'qyura_diagnostic');
             if ($response) {
                 $this->session->set_flashdata('message', 'Record has been updated successfully!');
-                redirect("diagnostic/detailDiagnostic/$diagnosticId");
+                redirect("diagnostic/detailDiagnostic/$diagnosticId/general");
             }
         }
     }
@@ -390,7 +385,7 @@ class Diagnostic extends MY_Controller {
                 redirect("diagnostic/detailDiagnostic/$diagnosticId");
             } else {
                 $this->session->set_flashdata('message', 'Record has been updated failed!');
-                redirect("diagnostic/detailDiagnostic/$diagnosticId");
+                redirect("diagnostic/detailDiagnostic/$diagnosticId/account");
             }
         }
     }
@@ -1051,7 +1046,7 @@ class Diagnostic extends MY_Controller {
                 $this->diagnostic_model->customInsert($option);
             }
             $this->session->set_flashdata('message', 'Your Time Slot has been successfully update!');
-            redirect("diagnostic/detailDiagnostic/$diagnosticId");
+            redirect("diagnostic/detailDiagnostic/$diagnosticId/timeslot");
         }
     }
 
@@ -1148,7 +1143,7 @@ class Diagnostic extends MY_Controller {
                 $this->diagnostic_model->customUpdate($option);
             }
             $this->session->set_flashdata('message', 'Your Time Slot has been successfully update!');
-            redirect("diagnostic/detailDiagnostic/$diagnosticId");
+            redirect("diagnostic/detailDiagnostic/$diagnosticId/timeslot");
         }
     }
 

@@ -1,5 +1,5 @@
 <style type="text/css">
-    #diagnostic_datatable_filter
+    #medicart_offer_datatable_filter
     {
         display:none;
     }
@@ -10,7 +10,6 @@ if(isset($diagnosticId) && !empty($diagnosticId)){
 }?>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
-<link href="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
 <script src="<?php echo base_url(); ?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
 
@@ -20,34 +19,42 @@ if($current != 'detailDiagnostic'):?>
 <?php else:?>
 
 <script src="<?php echo base_url(); ?>assets/cropper/common_cropper.js"></script>
-<script src="<?php echo base_url(); ?>assets/cropper/gallery_cropper.js"></script>
 
 <?php endif;?>
 
-<script src="<?php echo base_url();?>assets/vendor/timepicker/bootstrap-timepicker.min.js"></script>
-<!--<script src="<?php echo base_url();?>assets/js/angular.min.js"></script>-->
-<script src="<?php echo base_url();?>assets/js/pages/diagdetail.js"></script>
-<!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.cookie.js"></script>-->
-<script src="<?php echo base_url();?>assets/js/pages/blood-detail.js"></script>
-
-   <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script>
-    <!--<script src="<?php echo base_url(); ?>assets/js/angular.min.js"> </script>-->
-    
-
-
+<script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/vendor/x-editable/jquery.xeditable.js"> </script> 
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
+<script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script> 
 
-    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script> 
-<!--     <script src="<?php echo base_url();?>assets/js/fileUpload/fileinput.js" type="text/javascript"></script> -->
     
 <script> 
-     var urls = "<?php echo base_url()?>";
-     var diagnosticId = "<?php echo $check?>";
-     var checkEvent = 0;
+//     var urls = "<?php //echo base_url()?>";
+//     var diagnosticId = "<?php //echo $check?>";
 </script>
+
 <script>
+     /**
+     * @project Qyura
+     * @description  datepicker
+     * @access public
+     */
+    
+        $('#date-1').datepicker();
+        $('#date-2').datepicker();
+
+        $('.pickDate').datepicker()
+            .on('changeDate', function (ev) {
+                $('.pickDate').datepicker('hide');
+            });
+        
+        var hideKeyboard = function () {
+          document.activeElement.blur();
+          $(".pickDate").blur();
+      };
+      
      /**
      * @project Qyura
      * @description  geo location address
@@ -65,12 +72,236 @@ if($current != 'detailDiagnostic'):?>
         });
       });
       
-    /**
+   /**
      * @project Qyura
-     * @description  city, state records
+     * @description  offer datatable
      * @access public
      */
     
+       $(document).ready(function () {
+           
+        var oTableOffer = $('#medicart_offer_datatable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "columnDefs": [{
+                    "targets": [1,2,3,4,5,6,7],
+                    "orderable": false
+                }],
+            "pageLength": 10,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
+            "iDisplayStart ": 20,
+            "columns": [
+                {"data": "medicartOffer_id"},
+                {"data": "MIname"},
+                {"data": "medicartOffer_title"},
+                {"data": "totalBooking"},
+                {"data": "totalInquiries"},
+                {"data": "medicartOffer_startDate"},
+                {"data": "medicartOffer_endDate"},
+                {"data": "status"}
+            ],
+            "ajax": {
+                "url": "<?php echo site_url('medicart/getMedicartDl'); ?>",
+                "type": "POST",
+                "async": false,
+                "data": function (d) {
+                    d.search['value'] = $("#search").val();
+                    d.cityId = $("#cityId").val();
+                    d.statusId = $("#statusId").val();
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                },
+                 beforeSend: function () {
+                   // setting a timeout
+                    $('#load_consulting').show();
+                },
+                complete: function ()
+                {
+                   $('#load_consulting').hide('200');
+                },
+            }
+        });
+        
+        var oTableEnquiries = $('#medicart_enquiries_datatables').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "columnDefs": [{
+                    "targets": [1,2,3,4,5],
+                    "orderable": false
+                }],
+            "pageLength": 10,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
+            "iDisplayStart ": 20,
+            "columns": [
+                {"data": "medicartContect_enquiryId"},
+                {"data": "MIname"},
+                {"data": "medicartOffer_title"},
+                {"data": "medicartContect_name"},
+                {"data": "medicartContect_mobileNo"},
+                {"data": "action", "searchable": false, "order": false}
+            ],
+            "ajax": {
+                "url": "<?php echo site_url('medicart/getMedicartEnquiriesDl'); ?>",
+                "type": "POST",
+                "async": false,
+                "data": function (d) {
+                    d.search['value'] = $("#search").val();
+                    d.cityId = $("#cityIdEnq").val();
+                    //d.statusId = $("#statusId").val();
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                },
+                 beforeSend: function () {
+                   // setting a timeout
+                    $('#load_consulting').show();
+                },
+                complete: function ()
+                {
+                   $('#load_consulting').hide('200');
+                },
+            }
+        });
+        
+
+        var oTableBooking = $('#medicart_booking_datatables').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "columnDefs": [{
+                    "targets": [1,2,3,4,5],
+                    "orderable": false
+                }],
+            "pageLength": 10,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
+            "iDisplayStart ": 20,
+            "columns": [
+                {"data": "medicartBooking_bookId"},
+                {"data": "MIname"},
+                {"data": "medicartBooking_preferredDate"},
+                {"data": "patientDetails_patientName"},
+                {"data": "medicartOffer_title"},
+                {"data": "users_mobile"},
+                {"data": "action", "searchable": false, "order": false}
+            ],
+            "ajax": {
+                "url": "<?php echo site_url('medicart/getMedicartBookingDl'); ?>",
+                "type": "POST",
+                "async": false,
+                "data": function (d) {
+                    //d.search['value'] = $("#search").val();
+                    d.cityId = $("#cityIdEnq").val();
+                    //d.statusId = $("#statusId").val();
+                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+                },
+                 beforeSend: function () {
+                   // setting a timeout
+                    $('#load_consulting').show();
+                },
+                complete: function ()
+                {
+                   $('#load_consulting').hide('200');
+                },
+            }
+        });
+        
+        $('#cityId,#statusId,#cityIdEnq').change(function () {
+            oTableEnquiries.draw();
+            oTableOffer.draw();
+            oTableBooking.draw();
+        });
+          
+        $('#search').on('keyup', function () {
+          oTableEnquiries.draw();
+          oTableOffer.draw();
+          oTableBooking.draw();
+        });
+        
+        $("#cityId,#cityIdEnq").select2({
+             allowClear: true,
+             placeholder: "Select a city"
+        });
+    });
+      
+     
+     
+     
+     
+     
+     
+     
+     
+//        var diagnosticTable = $('#medicart_offer_datatable').DataTable({
+//            "processing": true,
+//            "serverSide": true,
+//            "columnDefs": [{
+//                    "targets": [4, 5],
+//                    "orderable": false
+//                }],
+//            "pageLength": 1,
+//            "bJQueryUI": true,
+//            "sPaginationType": "full_numbers",
+//            "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
+//            "iDisplayStart ": 20,
+//            "columns": [
+//                {"data": "medicartOffer_id"},
+////                {"data": "userName"},
+//                {"data": "medicartOffer_title"},
+////                {"data": "startDate"},
+////                {"data": "endDate"},
+//                {"data": "status", "searchable": false, "order": false},
+//                {"data": "action", "searchable": false, "order": false}
+//            ],
+//            "ajax": {
+//                "url": "<?php echo site_url('medicart/getMedicartDl'); ?>",
+//                "type": "POST",
+//                "data": function (d) {
+//                    d.search['value'] = $("#search").val();
+//                    d.startDate = $("#date-1").val();
+//                    d.endDate = $("#date-2").val();
+//
+//                    d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
+//                },
+//                beforeSend: function () {
+//                    // setting a timeout
+//                   // $('#load_diagnostic').addClass('loading').show();
+//                },
+//                complete: function ()
+//                {
+//                   // $('#load_diagnostic').removeClass('loading').hide('200');
+//                },
+//            }
+//        });
+//
+//
+//        $('#search').change(function () {
+//            if ($('#li_consulting').hasClass('active'))
+//                consultingTable.draw();
+//            else
+//                diagnosticTable.draw();
+//        });
+//
+//        $('#date-1').datepicker().on('changeDate', function (ev) {
+//            if ($('#li_consulting').hasClass('active'))
+//                consultingTable.draw();
+//            else
+//                diagnosticTable.draw();
+//        });
+//        $('#date-2').datepicker()
+//                .on('changeDate', function (ev) {
+//                    if ($('#li_consulting').hasClass('active'))
+//                        consultingTable.draw();
+//                    else
+//                        diagnosticTable.draw();
+//                });
+//
+//    });
+    
+
+    </script>
+<!--<script>
       $(document).ready(function(){
           
  
@@ -117,9 +348,6 @@ if($current != 'detailDiagnostic'):?>
            
         }
       });
-    </script>
-<script>
-
     /**
      * @project Qyura
      * @description  datepicker
@@ -446,50 +674,27 @@ if($current != 'detailDiagnostic'):?>
      */
     
     function loadDiagnostic(){
-        checkEvent = 1;
         $('#list2').load(urls + 'index.php/diagnostic/diagnosticCategorys/'+diagnosticId,function () {
-            checkEvent = 0;
            // alert('callback function implementation');
         });
-        checkEvent = 1;
         $('#list3').load(urls + 'index.php/diagnostic/diagnosticAllocatedCategorys/'+diagnosticId,function () {
            // alert('callback function implementation');
-           checkEvent = 0;
         });
     
     } 
     
-    
-    
      function addDiagnostic(){
-         //$("#addDiagnosticeArrow").attr('onclick',);
-         console.log(checkEvent,'befor');
-         if(checkEvent)
-            return false;
-         else
-             checkEvent = 1;
-         
-         console.log(checkEvent,'after');
-     
          $('.diagonasticCheck').each(function() {
             if($(this).is(':checked')){
-                $(this).removeClass( "diagonasticCheck diagonasticCheck1" );
                 $.ajax({
                     url : urls + 'index.php/diagnostic/addDiagnosticHasCategory',
                     type: 'POST',
                    data: {'diagnosticId' : diagnosticId , 'diagnosticsHasCat_diagnosticsCatId' : $(this).val() },
-                   async: false,
                    success:function(datas){
-                       
+                    
                        loadDiagnostic();
-                       checkEvent = 1;
-                       console.log(checkEvent,'iner');
                    }
                 });
-            }else{
-                $("#addDiagnosticeArrow").removeClass('disabled');
-                checkEvent = 0;
-                console.log(checkEvent,'outer');
             }
             
         });
@@ -502,7 +707,6 @@ if($current != 'detailDiagnostic'):?>
                     url : urls + 'index.php/diagnostic/revertDiagnosticHasCategory',
                     type: 'POST',
                    data: {'diagnosticId' : diagnosticId , 'diagnosticsHasCat_id' : $(this).val() },
-                   async: false,
                    success:function(datas){
                     
                        loadDiagnostic();
@@ -532,12 +736,10 @@ if($current != 'detailDiagnostic'):?>
      function addSpeciality(){
          $('.diagonasticSpecialCheck').each(function() {
             if($(this).is(':checked')){
-                $(this).removeClass( "diagonasticSpecialCheck diagonasticSpecialCheck1" );
                 $.ajax({
                     url : urls + 'index.php/diagnostic/addSpeciality',
                     type: 'POST',
                    data: {'diagnosticId' : diagnosticId , 'diagnosticSpecialities_specialitiesId' : $(this).val() },
-                   async: false,
                    success:function(datas){
                     
                        loadSpeciality();
@@ -554,9 +756,7 @@ if($current != 'detailDiagnostic'):?>
                 $.ajax({
                     url : urls + 'index.php/diagnostic/revertSpeciality',
                     type: 'POST',
-                    
                    data: {'diagnosticId' : diagnosticId , 'diagnosticSpecialities_id' : $(this).val() },
-                   async: false,
                    success:function(datas){
                     
                        loadSpeciality();
@@ -688,25 +888,14 @@ if($current != 'detailDiagnostic'):?>
             var m= e.time.minutes;
             var mer= e.time.meridian;
             
-            if(h < 6 && mer == 'AM'){
+            if(h < 6 && mer == 'AM')
                 $('#morningStartTime').timepicker('setTime', '6:00 AM');
-            }
-             var morningTime =  $('#morningEndTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] < h) || (morningTime[0] == h && morningTimeMin[0] < m))
-            {
-               // console.log(morningTime);
-                $('#morningStartTime').timepicker('setTime', '6:00 AM');
-            }
             //convert hours into minutes
             m+=h*60;
             
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 718 )
+                $('#morningStartTime').timepicker('setTime', '6:00 AM');
           });
           
           
@@ -715,36 +904,18 @@ if($current != 'detailDiagnostic'):?>
         minuteStep: 1,
         showInputs: true,        
         }).on('hide.timepicker', function(e) {   
-            var h= e.time.hours;
+             var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
-          // console.log(h);
-          // console.log(m);
-           //console.log(mer);
-            if(h > 11 && mer == 'PM'){
+           
+            if(h < 6 && mer == 'AM')
                 $('#morningEndTime').timepicker('setTime', '11:59 AM');
-            }
-            
-            var morningTime =  $('#morningStartTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] > h) || (morningTime[0] == h && morningTimeMin[0] > m))
-            {
-               // console.log(morningTime);
-                $('#morningEndTime').timepicker('setTime', '11:59 AM');
-            }
-            
             //convert hours into minutes
             m+=h*60;
             
             //10:15 = 10h*60m + 15m = 615 min
-//            if( m > 719 )
-//                $('#morningEndTime').timepicker('setTime', '11:59 AM');
+            if( m > 719 )
+                $('#morningEndTime').timepicker('setTime', '11:59 AM');
           });
           
        $('#afternoonStartTime').timepicker({
@@ -755,322 +926,120 @@ if($current != 'detailDiagnostic'):?>
              var h= e.time.hours;
             var m= e.time.minutes;
             var mer= e.time.meridian;
+            m+=h*60;
             
-            if(h > 12 && mer == 'PM'){
+            if(m < 719 && mer == 'AM'){
                 $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
-            }
-             var morningTime =  $('#afternoonEndTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
+            }   
+            //convert hours into minutes
             
-            if((morningTime[0] < h) || (morningTime[0] == h && morningTimeMin[0] < m))
-            {
-               // console.log(morningTime);
+          // console.log(m);
+            //10:15 = 10h*60m + 15m = 615 min
+            if( m > 358 )
                 $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
-            }
-            //convert hours into minutes
-            m+=h*60;
-            
           });
           
-       $('#afternoonEndTime').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
-        }).on('hide.timepicker', function(e) {   
-            var h= e.time.hours;
-            var m= e.time.minutes;
-            var mer= e.time.meridian;
-          // console.log(h);
-          // console.log(m);
-           //console.log(mer);
-            if(h > 6 && mer == 'PM'){
-                $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
-            }
-            
-            var morningTime =  $('#afternoonStartTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] > h) || (morningTime[0] == h && morningTimeMin[0] > m))
-            {
-               // console.log(morningTime);
-                $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
-            }
-            
+            $('#afternoonEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
+                }   
             //convert hours into minutes
-            m+=h*60;
-            
+         
+                if( m > 359 )
+                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
           });
           
-        $('#eveningStartTime').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
-        }).on('hide.timepicker', function(e) {   
-             var h= e.time.hours;
-            var m= e.time.minutes;
-            var mer= e.time.meridian;
-            
-            if(h < 6 && mer == 'PM'){
-                $('#eveningStartTime').timepicker('setTime', '06:00 PM');
-            }
-             var morningTime =  $('#eveningEndTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] < h) || (morningTime[0] == h && morningTimeMin[0] < m))
-            {
-               // console.log(morningTime);
-                $('#eveningStartTime').timepicker('setTime', '06:00 PM');
-            }
+                $('#eveningStartTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
+                }   
             //convert hours into minutes
-            m+=h*60;
-            
+         
+                if( m > 359 )
+                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
           });
           
-        $('#eveningEndTime').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
-        }).on('hide.timepicker', function(e) {   
-            var h= e.time.hours;
-            var m= e.time.minutes;
-            var mer= e.time.meridian;
-          // console.log(h);
-          // console.log(m);
-           //console.log(mer);
-            if(h > 10 && mer == 'PM'){
-                $('#eveningEndTime').timepicker('setTime', '10:59 PM');
-            }
-            
-            var morningTime =  $('#eveningStartTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] > h) || (morningTime[0] == h && morningTimeMin[0] > m))
-            {
-               // console.log(morningTime);
-                $('#eveningEndTime').timepicker('setTime', '10:59 PM');
-            }
-            
+           $('#eveningEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
+                }   
             //convert hours into minutes
-            m+=h*60;
-            
+         
+                if( m > 359 )
+                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
           });
           
-       $('#nightStartTime').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
-        }).on('hide.timepicker', function(e) {   
-             var h= e.time.hours;
-            var m= e.time.minutes;
-            var mer= e.time.meridian;
-            
-            if(h < 11 && mer == 'PM'){
-                $('#nightStartTime').timepicker('setTime', '11:00 PM');
-            }
-             var morningTime =  $('#nightEndTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] < h) || (morningTime[0] == h && morningTimeMin[0] < m))
-            {
-               // console.log(morningTime);
-                $('#nightStartTime').timepicker('setTime', '11:00 PM');
-            }
+           $('#nightStartTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
+                }   
             //convert hours into minutes
-            m+=h*60;
-            
+         
+                if( m > 359 )
+                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
           });
           
-        $('#nightEndTime').timepicker({
-        showMeridian: true,        
-        minuteStep: 1,
-        showInputs: true,        
-        }).on('hide.timepicker', function(e) {   
-            var h= e.time.hours;
-            var m= e.time.minutes;
-            var mer= e.time.meridian;
-          // console.log(h);
-          // console.log(m);
-           //console.log(mer);
-            if(h > 5 && mer == 'AM' && h > 12 && mer == 'PM'){
-                $('#nightEndTime').timepicker('setTime', '04:59 AM');
-            }
-            
-            var morningTime =  $('#nightStartTime').val();
-            //console.log(morningTime);
-            morningTime = morningTime.split(":");
-            //console.log(morningTime);
-            var morningTimeMin =morningTime[1].split(" ");
-            //console.log(morningTime[0] > h);
-            //console.log(morningTime[0] == h && morningTimeMin[0] > m);
-            
-            if((morningTime[0] > h) || (morningTime[0] == h && morningTimeMin[0] > m))
-            {
-               // console.log(morningTime);
-                $('#nightEndTime').timepicker('setTime', '04:59 AM');
-            }
-            
+          
+           $('#nightEndTime').timepicker({
+            showMeridian: true,        
+            minuteStep: 1,
+            showInputs: true,        
+            }).on('hide.timepicker', function(e) {   
+                 var h= e.time.hours;
+                var m= e.time.minutes;
+                var mer= e.time.meridian;
+                m+=h*60;
+               
+                if(m < 719 && mer == 'AM'){
+                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
+                }   
             //convert hours into minutes
-            m+=h*60;
-            
+         
+                if( m > 359 )
+                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
           });
-          
-//       $('#afternoonStartTime').timepicker({
-//        showMeridian: true,        
-//        minuteStep: 1,
-//        showInputs: true,        
-//        }).on('hide.timepicker', function(e) {   
-//             var h= e.time.hours;
-//            var m= e.time.minutes;
-//            var mer= e.time.meridian;
-//            m+=h*60;
-//            
-//            if(m < 719 && mer == 'AM'){
-//                $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
-//            }   
-//            //convert hours into minutes
-//            
-//          // console.log(m);
-//            //10:15 = 10h*60m + 15m = 615 min
-//            if( m > 358 )
-//                $('#afternoonStartTime').timepicker('setTime', '12:00 PM');
-//          });
-          
-//            $('#afternoonEndTime').timepicker({
-//            showMeridian: true,        
-//            minuteStep: 1,
-//            showInputs: true,        
-//            }).on('hide.timepicker', function(e) {   
-//                 var h= e.time.hours;
-//                var m= e.time.minutes;
-//                var mer= e.time.meridian;
-//                m+=h*60;
-//               
-//                if(m < 719 && mer == 'AM'){
-//                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
-//                }   
-//            //convert hours into minutes
-//         
-//                if( m > 359 )
-//                    $('#afternoonEndTime').timepicker('setTime', '05:59 PM');
-//          });
-          
-//         $('#eveningStartTime').timepicker({
-//            showMeridian: true,        
-//            minuteStep: 1,
-//            showInputs: true,        
-//            }).on('hide.timepicker', function(e) {   
-//                 var h= e.time.hours;
-//                var m= e.time.minutes;
-//                var mer= e.time.meridian;
-//                m+=h*60;
-//               
-//                if(m < 719 && mer == 'AM'){
-//                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
-//                }   
-//            //convert hours into minutes
-//         
-//                if( m > 359 )
-//                    $('#eveningStartTime').timepicker('setTime', '06:00 PM');
-//          });
-          
-//           $('#eveningEndTime').timepicker({
-//            showMeridian: true,        
-//            minuteStep: 1,
-//            showInputs: true,        
-//            }).on('hide.timepicker', function(e) {   
-//                 var h= e.time.hours;
-//                var m= e.time.minutes;
-//                var mer= e.time.meridian;
-//                m+=h*60;
-//               
-//                if(m < 719 && mer == 'AM'){
-//                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
-//                }   
-//            //convert hours into minutes
-//         
-//                if( m > 359 )
-//                    $('#eveningEndTime').timepicker('setTime', '10:59 PM');
-//          });
-          
-//           $('#nightStartTime').timepicker({
-//            showMeridian: true,        
-//            minuteStep: 1,
-//            showInputs: true,        
-//            }).on('hide.timepicker', function(e) {   
-//                 var h= e.time.hours;
-//                var m= e.time.minutes;
-//                var mer= e.time.meridian;
-//                m+=h*60;
-//               
-//                if(m < 719 && mer == 'AM'){
-//                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
-//                }   
-//            //convert hours into minutes
-//         
-//                if( m > 359 )
-//                    $('#nightStartTime').timepicker('setTime', '11:00 PM');
-//          });
-          
-          
-//           $('#nightEndTime').timepicker({
-//            showMeridian: true,        
-//            minuteStep: 1,
-//            showInputs: true,        
-//            }).on('hide.timepicker', function(e) {   
-//                 var h= e.time.hours;
-//                var m= e.time.minutes;
-//                var mer= e.time.meridian;
-//                m+=h*60;
-//               
-//                if(m < 719 && mer == 'AM'){
-//                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
-//                }   
-//            //convert hours into minutes
-//         
-//                if( m > 359 )
-//                    $('#nightEndTime').timepicker('setTime', '04:59 AM');
-//          });
           
           
     });
     
-      function isAlphabets(letters){
-        var pattern = /^[a-zA-Z ]*$/;
-        if(letters.match(pattern)) {
-            return 0;
-        }
-        else{
-            return 1;
-        }
-     }
-    
    
-   function validationDiagnostic(){
+     function validationDiagnostic(){
        // $("form[name='diagnosticForm']").submit();
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
@@ -1086,8 +1055,6 @@ if($current != 'detailDiagnostic'):?>
         var cityId =$.trim($('#diagnostic_cityId').val());
         var stateIds = $.trim($('#StateId').val());
         var diagnostic_mblNo = $.trim($('#diagnostic_mblNo').val());
-        var diagName = $.trim($('#diagnostic_name').val());
-        var designations = $.trim($('#diagnostic_dsgn').val());
         var status = 1;
     //debugger;
         var emailCheck =  checkEmailFormatValidation(emails);
@@ -1201,17 +1168,6 @@ if($current != 'detailDiagnostic'):?>
                 status = 0;
                // $('#cnfpassword').focus();
             }
-            if(isAlphabets(diagName)){
-                $('#diagnostic_name').addClass('bdr-error');
-                $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
-                status = 0;
-            }
-            
-            if(isAlphabets(designations)){
-                 $('#diagnostic_dsgn').addClass('bdr-error');
-                $('#error-diagnostic_dsgn').fadeIn().delay(3000).fadeOut('slow');
-                status = 0;
-            }
             if(!emailCheck){
                  status = 0;
             }
@@ -1225,7 +1181,7 @@ if($current != 'detailDiagnostic'):?>
             
         }
         
-   function validationDiagnosticEdit(){
+      function validationDiagnosticEdit(){
        // $("form[name='diagnosticForm']").submit();
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
@@ -1233,7 +1189,7 @@ if($current != 'detailDiagnostic'):?>
         var emails = $.trim($('#users_email').val());
         var cpname = $.trim($('#diagnostic_cntPrsn').val());
         
-        var centerName = $.trim($("#diagnosticCenter").val());
+       // var pswd = $.trim($("#users_password").val());
        // var cnfpswd = $.trim($("#cnfpassword").val());
         //var mbl= $.trim($('#diagnostic_mblNo').val());
         var phn= $.trim($('#diagnostic_phn1').val());
@@ -1245,7 +1201,6 @@ if($current != 'detailDiagnostic'):?>
         var ckeck = 1;
    
             if($('#diagnosticCenter').val()==''){
-  
                 $('#diagnostic_name').addClass('bdr-error');
                 $('#error-diagnostic_name').fadeIn().delay(3000).fadeOut('slow');
                
@@ -1313,7 +1268,7 @@ if($current != 'detailDiagnostic'):?>
           return false;      
         }
         
-   function checkEmailFormatValidation(email){
+        function checkEmailFormatValidation(email){
        
                 var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
                 if(email!==''){
@@ -1329,7 +1284,7 @@ if($current != 'detailDiagnostic'):?>
             }
         } 
         
-  function validationDiagnosticEditAccount(){
+      function validationDiagnosticEditAccount(){
        // $("form[name='diagnosticForm']").submit();
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
@@ -1360,7 +1315,7 @@ if($current != 'detailDiagnostic'):?>
           return true;      
         }
         
-  function updateAccount(){
+        function updateAccount(){
           
             var pswd = $.trim($("#users_password").val());
             var cnfpswd = $.trim($("#cnfPassword").val());
@@ -1372,12 +1327,10 @@ if($current != 'detailDiagnostic'):?>
            
             var status = 1;
             if(emails === ''){
-                $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
             if(users_mobile === ''){
-                $('#users_mobile').addClass('bdr-error');
                 $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
@@ -1412,12 +1365,11 @@ if($current != 'detailDiagnostic'):?>
                              $.ajax({
                                     url : urls + 'index.php/diagnostic/updatePassword',
                                     type: 'POST',
-                                    
+                                  
                                     data: $('#acccountForm').serialize(),
-                                    async: false,
                                    success:function(insertData){
                                        
-                                      // console.log(insertData);
+                                       console.log(insertData);
 
                                        if(insertData == 1){
                                      $('#users_password').val('');
@@ -1426,11 +1378,9 @@ if($current != 'detailDiagnostic'):?>
                                     setTimeout(function(){
                                       $('#users_password').removeClass('bdr-error');
                                       $('#cnfPassword').removeClass('bdr-error');
-                                      $('#users_mobile').removeClass('bdr-error');
-                                      $('#users_email').removeClass('bdr-error');
-                                      $('#error-password_email_check_success').fadeIn().delay(1000).fadeOut(function() {
+                                      $('#error-password_email_check_success').fadeIn().delay(3000).fadeOut(function() {
                                       window.location.reload();
-                                          window.location.href = urls + 'index.php/diagnostic/detailDiagnostic/'+diagnosticId+'/account';                     
+                                                               
                                         });
                                        }, 3000);
                                       
@@ -1453,7 +1403,7 @@ if($current != 'detailDiagnostic'):?>
             }
         }
         
-  function isNumberKey(evt, id) {
+        function isNumberKey(evt, id) {
     var charCode = (evt.which) ? evt.which : event.keyCode
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         $("#" + id).html("Please enter number key");
@@ -1463,7 +1413,6 @@ if($current != 'detailDiagnostic'):?>
         return true;
     }
 }
- 
     
   function changebackgroundImage(id){
            $.ajax({
@@ -1557,7 +1506,7 @@ function imageIsLoaded(e) {
      } 
 
 
-</script>
+</script>-->
 
 </body>
 </html>

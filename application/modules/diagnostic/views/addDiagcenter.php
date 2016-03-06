@@ -26,7 +26,7 @@
                                         <label for="cemail" class="control-label col-md-4 col-sm-4">Diagnostic Center Name </label>
                                         <div class="col-md-8 col-sm-8">
                                             <input class="form-control" id="diagnostic_name" name="diagnostic_name" type="text" required="" value="<?php echo set_value('diagnostic_name'); ?>">
-                                             <label class="error" style="display:none;" id="error-diagnostic_name"> please enter diagnostic name!</label>
+                                             <label class="error" style="display:none;" id="error-diagnostic_name"> please enter diagnostic name only alphabet character's</label>
                                             <label class="error" > <?php echo form_error("diagnostic_name"); ?></label>
                                         </div>
                                     </article>
@@ -137,7 +137,7 @@
                                         <label class="control-label col-md-4 col-sm-4" for="cemail">Designation :</label>
                                         <div class="col-md-8 col-sm-8">
                                         <input  class="form-control" type="text" required="" name="diagnostic_dsgn" id="diagnostic_dsgn">
-                                         <label class="error" style="display:none;" id="error-diagnostic_dsgn"> please enter the  contact person designation</label>
+                                         <label class="error" style="display:none;" id="error-diagnostic_dsgn"> please enter the  contact person designation only alphabet character's</label>
                                         <label class="error" > <?php echo form_error("diagnostic_dsgn"); ?></label>
                                         </div>
                                         </article>
