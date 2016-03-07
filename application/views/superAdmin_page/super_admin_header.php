@@ -204,6 +204,17 @@
                                 <li class="<?php if($this->router->fetch_method() == 'addAmbulance'):echo"active";endif;?>"><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
                             </ul>
                         </li>
+                        
+                         <li class="has_sub">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'medicart'):echo"active";endif;?>" href="#"><i class="fa fa-newspaper-o"></i><span>Medicart</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li class="<?php if($this->router->fetch_class() == 'medicart' && $this->router->fetch_method() != 'addOffer' && $this->router->fetch_method() != 'bookingRequest' && $this->router->fetch_method() != 'enquiries'):echo"active";endif;?>"><a href="<?php echo site_url('medicart');?>">Medicart Offers</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'medicart' && $this->router->fetch_method() == 'bookingRequest'):echo"active";endif;?>"><a href="<?php echo site_url('medicart/bookingRequest');?>">Booking Requests</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'medicart' && $this->router->fetch_method() == 'enquiries'):echo"active";endif;?>"><a href="<?php echo site_url('medicart/enquiries');?>">Enquiries</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'medicart' && $this->router->fetch_method() == 'addOffer'):echo"active";endif;?>"><a href="<?php echo site_url('medicart/addOffer');?>">Add New Offer</a></li>
+                            </ul>
+                        </li>
+                        
                         <li class="has_sub">
                             <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
                         <span>Doctors</span><span class="pull-right"><i class="md md-add"></i></span></a>
@@ -251,15 +262,7 @@
                                 <li><a href="<?php echo base_url();?>index.php/healthcare">Package Booking</a></li>
                             </ul>
                         </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Medicart</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="medicart-offer-list.html">Medicart Offers</a></li>
-                                <li><a href="medicart-booking.html">Booking Requests</a></li>
-                                <li><a href="medicart-enquiry.html">Enquiries</a></li>
-                                <li><a href="add-medicat-offer.html">Add New Offer</a></li>
-                            </ul>
-                        </li>
+
                         <li>
                             <a href="call-tracking.html" class="waves-effect"><i class="ion-ios7-telephone-outline"></i><span>Call Tracking</span></a>
                         </li>

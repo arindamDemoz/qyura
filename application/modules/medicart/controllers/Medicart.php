@@ -109,7 +109,7 @@ class Medicart extends MY_Controller {
     }
 
     function saveOffer() {
-
+    
         $this->bf_form_validation->set_rules('medicartOffer_cityId', 'City Name', 'required|trim|numeric');
         $this->bf_form_validation->set_rules('medicartOffer_MIId', 'MI Name', 'required|trim|numeric');
         $this->bf_form_validation->set_rules('medicartOffer_OfferId', 'Offer Id', 'required|trim|is_unique[qyura_medicartOffer.medicartOffer_OfferId]');

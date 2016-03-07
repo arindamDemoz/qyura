@@ -301,7 +301,7 @@ class Medicart_model extends CI_Model {
 //        $this->datatables->where(array("qyura_medicartOffer.medicartOffer_deleted" => 0,'qyura_users.users_deleted'=>0,'qyura_diagnostic.diagnostic_deleted'=>0,'qyura_offerCat.offerCat_deleted'=>0,'qyura_hospital.hospital_deleted'=>0));
         
         $this->datatables->where(array("qyura_medicartOffer.medicartOffer_deleted" => 0));
-        
+        $this->datatables->order_by('medicartOffer_id','asc');
         $city = $this->input->post('cityId');
         isset($city) && $city != '' ? $this->datatables->where('medicartOffer_cityId', $city) : '';
         $status = $this->input->post('statusId');
@@ -342,7 +342,7 @@ class Medicart_model extends CI_Model {
         $this->datatables->join('qyura_city','qyura_city.city_id=qyura_medicartOffer.medicartOffer_cityId','left'); 
         
         $this->datatables->where(array("qyura_medicartContect.medicartContect_deleted" => 0));
-        
+        $this->datatables->order_by('medicartContect_id','asc');
         $city = $this->input->post('cityId');
         isset($city) && $city != '' ? $this->datatables->where('qyura_medicartOffer.medicartOffer_cityId', $city) : '';
         
@@ -386,7 +386,7 @@ class Medicart_model extends CI_Model {
         $this->datatables->join('qyura_city','qyura_city.city_id=qyura_medicartOffer.medicartOffer_cityId','left'); 
         
         $this->datatables->where(array("qyura_medicartBooking.medicartBooking_deleted" => 0));
-        
+        $this->datatables->order_by('medicartBooking_id','asc');
         $city = $this->input->post('cityId');
         isset($city) && $city != '' ? $this->datatables->where('qyura_medicartOffer.medicartOffer_cityId', $city) : '';
         

@@ -32,7 +32,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="cname" class="control-label col-md-4 col-sm-4">City:</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <select class="selectpicker" data-width="100%" name="medicartOffer_cityId" id="cityId">
+                                                <select class="" data-width="100%" name="medicartOffer_cityId" id="cityId" required="">
                                                   <option value="">Select City</option>
                                                     <?php foreach ($allCity as $key => $val) { ?>
                                                         <option value="<?php echo $val->city_id; ?>"><?php echo $val->city_name; ?></option>
@@ -44,7 +44,7 @@
                                   <article class="form-group m-lr-0 ">
                                     <label class="control-label col-md-4 col-sm-4">MI/Doctor Type :</label>
                                     <div class="col-md-8 col-sm-8">
-                                        <select class="selectpicker" data-width="100%" name="miType" onchange ="getMIList(this.value, medicartOffer_cityId.value)" id="miType">
+                                        <select class="" data-width="100%" name="miType" onchange ="getMIList(this.value, medicartOffer_cityId.value)" id="miType" required="">
                                             <option value=""> Select MI Type</option>
                                             <option>Hospital</option>
                                             <option>Diagnostic</option>
@@ -56,7 +56,7 @@
                                         <article class="form-group m-lr-0 ">
                                             <label for="cemail" class="control-label col-md-4 col-sm-4">MI Name:</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <select class="selectpicker" data-width="100%" name="medicartOffer_MIId" id="miName">
+                                                <select class="" data-width="100%" name="medicartOffer_MIId" id="miName">
                                                 </select>
                                                  <label class="error"><?php echo form_error('medicartOffer_MIId'); ?></label>
                                             </div>
@@ -73,7 +73,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="cname" class="control-label col-md-4 col-sm-4">Offer Category:</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <select class="selectpicker" data-width="100%" name="medicartOffer_offerCategory"id="medicartOffer_offerCategory">
+                                                <select class="selectpicker" data-width="100%" name="medicartOffer_offerCategory"id="medicartOffer_offerCategory" required="">
                                                         <?php foreach ($allOffetCategory as $keys => $values) { ?>
                                                         <option value="<?php echo $values->offerCat_id; ?>"><?php echo ucwords($values->offerCat_name); ?></option>
                                                     <?php } ?>
@@ -100,6 +100,8 @@
                                                 </div>
                                                 <img src="<?php echo base_url();?>assets/images/noImage.png" alt=" " class="img-responsive image-preview-show" width="180"/>
                                                 <label class="error"><?php echo form_error('avatar_file'); ?></label>
+                                                 <label class="error"><?php echo $this->session->flashdata('valid_upload'); ?></label>
+                                                
                                             </div>
                                         </article>
 
@@ -171,7 +173,7 @@
                                                         </div>
                                                     </div>
                                                 </aside>
-                                                <div id="dateValidation"
+                                                <label id="date_error" class="error"></label>
                                             </div>
                                         </article>
 
@@ -179,7 +181,7 @@
                                             <label for="cname" class="control-label col-md-4 col-sm-4">Discount Offer</label>
                                             <div class="col-md-8 col-sm-8">
                                                 <div class="radio radio-success radio-inline">
-                                                    <input type="radio" checked="" name="medicartOffer_discount" value="1" id="inlineRadio1">
+                                                    <input type="radio" checked="" name="medicartOffer_discount" value="1" id="inlineRadio1" required="">
                                                     <label for="inlineRadio1">Yes</label>
                                                 </div>
                                                 <div class="radio radio-success radio-inline">
@@ -192,7 +194,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="cname" class="control-label col-md-4 col-sm-4">Discount for Age Group </label>
                                             <div class="col-md-8 col-sm-8">
-                                                <select class="selectpicker" data-width="100%" name="medicartOffer_ageDiscount" id="medicartOffer_ageDiscount">
+                                                <select class="selectpicker" data-width="100%" name="medicartOffer_ageDiscount" id="medicartOffer_ageDiscount" required="">
                                                     <option value="10-20">10-20</option>
                                                     <option value="20-30">20-30</option>
                                                     <option value="30-40">30-40</option>
@@ -211,7 +213,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="" class="control-label col-md-4 col-sm-4">Actual Pricing :</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input class="form-control " id="medicartOffer_actualPrice" type="text" name="medicartOffer_actualPrice" required="" placeholder="9000" value="<?=set_value('medicartOffer_actualPrice');?>" onkeypress="return isNumberKey(event)">
+                                                <input class="form-control " id="medicartOffer_actualPrice" type="text" name="medicartOffer_actualPrice" required="" placeholder="9000" value="<?=set_value('medicartOffer_actualPrice');?>" onkeypress="return isNumberKey(event)" >
                                                  <label class="error"><?php echo form_error('medicartOffer_actualPrice'); ?></label>
                                             </div>
                                         </article>

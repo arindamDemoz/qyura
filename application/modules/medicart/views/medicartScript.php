@@ -31,6 +31,7 @@ if($current != 'detailDiagnostic'):?>
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
 <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script> 
+<script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js" type="text/javascript"></script> 
 
     
 <script> 
@@ -44,9 +45,7 @@ if($current != 'detailDiagnostic'):?>
      * @description  datepicker
      * @access public
      */
-    
 
-    
         $('#date-1').datepicker();
         $('#date-2').datepicker();
 
@@ -58,7 +57,10 @@ if($current != 'detailDiagnostic'):?>
                      var d1 = new Date($('#date-1').val());
                      var d2 = new Date($('#date-2').val());
                      if(d1.getTime() > d2.getTime()){
-                         alert('greater');
+                        $("#date_error").html("<p>Start date should be less then end date.</p>");
+                        $('#date-1').val("");
+                     }else{
+                         $("#date_error").html(""); 
                      }
             });
         
@@ -203,7 +205,7 @@ if($current != 'detailDiagnostic'):?>
                 "type": "POST",
                 "async": false,
                 "data": function (d) {
-                    //d.search['value'] = $("#search").val();
+                    d.search['value'] = $("#search").val();
                     d.cityId = $("#cityIdEnq").val();
                     //d.statusId = $("#statusId").val();
                     d.<?php echo $this->security->get_csrf_token_name(); ?> = '<?php echo $this->security->get_csrf_hash(); ?>';
@@ -247,6 +249,11 @@ if($current != 'detailDiagnostic'):?>
              allowClear: true,
              placeholder: "Select Catrgory"
         });
+          $("#statusId").select2({
+             allowClear: true,
+             placeholder: "Select status"
+        });
+        
     });
       
      
@@ -283,7 +290,111 @@ if($current != 'detailDiagnostic'):?>
         return true;
     }
    }
-   
+   	$.validator.setDefaults({
+		submitHandler: function() {
+                    $('#submitForm').submit();
+		}
+	});
+        
+    $(document).ready(function() {
+
+            	$("#submitForm").validate({
+			rules: {
+				medicartOffer_title:{
+                                    required: true
+                                },
+                                medicartOffer_cityId:{
+                                    required: true
+                                },
+                                medicartOffer_MIId:{
+                                    required: true
+                                },
+                                medicartOffer_offerCategory:{
+                                    required: true
+                                },
+                                medicartOffer_description:{
+                                    required: true
+                                },
+                                medicartOffer_allowBooking:{
+                                    required: true
+                                },
+                                medicartOffer_maximumBooking:{
+                                    required: true,
+                                    number: true
+                                },
+                                medicartOffer_startDate :{
+                                    required: true
+                                },
+                                medicartOffer_endDate:{
+                                    required: true
+                                },
+                                medicartOffer_discount:{
+                                    required: true,
+                                      number: true
+                                },
+                                medicartOffer_ageDiscount:{
+                                    required: true
+                                },
+                                medicartOffer_actualPrice:{
+                                    required: true,
+                                      number: true
+                                },	
+                                medicartOffer_discountPrice:{
+                                    required: true,
+                                      number: true
+                                },
+                                miType:{
+                                   required: true 
+                                }
+			},
+			messages: {
+				medicartOffer_title: "Please enter offer title",
+                                medicartOffer_cityId: {
+					required: "Please select city",
+				},
+                                medicartOffer_discountPrice: {
+					required: "Please enter discount prize",
+                                        number: "Please enter only number formate",
+				},
+                                 medicartOffer_actualPrice: {
+					required: "Please enter actual prize",
+                                        number: "Please enter only number formate",
+				},
+				medicartOffer_ageDiscount: {
+					required: "Please select age",
+				},
+                                medicartOffer_discount: {
+					required: "Please enter discount",
+                                        number: "Please enter only number formate",
+				},
+                                medicartOffer_startDate: {
+					required: "Please enter start date",
+				},
+                                 medicartOffer_endDate: {
+					required: "Please enter end date",
+				},
+                                medicartOffer_maximumBooking:{
+                                        required: "Please enter maximum booking limit ",
+                                        number: "Please enter only number formate",
+                                },
+                                medicartOffer_allowBooking:{
+                                        required: "Please enter select allow booking",
+                                },
+                                medicartOffer_description:{
+                                        required: "Please enter description",
+                                },
+                                medicartOffer_offerCategory:{
+                                        required: "Please select offer category",
+                                },
+                                medicartOffer_MIId:{
+                                        required: "Please select MI name",
+                                },
+                                miType:{
+                                    required: "Please select MI type",
+                                }
+			}
+		});
+    });
     </script>
 
 </body>
