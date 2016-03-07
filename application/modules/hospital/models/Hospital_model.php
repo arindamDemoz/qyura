@@ -182,7 +182,7 @@ class Hospital_model extends CI_Model {
        $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
        
       $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
-
+        $this->datatables->order_by("Hos.creationTime"); 
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
 
@@ -434,7 +434,7 @@ class Hospital_model extends CI_Model {
     
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/hospitalImages/thumb/original/';
-         $this->db->select('hospital_img,hospital_name,city_name,SUBSTRING(hospital_phn, 1, CHAR_LENGTH(hospital_phn)-1)AS phone,hospital_address');
+         $this->db->select('hospital_img,hospital_name,city_name,hospital_phn,hospital_address');
         $this->db->from('qyura_hospital');
         $this->db->join('qyura_city','city_id = hospital_cityId','left');
         foreach($where as $key=>$val){
@@ -454,7 +454,7 @@ class Hospital_model extends CI_Model {
             $result[$i]['hospital_img'] = $imgUrl.$val->hospital_img;
             $result[$i]['hospital_name'] = $val->hospital_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['hospital_phn'] = $val->phone;
+            $result[$i]['hospital_phn'] = $val->hospital_phn;
             $result[$i]['hospital_address'] = $val->hospital_address;
            $i++;
         }

@@ -110,9 +110,10 @@
                                                     <label class="error" style="display:none;" id="error-hospital_cityId"> please select a city</label>
                                                 </div>
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10"> 
-                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" onkeypress="return isNumberKey(event)" />
+                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" onkeypress="return isNumberKey(event)" maxlength="6" minlength="6" />
                                                     <label class="error" style="display:none;" id="error-hospital_zip"> please enter a zip code</label>
-<label class="error" style="display:none;" id="error-hospital_zip_check">Please enter numeric digits only!</label>
+                                                    <label class="error" style="display:none;" id="error-hospital_zip_check">Please enter numeric digits only!</label>
+                                                    <label class="error" style="display:none;" id="error-hospital_zip_long"> zip code should be 6 digit long</label>
                                                     <label class="error" > <?php echo form_error("hospital_zip"); ?></label>
                                                 </div>
                                             </aside>

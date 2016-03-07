@@ -128,7 +128,7 @@ class Diagnostic_model extends CI_Model {
         $this->datatables->add_column('doctors_img', '<img class="img-responsive" height="80px;" width="80px;" src=' . $imgUrl . '>', 'doctors_img');
 
         $this->datatables->add_column('view', '<a disabled class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="#">View Detail</a>', 'doctors_id');
-
+        
         return $this->datatables->generate();
     }
 
@@ -165,7 +165,7 @@ class Diagnostic_model extends CI_Model {
         $this->datatables->add_column('diagnostic_img', '<img class="img-responsive" height="80px;" width="80px;" src=' . $imgUrl . '>', 'diagnostic_img');
 
         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="diagnostic/detailDiagnostic/$1">View Detail</a>', 'diagnostic_id');
-
+        $this->datatables->order_by("diag.creationTime");
         return $this->datatables->generate();
     }
     
@@ -355,7 +355,7 @@ class Diagnostic_model extends CI_Model {
     
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/diagnosticsImage/thumb/original/';
-        $this->db->select('diagnostic_img,diagnostic_name,city_name,SUBSTRING(diagnostic_phn, 1, CHAR_LENGTH(diagnostic_phn)-1)AS phone,diagnostic_address');
+        $this->db->select('diagnostic_img,diagnostic_name,city_name,diagnostic_phn,diagnostic_address');
         $this->db->from('qyura_diagnostic');
         $this->db->join('qyura_city','city_id = diagnostic_cityId','left');
         foreach($where as $key=>$val){
@@ -375,7 +375,7 @@ class Diagnostic_model extends CI_Model {
             $result[$i]['diagnostic_img'] = $imgUrl.$val->diagnostic_img;
             $result[$i]['diagnostic_name'] = $val->diagnostic_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['diagnostic_phn'] = $val->phone;
+            $result[$i]['diagnostic_phn'] = $val->diagnostic_phn;
             $result[$i]['diagnostic_address'] = $val->diagnostic_address;
            $i++;
         }

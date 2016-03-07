@@ -84,9 +84,9 @@
                                                 </div>
 
                                                  <div class="col-md-6 col-sm-6 m-t-xs-10"> 
-                                                    <input type="text" class="form-control" id="diagnostic_zip" name="diagnostic_zip" placeholder="700001" value="<?php echo set_value('diagnostic_zip'); ?>" onkeypress="return isNumberKey(event)"/>
+                                                     <input type="text" class="form-control" id="diagnostic_zip" name="diagnostic_zip" placeholder="700001" value="<?php echo set_value('diagnostic_zip'); ?>" maxlength="6" onkeypress="return isNumberKey(event)"/>
                                                     <label class="error" style="display:none;" id="error-diagnostic_zip"> please enter a zip code</label>
-
+                                                    <label class="error" style="display:none;" id="error-diagnostic_zip_long"> zip code should be 6 digit long</label>
                                                     <label class="error" > <?php echo form_error("diagnostic_zip"); ?></label>
                                                 </div>
                                             </aside>

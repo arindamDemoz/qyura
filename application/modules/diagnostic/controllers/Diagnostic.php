@@ -186,9 +186,13 @@ class Diagnostic extends MY_Controller {
             $countPnone = $this->input->post('countPnone');
 
             $finalNumber = '';
-            for ($i = 0; $i < count($countPnone); $i++) {
+            for ($i = 0; $i < $countPnone; $i++) {
                 if ($diagnostic_phn[$i] != '' && $pre_number[$i] != '') {
-                    $finalNumber .= $pre_number[$i] . ' ' . $diagnostic_phn[$i] . '|';
+                    
+                    if($i == ($countPnone)-1)
+                          $finalNumber .= $pre_number[$i].' '.$diagnostic_phn[$i];
+                        else        
+                       $finalNumber .= $pre_number[$i] . ' ' . $diagnostic_phn[$i] . '|'; 
                 }
             }
 
@@ -214,6 +218,7 @@ class Diagnostic extends MY_Controller {
                 'users_password' => $users_password,
                 'users_ip_address' => $this->input->ip_address(),
                 'users_mobile' => $this->input->post('diagnostic_mblNo'),
+                'creationTime' => strtotime(date("Y-m-d H:i:s"))
             );
 
             $diagnostic_usersId = $this->diagnostic_model->insertDiagnosticUser($diagnosticInsert);
