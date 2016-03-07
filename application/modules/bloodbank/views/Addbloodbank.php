@@ -88,8 +88,8 @@
 
                                                 </div>
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                    <input type="text" class="form-control" id="bloodBank_zip" name="bloodBank_zip" placeholder="700001" maxlength="13" value="<?php echo set_value('bloodBank_zip'); ?>" />
-                                                <label class="error" style="display:none;" id="error-bloodBank_zip"> please enter a zip code</label>                                               <label class="error" > <?php echo form_error("bloodBank_zip"); ?></label>
+                                                    <input type="text" class="form-control" id="bloodBank_zip" name="bloodBank_zip" placeholder="700001" maxlength="6" value="<?php echo set_value('bloodBank_zip'); ?>" onkeypress="return isNumberKey(event)"/>
+                                                <label class="error" style="display:none;" id="error-bloodBank_zip"> zip code should be numeric and 6 digit long</label>                                               <label class="error" > <?php echo form_error("bloodBank_zip"); ?></label>
                                                 </div>
                                             </aside>
                                         </div>
@@ -205,6 +205,7 @@
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
+                                            <input type="hidden" class="form-control" id="users_email_status" name="users_email_status" value="" />
                                         </div>
                                     </article>
 

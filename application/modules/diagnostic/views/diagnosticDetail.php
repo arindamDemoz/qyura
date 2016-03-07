@@ -113,7 +113,7 @@
                                                                    
                                                                      <?php 
                                                                     $explode= explode('|',$diagnosticData[0]->diagnostic_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($explode);$i++){?>
                                                                     <p>+<?php echo $explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -208,7 +208,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                      <?php 
                                                                     $explodes= explode('|',$diagnosticData[0]->diagnostic_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
+                                                                    for($i= 0; $i< count($explodes);$i++){
                                                                     $moreExpolde = explode(' ',$explodes[$i]);?>
                                                                     <aside class="row">
                                                                         <div class="col-md-3 col-sm-3 col-xs-12">

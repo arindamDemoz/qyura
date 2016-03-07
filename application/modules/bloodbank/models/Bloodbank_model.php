@@ -64,7 +64,7 @@ class Bloodbank_model extends CI_Model {
        $this->db->where(array('blood.bloodBank_id'=> $condition));   
         $this->db->where(array('blood.bloodBank_deleted'=> 0));
         //$this->db->where(array('Roles.usersRoles_parentId'=> 0)); // changed
-       $this->db->order_by("blood.creationTime", "desc"); 
+       $this->db->order_by("blood.creationTime", "desc");  
       $data= $this->db->get(); 
      //echo $this->db->last_query();exit;
      return $data->result();
@@ -112,7 +112,7 @@ class Bloodbank_model extends CI_Model {
        $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="bloodbank/detailBloodBank/$1">View Detail</a>', 'bloodBank_id');
        
        $this->datatables->add_column('bloodBank_add', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'bloodBank_add');
-       
+       $this->datatables->order_by("blood.creationTime");
         return $this->datatables->generate(); 
       //echo $this->datatables->last_query();
 
@@ -137,7 +137,6 @@ class Bloodbank_model extends CI_Model {
     }
     
     function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
-        //echo 
         $this->db->select(implode(",",$select));
         $this->db->from($tableName);
         foreach($condition as $key=>$val){
@@ -172,7 +171,7 @@ class Bloodbank_model extends CI_Model {
     }
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/BloodBank/thumb/original/';
-         $this->db->select('bloodBank_photo,bloodBank_name,city_name,SUBSTRING(bloodBank_phn, 1, CHAR_LENGTH(bloodBank_phn)-1)AS phone ,bloodBank_add');
+         $this->db->select('bloodBank_photo,bloodBank_name,city_name,bloodBank_phn,bloodBank_add');
         $this->db->from('qyura_bloodBank');
         $this->db->join('qyura_city','city_id = cityId','left');
         foreach($where as $key=>$val){
@@ -193,7 +192,7 @@ class Bloodbank_model extends CI_Model {
             $result[$i]['bloodBank_photo'] = $imgUrl.$val->bloodBank_photo;
             $result[$i]['bloodBank_name'] = $val->bloodBank_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['bloodBank_phn'] = $val->phone;
+            $result[$i]['bloodBank_phn'] = $val->bloodBank_phn;
             $result[$i]['bloodBank_add'] = $val->bloodBank_add;
            $i++;
         }
