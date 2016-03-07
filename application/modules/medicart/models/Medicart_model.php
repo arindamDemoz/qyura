@@ -57,6 +57,24 @@ class Medicart_model extends CI_Model {
         //echo $this->db->last_query();exit;
         return TRUE;
     }
+    
+  function fetchHospital ($cityId=NULL){
+
+        $this->db->select('hospital_id,hospital_usersId,hospital_name');
+        $this->db->from('qyura_hospital');
+        $this->db->where('hospital_cityId',$cityId);
+        $this->db->order_by("hospital_name","asc");
+        return $this->db->get()->result();
+    }
+    
+  function fetchDiagnostic ($cityId=NULL){
+
+        $this->db->select('diagnostic_id, diagnostic_usersId, diagnostic_name');
+        $this->db->from('qyura_diagnostic');
+        $this->db->where('diagnostic_cityId',$cityId);
+        $this->db->order_by("diagnostic_name","asc");
+        return $this->db->get()->result();
+    }
 
     //Function for update
     public function customUpdate($options) {
