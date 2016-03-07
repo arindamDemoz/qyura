@@ -1,3 +1,9 @@
+<style type="text/css">
+    #ambulance_datatable_filter
+    {
+        display:none;
+    }
+</style>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
