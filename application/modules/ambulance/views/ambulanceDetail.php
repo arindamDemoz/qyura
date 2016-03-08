@@ -33,7 +33,7 @@
                                                 <!-- image -->
                                                 <?php if(!empty($ambulanceData[0]->ambulance_img)){
                                                     ?>
-                                                <img src="<?php echo base_url()?>assets/ambulanceImages/thumb/thumb_100/<?php echo $ambulanceData[0]->ambulance_img; ?>" alt="" class="logo-img" />
+                                                <img src="<?php echo base_url()?>assets/ambulanceImages/thumb/original/<?php echo $ambulanceData[0]->ambulance_img; ?>" alt="" class="logo-img" />
                                                <?php } else { ?>
                                                  <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>
@@ -97,11 +97,13 @@
                                             </article>
                                             <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Number:</label>
+                                                <aside class="col-md-4 col-sm-4">
                                                  <?php 
                                                     $explode= explode('|',$ambulanceData[0]->ambulance_phn); 
-                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                    for($i= 0; $i< count($explode);$i++){?>
                                                     <p>+ <?php echo $explode[$i];?></p>
                                                     <?php }?>
+                                                </aside>
                                                 <!--<p class="col-md-8 col-sm-8">+91 731 7224401</p>-->
                                             </article>
                                             <article class="clearfix m-b-10">
@@ -165,7 +167,7 @@
                                                <div class="col-md-8 col-sm-8">
                                                    <?php 
                                                         $explodes= explode('|',$ambulanceData[0]->ambulance_phn); 
-                                                        for($i= 0; $i< count($explodes)-1;$i++){
+                                                        for($i= 0; $i< count($explodes);$i++){
                                                         $moreExpolde = explode(' ',$explodes[$i]);
                                                    ?>
                                                     <aside class="row">

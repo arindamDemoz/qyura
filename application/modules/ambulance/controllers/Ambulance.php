@@ -64,6 +64,10 @@ class Ambulance extends MY_Controller {
             $finalNumber = '';
             for ($i = 0; $i < count($ambulance_phn); $i++) {
                 if ($ambulance_phn[$i] != '' && $pre_number[$i] != '') {
+                     
+                    if($i == count($ambulance_phn)-1)
+                       $finalNumber .= $pre_number[$i].' '.$ambulance_phn[$i];
+                        else        
                     $finalNumber .= $pre_number[$i] . ' ' . $ambulance_phn[$i] . '|';
                 }
             }
@@ -124,7 +128,6 @@ class Ambulance extends MY_Controller {
     }
 
     function SaveAmbulance() {
-        // print_r($_POST);exit;
         $this->load->library('form_validation');
         $this->bf_form_validation->set_rules('ambulance_name', 'Ambulance Name', 'required|trim');
 
@@ -175,6 +178,9 @@ class Ambulance extends MY_Controller {
             $finalNumber = '';
             for ($i = 0; $i < count($ambulance_phn); $i++) {
                 if ($ambulance_phn[$i] != '' && $pre_number[$i] != '') {
+                    if($i == count($ambulance_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$ambulance_phn[$i];
+                        else        
                     $finalNumber .= $pre_number[$i] . ' ' . $ambulance_phn[$i] . '|';
                 }
             }
@@ -208,6 +214,8 @@ class Ambulance extends MY_Controller {
             );
             //print_r($insertData);
             //exit;
+             $users_email_status = $this->input->post('users_email_status');
+            if($users_email_status == ''){
             $users_email = $this->input->post('users_email');
             $ambulanceInsert = array(
                 'users_email' => $users_email,
@@ -215,9 +223,10 @@ class Ambulance extends MY_Controller {
                 'users_mobile' => $this->input->post('users_mobile')
             );
             $ambulance_usersId = $this->Ambulance_model->insertAmbulanceUser($ambulanceInsert);
-            //echo $ambulance_usersId;
-            //echo "here";
-            // exit;
+            }
+            else {
+                $ambulance_usersId = $users_email_status;
+            }
             if ($ambulance_usersId) {
 
                 $insertusersRoles = array(
@@ -266,11 +275,26 @@ class Ambulance extends MY_Controller {
     }
 
     function check_email() {
-
         $users_email = $this->input->post('users_email');
-        //echo $users_email;exit;
         $email = $this->Ambulance_model->fetchEmail($users_email);
+        if(isset($_POST['user_table_id'])){
+          $user_table_id = $this->input->post('user_table_id');
+        }
+        if($email == 1)
         echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Ambulance_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
         exit;
     }
 
@@ -321,7 +345,7 @@ class Ambulance extends MY_Controller {
                 'where'=> array('ambulance_id' => $id)
             );
             $data = $this->Ambulance_model->customGet($option);
-            echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/thumb_100/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />  <div class='pic-edit'><h3><a id='picEdit' class='pull-center cl-white' title='Edit Logo'><i class='fa fa-pencil'></i></a></h3><h3><article class='logo-up' style='display:none'><div class='fileUpload btn btn-sm btn-upload logo-Upload'><span><i class='fa fa-cloud-upload fa-3x avatar-view'></i></span><input type='hidden' style='display:none;' class='no-display' id='file_action_url' name='file_action_url' value='".site_url('ambulance/editUploadImage')."'><input type='hidden' style='display:none;' class='no-display' id='load_url' name='load_url' value='". site_url('ambulance/getUpdateAvtar/').$id."'></div> </article><a id='picEditClose' class='pull-center cl-white' title='Cancel'  style='display:none;'><i class='fa fa-times'></i></a></h3></div>  ";
+            echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/original/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />";
             exit();
         }
     }

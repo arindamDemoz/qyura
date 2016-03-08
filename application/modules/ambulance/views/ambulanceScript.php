@@ -49,7 +49,7 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
     marker = new google.maps.Marker({
         position: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
         map: map,
-        icon: '<?php echo base_url();?>/assets/images/pins/q2.png'
+        icon: '<?php echo base_url();?>/assets/images/pins/qyura.png'
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -156,21 +156,29 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
                 //status= 0;
                // $('#hospital_countryId').focus();
             }
-           if(stateIds){
+           if(stateIds === ''){
                // console.log("in state");
                 $('#ambulance_stateId').addClass('bdr-error');
                 $('#error-ambulance_stateId').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
                // $('#hospital_stateId').focus();
             }
-            if(!$.isNumeric(cityId)){
+            if(cityId === ''){
                 $('#ambulance_cityId').addClass('bdr-error');
                 $('#error-ambulance_cityId').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
                // $('#hospital_cityId').focus();
             }
            
-            if(!$.isNumeric(myzip)){
+           /* if(!$.isNumeric(myzip)){
+                
+                $('#ambulance_zip').addClass('bdr-error');
+                $('#error-ambulance_zip').fadeIn().delay(3000).fadeOut('slow');
+              status = 0;
+                // $('#hospital_zip').focus();
+            }*/
+            
+            if(myzip .length < 6){
                 
                 $('#ambulance_zip').addClass('bdr-error');
                 $('#error-ambulance_zip').fadeIn().delay(3000).fadeOut('slow');
@@ -255,11 +263,16 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
                    $("form[name='submitForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1){
                         $('#users_email').addClass('bdr-error');
                     $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
                    return false;
                   }
+                else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='submitForm']").submit();
+                     return true;
+              } 
               } 
            });
         }  
