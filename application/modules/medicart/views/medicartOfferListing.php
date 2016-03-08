@@ -65,6 +65,7 @@
                                                 <th>Active From</th>
                                                 <th>Active To</th>
                                                 <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                     </table>

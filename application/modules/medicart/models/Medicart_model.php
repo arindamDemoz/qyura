@@ -310,11 +310,12 @@ class Medicart_model extends CI_Model {
         $this->datatables->add_column('medicartOffer_startDate','<h6>$1</h6>', 'dateFormateConvert(medicartOffer_startDate)');
         $this->datatables->add_column('medicartOffer_endDate','<h6>$1</h6>', 'dateFormateConvert(medicartOffer_endDate)');
         $this->datatables->add_column('medicartOffer_title','<h6>$1</h6>', 'medicartOffer_title');
-        $this->datatables->add_column('medicartOffer_id','<h6>$1</h6>', 'medicartOffer_OfferId');
+        $this->datatables->add_column('medicartOffer_OfferId','<h6>$1</h6>', 'medicartOffer_OfferId');
         $this->datatables->add_column('MIname','<h6>$1</h6><p>$2</p>', 'MIname,city_name');
         $this->datatables->add_column('totalBooking','<h6>$1</h6>','totalBooking');
         $this->datatables->add_column('totalInquiries','<h6>$1</h6>','totalInquiries');
         $this->datatables->edit_column('status', '<h6>$1</h6>', 'checkStatus(status)');
+        $this->datatables->add_column('action', '<a href="medicart/editOffer/$1" class="btn btn-warning waves-effect waves-light m-b-5 applist-btn">Edit</a>', 'medicartOffer_id');
 
        return  $this->datatables->generate();
        // return $this->datatables->last_query();

@@ -98,7 +98,7 @@ if($current != 'detailDiagnostic'):?>
             "processing": true,
             "serverSide": true,
             "columnDefs": [{
-                    "targets": [1,2,3,4,5,6,7],
+                    "targets": [1,2,3,4,5,6,7,8],
                     "orderable": false
                 }],
             "pageLength": 10,
@@ -107,14 +107,15 @@ if($current != 'detailDiagnostic'):?>
             "dom": '<<t><"clearfix m-t-20 p-b-20" p>',
             "iDisplayStart ": 20,
             "columns": [
-                {"data": "medicartOffer_id"},
+                {"data": "medicartOffer_OfferId"},
                 {"data": "MIname"},
                 {"data": "medicartOffer_title"},
                 {"data": "totalBooking"},
                 {"data": "totalInquiries"},
                 {"data": "medicartOffer_startDate"},
                 {"data": "medicartOffer_endDate"},
-                {"data": "status"}
+                {"data": "status"},
+                {"data": "action","searchable": false, "order": false}
             ],
             "ajax": {
                 "url": "<?php echo site_url('medicart/getMedicartDl'); ?>",
