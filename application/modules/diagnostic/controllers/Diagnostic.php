@@ -210,7 +210,8 @@ class Diagnostic extends MY_Controller {
             $diagnostic_zip = $this->input->post('diagnostic_zip');
             $diagnostic_dsgn = $this->input->post('diagnostic_dsgn');
 
-
+            $users_email_status = $this->input->post('users_email_status');
+            if($users_email_status == ''){
             $users_email = $this->input->post('users_email');
             $users_password = md5($this->input->post('users_password'));
             $diagnosticInsert = array(
@@ -222,7 +223,10 @@ class Diagnostic extends MY_Controller {
             );
 
             $diagnostic_usersId = $this->diagnostic_model->insertDiagnosticUser($diagnosticInsert);
-            //echo $diagnostic_usersId;exit;
+            }
+            else {
+                $diagnostic_usersId = $users_email_status;
+            }
             if ($diagnostic_usersId) {
 
                 $insertusersRoles = array(
@@ -277,7 +281,23 @@ class Diagnostic extends MY_Controller {
             $user_table_id = $this->input->post('user_table_id');
         }
         $email = $this->diagnostic_model->fetchEmail($users_email, $user_table_id);
+        
+        if($email == 1)
         echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->diagnostic_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
+        
         exit;
     }
 
@@ -317,8 +337,14 @@ class Diagnostic extends MY_Controller {
 
             $finalNumber = '';
             for ($i = 0; $i < count($diagnostic_phn); $i++) {
-                if ($diagnostic_phn[$i] != '' && $pre_number[$i] != '') {
+               /* if ($diagnostic_phn[$i] != '' && $pre_number[$i] != '') {
                     $finalNumber .= $pre_number[$i] . ' ' . $diagnostic_phn[$i] . '|';
+                }*/
+                if ($diagnostic_phn[$i] != '' && $pre_number[$i] != '') {
+                 if($i == count($diagnostic_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$diagnostic_phn[$i];
+                        else        
+                       $finalNumber .= $pre_number[$i] . ' ' . $diagnostic_phn[$i] . '|';
                 }
             }
             $updateDiagnostic = array(

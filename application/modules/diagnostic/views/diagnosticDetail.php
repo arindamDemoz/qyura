@@ -20,7 +20,7 @@
                             <section class="col-md-12">
                                 <aside class="clearfix m-bg-pic">
                                     
-                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($diagnosticData) && !empty($diagnosticData[0]->diagnostic_background_img)): echo base_url().'assets/diagnosticsImage/'.$diagnosticData[0]->diagnostic_background_img; endif;?>')">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($diagnosticData) && !empty($diagnosticData[0]->diagnostic_background_img)): echo base_url().'assets/diagnosticsImage/'.$diagnosticData[0]->diagnostic_background_img; else : echo base_url().'assets/images/dc.jpg'; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
@@ -799,7 +799,7 @@
                                                     <div class="col-md-8 col-sm-8">
                                                    
                                                          
-                                                <input type="teL" class="form-control" name="users_mobile" id="users_mobile" placeholder="9837000123" onkeypress="return isNumberKey(event)" value="<?php if(isset($diagnosticData[0]->users_mobile)){ echo $diagnosticData[0]->users_mobile; } ?>" />
+                                                <input type="teL" class="form-control" name="users_mobile" id="users_mobile" placeholder="9837000123" maxlength="10" onkeypress="return isNumberKey(event)" value="<?php if(isset($diagnosticData[0]->users_mobile)){ echo $diagnosticData[0]->users_mobile; } ?>"/>
                                                                    <label class="error" id="error-users_mobile" style="display:none;"> Enter Mobile Number</label>
                                                          
                                                             <!--<p class="m-t-10">* If it is landline, include Std code with number </p> -->

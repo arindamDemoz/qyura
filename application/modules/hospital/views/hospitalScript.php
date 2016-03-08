@@ -732,15 +732,20 @@ function addAwards(){
                type: 'POST',
               data: {'users_email' : myEmail},
               success:function(datas){
-                  if(datas == 0){
-                   $("form[name='hospitalForm']").submit();
+                   if(datas == 0){
+                    $("form[name='hospitalForm']").submit();
                    return true;
-              }
-              else {
-                        $('#users_email').addClass('bdr-error');
-                    $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
+                }
+                else if(datas == 1) {
+                    $('#users_email').addClass('bdr-error');
+                    $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');
                    return false;
-                  }
+                }else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='hospitalForm']").submit();
+                     return true;
+                }
+                
               } 
            });
         }
@@ -848,7 +853,7 @@ function addAwards(){
                        data: {'users_email' : emails,'user_table_id' : user_table_id },
                        success:function(datas){
                            //console.log(datas);
-                           if(datas == 0){
+                           if(datas == 0 || datas != 1){
                             
                              $.ajax({
                                     url : urls + 'index.php/hospital/updatePassword',
@@ -856,9 +861,7 @@ function addAwards(){
                                    //data: {'currentPassword' : pswd,'existingPassword' : password,'user_tables_id' : user_tables_id}, password updated from another user except super admin
                                    data: $('#acccountForm').serialize(),
                                    success:function(insertData){
-                                       
-                                       console.log(insertData);
-
+                                      
                                        if(insertData == 1){
                                      $('#users_password').val('');
                                       $('#cnfPassword').val('');

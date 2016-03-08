@@ -30,7 +30,7 @@
                                 <aside class="clearfix m-bg-pic">
 
 
-                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($hospitalData[0]->hospital_background_img) && !empty($hospitalData[0]->hospital_background_img)): echo base_url().'assets/hospitalsImages/'.$hospitalData[0]->hospital_background_img; endif;?>')">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($hospitalData[0]->hospital_background_img) && !empty($hospitalData[0]->hospital_background_img)): echo base_url().'assets/hospitalsImages/'.$hospitalData[0]->hospital_background_img; else : echo base_url().'assets/images/hospital.jpg'; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
