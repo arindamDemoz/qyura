@@ -148,7 +148,7 @@
                                                                 <aside class="col-md-8 col-sm-8 text-right t-xs-left">
                                                                     <?php 
                                                                     $explode= explode('|',$hospitalData[0]->hospital_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($explode);$i++){?>
                                                                     <p>+<?php echo $explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -193,7 +193,7 @@
                                                                     <aside class="col-md-8 col-sm-8 t-xs-left">
                                                                          <?php 
                                                                     $bloodBank_explode= explode('|',$hospitalData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($bloodBank_explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($bloodBank_explode);$i++){?>
                                                                     <p>+<?php echo $bloodBank_explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -220,7 +220,7 @@
                                                                     <aside class="col-md-8 col-sm-8 t-xs-left">
                                                                          <?php 
                                                                     $pharmacy_explode= explode('|',$hospitalData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($pharmacy_explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($pharmacy_explode);$i++){?>
                                                                     <p>+<?php echo $pharmacy_explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -270,7 +270,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <?php 
                                                                     $explodes= explode('|',$hospitalData[0]->hospital_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
+                                                                    for($i= 0; $i< count($explodes);$i++){
                                                                     $moreExpolde = explode(' ',$explodes[$i]);?>
                                                                     
                                                                     
@@ -318,7 +318,7 @@
                                                                             <?php 
                                                                             if($hospitalData[0]->bloodBank_phn != ''){
                                                                                 $explodes_bloodbank= explode('|',$hospitalData[0]->bloodBank_phn); 
-                                                                                for($i= 0; $i< count($explodes_bloodbank)-1;$i++){
+                                                                                for($i= 0; $i< count($explodes_bloodbank);$i++){
                                                                                 $more_bloodbank = explode(' ',$explodes_bloodbank[$i]);?>
                                                                            <aside class="row">
                                                                                <div class="col-md-3 col-sm-3 col-xs-12">
@@ -328,7 +328,7 @@
                                                                                    </select>
                                                                                </div>
                                                                                <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                                   <input type="teL" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn<?php echo ($i+1);?>" value ="<?php echo $more_bloodbank[1]; ?>" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
+                                                                                   <input type="teL" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn<?php echo ($i+1);?>" value ="<?php echo $more_bloodbank[1]; ?>" placeholder="9837000123" onkeypress="return isNumberKey(event)" maxlength="10" />
                                                                                </div>
 
                                                                            </aside>
@@ -341,7 +341,7 @@
                                                                                    </select>
                                                                                </div>
                                                                                <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                                   <input type="teL" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn1" value ="" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
+                                                                                   <input type="teL" class="form-control" name="bloodBank_phn[]" id="bloodBank_phn1" value ="" placeholder="9837000123" onkeypress="return isNumberKey(event)" maxlength="10"/>
                                                                                </div>
 
                                                                            </aside>
@@ -377,7 +377,7 @@
                                                                     <?php 
                                                                     if($hospitalData[0]->pharmacy_phn != ''){
                                                                     $explodesPharmacy= explode('|',$hospitalData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($explodesPharmacy)-1;$i++){
+                                                                    for($i= 0; $i< count($explodesPharmacy);$i++){
                                                                     $morePharmacy = explode(' ',$explodesPharmacy[$i]);?>
                                                                     <aside class="row">
                                                                         <div class="col-md-3 col-sm-3 col-xs-12">
@@ -387,7 +387,7 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn<?php echo ($i+1);?>" value ="<?php echo $morePharmacy[1]; ?>" placeholder="9837000123" onkeypress="return isNumberKey(event)" />
+                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn<?php echo ($i+1);?>" value ="<?php echo $morePharmacy[1]; ?>" placeholder="9837000123" onkeypress="return isNumberKey(event)" maxlength="10" />
                                                                         </div>
 
                                                                     </aside>
@@ -400,7 +400,7 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
-                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" onkeypress="return isNumberKey(event)" onblur="phphone()" />
+                                                                            <input type="teL" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn1" placeholder="9837000123" onkeypress="return isNumberKey(event)" onblur="phphone()" maxlength="10" />
                                                                         </div>
 
                                                                     </aside>
