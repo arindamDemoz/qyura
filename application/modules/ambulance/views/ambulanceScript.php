@@ -20,26 +20,62 @@ if($current == 'detailAmbulance'):?>
 <?php endif;?>
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
- <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<!-- <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>-->
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js"></script>-->
 <?php $check= 0; 
 if(isset($ambulanceId) && !empty($ambulanceId)){
     $check = $ambulanceId; 
 }?>
+<?php if(isset($mapData) && !empty($mapData)){
+        $lat = $mapData[0]->ambulance_lat;
+        $lang = $mapData[0]->ambulance_long;
+        $imgUrl = (!empty($mapData[0]->ambulance_img)) ? base_url().'/assets/ambulanceImages/thumb/thumb_50/'.$mapData[0]->ambulance_img : base_url().'/assets/images/pins/Contact.png';
+           
+        $templates = '<img src="'.$imgUrl.'" /><h2 class="text-success">'.ucwords($mapData[0]->ambulance_name).'</h2><b>'.$mapData[0]->ambulance_address.'</b>';
+    ?>
+    
+  <script>
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 18,
+      center: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+        map: map,
+        icon: '<?php echo base_url();?>/assets/images/pins/qyura.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent('<?php echo $templates;?>');
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+  
+ </script>
+<?php } ?>
 <script>
     var urls = "<?php echo base_url()?>";
     var ambulanceId = "<?php echo $check?>";
     $('#date-3').datepicker();
+    
     $('.selectpicker').selectpicker({
     style: 'btn-default',
     size: "auto",
     width: "100%"
-});
+   });
 
     $("#edit").click(function () {
     $("#detail").toggle();
     $("#editdetail").toggle();
-});
+    });
         $(function(){
 
         $("#geocomplete").geocomplete({
@@ -462,6 +498,7 @@ function imageIsLoaded(e) {
     $('#previewing').attr('height', '230px');
 }
 });
+
 </script>
 
 </body>

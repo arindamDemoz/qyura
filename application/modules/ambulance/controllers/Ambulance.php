@@ -411,5 +411,16 @@ class Ambulance extends MY_Controller {
 
         }
     }
+    
+    function map($id){
+        $option = array(
+            'table' => 'qyura_ambulance',
+            'select' => 'ambulance_lat,ambulance_long,ambulance_address,ambulance_name,ambulance_img',
+            'where' => array('ambulance_id' => $id)
+        );
+        $data['mapData'] = $this->Ambulance_model->customGet($option);
+        $data['title'] = 'Ambulance Map';
+        $this->load->super_admin_template('map', $data, 'ambulanceScript');
+    }
 
 }
