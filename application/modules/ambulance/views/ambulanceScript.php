@@ -49,7 +49,7 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
     marker = new google.maps.Marker({
         position: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
         map: map,
-        icon: '<?php echo base_url();?>/assets/images/pins/qyura.png'
+        icon: '<?php echo base_url();?>/assets/images/pins/q2.png'
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {

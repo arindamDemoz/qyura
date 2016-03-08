@@ -33,7 +33,7 @@
                                                 <!-- image -->
                                                 <?php if(!empty($ambulanceData[0]->ambulance_img)){
                                                     ?>
-                                                <img src="<?php echo base_url()?>assets/ambulanceImages/thumb/original/<?php echo $ambulanceData[0]->ambulance_img; ?>" alt="" class="logo-img" />
+                                                <img src="<?php echo base_url()?>assets/ambulanceImages/thumb/thumb_100/<?php echo $ambulanceData[0]->ambulance_img; ?>" alt="" class="logo-img" />
                                                <?php } else { ?>
                                                  <img src="<?php echo base_url()?>assets/images/noImage.png" alt="" class="logo-img" />
                                                <?php } ?>

@@ -321,7 +321,7 @@ class Ambulance extends MY_Controller {
                 'where'=> array('ambulance_id' => $id)
             );
             $data = $this->Ambulance_model->customGet($option);
-            echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/original/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />";
+            echo "<img src='" . base_url() . "assets/ambulanceImages/thumb/thumb_100/" . $data[0]->ambulance_img . "'alt='' class='logo-img' />  <div class='pic-edit'><h3><a id='picEdit' class='pull-center cl-white' title='Edit Logo'><i class='fa fa-pencil'></i></a></h3><h3><article class='logo-up' style='display:none'><div class='fileUpload btn btn-sm btn-upload logo-Upload'><span><i class='fa fa-cloud-upload fa-3x avatar-view'></i></span><input type='hidden' style='display:none;' class='no-display' id='file_action_url' name='file_action_url' value='".site_url('ambulance/editUploadImage')."'><input type='hidden' style='display:none;' class='no-display' id='load_url' name='load_url' value='". site_url('ambulance/getUpdateAvtar/').$id."'></div> </article><a id='picEditClose' class='pull-center cl-white' title='Cancel'  style='display:none;'><i class='fa fa-times'></i></a></h3></div>  ";
             exit();
         }
     }

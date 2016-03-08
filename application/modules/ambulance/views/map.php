@@ -6,7 +6,7 @@
                     <div class="clearfix">
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">View Map</h3>
-                             <a href="#" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
+                             <a href="<?php echo site_url('ambulance');?>" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
 
                         </div>
                     </div>

@@ -221,53 +221,29 @@ class Medicart_model extends CI_Model {
         return $query->result();
     }
 
-    function fetchambulanceData($condition = NULL) {
-        $this->db->select('ambulance.ambulance_id,ambulance.ambulance_usersId,City.city_name,ambulance.ambulance_name,ambulance.ambulance_address,ambulance.ambulance_phn,ambulance.ambulance_img,'
-                . 'usr.users_email,usr.users_password ,ambulance.ambulance_cntPrsn,ambulance.ambulance_lat,ambulance.ambulance_long,usr.users_mobile'
-                . ',ambulance.ambulance_27Src,ambulance.ambulanceType,ambulance.ambulance_mmbrTyp');
-        $this->db->from('qyura_ambulance AS ambulance');
-        $this->db->join('qyura_city AS City', 'City.city_id = ambulance.ambulance_cityId', 'left');
-        $this->db->join('qyura_users AS usr', 'usr.users_id = ambulance.ambulance_usersId', 'left');
-        // $this->db->join('qyura_usersRoles AS Roles','Roles.usersRoles_userId = ambulance.ambulance_usersId','left'); // closed because no data will go in user roll table changed
-        if ($condition)
-            $this->db->where(array('ambulance.ambulance_id' => $condition));
-
-        $this->db->where(array('ambulance.ambulance_deleted' => 0));
-        // $this->db->where(array('Roles.usersRoles_parentId'=> 0)); // changed
-        $this->db->order_by("ambulance.creationTime", "desc");
-        $data = $this->db->get();
-        // echo $this->db->last_query();exit;
-        return $data->result();
-    }
-    
-    public function getMedDetail($medicartOffer_id)
+ public function getMedDetail($medicartOffer_id)
     {
         $nowDt = time();
         $con = array(
-                        'qyura_diagnostic.diagnostic_deleted'=>0,
                         'qyura_users.users_deleted'=>0,
                         'qyura_medicartOffer.medicartOffer_deleted'=>0,
-                        'qyura_offerCat.offerCat_deleted'=>0,
-                        'qyura_medicartOffer.medicartOffer_endDate >'=>$nowDt,
                         'qyura_medicartOffer.medicartOffer_id' => $medicartOffer_id
                     );
         
-        $this->db->select('qyura_medicartOffer.medicartOffer_id,'
+        $this->db->select('qyura_medicartOffer.medicartOffer_id,qyura_medicartOffer.medicartOffer_cityId,qyura_medicartOffer.medicartOffer_OfferId,qyura_medicartOffer.medicartOffer_image,'
                 . 'qyura_medicartOffer.medicartOffer_MIId,qyura_medicartOffer.medicartOffer_offerCategory,'
-                . 'qyura_medicartOffer.medicartOffer_title,CONCAT("assets/Medicart","/",qyura_medicartOffer.medicartOffer_image) as medicartOffer_image,'
+                . 'qyura_medicartOffer.medicartOffer_title,CONCAT("assets/Medicart/thumb/original","/",qyura_medicartOffer.medicartOffer_image) as medicartOffer_image,'
                 . 'qyura_medicartOffer.medicartOffer_description,qyura_medicartOffer.medicartOffer_allowBooking,'
                 . 'qyura_medicartOffer.medicartOffer_maximumBooking,qyura_medicartOffer.medicartOffer_startDate,'
                 . 'qyura_medicartOffer.medicartOffer_endDate,qyura_medicartOffer.medicartOffer_discount,'
                 . 'qyura_medicartOffer.medicartOffer_ageDiscount,qyura_medicartOffer.medicartOffer_actualPrice,'
                 . 'qyura_medicartOffer.medicartOffer_discountPrice,qyura_medicartOffer.medicartOffer_deleted,'
-                . 'qyura_medicartOffer.modifyTime,qyura_hospital.hospital_name,qyura_diagnostic.diagnostic_name')
+                . 'qyura_medicartOffer.modifyTime,(CASE WHEN(diagnostic_usersId is not null) THEN diagnostic_name WHEN(hospital_usersId is not null) THEN hospital_name END) as MIname,(CASE WHEN(diagnostic_usersId is not null) THEN 1 WHEN(hospital_usersId is not null) THEN 2 END) as miType,(CASE WHEN(diagnostic_usersId is not null) THEN diagnostic_usersId WHEN(hospital_usersId is not null) THEN hospital_usersId END) as miId')
         ->from('qyura_medicartOffer')
-        ->join('qyura_offerCat','qyura_offerCat.offerCat_id=qyura_medicartOffer.medicartOffer_offerCategory','left')
         ->join('qyura_users','qyura_users.users_id=qyura_medicartOffer.medicartOffer_MIId','left')
         ->join('qyura_hospital','qyura_hospital.hospital_usersId=qyura_users.users_id','left')   
         ->join('qyura_diagnostic','qyura_diagnostic.diagnostic_usersId=qyura_users.users_id','left') 
         ->where($con)
-        ->or_where(array('qyura_diagnostic.diagnostic_deleted'=>0,'qyura_hospital.hospital_deleted'=>0))
         ->limit(1);
         return $this->db->get()->row();
     }
