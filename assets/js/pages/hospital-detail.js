@@ -354,7 +354,7 @@ $("#bloodbankbtn").click(function () {
     $("#bloodbankdetail").fadeToggle();
 });
 
-/* -- Upload Button -- */
+/* -- Upload Button -- 
 
 document.getElementById("uploadBtn").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
@@ -367,7 +367,7 @@ document.getElementById("uploadBtnBg").onchange = function () {
 document.getElementById("uploadBtnBb").onchange = function () {
     document.getElementById("uploadFileBb").value = this.value;
 };
-
+*/
 function isNumberKey(evt, id) {
     var charCode = (evt.which) ? evt.which : event.keyCode
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {

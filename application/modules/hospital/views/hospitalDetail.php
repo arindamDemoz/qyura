@@ -176,7 +176,7 @@
                                                                 <p class="col-md-8 col-sm-8 t-xs-left"><?php if(isset($hospitalData[0]->hospital_dsgn)){ echo $hospitalData[0]->hospital_dsgn; }?></p>
                                                             </article> 
                                                             
-                                                            
+                                                            <?php if(!empty($hospitalData[0]->bloodBank_phn)){ ?>
                                                              <aside class="clearfix m-t-20 setting">
                                                             <h4>Blood Bank Detail
                                                             
@@ -202,8 +202,8 @@
                                                             </section>
                                                          
                                                         </aside>
-
-
+                                                            <?php } 
+                                                             if(!empty($hospitalData[0]->pharmacy_phn)){ ?>
                                                         <aside class="clearfix m-t-20 setting">
                                                             <h4>Pharmacy Detail
                                                            
@@ -229,6 +229,7 @@
                                                             </section>
                                                             
                                                         </aside>
+                                                             <?php } ?>
                                                         </aside>
                                                         
                                                         <!--edit-->
