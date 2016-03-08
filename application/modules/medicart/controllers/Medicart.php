@@ -256,39 +256,40 @@ class Medicart extends MY_Controller {
         
         $id = $this->input->post('offerId');
 
-//       $this->bf_form_validation->set_rules('medicartOffer_cityId', 'City Name', 'required|trim|numeric');
-//        $this->bf_form_validation->set_rules('medicartOffer_MIId', 'MI Name', 'required|trim|numeric');
-//        $this->bf_form_validation->set_rules('medicartOffer_OfferId', 'Offer Id', 'required|trim|is_unique[qyura_medicartOffer.medicartOffer_OfferId]');
-//        $this->bf_form_validation->set_rules('medicartOffer_offerCategory', 'Offer Caregory', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_title', 'Title', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_description', 'Description', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_allowBooking', 'allow Booking', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_maximumBooking', 'Maximum Booking', 'required|trim|numeric');
-//        $this->bf_form_validation->set_rules('medicartOffer_startDate', 'Start Date', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_endDate', 'End Date', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_discount', 'Discount', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_ageDiscount', 'Age Discount', 'required|trim');
-//        $this->bf_form_validation->set_rules('medicartOffer_actualPrice', 'Actual Price', 'required|trim|numeric');
-//        $this->bf_form_validation->set_rules('medicartOffer_discountPrice', 'Discount Price', 'required|trim|numeric');
-//        $this->bf_form_validation->set_rules('miType', 'MI Type', 'required|trim');
-//         if ($this->bf_form_validation->run() === False) {
-//           $option = array(
-//            'select' => 'city_id,city_name',
-//            'table' => 'qyura_city',
-//            'order_by' => array("city_name", "asc")
-//        );
-//        $data['allCity'] = $this->medicart_model->customGet($option);
-//        $option = array(
-//            'select' => 'offerCat_id,offerCat_name',
-//            'table' => 'qyura_offerCat',
-//            'where' => array('offerCat_deleted' => 0),
-//            'order_by' => array("offerCat_name", "asc")
-//        );
-//        $data['allOffetCategory'] = $this->medicart_model->customGet($option);
-//        
-//        $data['offerData'] = $this->medicart_model->getMedDetail($id);
-//        }else{
-        
+        $this->bf_form_validation->set_rules('medicartOffer_cityId', 'City Name', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('medicartOffer_MIId', 'MI Name', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('medicartOffer_offerCategory', 'Offer Caregory', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_title', 'Title', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_description', 'Description', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_allowBooking', 'allow Booking', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_maximumBooking', 'Maximum Booking', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('medicartOffer_startDate', 'Start Date', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_endDate', 'End Date', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_discount', 'Discount', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_ageDiscount', 'Age Discount', 'required|trim');
+        $this->bf_form_validation->set_rules('medicartOffer_actualPrice', 'Actual Price', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('medicartOffer_discountPrice', 'Discount Price', 'required|trim|numeric');
+        $this->bf_form_validation->set_rules('miType', 'MI Type', 'required|trim');
+         if ($this->bf_form_validation->run() === False) {
+           
+              $option = array(
+                'select' => 'city_id,city_name',
+                'table' => 'qyura_city',
+                'order_by' => array("city_name", "asc")
+            );
+            $data['allCity'] = $this->medicart_model->customGet($option);
+            $option = array(
+                'select' => 'offerCat_id,offerCat_name',
+                'table' => 'qyura_offerCat',
+                'where' => array('offerCat_deleted' => 0),
+                'order_by' => array("offerCat_name", "asc")
+            );
+            $data['allOffetCategory'] = $this->medicart_model->customGet($option);
+            $data['offerData'] = $this->medicart_model->getMedDetail($id);
+            $data['title'] = 'Edit Offer';
+            $this->load->super_admin_template('medicartEditOffer', $data, 'medicartScript');
+            
+        }else{
         
             $imagesname = '';
             if ($_FILES['avatar_file']['name'] && !empty($_FILES['avatar_file']['name'])) {
@@ -311,18 +312,16 @@ class Medicart extends MY_Controller {
                         'order_by' => array("offerCat_name", "asc")
                     );
                     $data['allOffetCategory'] = $this->medicart_model->customGet($option);
-                    $data['title'] = 'add Offer';
+                    $data['title'] = 'Edit Offer';
+                    $data['offerData'] = $this->medicart_model->getMedDetail($id);
                     $this->session->set_flashdata('valid_upload', $this->error_message);
-                    $this->load->super_admin_template('addOffer', $data, 'medicartScript');
+                    $this->load->super_admin_template('medicartEditOffer', $data, 'medicartScript');
                     return false;
                 } else {
                     $imagesname = $original_imagesname;
                 }
             }
-        
-        
-        
-        
+
         $offerData = array(
             'medicartOffer_MIId' => $this->input->post('medicartOffer_MIId'),
             'medicartOffer_offerCategory' => $this->input->post('medicartOffer_offerCategory'),
@@ -352,8 +351,6 @@ class Medicart extends MY_Controller {
             'where' => $where,
             'data'=> $offerData
         );
-       // dump($option);
-//exit();
         $response = $this->medicart_model->customUpdate($option);
         if ($response) {
                 $this->session->set_flashdata('message', 'Record has been updated successfully!');
@@ -363,5 +360,6 @@ class Medicart extends MY_Controller {
                 redirect('medicart/editOffer/'.$id);
             }
     }
+   }
 
 }
