@@ -129,7 +129,7 @@ class Pharmacy_model extends CI_Model {
               $this->datatables->add_column('pharmacy_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'pharmacy_address');
        
          $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="pharmacy/detailPharmacy/$1">View Detail</a> <a href="#"  class="btn btn-success waves-effect waves-light m-b-5 applist-btn hide">Edit Detail</a>', 'pharmacy_id');
-
+         $this->datatables->order_by("pharmacy.creationTime");
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
 
@@ -137,7 +137,7 @@ class Pharmacy_model extends CI_Model {
     
      function createCSVdata($where){
         $imgUrl = base_url() . 'assets/pharmacyImages/thumb/original/';
-         $this->db->select('pharmacy_img,pharmacy_name,city_name,SUBSTRING(pharmacy_phn, 1, CHAR_LENGTH(pharmacy_phn)-1)AS phone,pharmacy_address');
+         $this->db->select('pharmacy_img,pharmacy_name,city_name,pharmacy_phn,pharmacy_address');
         $this->db->from('qyura_pharmacy');
         $this->db->join('qyura_city','city_id = pharmacy_cityId','left');
         foreach($where as $key=>$val){
@@ -151,11 +151,8 @@ class Pharmacy_model extends CI_Model {
         }
     
         $data= $this->db->get(); 
-       // echo $this->db->last_query(); exit;
         $result= array();
-       // echo "<pre>";print_r($result);echo"</pre>";
-       //exit;
-        //echo $this->db->last_query();
+
         $i=1;
         foreach($data->result() as $key=>$val){
             $result[$i]['pharmacy_img'] = $imgUrl.$val->pharmacy_img;
@@ -171,8 +168,7 @@ class Pharmacy_model extends CI_Model {
       
       
       function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
-        //echo 
-        $this->db->select(implode(",",$select));
+       $this->db->select(implode(",",$select));
         $this->db->from($tableName);
         foreach($condition as $key=>$val){
             $this->db->where($key, $val); 
@@ -180,9 +176,7 @@ class Pharmacy_model extends CI_Model {
         if(!empty($notIn))
             $this->db->where_not_in($fieldName,$notIn);
         $data= $this->db->get(); 
-      //echo $this->db->last_query(); exit;
-     return $data->result();
-      //echo $this->db->last_query(); exit;
+        return $data->result();
     }
 }   
 

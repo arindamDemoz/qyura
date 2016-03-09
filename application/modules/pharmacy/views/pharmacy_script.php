@@ -12,7 +12,7 @@ if(!empty($id)){
 
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
 
-<script src="<?php echo base_url(); ?>assets/js/table2excel.js"></script>
+<!--<script src="<?php echo base_url(); ?>assets/js/table2excel.js"></script> -->
 
 <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
@@ -43,7 +43,7 @@ if(!empty($id)){
     <script type="text/javascript" src="http://localhost/qyura/assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script type="text/javascript" src="http://localhost/qyura/assets/vendor/x-editable/jquery.xeditable.js"> </script>
     <!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>-->
-      <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js">
+      
     </script>
     <script> var pharmacyId = <?php echo $check;?> </script>
     <script>
@@ -131,7 +131,7 @@ $('.selectpicker').selectpicker({
         var phn= $.trim($('#pharmacy_phn1').val());
         var myzip = $.trim($('#pharmacy_zip').val());
         var cityId =$.trim($('#pharmacy_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
+        var stateIds = $.trim($('#pharmacy_stateId').val());
         var status =1;
     //debugger;
    
@@ -153,24 +153,31 @@ $('.selectpicker').selectpicker({
                 status= 0;
                // $('#hospital_countryId').focus();
             }
-           if(!$.isNumeric(stateIds)){
+           if(stateIds === ''){
                // console.log("in state");
                 $('#pharmacy_stateId').addClass('bdr-error');
                 $('#error-pharmacy_stateId').fadeIn().delay(3000).fadeOut('slow');
                 status= 0;
                // $('#hospital_stateId').focus();
             }
-            if(!$.isNumeric(cityId)){
+            if(cityId === ''){
                 $('#pharmacy_cityId').addClass('bdr-error');
                 $('#error-pharmacy_cityId').fadeIn().delay(3000).fadeOut('slow');
                 status= 0;
                // $('#hospital_cityId').focus();
             }
            
-            if(!$.isNumeric(myzip)){
+            /*if(!$.isNumeric(myzip)){
                 
                 $('#pharmacy_zip').addClass('bdr-error');
                 $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
+                status= 0;
+                // $('#hospital_zip').focus();
+            } */
+            if(myzip.length < 6){
+                
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip_long').fadeIn().delay(3000).fadeOut('slow');
                 status= 0;
                 // $('#hospital_zip').focus();
             } 
@@ -203,7 +210,7 @@ $('.selectpicker').selectpicker({
                 status = 0;
                // $('#hospital_mmbrType').focus();
             }
-            if($('#users_email').val()==''){
+            if($('#users_email').val()===''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
@@ -216,12 +223,17 @@ $('.selectpicker').selectpicker({
                 status= 0;
             }
             
-            if(status == 0){
+            /* if(status == 0){
               return false;
             }else{
               return true;
-        }
-        //debugger;
+            } */
+        if(emails != '' &&  status == 1){
+            check_email(emails);
+            return false;
+        }   
+        return false;
+        
         }
 
 
@@ -318,51 +330,49 @@ $('.selectpicker').selectpicker({
                    $("form[name='pharmacyForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1) {
                         $('#users_email').addClass('bdr-error');
                     $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
                    return false;
                   }
+                else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='pharmacyForm']").submit();
+                     return true;
+                }
               } 
            });
         }  
         
          $(document).ready(function () {
+            // 
                 var oTable = $('#pharmacy_datatable').DataTable({
                     "processing": true,
-                    "serverSide": true,
+                    "bServerSide": true,
+                   // "searching": true,
                     "bLengthChange": false,
-                    "bFilter": false,
-                    "iDisplayStart ": 10,
-                    "iDisplayLength" : 12,
-                     dom: 'Bfrtip',
-                     "buttons": [
-                        {
-                            extend: 'collection',
-                            text: 'Export',
-                            buttons: [
-                                'copy',
-                                'excel',
-                                'csv',
-                                'pdf',
-                                'print'
-                            ]
-                        }
-                        ],
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    "bPaginate": true,
+                    "sPaginationType": "full_numbers",
+                    "columnDefs": [{
+                    "targets": [0, 5],
+                    "orderable": false }],
                      "columns": [
-                        {"data": "pharmacy_img"},
+                        {"data": "pharmacy_img","searchable": false, "order": false,orderable: false, width: "8%" },
                         {"data": "pharmacy_name"},
                         {"data": "city_name"},
                         {"data": "pharmacy_phn"},
                         {"data": "pharmacy_address"},
-                        {"data": "view"},
+                        {"data": "view","searchable": false, "order": false,orderable: false, width: "8%"},
                     ],
                     
                     "ajax": {
                         "url": "<?php echo site_url('pharmacy/getPharmacyDl'); ?>",
                         "type": "POST", 
                         "data": function ( d ) {
-                                         d.cityId = $("#pharmacy_cityId").val();
+                            console.log("asdsadas");
+                                        d.cityId = $("#pharmacy_cityId").val();
                                          d.name = $("#search").val();
                                          if($("#pharmacy_stateId").val() != ' '){
                                          d.hosStateId = $("#pharmacy_stateId").val();
@@ -376,7 +386,7 @@ $('.selectpicker').selectpicker({
                         oTable.draw();
                   } );
                      $('#search').on('keyup', function() {
-                        oTable.draw();
+                        oTable.search($(this).val()).draw() ;
                   } );
                 
             });
@@ -553,6 +563,15 @@ function imageIsLoaded(e) {
     $('#previewing').attr('width', '500px');
     $('#previewing').attr('height', '230px');
 }
+});
+
+$("#edit").click(function () {
+ $("#detail").toggle();
+    $("#newDetail").toggle();
+});
+$("#editdetail").click(function () {
+    $("#detail").toggle();
+    $("#newDetail").toggle();
 });
  </script>   
 

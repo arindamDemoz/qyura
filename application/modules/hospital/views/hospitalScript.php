@@ -127,7 +127,7 @@ function fetchCity(stateId) {
                   } );
                      $('#search').on('keyup', function() {
                         //oTable.draw();
-                         oTable.columns( 5 ).search($(this).val()).draw() ;
+                         oTable.search($(this).val()).draw() ;
                         
                   } );
 

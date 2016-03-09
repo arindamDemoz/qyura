@@ -119,7 +119,7 @@
                                                                 <aside class="col-md-8 col-sm-8 text-right t-xs-left">
                                                                     <?php 
                                                                     $explode= explode('|',$pharmacyData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($explode);$i++){?>
                                                                     <p>+<?php echo $explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -230,7 +230,8 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <?php 
                                                                     $explodes= explode('|',$pharmacyData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
+                                                                    if(!empty($explodes)){
+                                                                    for($i= 0; $i< count($explodes);$i++){
                                                                     $moreExpolde = explode(' ',$explodes[$i]);?>
                                                                     
                                                                     
@@ -242,12 +243,12 @@
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-10 m-t-xs-10">
-                                                                            <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn<?php echo $i;?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
+                                                                            <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn<?php echo $i;?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onkeypress="return isNumberKey(event)"/>
                                                                         </div>
                                                                        
                                                                     </aside>
                                                                     <br />
-                                                                    <?php $moreExpolde ='';}?>
+                                                                    <?php $moreExpolde ='';} }?>
                                                                
                                                                     <p class="m-t-10">* If it is landline, include Std code with number </p>
                                                                 </div>

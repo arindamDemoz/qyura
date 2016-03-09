@@ -360,9 +360,6 @@
                                         </div>
                                     </section>
                                     <!-- diagnostic Ends -->
-
-                                  
-
                                     <!--Account Starts -->
                                     <section class="tab-pane fade in" id="account">
                                         <div class="clearfix m-t-20 p-b-20 doctor-description">

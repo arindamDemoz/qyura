@@ -23,8 +23,7 @@ class Pharmacy extends MY_Controller {
    }
     function getPharmacyDl(){
 
-       
-        echo $this->Pharmacy_model->fetchPharmacyDataTables();
+      echo $this->Pharmacy_model->fetchPharmacyDataTables();
  
    }
    function addPharmacy(){
@@ -79,8 +78,6 @@ class Pharmacy extends MY_Controller {
       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
        
         if ($this->bf_form_validation->run() === FALSE) {
-          //echo validation_errors();
-          //exit;
              $data = array();
              $data['allStates'] = $this->Pharmacy_model->fetchStates();
              $this->load->super_admin_template('addPharmacy', $data,'pharmacy_script');
@@ -111,8 +108,11 @@ class Pharmacy extends MY_Controller {
                  
                   $finalNumber = '';
                 for($i= 0;$i < count($pharmacy_phn) ;$i++) {
-                    if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') {
-                       $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|'; 
+                    if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') { 
+                       if($i == count($pharmacy_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i];
+                       else        
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|';
                     }
                     
                 }
@@ -146,12 +146,18 @@ class Pharmacy extends MY_Controller {
                     'pharmacy_type'  => $this->input->post('pharmacyType') 
                         
                     );
+                    $users_email_status = $this->input->post('users_email_status');
+                    if($users_email_status == ''){
                     $users_email = $this->input->post('users_email');
                     $pharmacyInsert = array(
                    'users_email' => $users_email,
                    'users_ip_address' => $this->input->ip_address(),
-                );
-                    $pharmacy_usersId = $this->Pharmacy_model->insertPharmacyUser($pharmacyInsert);
+                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                    );
+                        $pharmacy_usersId = $this->Pharmacy_model->insertPharmacyUser($pharmacyInsert);
+                    }else {
+                        $pharmacy_usersId = $users_email_status;
+                    }
                     if($pharmacy_usersId) {
 
                       $insertusersRoles = array(
@@ -197,7 +203,7 @@ class Pharmacy extends MY_Controller {
         $data = base64_decode($img);
         return $data;
     }
-    function check_email(){
+    /*function check_email(){
         $user_table_id = '';
         $users_email = $this->input->post('users_email');
         if(isset($_POST['user_table_id'])){
@@ -205,6 +211,31 @@ class Pharmacy extends MY_Controller {
         }
         $email = $this->Pharmacy_model->fetchEmail($users_email,$user_table_id);
         echo $email;
+        exit;
+    }*/
+    function check_email(){
+       $user_table_id = '';
+        $users_email = $this->input->post('users_email');
+        if(isset($_POST['user_table_id'])){
+          $user_table_id = $this->input->post('user_table_id');
+        }
+        $email = $this->Pharmacy_model->fetchEmail($users_email,$user_table_id);
+       
+        if($email == 1)
+        echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Pharmacy_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
         exit;
     }
     function saveDetailPharmacy($pharmacyId){
@@ -243,7 +274,11 @@ class Pharmacy extends MY_Controller {
                   $finalNumber = '';
                 for($i= 0;$i < count($pharmacy_phn) ;$i++) {
                     if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') {
-                       $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|'; 
+                       
+                       if($i == count($pharmacy_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i];
+                       else        
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|';
                     }
                 } 
                 
