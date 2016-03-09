@@ -23,7 +23,7 @@ class Healthcare_model extends CI_Model {
     
    function fetchHospital ($cityId=NULL){
 
-        $this->db->select('hospital_id,hospital_usersId,hospital_name');
+        $this->db->select('hospital_id,hospital_usersId miId,hospital_name miName');
         $this->db->from('qyura_hospital');
         $this->db->where('hospital_cityId',$cityId);
         $this->db->order_by("hospital_name","asc");
@@ -32,7 +32,7 @@ class Healthcare_model extends CI_Model {
     
   function fetchDiagnostic ($cityId=NULL){
 
-        $this->db->select('diagnostic_id, diagnostic_usersId, diagnostic_name');
+        $this->db->select('diagnostic_id, diagnostic_usersId miId, diagnostic_name miName');
         $this->db->from('qyura_diagnostic');
         $this->db->where('diagnostic_cityId',$cityId);
         $this->db->order_by("diagnostic_name","asc");
@@ -74,7 +74,7 @@ class Healthcare_model extends CI_Model {
     }    
     function fetchHealthcareData($condition = NULL){
         
-         $this->db->select('healthpkg.healthPackage_id id, healthpkg.healthPackage_packageId healthpkgId, healthpkg.healthPackage_packageTitle title,healthpkg.healthPackage_discountedPrice price, (CASE healthpkg.status WHEN 1 THEN "Active" WHEN 0 THEN "Deactive" END) as status, healthpkg.creationTime createdAt,healthpkg.    healthPackage_bestPrice,healthpkg.healthPackage_description,FROM_UNIXTIME(healthpkg.healthPackage_date,"%d-%m-%Y") AS date, IFNULL(hos.hospital_name,diag.diagnostic_name) as miName,healthpkg.healthPackage_includesTest as test');
+         $this->db->select('healthpkg.healthPackage_id id, healthpkg.healthPackage_packageId healthpkgId, healthpkg.healthPackage_packageTitle title,healthpkg.healthPackage_discountedPrice price, (CASE healthpkg.status WHEN 1 THEN "Active" WHEN 0 THEN "Deactive" END) as status, healthpkg.creationTime createdAt,healthpkg.healthPackage_bestPrice bp,healthpkg.healthPackage_description,FROM_UNIXTIME(healthpkg.healthPackage_date,"%d-%m-%Y") AS date, IFNULL(hos.hospital_name,diag.diagnostic_name) as miName,healthpkg.healthPackage_includesTest as test, (CASE WHEN hospital_usersId <>0 THEN "Hospital" WHEN diagnostic_usersId <> 0 THEN "Diagnostic" END ) as miType, healthpkg.healthPackage_cityId as cityId, healthpkg.healthPackage_MIuserId as miId');
         $this->db->from('qyura_healthPackage AS healthpkg');
         $this->db->join('qyura_hospital AS hos','hos.hospital_usersId = healthpkg.healthPackage_MIuserId','left');
         $this->db->join('qyura_diagnostic AS diag','diag.diagnostic_usersId = healthpkg.healthPackage_MIuserId','left');
@@ -123,19 +123,28 @@ class Healthcare_model extends CI_Model {
         
        // if($condition)
        // $this->datatables->where(array('pharmacy.pharmacy_id'=> $condition));
-        $this->db->where(array('healthpkg.healthPackage_deleted'=> 0));
+         $this->db->where(array('healthpkg.healthPackage_deleted'=> 0));
         
          $this->datatables->add_column('miName', '<h6>$1</h6><p>$2</p>', 'miName,city_name');
          
          $this->datatables->edit_column('status', '$1', 'getStatus(status)');
        
-         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5" href="healthcare/detailHealthpkg/$1">View Detail</a> <button class="btn btn-success waves-effect waves-light m-b-5" type="button" onclick="enableFn($1,$3)">$2</button>', 'healthPackage_id,getOppStatus(status),status');
+         $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5" href="healthcare/detailHealthpkg/$1">View Detail</a><button class="btn btn-success waves-effect waves-light m-b-5" type="button" onclick="enableFn($1,$3)">$2</button> <a href="healthcare/editHealthpkg/$1"  class="btn btn-success waves-effect waves-light m-b-5 applist-btn">Edit Detail</a>', 'healthPackage_id,getOppStatus(status),status');
 
        return  $this->datatables->generate(); 
       //  echo $this->datatables->last_query(); exit;
 
     }
-    
+    function UpdateTableData($data=array(),$where=array(),$tableName = NULL){
+        foreach($where as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+       
+        $this->db->update($tableName, $data); 
+       
+        //echo $this->db->last_query();exit;
+         return TRUE;
+    }
     
       function createCSVdata($where,$or_where = null){
         $this->db->select('IFNULL(hos.hospital_name,diag.diagnostic_name) as miName, healthpkg.healthPackage_packageId healthpkgId, healthpkg.healthPackage_packageTitle title,healthpkg.healthPackage_discountedPrice price, (CASE healthpkg.status WHEN 1 THEN "Active" WHEN 0 THEN "Deactive" END) as status');
@@ -153,10 +162,15 @@ class Healthcare_model extends CI_Model {
             $this->db->where($key, $val); 
             }
         }
-        $this->db->like($or_where);
+        
+        $this->db->group_start();
+        $this->db->or_like($or_where);
+        $this->db->group_end(); 
+                
+       // $this->db->like($or_where);
         
         $data= $this->db->get(); 
-      // echo $this->db->last_query(); exit;
+      //  echo $this->db->last_query(); exit;
         $result= array();
         $i=1;
         foreach($data->result() as $key=>$val){
@@ -209,7 +223,7 @@ class Healthcare_model extends CI_Model {
         
         
         
-        $this->datatables->add_column('bookedBy', '<h6>$1</h6><p>$2|$3</p>', 'bookedBy,gender,userAge');
+        $this->datatables->add_column('bookedBy', '<h6>$1</h6><p>$2|$3</p>', 'bookedBy,getGender(gender),userAge');
         
         $this->datatables->add_column('miName', '<h6>$1</h6><p>$2</p>', 'miName,city_name');
        

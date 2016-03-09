@@ -10,7 +10,7 @@
                          </div>
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">Pharmacy Detail</h3>
-                            <a href="all-pharmacies.html" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
+                            <a href="<?php echo site_url('/pharmacy'); ?>" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
                                
                         </div>
                     </div>
@@ -68,7 +68,7 @@
 
                                 </aside>
                                 <section class="clearfix hospitalBtn">
-                                    <div class="col-md-12">
+                                   <div class="col-md-12">
                                         <a data-toggle="modal" data-target="#changeBg" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
                                     </div>
 
@@ -154,6 +154,7 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Pharmacy Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="pharmacy_name" name="pharmacy_name" type="text" value="<?php echo $pharmacyData[0]->pharmacy_name;?>">
+                                                                     <label class="error" style="display:none;" id="error-pharmacy_name"> please enter pharmacy name</label>
                                                                     <label class="error" > <?php echo form_error("pharmacy_name"); ?></label>
                                                                 </div>
                                                             </article>
@@ -170,13 +171,59 @@
                                                                     <label class="error" > <?php echo form_error("pharmacy_type"); ?></label>
                                                                 </div>
                                                             </article>
-                                                            <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Address :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <textarea class="form-control" id="geocomplete" name="pharmacy_address" type="text" ><?php if(isset($pharmacyData[0]->pharmacy_address)){ echo $pharmacyData[0]->pharmacy_address; }?></textarea>
+                                                         
+                                                            
+                                                          <article class="clearfix m-b-10">
+                                                             <label for="cemail" class="control-label col-md-4 col-sm-4">Address:</label>
+                                                             <div class="col-md-8 col-sm-8">
+                                                                 <aside class="row">
+                                                                     <div class="col-md-6 col-sm-6">
+                                                                         <select class="selectpicker" data-width="100%" name="pharmacy_countryId">
+                                                                             <option>Select Country</option>
+                                                                             <?php if(!empty($allCountry)):
+                                                                                    foreach($allCountry as $country):?>
+                                                                                
+                                                                                    <option value="<?php echo $country->country_id;?>" <?php if($pharmacyData[0]->pharmacy_countryId == $country->country_id):echo"selected";endif;?>><?php echo $country->country;?></option>
+                                                                             <?php endforeach;endif;?>
+                                                                         </select>
+                                                                         <label class="error" style="display:none;" id="error-pharmacy_countryId"> please select a country</label>
+                                                                         <label class="error" > <?php echo form_error("pharmacy_countryId"); ?></label>
+                                                                     </div>
+                                                                     <div class="col-md-6 col-sm-6 m-t-xs-10">
+                                                                            <select class="selectpicker" data-width="100%" name="pharmacy_stateId" onchange ="fetchCity(this.value)" id="pharmacy_stateId">
+                                                                                <?php foreach($allStates as $key=>$val) {?>
+                                                                                  <option <?php if($pharmacyData[0]->pharmacy_stateId == $val->state_id):echo"selected";endif;?> value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
+                                                                                 <?php }?>
+                                                                              
+                                                                                
+       </select>
+                                                                     </div>
+                                                                 </aside>
+                                                                 <aside class="row m-t-10">
+                                                                     <div class="col-md-6 col-sm-6">
+                                                                         
+                                                                         <select class="selectpicker" data-width="100%" name="pharmacy_cityId" id="pharmacy_cityId">
+                                                                              <?php foreach($allCities as $key=>$val) {?>
+                                                                                <option <?php if($pharmacyData[0]->pharmacy_cityId == $val->city_id):echo"selected";endif;?> value="<?php echo $val->city_id;?>"><?php echo $val->city_name;?></option>
+                                                                              <?php }?>
+
+                                                                            </select>
+                                                                      <label class="error" style="display:none;" id="error-diagnostic_cityId"> please select a city</label>
+                                                                       <label class="error" > <?php echo form_error("pharmacy_cityId"); ?></label>
+                                                                     </div>
+                                                                     <div class="col-md-6 col-sm-6 m-t-xs-10">
+                                                                         <input type="text" class="form-control" id="pharmacy_zip" name="pharmacy_zip" placeholder="700001" maxlength="6"  value="<?php if(!empty($pharmacyData)): echo $pharmacyData[0]->pharmacy_zip; endif;?>" onkeypress="return isNumberKey(event)"/>
+                                                                             <label class="error" style="display:none;" id="error-pharmacy_zip"> please enter a zip code</label>
+
+                                                                            <label class="error" id="error-pharmacy_zip1"  > <?php echo form_error("pharmacy_zip"); ?></label>
+                                                                     </div>
+                                                                 </aside>
+                                                                 <div class="clearfix m-t-10">
+                                                                      <input type="text" class="form-control" id="geocomplete" name="pharmacy_address" type="text" value="<?php if(isset($pharmacyData[0]->pharmacy_address)){ echo $pharmacyData[0]->pharmacy_address; }?>" >
                                                                     <label class="error" > <?php echo form_error("pharmacy_address"); ?></label>
-                                                                </div>
-                                                            </article>
+                                                                 </div>
+                                                             </div>
+                                                         </article>
 
                                                             <article class="clearfix m-b-10 ">
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
@@ -293,9 +340,8 @@
 
                 <!-- container -->
             </div>
-            <!-- content -->
-           <!--Change Logo-->
-                    <div id="changeBg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <!--Change Logo-->
+            <div id="changeBg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -334,6 +380,7 @@
                     </div>
                     <!-- /Change Logo -->
    
-    <?php echo $this->load->view('edit_upload_crop_modal');?>
-    <?php echo $this->load->view('edit_gallery_crop_modal');?>
+<?php echo $this->load->view('edit_upload_crop_modal');?>
+</body>
 
+</html>

@@ -519,7 +519,7 @@ class Auth_model extends CI_Model {
             
             $now = time();
             $otpTime = $result->users_otpTime;
-            $acceptTime = ($this->config->item('otp_time_in_min' != '') && $this->config->item('otp_time_in_min')) != null ? $this->config->item('otp_time_in_min'):1;
+            $acceptTime = ($this->config->item('otp_time_in_min') != '' && $this->config->item('otp_time_in_min') != null) ? $this->config->item('otp_time_in_min'):1;
             $timeDuration = 60*$acceptTime;
             $newTime = $timeDuration+$otpTime;
             
@@ -1327,7 +1327,7 @@ class Auth_model extends CI_Model {
 
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select($this->identity_column . ', '.$this->tables['users'].'.users_username, '.$this->tables['users'].'.users_email, '.$this->tables['users'].'.users_mobile, '.$this->tables['users'].'.users_lastLogin, '.$this->tables['users'].'.users_id, '.$this->tables['users'].'.users_active, '.$this->tables['users'].'.users_otpActive, '.$this->tables['users'].'.users_otpTime, '.$this->tables['users'].'.users_logintype as logintype, '.$this->tables['patient'].'.patientDetails_patientName as patientName, '.$this->tables['patient'].'.patientDetails_pLastName as pLastName, '.$this->tables['patient'].'.patientDetails_address as address, CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg, '.$this->tables['groups'].'.'.$this->join['roles_id'].','.$this->tables['userSocial'].'.userSocial_pushToken as pushToken,'.$this->tables['userSocial'].'.userSocial_device as device,'.$this->tables['userSocial'].'.userSocial_gpId as gpId,'.$this->tables['userSocial'].'.userSocial_fbId as fbId')
+        $query = $this->db->select($this->identity_column . ', '.$this->tables['users'].'.users_username, '.$this->tables['users'].'.users_email, '.$this->tables['users'].'.users_mobile, '.$this->tables['users'].'.users_lastLogin, '.$this->tables['users'].'.users_id, '.$this->tables['users'].'.users_active, '.$this->tables['users'].'.users_otpActive, '.$this->tables['users'].'.users_otpTime, '.$this->tables['users'].'.users_logintype as logintype, '.$this->tables['patient'].'.patientDetails_patientName as patientName, '.$this->tables['patient'].'.patientDetails_pLastName as pLastName, '.$this->tables['patient'].'.patientDetails_gender as gender, '.$this->tables['patient'].'.patientDetails_dob as dob, '.$this->tables['patient'].'.patientDetails_address as address, CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg, '.$this->tables['groups'].'.'.$this->join['roles_id'].','.$this->tables['userSocial'].'.userSocial_pushToken as pushToken,'.$this->tables['userSocial'].'.userSocial_device as device,'.$this->tables['userSocial'].'.userSocial_gpId as gpId,'.$this->tables['userSocial'].'.userSocial_fbId as fbId')
                 ->where($this->identity_column, $identity)
                 ->or_where($this->identity_mobile,$identity)
                 ->join($this->tables['patient'],$this->tables['patient'].'.'.$this->join['patient'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
@@ -1619,6 +1619,8 @@ class Auth_model extends CI_Model {
                 $this->tables['patient'] . '.patientDetails_pLastName as pLastName',
                 $this->tables['patient'] . '.patientDetails_unqId as pUnqId',
                 $this->tables['patient'] . '.patientDetails_address as address',
+                $this->tables['patient'] . '.patientDetails_dob as dob',
+                $this->tables['patient'] . '.patientDetails_gender as gender',
                 //$this->tables['patient'] . '.patientDetails_patientImg as patientImg',
                 'CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg',
                 $this->tables['userSocial'].'.userSocial_pushToken as pushToken',
@@ -2513,4 +2515,43 @@ class Auth_model extends CI_Model {
         return $ip_address;
     }
 
+    public function getUserDetail($where,$or_where=null)
+    {
+        $query = $this->db->select($this->identity_column . ', '.$this->tables['users'].'.users_username, '.$this->tables['users'].'.users_email, '.$this->tables['users'].'.users_mobile, '.$this->tables['users'].'.users_lastLogin, '.$this->tables['users'].'.users_id, '.$this->tables['users'].'.users_active, '.$this->tables['users'].'.users_otpActive, '.$this->tables['users'].'.users_otpTime, '.$this->tables['users'].'.users_logintype as logintype, '.$this->tables['patient'].'.patientDetails_patientName as patientName, '.$this->tables['patient'].'.patientDetails_gender as gender, '.$this->tables['patient'].'.patientDetails_dob as dob, '.$this->tables['patient'].'.patientDetails_pLastName as pLastName, '.$this->tables['patient'].'.patientDetails_address as address, CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg, '.$this->tables['groups'].'.'.$this->join['roles_id'].','.$this->tables['userSocial'].'.userSocial_pushToken as pushToken,'.$this->tables['userSocial'].'.userSocial_device as device,'.$this->tables['userSocial'].'.userSocial_gpId as gpId,'.$this->tables['userSocial'].'.userSocial_fbId as fbId')
+                ->where($where)
+                
+                ->join($this->tables['patient'],$this->tables['patient'].'.'.$this->join['patient'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->join($this->tables['userSocial'],$this->tables['userSocial'].'.'.$this->join['userSocial'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->join($this->tables['users_groups'],$this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.'.$this->join['users_id'])
+                ->join($this->tables['groups'],$this->tables['groups'].'.'.$this->join['roles_id'].'='.$this->tables['users_groups'].'.'.$this->join['groups'])
+                ->limit(1)
+                ->order_by('users_id', 'desc')
+                ->get($this->tables['users']);
+
+        // check password 
+        
+        
+        if ($query->num_rows() === 1) {
+        return $user = $query->row();
+        }
+        else
+            return false;
+    }
+    
+    public function getSocialData($where){
+        $query = $this->db->select($this->identity_column . ', '.$this->tables['users'].'.users_username, '.$this->tables['users'].'.users_email, '.$this->tables['users'].'.users_mobile, '.$this->tables['users'].'.users_id, '.$this->tables['users'].'.users_active, '.$this->tables['users'].'.users_otpActive, '.$this->tables['users'].'.users_otpTime, '.$this->tables['users'].'.users_logintype as logintype, '.$this->tables['userSocial'].'.userSocial_gpId as gpId,'.$this->tables['userSocial'].'.userSocial_fbId as fbId,'.$this->tables['patient'].'.patientDetails_patientName as patientName, '.$this->tables['patient'].'.patientDetails_gender as gender, '.$this->tables['patient'].'.patientDetails_dob as dob, '.$this->tables['patient'].'.patientDetails_pLastName as pLastName, '.$this->tables['patient'].'.patientDetails_address as address, CONCAT("assets/proImg","/",'.$this->tables['patient'].'.patientDetails_patientImg) as patientImg')
+                ->join($this->tables['patient'],$this->tables['patient'].'.'.$this->join['patient'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->join($this->tables['userSocial'],$this->tables['userSocial'].'.'.$this->join['userSocial'].'='.$this->tables['users'].'.'.$this->join['users_id'],'LEFT')
+                ->where($where)
+                ->limit(1)
+                ->order_by('users_id', 'desc')
+                ->get($this->tables['users']);
+        if ($query->num_rows() === 1) {
+        return $user = $query->row();
+        }
+        else
+            return false;
+    }
+    
+    
 }

@@ -55,7 +55,7 @@
                             <!-- Table Section Start -->
                             <article class="clearfix m-top-40 p-b-20">
                                 <aside class="table-responsive">
-                                <table class="table all-bloodbank" id="pharmacy_datatable">
+                                <table class="table all-bloodbank" id="favTable">
                                     <thead>
                                         <tr class="border-a-dull">
                                             <th>Logo</th>

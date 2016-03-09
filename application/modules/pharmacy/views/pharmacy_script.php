@@ -1,10 +1,12 @@
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
-<?php 
-$check= 0; 
-if(isset($pharmacyId) && !empty($pharmacyId)){
-    $check = $pharmacyId; 
+<?php $check= 0; 
+$id = $this->uri->segment(3); 
+if(!empty($id)){
+  $check = $this->uri->segment(3); 
+}else{
+  $check = 0 ;
 }?>
 
 
@@ -56,9 +58,6 @@ $('.selectpicker').selectpicker({
 </script>
     
     <script>
-        var urls = "<?php echo base_url()?>";
-         var j = 1;
-         var pharmacyId = "<?php echo $check?>";
          $(function(){
 
         $("#geocomplete").geocomplete({
@@ -91,7 +90,8 @@ $('.selectpicker').selectpicker({
                   return true;
               }
           }
-        
+        var urls = "<?php echo base_url()?>";
+         var j = 1;
          
         function fetchCity(stateId) {    
            
@@ -132,38 +132,38 @@ $('.selectpicker').selectpicker({
         var myzip = $.trim($('#pharmacy_zip').val());
         var cityId =$.trim($('#pharmacy_cityId').val());
         var stateIds = $.trim($('#StateId').val());
-        //var status =1;
+        var status =1;
     //debugger;
    
             if($('#pharmacy_name').val()==''){
                 $('#pharmacy_name').addClass('bdr-error');
                 $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_name').focus();
             }
            if($('#pharmacy_type').val()==''){
                 $('#pharmacy_type').addClass('bdr-error');
                 $('#error-pharmacy_type').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_type').focus();
             }
             if($.trim($('#pharmacy_countryId').val()) == ''){
                 $('#pharmacy_countryId').addClass('bdr-error');
                 $('#error-pharmacy_countryId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_countryId').focus();
             }
            if(!$.isNumeric(stateIds)){
                // console.log("in state");
                 $('#pharmacy_stateId').addClass('bdr-error');
                 $('#error-pharmacy_stateId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_stateId').focus();
             }
             if(!$.isNumeric(cityId)){
                 $('#pharmacy_cityId').addClass('bdr-error');
                 $('#error-pharmacy_cityId').fadeIn().delay(3000).fadeOut('slow');
-               // status= 0;
+                status= 0;
                // $('#hospital_cityId').focus();
             }
            
@@ -171,14 +171,14 @@ $('.selectpicker').selectpicker({
                 
                 $('#pharmacy_zip').addClass('bdr-error');
                 $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                 // $('#hospital_zip').focus();
             } 
 
             if($("input[name='pharmacy_address']" ).val()==''){
                 $('#pharmacy_address').addClass('bdr-error');
                 $('#error-pharmacy_address').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_address').focus();
             }
             
@@ -186,33 +186,41 @@ $('.selectpicker').selectpicker({
             if(!$.isNumeric(phn)){
                 $('#pharmacy_phn1').addClass('bdr-error');
                 $('#error-pharmacy_phn1').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                 // $('#hospital_phn').focus();
             }
             
             if(!check.test(cpname)){
                 $('#pharmacy_cntPrsn').addClass('bdr-error');
                 $('#error-pharmacy_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                 // $('#hospital_cntPrsn').focus();
             }
            
             if($('#pharmacy_mmbrTyp').val()==''){
                 $('#pharmacy_mmbrTyp').addClass('bdr-error');
                 $('#error-pharmacy_mmbrTyp').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status = 0;
                // $('#hospital_mmbrType').focus();
             }
             if($('#users_email').val()==''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
                // $('#users_email').focus();
             }
-            if(emails !=''){
-              check_email(emails);
-              return false;
+            
+             if(myzip .length < 6){
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
+                status= 0;
             }
-            return false;
+            
+            if(status == 0){
+              return false;
+            }else{
+              return true;
+        }
         //debugger;
         }
 
@@ -224,10 +232,16 @@ $('.selectpicker').selectpicker({
         var numcheck=/^[0-9]+$/;
         var emails = $.trim($('#users_email').val());
         var cpname = $.trim($('#pharmacy_cntPrsn').val());
+        var myzip = $.trim($('#pharmacy_zip').val());
+        var phn= $.trim($('#pharmacy_phn1').val());
+        var myzip = $.trim($('#pharmacy_zip').val());
+        var cityId =$.trim($('#pharmacy_cityId').val());
+        var stateIds = $.trim($('#StateId').val());
         var status = 1;
        
             if($.trim($('#pharmacy_name').val()) === ''){
                 $('#pharmacy_name').addClass('bdr-error');
+                $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
           
@@ -241,6 +255,13 @@ $('.selectpicker').selectpicker({
             }
 
             if( emails !== '' && checkUpdateEmailFormat(emails)){
+                status = 0;
+            }
+            
+            
+             if(myzip .length < 6){
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
             
@@ -457,8 +478,8 @@ $("#picEditClose").click(function () {
              }
           });
      }  
-     
-     function changebackgroundImage(id){
+
+      function changebackgroundImage(id){
            $.ajax({
             url: urls + 'index.php/pharmacy/getBackgroundImage/'+id, // Url to which the request is send
             type: "POST",            

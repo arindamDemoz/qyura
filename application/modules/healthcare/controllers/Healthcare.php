@@ -49,10 +49,23 @@ class Healthcare extends MY_Controller {
        // echo $healthPackage_id; exit;
         $data['healthcareData'] = $this->Healthcare_model->fetchHealthcareData($healthPackage_id);
         $data['healthPackage_id'] = $healthPackage_id;
-        $data['showStatus'] = 'none';
-        $data['detailShow'] = 'block';
         $data['title'] = 'Health Package Detail';
         $this->load->super_admin_template('detailHealthpkg', $data,'scriptHealthpkg');
+   }
+   function editHealthpkg($healthPackage_id=''){
+    $data = array();
+    $data['editHealthcareData'] = $this->Healthcare_model->fetchHealthcareData($healthPackage_id);
+    $data['healthPackage_id'] = $healthPackage_id;
+    //print_r($healthPackage_id);
+    //exit;
+    if($data['editHealthcareData'][0]->miType == "Hospital"){
+    $data['miData'] = $this->Healthcare_model->fetchHospital($data['editHealthcareData'][0]->cityId);
+    }else{
+    $data['miData'] = $this->Healthcare_model->fetchDiagnostic($data['editHealthcareData'][0]->cityId);
+    }
+    $data['allCities'] = $this->Healthcare_model->fetchCity();
+    $data['title'] = 'Edit Healthpkg';
+    $this->load->super_admin_template('editHealthpkg', $data,'scriptHealthpkg');
    }
    function fetchCity(){
        //echo "fdadas";exit;
@@ -68,14 +81,13 @@ class Healthcare extends MY_Controller {
     }
     
     function fetchHospital(){
-        //echo "fdadas";exit;
         $cityId = $this->input->post('cityId');
         $hosData = $this->Healthcare_model->fetchHospital($cityId);
         $hosOption = '';
         $hosOption .='<option value=>Select Hospital</option>';
         if(!empty($hosData)){
             foreach($hosData as $key=>$val ) {
-                $hosOption .= '<option value='.$val->hospital_usersId.'>'. strtoupper($val->hospital_name).'</option>';
+                $hosOption .= '<option value='.$val->miId.'>'. strtoupper($val->miName).'</option>';
             }
         }
        echo $hosOption;
@@ -90,7 +102,7 @@ class Healthcare extends MY_Controller {
         $diOption .='<option value=>Select Diagnostic</option>';
         if(!empty($diagnoData)){
             foreach($diagnoData as $key=>$val ) {
-                $diOption .= '<option value='.$val->diagnostic_usersId.'>'. strtoupper($val->diagnostic_name).'</option>';
+                $diOption .= '<option value='.$val->miId.'>'. strtoupper($val->miName).'</option>';
             }
         }
        echo $diOption;
@@ -99,34 +111,33 @@ class Healthcare extends MY_Controller {
     
   function SaveHealthcare(){
      // print_r($_POST);exit;
-        $this->load->library('form_validation');
-      
-        $this->bf_form_validation->set_rules('miType', 'Mi Type', 'xss_clean|required|trim');
-        $this->bf_form_validation->set_rules('city', 'Health Package City', 'xss_clean|required|trim');
-       $this->bf_form_validation->set_rules('miName','Mi Name', 'xss_clean|required|trim');
+      $this->load->library('form_validation');
+      $this->bf_form_validation->set_rules('miType', 'Mi Type', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('city', 'Health Package City', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('miName','Mi Name', 'xss_clean|required|trim');
        
-       $this->bf_form_validation->set_rules('packageId','Package Id','xss_clean|required|trim');
-       $this->bf_form_validation->set_rules('packagetitle','Package Title','xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('packageId','Package Id','xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('packagetitle','Package Title','xss_clean|required|trim');
    
-        $this->bf_form_validation->set_rules('bestPrice', 'Best Price', 'xss_clean|required|trim');
-       $this->bf_form_validation->set_rules('discountPrice','Discount Price','required|xss_clean|trim');
+      $this->bf_form_validation->set_rules('bestPrice', 'Best Price', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('discountPrice','Discount Price','required|xss_clean|trim');
        //$this->bf_form_validation->set_rules('testIncluded','Test Includes','required|xss_clean|trim');
        
-        if ($this->bf_form_validation->run() === FALSE) {
-         $data = array();
-            $data['allCities'] = $this->Healthcare_model->fetchCity();
-            $data['title'] = 'Add Healthpkg';
-            $this->load->super_admin_template('addHealthpkg', $data, 'scriptHealthpkg');
-         }
-         else {
-                $packageId = $this->input->post('packageId');
-                $packagetitle = $this->input->post('packagetitle');
-                $bestPrice = $this->input->post('bestPrice');
-                $discountPrice = $this->input->post('discountPrice');
-                $city = $this->input->post('city');
-                $miName=$this->input->post('miName');
-                $testIncluded=implode('|',$this->input->post('testIncluded'));
-                    $insertData = array(
+      if ($this->bf_form_validation->run() === FALSE) {
+      $data = array();
+      $data['allCities'] = $this->Healthcare_model->fetchCity();
+      $data['title'] = 'Add Healthpkg';
+      $this->load->super_admin_template('addHealthpkg', $data, 'scriptHealthpkg');
+      }
+      else {
+              $packageId = $this->input->post('packageId');
+              $packagetitle = $this->input->post('packagetitle');
+              $bestPrice = $this->input->post('bestPrice');
+              $discountPrice = $this->input->post('discountPrice');
+              $city = $this->input->post('city');
+              $miName=$this->input->post('miName');
+              $testIncluded=implode('|',$this->input->post('testIncluded'));
+              $insertData = array(
                      'healthPackage_packageId'=> $packageId,
                      'healthPackage_packageTitle' => $packagetitle,
                      'healthPackage_bestPrice' => $bestPrice,
@@ -147,6 +158,59 @@ class Healthcare extends MY_Controller {
                      }
                    redirect('healthcare/addHealthpkg');
          }
+  }  
+  function saveEditHealthcare($healthPackage_id){
+     //echo($healthPackage_id);exit;
+      $this->load->library('form_validation');
+      $this->bf_form_validation->set_rules('miType', 'Mi Type', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('city', 'Health Package City', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('miName','Mi Name', 'xss_clean|required|trim');
+       
+     // $this->bf_form_validation->set_rules('packageId','Package Id','xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('packagetitle','Package Title','xss_clean|required|trim');
+   
+      $this->bf_form_validation->set_rules('bestPrice', 'Best Price', 'xss_clean|required|trim');
+      $this->bf_form_validation->set_rules('discountPrice','Discount Price','required|xss_clean|trim');
+       //$this->bf_form_validation->set_rules('testIncluded','Test Includes','required|xss_clean|trim');
+      if ($this->bf_form_validation->run() === FALSE) {
+      $data = array();
+     // echo validation_errors(); exit;
+      $data['editHealthcareData'] = $this->Healthcare_model->fetchHealthcareData($healthPackage_id);
+     $data['healthPackage_id'] = $healthPackage_id;
+     $data['allCities'] = $this->Healthcare_model->fetchCity();
+     $data['title'] = 'Edit Healthpkg';
+     $this->load->super_admin_template('editHealthpkg', $data,'scriptHealthpkg');
+     }
+     else {
+              $packagetitle = $this->input->post('packagetitle');
+              $bestPrice = $this->input->post('bestPrice');
+              $discountPrice = $this->input->post('discountPrice');
+              $city = $this->input->post('city');
+              $miName=$this->input->post('miName');
+              $testIncluded=implode('|',$this->input->post('testIncluded'));
+              $updateData = array(
+              'healthPackage_packageTitle' => $packagetitle,
+              'healthPackage_bestPrice' => $bestPrice,
+              'healthPackage_discountedPrice'=> $discountPrice,
+              'healthPackage_cityId'=>$city,
+              'healthPackage_MIuserId'=>$miName,
+              'healthPackage_includesTest'=>rtrim($testIncluded,"|"),
+              'status'=>1,
+              'creationTime' => strtotime(date("Y-m-d H:i:s"))
+              );
+                      //print_r($insertData);
+                      //exit;
+              $where = array(
+              'healthPackage_id' => $healthPackage_id
+              );
+              $response = '';
+             // var_dump($updateData); exit;
+              $response = $this->Healthcare_model->UpdateTableData($updateData,$where, 'qyura_healthPackage');
+                if ($response) {
+                $this->session->set_flashdata('message', 'Data updated successfully !');
+                redirect("healthcare/editHealthpkg/$healthPackage_id");
+                }
+            }
   }  
     function check_pkgId(){
         $user_table_id = '';
@@ -192,7 +256,7 @@ class Healthcare extends MY_Controller {
        
         $where=array('healthPackage_deleted'=> 0,'healthPackage_cityId'=> $helathpkg_cityId);
        // $or_where = array(['hospital_name'=>$mi, 'diagnostic_name' => $mi]);
-        $or_where = "(`hospital_name` LIKE '%$mi%' OR `diagnostic_name` LIKE '%$mi%')";
+        $or_where = array('hospital_name' =>  $mi,  'diagnostic_name' => $mi);
         $array[]= array('Mi Name','Package id','title','Pricing','Status');
         $data = $this->Healthcare_model->createCSVdata($where,$or_where);
         $arrayFinal = array_merge($array,$data);
@@ -205,7 +269,7 @@ class Healthcare extends MY_Controller {
     
             /**
      * @method status
-     * @description 	update  status enable or disable
+     * @description   update  status enable or disable
      * @access public
      * @param int
      * @return boolean
@@ -239,4 +303,5 @@ class Healthcare extends MY_Controller {
             echo 0;
         }
     }
+
 }  

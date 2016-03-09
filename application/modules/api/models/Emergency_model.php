@@ -10,7 +10,7 @@ class Emergency_model extends CI_Model {
         parent::__construct();
     }
 
-    public function getHospitalList($lat, $long, $notIn, $search) {
+    public function getHospitalList($lat, $long, $notIn, $search,$cityId=null) {
         $lat = isset($lat) ? $lat : '';
         $long = isset($long) ? $long : '';
         $search = isset($search) ? $search : '';
@@ -25,12 +25,18 @@ class Emergency_model extends CI_Model {
                 ->join('qyura_hospitalSpecialities', 'qyura_hospitalSpecialities.hospitalSpecialities_hospitalId=qyura_hospital.hospital_id', 'left')
                 ->join('qyura_specialities', 'qyura_specialities.specialities_id=qyura_hospitalSpecialities.hospitalSpecialities_specialitiesId', 'left')
                 ->where(array('hospital_deleted' => 0, 'isEmergency' => 1))
-                ->having(array('distance <' => USER_DISTANCE))
+                
                 ->where_not_in('qyura_hospital.hospital_id', $notIn)
                 ->order_by('distance', 'ASC')
                 ->group_by('hospital_id')
                 ->limit(DATA_LIMIT);
-
+        
+        if ($cityId != NULL) {
+            $cityCon = array('hospital_cityId' => $cityId);
+            $this->db->where($cityCon);
+        } else {
+            $this->db->having(array('distance <' => USER_DISTANCE));
+        }
 
         $response = $this->db->get()->result();
         // echo $this->db->last_query(); die();
@@ -54,75 +60,69 @@ class Emergency_model extends CI_Model {
                 $finalTemp[] = isset($row->specialities) ? $row->specialities : "";
                 $finalResult[] = $finalTemp;
             }
-            
+
             return $finalResult;
         } else {
             return $finalResult[] = '';
         }
     }
 
-    public function getDoctorsList($lat, $long, $notIn, $search) {
-       
-            $lat = isset($lat) ? $lat : '';
-            $long = isset($long) ? $long : '';
-            $search = isset($search) ? $search : '';
+    public function getDoctorsList($lat, $long, $notIn, $search,$cityId=null) {
 
-            $notIn = isset($notIn) ? $notIn : '';
-            $notIn = explode(',', $notIn);
+        $lat = isset($lat) ? $lat : '';
+        $long = isset($long) ? $long : '';
+        $search = isset($search) ? $search : '';
 
-            $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
+        $notIn = isset($notIn) ? $notIn : '';
+        $notIn = explode(',', $notIn);
+
+        $this->db->select('qyura_doctors.doctors_id as id, CONCAT(qyura_doctors.doctors_fName, "",  qyura_doctors.doctors_lName) AS name, qyura_professionalExp.professionalExp_start startDate, qyura_professionalExp.professionalExp_end endDate, qyura_doctors.doctors_img imUrl, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( doctors_lat ) ) * cos( radians( doctors_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( doctors_lat ) ) )
                 ) AS distance, qyura_doctors.doctors_deleted as rating , qyura_doctors.doctors_consultaionFee as consFee, qyura_specialitiesCat.specialitiesCat_name as specialityCat, Group_concat(qyura_degree.degree_SName) as degree, qyura_doctors.doctors_lat as lat, qyura_doctors.doctors_long as long')
+                ->from('qyura_doctors')
+                ->join('qyura_usersRoles', 'qyura_usersRoles.usersRoles_userId=qyura_doctors.doctors_userId', 'left')
+                ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_doctorsId=qyura_doctors.doctors_id', 'left')
+                ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left')
+                ->join('qyura_degree', 'qyura_doctorAcademic.doctorAcademic_degreeId=qyura_degree.degree_id', 'left')
+                ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
+                ->where(array('doctors_deleted' => 0, 'usersRoles_roleId' => ROLE_DOCTORE, 'usersRoles_parentId' => 0))
+                ->having(array('distance <' => USER_DISTANCE))
+                ->where_not_in('doctors_id', $notIn)
+                ->order_by('distance', 'ASC')
+                ->group_by('doctors_id')
+                ->limit(DATA_LIMIT);
 
-                    ->from('qyura_doctors')
-                    
-                    ->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId=qyura_doctors.doctors_userId','left')
-                    
-                    ->join('qyura_doctorAcademic', 'qyura_doctorAcademic.doctorAcademic_doctorsId=qyura_doctors.doctors_id', 'left')
+        if ($cityId != NULL) {
+            $cityCon = array('doctors_cityId' => $cityId);
+            $this->db->where($cityCon);
+        } else {
+            $this->db->having(array('distance <' => USER_DISTANCE));
+        }
 
-                    ->join('qyura_professionalExp', 'qyura_professionalExp.professionalExp_usersId=qyura_doctors.doctors_id', 'left')
-
-                    ->join('qyura_degree', 'qyura_doctorAcademic.doctorAcademic_degreeId=qyura_degree.degree_id', 'left')
-
-                    ->join('qyura_specialitiesCat', 'qyura_specialitiesCat.specialitiesCat_id=qyura_doctorAcademic.doctorSpecialities_specialitiesCatId', 'left')
-
-                    ->where(array('doctors_deleted' => 0, 'usersRoles_roleId' => ROLE_DOCTORE, 'usersRoles_parentId'=> 0))
-                    
-                    ->having(array('distance <' => USER_DISTANCE))
-                    
-                    ->where_not_in('doctors_id', $notIn)
-                    
-                    ->order_by('distance' , 'ASC')
-                    
-                    ->group_by('doctors_id')
-                    
-                    ->limit(DATA_LIMIT);
-
-            $response = $this->db->get()->result();
-            $finalResult = array();
-            if (!empty($response)) {                
-                foreach ($response as $row) {
-                    $finalTemp = array();
-                    $finalTemp[] = isset($row->id) ? $row->id : "";
-                    $finalTemp[] = isset($row->name) ? $row->name : "";
-                    $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate,$row->endDate) : "";
-                    $finalTemp[] = isset($row->imUrl) ? base_url().'assets/doctorsImages/'.$row->imUrl : "";
-                    $finalTemp[] = isset($row->rating) ? $row->rating : "";
-                    $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
-                    $finalTemp[] = isset($row->specialityCat) ? $row->specialityCat : "";
-                    $finalTemp[] = isset($row->degree) ? $row->degree : "";
-                    $finalTemp[] = isset($row->lat) ? $row->lat : "";
-                    $finalTemp[] = isset($row->long) ? $row->long : "";
-                    $finalResult[] = $finalTemp;
-                    
-                }
-             return $finalResult;
-          } else {
+        $response = $this->db->get()->result();
+        $finalResult = array();
+        if (!empty($response)) {
+            foreach ($response as $row) {
+                $finalTemp = array();
+                $finalTemp[] = isset($row->id) ? $row->id : "";
+                $finalTemp[] = isset($row->name) ? $row->name : "";
+                $finalTemp[] = isset($row->startDate) && isset($row->endDate) ? getYearBtTwoDate($row->startDate, $row->endDate) : "";
+                $finalTemp[] = isset($row->imUrl) ? base_url() . 'assets/doctorsImages/' . $row->imUrl : "";
+                $finalTemp[] = isset($row->rating) ? $row->rating : "";
+                $finalTemp[] = isset($row->consFee) ? $row->consFee : "";
+                $finalTemp[] = isset($row->specialityCat) ? $row->specialityCat : "";
+                $finalTemp[] = isset($row->degree) ? $row->degree : "";
+                $finalTemp[] = isset($row->lat) ? $row->lat : "";
+                $finalTemp[] = isset($row->long) ? $row->long : "";
+                $finalResult[] = $finalTemp;
+            }
+            return $finalResult;
+        } else {
             return $finalResult[] = '';
         }
     }
 
-    public function getPhamacyList($lat, $long, $notIn, $search) {
+    public function getPhamacyList($lat, $long, $notIn, $search, $cityId = null) {
         $lat = isset($lat) ? $lat : '';
         $long = isset($long) ? $long : '';
         $search = isset($search) ? $search : '';
@@ -136,15 +136,20 @@ class Emergency_model extends CI_Model {
                 ) AS distance, pharmacy_phn phn, pharmacy_lat lat, pharmacy_long long')
                 ->from('qyura_pharmacy')
                 ->where(array('qyura_pharmacy.pharmacy_deleted' => 0, 'pharmacy_27Src' => 1))
-                ->having(array('distance <' => USER_DISTANCE))
                 ->where_not_in('qyura_pharmacy.pharmacy_id', $notIn)
                 ->order_by('distance', 'ASC')
                 ->group_by('pharmacy_id')
                 ->limit(DATA_LIMIT);
 
+        if ($cityId != NULL) {
+            $cityCon = array('pharmacy_cityId' => $cityId);
+            $this->db->where($cityCon);
+        } else {
+            $this->db->having(array('distance <' => USER_DISTANCE));
+        }
 
         $response = $this->db->get()->result();
-        
+
         $finalResult = array();
         if (!empty($response)) {
             foreach ($response as $row) {
@@ -165,24 +170,31 @@ class Emergency_model extends CI_Model {
         }
     }
 
-    public function getAmbulanceList($lat,$long,$notIn) {
-        
+    public function getAmbulanceList($lat, $long, $notIn, $cityId = null) {
+
         $lat = isset($lat) ? $lat : '';
         $long = isset($long) ? $long : '';
         $notIn = isset($notIn) ? $notIn : '';
         $notIn = explode(',', $notIn);
-        
+
+
         $this->db->select('ambulance_id id, ambulance_name name, ambulance_phn phn, (
                 6371 * acos( cos( radians( ' . $lat . ' ) ) * cos( radians( ambulance_lat ) ) * cos( radians( ambulance_long ) - radians( ' . $long . ' ) ) + sin( radians( ' . $lat . ' ) ) * sin( radians( ambulance_lat ) ) )
                 ) AS distance')
-        ->from('qyura_ambulance')
-        ->where(array('ambulance_deleted' => 0))
-        ->having(array('distance <' => USER_DISTANCE))
-        ->where_not_in('ambulance_id', $notIn)
-        ->order_by('distance', 'ASC')
-        ->group_by('ambulance_id')
-        ->limit(DATA_LIMIT);
-        
+                ->from('qyura_ambulance')
+                ->where(array('ambulance_deleted' => 0))
+                ->where_not_in('ambulance_id', $notIn)
+                ->order_by('distance', 'ASC')
+                ->group_by('ambulance_id')
+                ->limit(DATA_LIMIT);
+
+        if ($cityId != NULL) {
+            $cityCon = array('ambulance_cityId' => $cityId);
+            $this->db->where($cityCon);
+        } else {
+            $this->db->having(array('distance <' => USER_DISTANCE));
+        }
+
         $response = $this->db->get()->result();
         $finalResult = array();
         if (!empty($response)) {

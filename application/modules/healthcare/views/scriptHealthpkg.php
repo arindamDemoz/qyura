@@ -180,6 +180,79 @@
      }
         //debugger;
   }
+  function editValidationHealthpkg() {
+        //$("form[name='pharmacyForm']").submit();
+        // alert("here");
+        var check = /^[a-zA-Z\s]+$/;
+        var alphacheck = /^[a-z0-9]+$/i;
+        var cityId = $.trim($('#cityId').val());
+        var miType = $.trim($('#miType').val());
+        var miName = $.trim($('#miName').val());
+        var packagetitle = $.trim($('#packagetitle').val());
+        var hospitalservices = $.trim($('#hospitalServices_serviceName1').val());
+        var status = 1;
+        //debugger;
+
+        if (packagetitle == '') {
+            $('#packagetitle').addClass('bdr-error');
+            $('#error-packagetitle1').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+
+        } else if (!check.test(packagetitle))
+        {
+            $('#packagetitle').addClass('bdr-error');
+            $('#error-packagetitle2').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+        }
+        if ($.trim($('#bestPrice').val()) == '') {
+            $('#bestPrice').addClass('bdr-error');
+            $('#error-bestPrice').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+            // $('#hospital_countryId').focus();
+        }
+        if ($.trim($('#discountPrice').val()) == '') {
+            $('#discountPrice').addClass('bdr-error');
+            $('#error-discountPrice').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+            // $('#hospital_address').focus();
+        }
+        if (!check.test(hospitalservices)) {
+            $('#hospitalServices_serviceName1').addClass('bdr-error');
+            $('#error-hospitalServices_serviceName1').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+            // $('#hospital_cntPrsn').focus();
+        }
+        
+        if (cityId == '') {
+            $('#city').addClass('bdr-error');
+            $('#error-cityId').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+
+        }
+        
+        if (miType == '') {
+            $('#miType').addClass('bdr-error');
+            $('#error-miType').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+
+        }
+        
+        if (miName == '') {
+            $('#miName').addClass('bdr-error');
+            $('#error-miName').fadeIn().delay(3000).fadeOut('slow');
+            status = 0;
+
+        }
+      
+       
+            
+     if(status == 1){
+         return true;
+     }else{
+         return false;
+     }
+        //debugger;
+  }
     $("#cityId,#miType,#miName").select2();
     $(document).ready(function () {
         // alert('test');

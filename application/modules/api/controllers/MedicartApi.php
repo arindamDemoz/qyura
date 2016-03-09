@@ -41,7 +41,7 @@ class MedicartApi extends MyRest {
 
             $option['notIn'] = explode(',', $notIn);
             
-            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "description","startDate", "endDate", "actualPrice", "discountPrice",   "medicartOffer_deleted", "modifyTime","by", "lat", "long");
+            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "description","startDate", "endDate", "actualPrice", "discountPrice",   "medicartOffer_deleted", "modifyTime","by", "lat", "long","allowBooking","maximumBooking");
 
             $medList = $this->medicart_model->getMedlists($option);
             
@@ -93,6 +93,8 @@ class MedicartApi extends MyRest {
                         $finalTemp[] = $long;
                         //$finalTemp[] = (isset($row->hospital_lat) && $row->hospital_lat != null && $row->hospital_lat != '') ? $row->hospital_lat : (isset($row->diagnostic_lat) && $row->diagnostic_lat != null && $row->diagnostic_lat != '') ? $row->diagnostic_lat : '' ;
                         //$finalTemp[] = (isset($row->hospital_long) && $row->hospital_long != null && $row->hospital_long != '') ? $row->hospital_long : (isset($row->diagnostic_long) && $row->diagnostic_long != null && $row->diagnostic_long != '') ? $row->diagnostic_long : ''  ;
+                        $finalTemp[] = isset($row->medicartOffer_allowBooking) ? $row->medicartOffer_allowBooking : "";
+                        $finalTemp[] = isset($row->medicartOffer_maximumBooking) ? $row->medicartOffer_maximumBooking : "";
                         $finalResult[] = $finalTemp;
                     }
                 }
@@ -131,7 +133,7 @@ class MedicartApi extends MyRest {
 
             $medicartOffer_id = isset($_POST['medicartOffer_Id']) ? $this->input->post('medicartOffer_id') : '';
             
-            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "startDate", "endDate", "description", "actualPrice", "discountPrice", "medicartOffer_deleted", "modifyTime","by");
+            $aoClumns = array("medicartOffer_id", "MIId", "offerCategory", "title", "image", "startDate", "endDate", "description", "actualPrice", "discountPrice", "medicartOffer_deleted", "modifyTime","by","allowBooking","maximumBooking");
 
             $row = $this->medicart_model->getMedDetail($medicartOffer_id);
             
@@ -148,10 +150,11 @@ class MedicartApi extends MyRest {
                         $finalTemp[] = isset($row->medicartOffer_offerCategory) ? $row->medicartOffer_offerCategory : "";
                         $finalTemp[] = isset($row->medicartOffer_title) ? $row->medicartOffer_title : "";
                         $finalTemp[] = isset($row->medicartOffer_image) ? $row->medicartOffer_image : "";
-                        $finalTemp[] = isset($row->medicartOffer_description) ? $row->medicartOffer_allowBooking : "";
+                        
                         //$finalTemp[] = isset($row->medicartOffer_maximumBooking) ? $row->medicartOffer_maximumBooking : "";
                         $finalTemp[] = isset($row->medicartOffer_startDate) ? $row->medicartOffer_startDate : "";
                         $finalTemp[] = isset($row->medicartOffer_endDate) ? $row->medicartOffer_endDate : "";
+                        $finalTemp[] = isset($row->medicartOffer_description) ? $row->medicartOffer_description : "";
                         //$finalTemp[] = isset($row->medicartOffer_discount) ? $row->medicartOffer_discount : "";
                         //$finalTemp[] = isset($row->medicartOffer_ageDiscount) ? $row->medicartOffer_ageDiscount : "";
                         $finalTemp[] = isset($row->medicartOffer_actualPrice) ? $row->medicartOffer_actualPrice : "";
@@ -183,6 +186,8 @@ class MedicartApi extends MyRest {
                         //$finalTemp[] = $long;
                         //$finalTemp[] = (isset($row->hospital_lat) && $row->hospital_lat != null && $row->hospital_lat != '') ? $row->hospital_lat : (isset($row->diagnostic_lat) && $row->diagnostic_lat != null && $row->diagnostic_lat != '') ? $row->diagnostic_lat : '' ;
                         //$finalTemp[] = (isset($row->hospital_long) && $row->hospital_long != null && $row->hospital_long != '') ? $row->hospital_long : (isset($row->diagnostic_long) && $row->diagnostic_long != null && $row->diagnostic_long != '') ? $row->diagnostic_long : ''  ;
+                        $finalTemp[] = isset($row->medicartOffer_allowBooking) ? $row->medicartOffer_allowBooking : "";
+                        $finalTemp[] = isset($row->medicartOffer_maximumBooking) ? $row->medicartOffer_maximumBooking : "";
                         $finalResult[] = $finalTemp;
                     
                 }
@@ -250,7 +255,7 @@ class MedicartApi extends MyRest {
     
     function cartBook_post() {
         
-        $this->bf_form_validation->set_rules('medicartOfferId', 'Medicart Offer Id', 'xss_clean|trim|required|numeric|is_natural_no_zero');
+        $this->bf_form_validation->set_rules('medicartOfferId', 'Medicart Offer Id', 'xss_clean|trim|required|numeric|is_natural_no_zero|callback__check_allowBooking');
         $this->bf_form_validation->set_rules('usersId', 'User Id', 'xss_clean|trim|required|numeric|is_natural_no_zero|_user_check');
         $this->bf_form_validation->set_rules('preferredDate', 'Preferred Date', 'xss_clean|trim|required|max_length[11]|valid_date[y-m-d,-]|callback__check_date');
         $this->bf_form_validation->set_rules('message', 'Message', 'xss_clean|trim|required|max_length[255]');
@@ -347,7 +352,24 @@ class MedicartApi extends MyRest {
         return TRUE;
     }
     
-    
+    function _check_allowBooking($str_in= '')
+    {
+        $medicartOfferId = isset($_POST['medicartOfferId'])?$this->input->post('medicartOfferId'):'';
+        $medicartOfferData = $this->medicart_model->getSingleData(array('medicartOffer_id'=>$medicartOfferId,'medicartOffer_deleted'=>0),'medicartOffer_id,medicartOffer_startDate as startDate,medicartOffer_endDate as endDate,qyura_medicartOffer.medicartOffer_allowBooking as allowBooking');
+        
+        
+        if($medicartOfferData == NULL)
+        {
+            
+            $this->bf_form_validation->set_message('_check_allowBooking', 'Medicart offer is no more available for booking');
+            return FALSE;
+        }
+        
+        if(!$medicartOfferData->allowBooking){
+            $this->bf_form_validation->set_message('_check_allowBooking', 'This madicart is not allowed for booking');
+            return FALSE;
+        }
+    }
     
     
 
