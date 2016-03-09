@@ -133,7 +133,7 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
         var phn= $.trim($('#ambulance_phn1').val());
         var myzip = $.trim($('#ambulance_zip').val());
         var cityId =$.trim($('#ambulance_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
+        var stateIds = $.trim($('#ambulance_stateId').val());
         var mobileNumber = $.trim($('#users_mobile').val());
         var status =1;
     //debugger;

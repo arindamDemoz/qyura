@@ -116,7 +116,7 @@
                                             <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" />
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
-                                            <input type="text" class="form-control" id="users_email_status" name="users_email_status" value="" />
+                                            <input type="hidden" class="form-control" id="users_email_status" name="users_email_status" value="" />
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
                                         </div>
                                     </article>

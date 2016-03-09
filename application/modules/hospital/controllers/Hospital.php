@@ -579,7 +579,7 @@ class Hospital extends MY_Controller {
                         for($i= 0;$i < $countAmbulance_phn ;$i++) {
                             if($ambulance_phn[$i] != '' && $preAmbulance[$i] !='') {
                                
-                                if($i == ($countPharmacy_phn)-1)
+                                if($i == ($countAmbulance_phn)-1)
                                   $finalAmbulanceNumber .= $preAmbulance[$i].' '.$ambulance_phn[$i];
                               else        
                                   $finalAmbulanceNumber .= $preAmbulance[$i].' '.$ambulance_phn[$i].'|'; 
@@ -909,7 +909,76 @@ class Hospital extends MY_Controller {
                         );
                         $this->Hospital_model->deleteTable('qyura_pharmacy',$pharmacyWhereUser);
                   }
-                 $this->session->set_flashdata('message','Data updated successfully !');
+                 if(isset($_POST['ambulance_chk'])==1){
+                      
+                       $ambulance_phn = $this->input->post('ambulance_phn');
+                        $preambuNo = $this->input->post('preambuNo');
+                        
+                          $finalAmbulanceNumber = '';
+                        for($i= 0;$i < count($preambuNo) ;$i++) {
+                            if($ambulance_phn[$i] != '' && $preambuNo[$i] !='') {
+                              if($i == count($preambuNo)-1)
+                                $finalAmbulanceNumber .= $preambuNo[$i].' '.$ambulance_phn[$i];
+                              else        
+                                $finalAmbulanceNumber .= $preambuNo[$i].' '.$ambulance_phn[$i].'|';
+                            }
+
+                        }
+                       //echo $finalAmbulanceNumber;exit;
+                       $ambulance_name = $this->input->post('ambulance_name');
+                       //echo $finalAmbulanceNumber;exit;
+                       $ambulance_lat = $hospital_lat;
+                       $ambulance_long = $hospital_long;
+                     
+                       $ambulanceDetail = array(
+                           'ambulance_name' => $ambulance_name,
+                            'ambulance_lat' => $ambulance_lat,
+                           'ambulance_long' => $ambulance_long,
+                           'ambulance_usersId' => $this->input->post('user_tables_id'),
+                           'creationTime' => strtotime(date("Y-m-d H:i:s")),
+                           'ambulance_phn' => $finalAmbulanceNumber,
+                            'ambulance_address' => $hospital_address
+                           
+                       );
+                       $ambulanceConditions = array();
+                      $ambulanceConditions['ambulance_usersId'] = $this->input->post('user_tables_id');
+                      $ambulanceConditions['ambulance_deleted'] = 0;
+                      $ambulanceSelect = array('ambulance_id');
+                      $getDataAmbulance = '';
+                       $getDataAmbulance = $this->Hospital_model->fetchTableData($ambulanceSelect,'qyura_ambulance',$ambulanceConditions);
+                     
+                       if($getDataAmbulance){
+                           $ambulanceWhereUser = array(
+                            'ambulance_usersId' => $this->input->post('user_tables_id')  
+                        );
+                          // print_r($ambulanceDetail);exit;
+                         $this->Hospital_model->UpdateTableData($ambulanceDetail,$ambulanceWhereUser,'qyura_ambulance');
+                       }else
+                       {
+                           unset($ambulanceSelect,$ambulanceConditions);
+                           $ambulanceConditions = array();
+                            $ambulanceConditions['hospital_usersId'] = $this->input->post('user_tables_id');
+                            $ambulanceConditions['hospital_deleted'] = 0;
+                            $ambulanceSelect = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                           $ambulanceResult  = $this->Hospital_model->fetchTableData($ambulanceSelect,'qyura_hospital',$ambulanceConditions);
+                           $ambulanceDetail['ambulance_countryId'] = $ambulanceResult[0]->hospital_countryId;
+                           $ambulanceDetail['ambulance_stateId'] = $ambulanceResult[0]->hospital_stateId;
+                           $ambulanceDetail['ambulance_cityId'] = $ambulanceResult[0]->hospital_cityId;
+                           $ambulanceDetail['inherit_status'] = 1;
+                           $ambulanceDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
+                           $ambulanceDetail['ambulance_usersId'] = $this->input->post('user_tables_id');
+                           $ambulanceId = $this->Hospital_model->insertAmbulance($ambulanceDetail);
+                       }    
+                      
+                     
+                  }
+                  else{
+                        $ambulanceWhereUser = array(
+                            'ambulance_usersId' => $this->input->post('user_tables_id')  
+                        );
+                        $this->Hospital_model->deleteTable('qyura_ambulance',$ambulanceWhereUser);
+                  }
+                  $this->session->set_flashdata('message','Data updated successfully !');
                   redirect("hospital/detailHospital/$hospitalId");
                  }
               

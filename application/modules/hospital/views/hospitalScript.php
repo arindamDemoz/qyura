@@ -144,7 +144,11 @@ function fetchCity(stateId) {
 		        $("#bloodbankbtn").trigger("click");
 		        if(pharmacy_status != '')
 		        $("#pharmacybtn").trigger("click");
-		         
+		         var ambulance_status = ''; 
+                         ambulance_status = $.trim($('#ambulance_status').val());
+                         if(ambulance_status != '')
+		        $("#ambulancebtn").trigger("click");
+                        
 		         loadSpeciality();
 		          loadDiagonastic();    
                 $("#edit").click(function () {
