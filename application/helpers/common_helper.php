@@ -76,6 +76,7 @@ if ( ! function_exists('dateFormate'))
     }
 }
 
+<<<<<<< HEAD
 if ( ! function_exists('getStatus'))
 {
     function getStatus($status)
@@ -112,5 +113,40 @@ if ( ! function_exists('getGender'))
  //   function deg2rad($deg) {
   //      return $deg * (pi()/180);
   //  }
+=======
+if ( ! function_exists('dateFormateConvert'))
+{
+    function dateFormateConvert($strToTime)
+    {
+        
+        return date("M d, Y",$strToTime);
+        //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
+
+if ( ! function_exists('checkStatus'))
+{
+    function checkStatus($status)
+    {
+        if($status == 1){
+            return "Active";
+        }else{
+            return "Inactive";
+        }
+        
+        //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
+
+if ( ! function_exists('isUnique'))
+{
+    function isUnique()
+    {
+        $default = "QYURA";
+        $random = rand(0,999);
+        return $default.$random;
+    }
+}
+>>>>>>> 4050d841246ccc8959b159e217f2f2f26b0f3b3d
 
     ?>

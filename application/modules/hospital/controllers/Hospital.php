@@ -383,7 +383,8 @@ class Hospital extends MY_Controller {
                     'hospital_long' => $this->input->post('lng'),
                     'isEmergency' => $isEmergency
                 );
-                
+                $users_email_status = $this->input->post('users_email_status');
+            if($users_email_status == ''){
                 $users_email = $this->input->post('users_email');
                 $users_password = md5($this->input->post('users_password'));
                 $hospitalInsert = array(
@@ -396,6 +397,10 @@ class Hospital extends MY_Controller {
               
                  
                $hospital_usersId = $this->Hospital_model->inserHospitalUser($hospitalInsert);
+            }
+            else {
+                $hospital_usersId = $users_email_status;
+            }
                if($hospital_usersId) {
                    
                    $inserData['hospital_usersId'] = $hospital_usersId;
@@ -436,7 +441,11 @@ class Hospital extends MY_Controller {
                           $finalBloodbnkNumber = '';
                         for($i= 0;$i < $countbloodBank_phn ;$i++) {
                             if($bloodBank_phn[$i] != '' && $pre_number[$i] !='') {
-                               $finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i].'|'; 
+                               
+                               if($i == ($countbloodBank_phn)-1)
+                                  $finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i];
+                              else        
+                                  $finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i].'|';  
                             }
 
                         }
@@ -507,7 +516,11 @@ class Hospital extends MY_Controller {
                           $finalPharmacyNumber = '';
                         for($i= 0;$i < $countPharmacy_phn ;$i++) {
                             if($pharmacy_phn[$i] != '' && $prePharmacy[$i] !='') {
-                               $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i].'|'; 
+                              
+                               if($i == ($countPharmacy_phn)-1)
+                                  $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i];
+                              else        
+                                  $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i].'|'; 
                             }
 
                         }
@@ -565,7 +578,11 @@ class Hospital extends MY_Controller {
                           $finalAmbulanceNumber = '';
                         for($i= 0;$i < $countAmbulance_phn ;$i++) {
                             if($ambulance_phn[$i] != '' && $preAmbulance[$i] !='') {
-                               $finalAmbulanceNumber .= $preAmbulance[$i].' '.$ambulance_phn[$i].'|'; 
+                               
+                                if($i == ($countPharmacy_phn)-1)
+                                  $finalAmbulanceNumber .= $preAmbulance[$i].' '.$ambulance_phn[$i];
+                              else        
+                                  $finalAmbulanceNumber .= $preAmbulance[$i].' '.$ambulance_phn[$i].'|'; 
                             }
 
                         }
@@ -636,7 +653,22 @@ class Hospital extends MY_Controller {
           $user_table_id = $this->input->post('user_table_id');
         }
         $email = $this->Hospital_model->fetchEmail($users_email,$user_table_id);
+       
+        if($email == 1)
         echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Hospital_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
         exit;
     }
      function saveDetailHospital($hospitalId){
@@ -674,8 +706,13 @@ class Hospital extends MY_Controller {
                   $finalNumber = '';
                 for($i= 0;$i < count($hospital_phn) ;$i++) {
                     if($hospital_phn[$i] != '' && $pre_number[$i] !='') {
-                       $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i].'|'; 
+                       if($i == count($hospital_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i];
+                        else        
+                       $finalNumber .= $pre_number[$i].' '.$hospital_phn[$i].'|';
                     }
+
+
                 } 
                 $hospital_address =  $this->input->post('hospital_address');
                 $hospital_lat = $this->input->post('lat'); 
@@ -721,7 +758,11 @@ class Hospital extends MY_Controller {
                           $finalBloodbnkNumber = '';
                         for($i= 0;$i < count($preblbankNo) ;$i++) {
                             if(isset($bloodBank_phn[$i]) != '' && isset($preblbankNo[$i]) !='') {
-                               $finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i].'|'; 
+                               //$finalBloodbnkNumber .= $preblbankNo[$i].' '.$bloodBank_phn[$i].'|'; 
+                              if($i == count($preblbankNo)-1)
+                                $finalBloodbnkNumber .= $pre_number[$i].' '.$bloodBank_phn[$i];
+                              else        
+                                $finalBloodbnkNumber .= $pre_number[$i].' '.$bloodBank_phn[$i].'|';
                             }
 
                         }
@@ -805,7 +846,11 @@ class Hospital extends MY_Controller {
                           $finalPharmacyNumber = '';
                         for($i= 0;$i < count($prePharmacy) ;$i++) {
                             if($pharmacy_phn[$i] != '' && $prePharmacy[$i] !='') {
-                               $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i].'|'; 
+                              // $finalPharmacyNumber .= $prePharmacy[$i].' '.$pharmacy_phn[$i].'|'; 
+                               if($i == count($prePharmacy)-1)
+                                $finalPharmacyNumber .= $pre_number[$i].' '.$pharmacy_phn[$i];
+                              else        
+                                $finalPharmacyNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|';
                             }
 
                         }
@@ -929,7 +974,6 @@ class Hospital extends MY_Controller {
         $hospitalWhere = array('hospital_usersId' => $user_tables_id);
         $return = $this->Hospital_model->UpdateTableData($hospitalData,$hospitalWhere,'qyura_hospital');
        echo $return ;
-        //echo $encrypted;
         exit;
     }
     function hospitalSpecialities($hospitalId){

@@ -20,17 +20,23 @@ class Ambulance_model extends CI_Model {
         $this->db->order_by("city_name","asc");
         return $this->db->get()->result();
     }
-    function fetchEmail($email){
+    function fetchEmail($email,$usersId = NULL){
         $this->db->select('users_email');
         $this->db->from('qyura_users');
-        $this->db->where('users_email',$email);
-        $result = $this->db->get();
-       // return $this->db->last_query();
+        $this->db->join('qyura_usersRoles','qyura_usersRoles.usersRoles_userId = qyura_users.users_id','left');
+        if($usersId) {
+            $this->db->where('qyura_users.users_id !=',$usersId);
+        }
+        $this->db->where('qyura_usersRoles.usersRoles_roleId',8);
+         $this->db->where('qyura_users.users_email',$email); 
+       $result = $this->db->get();
+       //return $this->db->last_query();
+       
         if($result->num_rows() > 0)
             return 1;
         else             
-        return 0; 
-    } 
+            return 0; 
+    }  
         
     function insertAmbulanceUser($insertData){
       $this->db->insert('qyura_users', $insertData); 
@@ -120,7 +126,7 @@ class Ambulance_model extends CI_Model {
         
        $this->datatables->add_column('ambulance_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'ambulance_img');
        
-              $this->datatables->add_column('ambulance_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'ambulance_address');
+              $this->datatables->add_column('ambulance_address', '$1 </br><a  href="ambulance/map/$2" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'ambulance_address,ambulance_id');
        
          $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="ambulance/detailAmbulance/$1">View Detail</a>', 'ambulance_id');
 
@@ -275,6 +281,18 @@ class Ambulance_model extends CI_Model {
         $this->db->update($table, $data);
 
         return $this->db->affected_rows();
+    }
+    function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
+        $this->db->select(implode(",",$select));
+        $this->db->from($tableName);
+        foreach($condition as $key=>$val){
+            $this->db->where($key, $val); 
+        }
+        if(!empty($notIn))
+            $this->db->where_not_in($fieldName,$notIn);
+        $data= $this->db->get(); 
+     return $data->result();
+     
     }
 }   
 

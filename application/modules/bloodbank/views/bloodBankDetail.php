@@ -27,7 +27,7 @@
                                 <aside class="clearfix m-bg-pic">
 
 
-                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($bloodBankData[0]->bloodBank_background_img) && !empty($bloodBankData[0]->bloodBank_background_img)): echo base_url().'assets/BloodBank/'.$bloodBankData[0]->bloodBank_background_img; endif;?>')">
+                                    <div class="bg-picture text-center" style="background-image:url('<?php if(isset($bloodBankData[0]->bloodBank_background_img) && !empty($bloodBankData[0]->bloodBank_background_img)): echo base_url().'assets/BloodBank/'.$bloodBankData[0]->bloodBank_background_img; else : echo base_url().'assets/images/bloodbank.jpg'; endif;?>')">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
                                             <div class='pro-img'>
@@ -117,7 +117,7 @@
                                                                 <aside class="col-md-8 col-sm-8 text-right t-xs-left">
                                                                     <?php 
                                                                     $explode= explode('|',$bloodBankData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($explode)-1;$i++){?>
+                                                                    for($i= 0; $i< count($explode);$i++){?>
                                                                     <p>+<?php echo $explode[$i];?></p>
                                                                    
                                                                     <?php }?>
@@ -163,7 +163,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <?php 
                                                                     $explodes= explode('|',$bloodBankData[0]->bloodBank_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
+                                                                    for($i= 0; $i< count($explodes);$i++){
                                                                     $moreExpolde = explode(' ',$explodes[$i]);?>
                                                                     
                                                                     

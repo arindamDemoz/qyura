@@ -1,6 +1,6 @@
 $("#edit").click(function () {
-    $("#detail").hide();
-    $("#newDetail").show();
+    $("#detail").toggle();
+    $("#newDetail").toggle();
 });
 
 $("#opve").click(function () {

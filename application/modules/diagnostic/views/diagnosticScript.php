@@ -290,11 +290,16 @@ if($current != 'detailDiagnostic'):?>
                    $("form[name='diagnosticForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1) {
                     $('#users_email').addClass('bdr-error');
                 $('#error-users_email_check').delay(3000).fadeOut('slow');;
                // $('#users_email').focus();
                return false;
+              }
+              else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='diagnosticForm']").submit();
+                     return true;
               }
               } 
            });
@@ -1410,7 +1415,7 @@ if($current != 'detailDiagnostic'):?>
                        data: {'users_email' : emails,'user_table_id' : user_table_id },
                        success:function(datas){
                            //console.log(datas);
-                           if(datas == 0){
+                           if(datas == 0 || datas != 1){
                             
                              $.ajax({
                                     url : urls + 'index.php/diagnostic/updatePassword',

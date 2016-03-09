@@ -38,7 +38,7 @@
                                          <option value="0">Inactive</option>
                                      </select>
                                  </aside>-->
-                                <aside class="col-md-3 col-sm-3">
+                                <aside class="col-md-3 col-sm-3 col-md-offset-5">
                                     <input type="text" name="search" id="search" class="form-control" placeholder="Search" />
                                 </aside>
 

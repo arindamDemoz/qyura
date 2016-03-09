@@ -95,7 +95,7 @@
                                                 </div>
                                                         
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                    <input type="text" class="form-control" id="ambulance_zip" name="ambulance_zip" placeholder="700001" maxlength="13"  onkeypress="return isNumberKey(event)"/>
+                                                    <input type="text" class="form-control" id="ambulance_zip" name="ambulance_zip" placeholder="700001" maxlength="6"  onkeypress="return isNumberKey(event)"/>
                                                 <label class="error" style="display:none;" id="error-ambulance_zip"> please enter a zip code</label>   
                                                 <label class="error" > <?php echo form_error("ambulance_zip"); ?></label>
                                                 </div>                                            
@@ -116,6 +116,7 @@
                                             <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" />
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
+                                            <input type="text" class="form-control" id="users_email_status" name="users_email_status" value="" />
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
                                         </div>
                                     </article>

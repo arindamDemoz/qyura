@@ -1,3 +1,9 @@
+<style type="text/css">
+    #ambulance_datatable_filter
+    {
+        display:none;
+    }
+</style>
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
@@ -14,26 +20,62 @@ if($current == 'detailAmbulance'):?>
 <?php endif;?>
 
 <script src="<?php echo base_url(); ?>assets/js/reCopy.js"></script>
- <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<!-- <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>-->
 <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js"></script>-->
 <?php $check= 0; 
 if(isset($ambulanceId) && !empty($ambulanceId)){
     $check = $ambulanceId; 
 }?>
+<?php if(isset($mapData) && !empty($mapData)){
+        $lat = $mapData[0]->ambulance_lat;
+        $lang = $mapData[0]->ambulance_long;
+        $imgUrl = (!empty($mapData[0]->ambulance_img)) ? base_url().'/assets/ambulanceImages/thumb/thumb_50/'.$mapData[0]->ambulance_img : base_url().'/assets/images/pins/Contact.png';
+           
+        $templates = '<img src="'.$imgUrl.'" /><h2 class="text-success">'.ucwords($mapData[0]->ambulance_name).'</h2><b>'.$mapData[0]->ambulance_address.'</b>';
+    ?>
+    
+  <script>
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 18,
+      center: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+        map: map,
+        icon: '<?php echo base_url();?>/assets/images/pins/qyura.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent('<?php echo $templates;?>');
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+  
+ </script>
+<?php } ?>
 <script>
     var urls = "<?php echo base_url()?>";
     var ambulanceId = "<?php echo $check?>";
     $('#date-3').datepicker();
+    
     $('.selectpicker').selectpicker({
     style: 'btn-default',
     size: "auto",
     width: "100%"
-});
+   });
 
     $("#edit").click(function () {
     $("#detail").toggle();
     $("#editdetail").toggle();
-});
+    });
         $(function(){
 
         $("#geocomplete").geocomplete({
@@ -114,21 +156,29 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
                 //status= 0;
                // $('#hospital_countryId').focus();
             }
-           if(stateIds){
+           if(stateIds === ''){
                // console.log("in state");
                 $('#ambulance_stateId').addClass('bdr-error');
                 $('#error-ambulance_stateId').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
                // $('#hospital_stateId').focus();
             }
-            if(!$.isNumeric(cityId)){
+            if(cityId === ''){
                 $('#ambulance_cityId').addClass('bdr-error');
                 $('#error-ambulance_cityId').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
                // $('#hospital_cityId').focus();
             }
            
-            if(!$.isNumeric(myzip)){
+           /* if(!$.isNumeric(myzip)){
+                
+                $('#ambulance_zip').addClass('bdr-error');
+                $('#error-ambulance_zip').fadeIn().delay(3000).fadeOut('slow');
+              status = 0;
+                // $('#hospital_zip').focus();
+            }*/
+            
+            if(myzip .length < 6){
                 
                 $('#ambulance_zip').addClass('bdr-error');
                 $('#error-ambulance_zip').fadeIn().delay(3000).fadeOut('slow');
@@ -213,11 +263,16 @@ if(isset($ambulanceId) && !empty($ambulanceId)){
                    $("form[name='submitForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1){
                         $('#users_email').addClass('bdr-error');
                     $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
                    return false;
                   }
+                else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='submitForm']").submit();
+                     return true;
+              } 
               } 
            });
         }  
@@ -456,6 +511,7 @@ function imageIsLoaded(e) {
     $('#previewing').attr('height', '230px');
 }
 });
+
 </script>
 
 </body>

@@ -29,15 +29,10 @@
                                          <?php } ?>
                                      </select>
                                  </aside>
-                                <aside class="col-md-3 col-sm-3 m-tb-xs-3">
-                                    <div class="input-group">
-                                        <input class="form-control pickDate" placeholder="From" id="date-1" type="text" onkeydown="return false;">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </aside>
 
-                                <aside class="col-md-3 col-sm-3">
-                                    <input type="text" name="search" class="form-control" placeholder="Search" />
+
+                                <aside class="col-md-3 col-sm-3 col-md-offset-5">
+                                    <input type="text" name="search" id="search" class="form-control" placeholder="Search" />
                                 </aside>
 
 

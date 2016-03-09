@@ -505,6 +505,7 @@
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
+                                            <input type="hidden" class="form-control" id="users_email_status" name="users_email_status" value="" />
                                         </div>
                                     </article>
 

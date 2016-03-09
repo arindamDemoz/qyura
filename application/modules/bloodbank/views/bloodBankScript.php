@@ -194,8 +194,9 @@ if($current == 'detailBloodBank'):?>
                     status = 0;  
               }
        
-            if( emails !== '' && status == 1){
+            if( emails != '' && status == 1){
                 check_email_detail(emails);
+               
             }
             
         
@@ -224,13 +225,17 @@ if($current == 'detailBloodBank'):?>
                   if(datas == 0){
                    $("form[name='submitForm']").submit();
                    return true;
-              }
-              else {
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
-               // $('#users_email').focus();
-               return false;
-              }
+                }
+                else if(datas == 1) {
+                  $('#users_email').addClass('bdr-error');
+                  $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');
+                 // $('#users_email').focus();
+                 return false;
+                }else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='submitForm']").submit();
+                     return true;
+                }
               } 
            });
         }
@@ -247,11 +252,16 @@ if($current == 'detailBloodBank'):?>
                    $("form[name='submitForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
                
                return false;
+              }
+              else{
+                  //$('#users_email_status').val(datas);
+                  $("form[name='submitForm']").submit();
+                  return true;
               }
               } 
            });
@@ -389,27 +399,32 @@ if($current == 'detailBloodBank'):?>
                // $('#hospital_countryId').focus();
                status = 0;
             }
-           if(!$.isNumeric(stateIds)){
+           if(stateIds === ''){
                // console.log("in state");
                 $('#stateId').addClass('bdr-error');
                 $('#error-stateId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_stateId').focus();
                status = 0;
             }
-            if(!$.isNumeric(cityId)){
+            if(cityId === ''){
                 $('#cityId').addClass('bdr-error');
                 $('#error-cityId').fadeIn().delay(3000).fadeOut('slow');
                // $('#hospital_cityId').focus();
                status = 0;
             }
            
-            if(!$.isNumeric(myzip)){
+           /* if(!$.isNumeric(myzip)){
                 
                 $('#bloodBank_zip').addClass('bdr-error');
                 $('#error-bloodBank_zip').fadeIn().delay(3000).fadeOut('slow');
                 // $('#hospital_zip').focus();
                 status = 0;
-            } 
+            } */
+            if(myzip .length < 6){
+                 $('#bloodBank_zip').addClass('bdr-error');
+                $('#error-bloodBank_zip').fadeIn().delay(3000).fadeOut('slow');
+                 status = 0;
+            }  
 
             if($("input[name='bloodBank_add']" ).val()==''){
                 $('#bloodBank_add').addClass('bdr-error');
@@ -455,7 +470,7 @@ if($current == 'detailBloodBank'):?>
                 $('#users_password').addClass('bdr-error');
                 $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
                // $('#users_password').focus();
-               status = 0;
+                status = 0;
             }
             if(cnfpswd == ''){
                 $('#cnfPassword').addClass('bdr-error');
@@ -472,7 +487,7 @@ if($current == 'detailBloodBank'):?>
             }
              var emailCheck =  checkEmailFormat();
             if(!emailCheck){
-                    status = 0;  
+                 status = 0;  
               }
             
             

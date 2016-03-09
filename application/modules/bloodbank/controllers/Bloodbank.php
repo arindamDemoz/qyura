@@ -150,9 +150,11 @@ class Bloodbank extends MY_Controller {
 
             $finalNumber = '';
             for ($i = 0; $i < count($pre_number); $i++) {
-                if ($bloodBank_phn[$i] != '' && $pre_number[$i] != '') {
-                    $finalNumber .= $pre_number[$i] . ' ' . $bloodBank_phn[$i] . '|';
-                }
+                    if($i == count($pre_number)-1)
+                          $finalNumber .= $pre_number[$i].' '.$bloodBank_phn[$i];
+                        else        
+                       $finalNumber .= $pre_number[$i].' '.$bloodBank_phn[$i].'|'; 
+                
             }
 
             // echo $finalNumber.'===';
@@ -168,16 +170,22 @@ class Bloodbank extends MY_Controller {
             $isEmergency = $this->input->post('isEmergency');
             $bloodBank_zip = $this->input->post('bloodBank_zip');
 
-
+            $users_email_status = $this->input->post('users_email_status');
+            if($users_email_status == ''){
             $users_email = $this->input->post('users_email');
             $users_password = md5($this->input->post('users_password'));
             $bloodBankInsert = array(
                 'users_email' => $users_email,
                 'users_password' => $users_password,
                 'users_ip_address' => $this->input->ip_address(),
-                'users_mobile' => $this->input->post('bloodBank_mblNo')
+                'users_mobile' => $this->input->post('bloodBank_mblNo'),
+                'creationTime' => strtotime(date("Y-m-d H:i:s"))
             );
-            $bloodbank_usersId = $this->Bloodbank_model->insertBloodBankUser($bloodBankInsert);
+                $bloodbank_usersId = $this->Bloodbank_model->insertBloodBankUser($bloodBankInsert);
+            }
+            else {
+                $bloodbank_usersId = $users_email_status;
+            }
             if ($bloodbank_usersId) {
 
                 $insertusersRoles = array(
@@ -219,7 +227,7 @@ class Bloodbank extends MY_Controller {
                                    'bloodCatBank_Unit' => 0,
                                    'creationTime' => strtotime(date("Y-m-d H:i:s"))
                                 );
-                                $this->Hospital_model->insertTableData('qyura_bloodCatBank',$bloodCatData);
+                                $this->Bloodbank_model->insertTableData('qyura_bloodCatBank',$bloodCatData);
                                 $bloodCatData='';
                             }
                 
@@ -245,7 +253,21 @@ class Bloodbank extends MY_Controller {
             $user_table_id = $this->input->post('user_table_id');
         }
         $email = $this->Bloodbank_model->fetchEmail($users_email, $user_table_id);
+        if($email == 1)
         echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Bloodbank_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
         exit;
     }
 
@@ -295,9 +317,16 @@ class Bloodbank extends MY_Controller {
 
             $finalNumber = '';
             for ($i = 0; $i < count($bloodBank_phn); $i++) {
-                if ($bloodBank_phn[$i] != '' && $pre_number[$i] != '') {
+                /*if ($bloodBank_phn[$i] != '' && $pre_number[$i] != '') {
                     $finalNumber .= $pre_number[$i] . ' ' . $bloodBank_phn[$i] . '|';
-                }
+                }*/
+                
+                if($bloodBank_phn[$i] != '' && $pre_number[$i] != '') {
+                        if($i == count($bloodBank_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$bloodBank_phn[$i];
+                        else        
+                       $finalNumber .= $pre_number[$i].' '.$bloodBank_phn[$i].'|'; 
+                    }
             }
 
             $updateBloodBank = array(
