@@ -76,7 +76,7 @@ if ( ! function_exists('dateFormate'))
     }
 }
 
-<<<<<<< HEAD
+
 if ( ! function_exists('getStatus'))
 {
     function getStatus($status)
@@ -113,7 +113,7 @@ if ( ! function_exists('getGender'))
  //   function deg2rad($deg) {
   //      return $deg * (pi()/180);
   //  }
-=======
+
 if ( ! function_exists('dateFormateConvert'))
 {
     function dateFormateConvert($strToTime)
@@ -147,6 +147,6 @@ if ( ! function_exists('isUnique'))
         return $default.$random;
     }
 }
->>>>>>> 4050d841246ccc8959b159e217f2f2f26b0f3b3d
+
 
     ?>
