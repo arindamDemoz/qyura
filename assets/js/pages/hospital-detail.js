@@ -354,6 +354,10 @@ $("#bloodbankbtn").click(function () {
     $("#bloodbankdetail").fadeToggle();
 });
 
+$("#ambulancebtn").click(function () {
+    $("#ambulancedetail").fadeToggle();
+});
+
 /* -- Upload Button -- 
 
 document.getElementById("uploadBtn").onchange = function () {
