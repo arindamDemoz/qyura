@@ -1,11 +1,13 @@
 <?php
 
-class Doctor extends CI_Controller {
+class Doctor extends MY_Controller {
 
      public function __construct() {
        parent:: __construct();
      
        $this->load->model('Doctor_model');
+       $this->load->library('datatables');
+      
    }
    function index(){
       $data = array();
@@ -14,7 +16,10 @@ class Doctor extends CI_Controller {
         $data['speciality'] = $this->Doctor_model->fetchSpeciality();
        // $data['hospital']=$this->Doctor_model->fetchHospital();
        // print_r($data['hospitalData'] );exit;
-        $this->load->view('doctorListing',$data);
+        $data['doctorId'] = 0;
+        $data['title'] = 'List Doctor';
+        $this->load->super_admin_template('doctorListing', $data, 'doctorScript');
+        //$this->load->view('doctorListing',$data);
    }
    
    function addDoctor(){
@@ -23,7 +28,10 @@ class Doctor extends CI_Controller {
         $data['speciality'] = $this->Doctor_model->fetchSpeciality();
         $data['degree'] = $this->Doctor_model->fetchDegree();
         $data['hospital'] = $this->Doctor_model->fetchHospital();
-       $this->load->view('addDoctor',$data);
+        $data['doctorId'] = 0;
+        $data['title'] = 'Add Doctor';
+        $this->load->super_admin_template('addDoctor', $data, 'doctorScript');
+       //$this->load->view('addDoctor',$data);
    }
    
    function saveDoctor(){
@@ -47,10 +55,7 @@ class Doctor extends CI_Controller {
        $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
        $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
         $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
-        if (empty($_FILES['doctors_img']['name']))
-         {
-             $this->bf_form_validation->set_rules('doctors_img', 'File', 'required');
-        }
+        
         if ($this->bf_form_validation->run($this) === FALSE) {
            
             $data = array();
@@ -58,41 +63,34 @@ class Doctor extends CI_Controller {
              $data['speciality'] = $this->Doctor_model->fetchSpeciality();
              $data['degree'] = $this->Doctor_model->fetchDegree();
              $data['hospital'] = $this->Doctor_model->fetchHospital();
-             $this->load->view('addDoctor',$data);
+             $data['doctorId'] = 0;
+             $data['title'] = 'Add Doctor';
+             $this->load->super_admin_template('addDoctor', $data, 'doctorScript');
+             return false;
+             //$this->load->view('addDoctor',$data);
          }
          else {
              $imagesname='';
-              if ($_FILES['doctors_img']['name'] ) {
-             $path = realpath(FCPATH.'assets/doctorsImages/');
-             $temp = explode(".", $_FILES["doctors_img"]["name"]);
-                $newfilename = 'DOC_'.round(microtime(true)) . '.' . end($temp);
-                $config['upload_path'] = $path;
-                $config['allowed_types'] = 'jpg|jpeg|gif|png';
-		$config['max_size']	= '5000';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-                $config['file_name'] = $newfilename;
-               
-		$this->load->library('upload', $config);
-               $this->upload->initialize($config);
-              
-                if ( ! $this->upload->do_upload('doctors_img'))
-		{
-			$data = array();
-                        $data['allStates'] = $this->Doctor_model->fetchStates();
-                        $data['speciality'] = $this->Doctor_model->fetchSpeciality();
-                        $data['degree'] = $this->Doctor_model->fetchDegree();
-                        $data['hospital'] = $this->Doctor_model->fetchHospital();
-                        $this->load->view('addDoctor',$data);
-                      
-		}
-		else
-		{
-                     $imagesname = $newfilename;
-                       
-		}
-                
-              } 
+              if ($_FILES['avatar_file']['name']) {
+                $path = realpath(FCPATH . 'assets/doctorsImages/');
+                $upload_data = $this->input->post('avatar_data');
+                $upload_data = json_decode($upload_data);
+                $original_imagesname = $this->uploadImageWithThumb($upload_data, 'avatar_file', $path, 'assets/doctorsImages/', './assets/doctorsImages/thumb/','doctor');
+
+                if (empty($original_imagesname)) {
+                    $data = array();
+                    $data['allStates'] = $this->Doctor_model->fetchStates();
+                    $data['speciality'] = $this->Doctor_model->fetchSpeciality();
+                    $data['degree'] = $this->Doctor_model->fetchDegree();
+                    $data['hospital'] = $this->Doctor_model->fetchHospital();
+                    $data['doctorId'] = 0;
+                    $data['title'] = 'Add Doctor';
+                    $this->load->super_admin_template('addDoctor', $data, 'doctorScript');
+                    return false;
+                } else {
+                    $imagesname = $original_imagesname;
+                }
+                 }
          
               $doctors_phn = $this->input->post('doctors_phn');
               $pre_number = $this->input->post('preNumber');
@@ -100,8 +98,12 @@ class Doctor extends CI_Controller {
                  
               $finalNumber = '';
               for($i= 0;$i < count($pre_number) ;$i++) {
-                  if($doctors_phn[$i] != '' && $pre_number[$i] !='' && $midNumber[$i] != '') {
-                   $finalNumber .= $pre_number[$i].' '.$midNumber[$i].' '.$doctors_phn[$i].'|'; 
+                  if($doctors_phn[$i] != '' && $pre_number[$i] !='' && $midNumber[$i] != '') {            
+                   
+                    if($i == count($pre_number)-1)
+                       $finalNumber .= $pre_number[$i].' '.$midNumber[$i].' '.$doctors_phn[$i];
+                    else        
+                       $finalNumber .= $pre_number[$i].' '.$midNumber[$i].' '.$doctors_phn[$i].'|'; 
                 }
                     
                 }
@@ -111,23 +113,36 @@ class Doctor extends CI_Controller {
               $checkbox = 1;
               for($i= 0;$i < count($pre_mobile_number) ;$i++) {
                   if($doctors_mobile_number[$i] != '' && $pre_mobile_number[$i] !='') {
-                      if(isset($_POST['checkbox'.$checkbox]) == 1)
-                         $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.$checkbox.'|';  
-                      else
-                   $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.'0'.'|'; 
+                      if($i == count($pre_mobile_number)-1){
+                            if(isset($_POST['checkbox'.$checkbox]) == 1)
+                            $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.$checkbox;  
+                            else
+                            $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.'0'; 
+                      }else{
+                        if(isset($_POST['checkbox'.$checkbox]) == 1)
+                            $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.$checkbox.'|';  
+                        else
+                         $finalMobileNumber .= $pre_mobile_number[$i].' '.$doctors_mobile_number[$i].'*'.'0'.'|'; 
+                      }
                 }
                  $checkbox ++;   
                 }
-                
-                $users_email = $this->input->post('users_email');
-                $users_password = md5($this->input->post('users_password'));
-                $doctorsInsert = array(
-                   'users_email' => $users_email,
-                    'users_password'=> $users_password,
-                   'users_ip_address' => $this->input->ip_address(),
-                    'users_mobile' => $this->input->post('users_mobile')
-                );
-               $doctors_usersId = $this->Doctor_model->insertDoctorUser($doctorsInsert); 
+                  $users_email_status = $this->input->post('users_email_status');
+                 if($users_email_status == ''){
+                    $users_email = $this->input->post('users_email');
+                    $users_password = md5($this->input->post('users_password'));
+                    $doctorsInsert = array(
+                       'users_email' => $users_email,
+                        'users_password'=> $users_password,
+                       'users_ip_address' => $this->input->ip_address(),
+                        'users_mobile' => $this->input->post('users_mobile'),
+                        'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                    );
+                   $doctors_usersId = $this->Doctor_model->insertDoctorUser($doctorsInsert); 
+                 }
+                else {
+                    $doctors_usersId = $users_email_status;
+                }
                if($doctors_usersId){
                    $insertusersRoles = array(
                       'usersRoles_userId' => $doctors_usersId,
@@ -230,10 +245,7 @@ class Doctor extends CI_Controller {
                   $doctorSpecialities_specialitiesId = '';
                   if(isset($_POST['doctorSpecialities_specialitiesId'.$i]))
                      $doctorSpecialities_specialitiesId =  $_POST['doctorSpecialities_specialitiesId'.$i]; 
-                  
-                  //echo $professionalExp_end.'    '.$professionalExp_start;
-                  //exit;
-                  
+                 
                   foreach($doctorSpecialities_specialitiesId as $key => $val){
                       $dataProfessional = array(
                         'professionalExp_usersId' => $doctorsProfileId,
@@ -243,15 +255,9 @@ class Doctor extends CI_Controller {
                         'professionalExp_end' => $professionalExp_end,
                         'creationTime' => strtotime(date('Y-m-d')) 
                       );
-                     // echo "<pre>";print_r($dataProfessional);echo "</pre>";
-                      //echo '---------------------------------------------------------';
-                      
-                      //exit;
+                     
                        $this->Doctor_model->insertDoctorData($dataProfessional,'qyura_professionalExp');
-                       //$professionalExp_start = 0;
-                      // $professionalExp_end = 0;
-                       //$professionalExp_hospitalId = 0;
-                      // unset($dataProfessional);
+                      
                   }
                
               }
@@ -289,7 +295,7 @@ class Doctor extends CI_Controller {
         echo $Speciality;exit;
     }
     
-    function check_email(){
+    /*function check_email(){
         $user_table_id = '';
         $users_email = $this->input->post('users_email');
         if(isset($_POST['user_table_id'])){
@@ -297,6 +303,52 @@ class Doctor extends CI_Controller {
         }
         $email = $this->Doctor_model->fetchEmail($users_email,$user_table_id);
         echo $email;
+        exit;
+    }*/
+    
+        function check_email(){
+       $user_table_id = '';
+        $users_email = $this->input->post('users_email');
+        if(isset($_POST['user_table_id'])){
+          $user_table_id = $this->input->post('user_table_id');
+        }
+        $email = $this->Doctor_model->fetchEmail($users_email,$user_table_id);
+       
+        if($email == 1)
+        echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Doctor_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
+        exit;
+    }
+    
+      function createCSV(){
+       
+        $doctorSpecialities_specialitiesId ='';
+       
+       if(isset($_POST['doctorSpecialities_specialitiesId']))
+        $doctorSpecialities_specialitiesId = $this->input->post('doctorSpecialities_specialitiesId');
+       
+       
+       // $where=array('doctors_deleted'=> 0,'doctorSpecialities_specialitiesId'=> $doctorSpecialities_specialitiesId);
+       $where = '';
+        $array[]= array('Image Name','Doctor Name','Doctor ID','Address','Speciality','Exprience','Date Of Joining','Phone Number','Mobile Number');
+        $data = $this->Doctor_model->createCSVdata($where);
+       
+        $arrayFinal = array_merge($array,$data);
+       
+        array_to_csv($arrayFinal,'DoctorDetail.csv');
+        return True;
         exit;
     }
 }   

@@ -12,7 +12,6 @@ if(isset($hospitalId) && !empty($hospitalId)){
     $check = $hospitalId; 
 }?>
 
-?>
 
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
@@ -46,7 +45,6 @@ if($current != 'detailHospital'):?>
     <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>  
 
     <script>
-        var resizefunc = [];
         var hospitalId = <?php echo $check;?> 
         
         

@@ -233,7 +233,7 @@ class Ambulance_model extends CI_Model {
     
     function createCSVdata($where){
         $imgUrl = base_url() . 'assets/ambulanceImages/thumb/original/';
-        $this->db->select('ambulance_img,ambulance_name,city_name, SUBSTRING(ambulance_phn, 1, CHAR_LENGTH(ambulance_phn)-1)AS phone,ambulance_address');
+        $this->db->select('ambulance_img,ambulance_name,city_name, ambulance_phn,ambulance_address');
         $this->db->from('qyura_ambulance');
         $this->db->join('qyura_city','city_id = ambulance_cityId','left');
         foreach($where as $key=>$val){
@@ -253,7 +253,7 @@ class Ambulance_model extends CI_Model {
             $result[$i]['ambulance_img'] = $imgUrl.$val->ambulance_img;
             $result[$i]['ambulance_name'] = $val->ambulance_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['ambulance_phn'] = $val->phone;
+            $result[$i]['ambulance_phn'] = $val->ambulance_phn;
             $result[$i]['ambulance_address'] = $val->ambulance_address;
            $i++;
         }

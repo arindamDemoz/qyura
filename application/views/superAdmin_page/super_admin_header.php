@@ -216,11 +216,11 @@
                         </li>
                         
                         <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
+                            <a class="waves-effect" <?php if($this->router->fetch_class() == 'doctor'):echo 'active';endif;?> href="#"><i class="fa fa-stethoscope"></i> 
                         <span>Doctors</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="all-doctor.html">All Doctors</a></li>
-                                <li><a href="add-doctor.html">Add New Doctor</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'doctor' && $this->router->fetch_method() != 'addDoctor'):echo"active";endif;?>"><a href="<?php echo site_url('doctor');?>">All Doctors</a></li>
+                                <li class="<?php if($this->router->fetch_method() == 'addDoctor'):echo"active";endif;?>"><a href="<?php echo site_url('doctor/addDoctor');?>">Add New Doctor</a></li>
                                 <li><a href="#">Schedule & Availability</a></li>
                             </ul>
                         </li>

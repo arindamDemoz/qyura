@@ -158,7 +158,7 @@ class Pharmacy_model extends CI_Model {
             $result[$i]['pharmacy_img'] = $imgUrl.$val->pharmacy_img;
             $result[$i]['pharmacy_name'] = $val->pharmacy_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['phone'] = $val->phone;
+            $result[$i]['phone'] = $val->pharmacy_phn;
             $result[$i]['pharmacy_address'] = $val->pharmacy_address;
            $i++;
         }
