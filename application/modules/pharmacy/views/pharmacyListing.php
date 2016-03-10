@@ -25,7 +25,7 @@
                                 <aside class="col-md-3 col-sm-3">
                                     <select class="selectpicker" data-width="100%" name="pharmacy_stateId" id="pharmacy_stateId" data-size="4" onchange ="fetchCity(this.value)">
 
-                                                        <option value=" ">Select State</option>
+                                                        <option value="">Select State</option>
                                                        <?php foreach($allStates as $key=>$val) {?>
                                                         <option value="<?php echo $val->state_id;?>"><?php echo $val->state_statename;?></option>
                                                          <?php }?>
@@ -55,7 +55,7 @@
                             <!-- Table Section Start -->
                             <article class="clearfix m-top-40 p-b-20">
                                 <aside class="table-responsive">
-                                <table class="table all-bloodbank" id="favTable">
+                                <table class="table all-bloodbank" id="pharmacy_datatable">
                                     <thead>
                                         <tr class="border-a-dull">
                                             <th>Logo</th>

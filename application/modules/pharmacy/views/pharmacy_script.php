@@ -1,12 +1,19 @@
+<style type="text/css">
+    #pharmacy_datatable_filter
+    {
+        display:none;
+    }
+</style>
+
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
 <?php $check= 0; 
-$id = $this->uri->segment(3); 
-if(!empty($id)){
-  $check = $this->uri->segment(3); 
-}else{
-  $check = 0 ;
+
+$check= 0; 
+if(isset($pharmacyId) && !empty($pharmacyId)){
+    $check = $pharmacyId; 
+
 }?>
 
 
@@ -357,7 +364,8 @@ $('.selectpicker').selectpicker({
                     "sPaginationType": "full_numbers",
                     "columnDefs": [{
                     "targets": [0, 5],
-                    "orderable": false }],
+                    "orderable": false
+                }],
                      "columns": [
                         {"data": "pharmacy_img","searchable": false, "order": false,orderable: false, width: "8%" },
                         {"data": "pharmacy_name"},
@@ -371,8 +379,7 @@ $('.selectpicker').selectpicker({
                         "url": "<?php echo site_url('pharmacy/getPharmacyDl'); ?>",
                         "type": "POST", 
                         "data": function ( d ) {
-                            console.log("asdsadas");
-                                        d.cityId = $("#pharmacy_cityId").val();
+                                    d.cityId = $("#pharmacy_cityId").val();
                                          d.name = $("#search").val();
                                          if($("#pharmacy_stateId").val() != ' '){
                                          d.hosStateId = $("#pharmacy_stateId").val();

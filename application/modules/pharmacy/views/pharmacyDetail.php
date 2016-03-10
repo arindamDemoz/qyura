@@ -213,7 +213,7 @@
                                                                      </div>
                                                                      <div class="col-md-6 col-sm-6 m-t-xs-10">
                                                                          <input type="text" class="form-control" id="pharmacy_zip" name="pharmacy_zip" placeholder="700001" maxlength="6"  value="<?php if(!empty($pharmacyData)): echo $pharmacyData[0]->pharmacy_zip; endif;?>" onkeypress="return isNumberKey(event)"/>
-                                                                             <label class="error" style="display:none;" id="error-pharmacy_zip"> please enter a zip code</label>
+                                                                             <label class="error" style="display:none;" id="error-pharmacy_zip"> Zip code should be numeric and 6 digit long</label>
 
                                                                             <label class="error" id="error-pharmacy_zip1"  > <?php echo form_error("pharmacy_zip"); ?></label>
                                                                      </div>

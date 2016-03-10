@@ -14,10 +14,7 @@ class Pharmacy extends MY_Controller {
         $data = array();
        $data['allStates'] = $this->Pharmacy_model->fetchStates();
        $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData();
-       //print_r($data['pharmacyData']);
-       //exit;
-       
-       // $this->load->view('pharmacyListing',$data);
+       $data['pharmacyId'] = 0;
         $data['title'] = 'All Pharmacy';
         $this->load->super_admin_template('pharmacyListing', $data,'pharmacy_script');
    }
