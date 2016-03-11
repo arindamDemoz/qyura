@@ -8,9 +8,47 @@ class Auth extends MyRest {
     function __construct() {
         parent::__construct();
         $this->load->library(array('ion_auth_api', 'form_validation'));
-        $this->load->helper(array('url', 'language','common','string'));
+        $this->load->helper(array('url', 'language', 'common', 'string'));
         $this->bf_form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'auth_conf_api'), $this->config->item('error_end_delimiter', 'auth_conf_api'));
         $this->lang->load('auth_api');
+    }
+
+    function checkSocial_post() {
+        $logintype = (int) $this->input->post('logintype');
+        $this->bf_form_validation->set_rules('logintype', 'logintype', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
+            $this->bf_form_validation->set_rules('socialId', 'Social Id', 'trim|required|xss_clean');
+        if ($this->bf_form_validation->run($this) == true) {
+
+            if ($logintype == 1 && isset($_POST['socialId']))
+                $where = array('qyura_userSocial.userSocial_fbId' => $_POST['socialId']);
+            if ($logintype == 2 && isset($_POST['socialId']))
+                $where = array('qyura_userSocial.userSocial_gpId' => $_POST['socialId']);
+
+            $userDetail = $this->ion_auth_api->getSocialData($where);
+            
+            //if ($userDetail && (($userDetail->users_mobile == null && $userDetail->users_mobile == ''))) {
+            if ($userDetail) {
+                
+                if ($userDetail->gpId == null)
+                    $userDetail->gpId = '';
+
+                if ($userDetail->fbId == null)
+                    $userDetail->fbId = '';
+                
+                if ($userDetail->patientImg == 'assets/proImg/')
+                    $userDetail->patientImg = '';
+                
+                $response = array('status' => TRUE, 'userDetail' => $userDetail, 'message' => 'Login successfull');
+                $this->response($response, 400);
+            }else {
+                $response = array('status' => FALSE, 'message' => 'Please go to next step');
+                $this->response($response, 400);
+            }
+        } else {
+            $message = $this->validation_post_warning();
+            $response = array('status' => FALSE, 'message' => $message);
+            $this->response($response, 400);
+        }
     }
 
     // create a new group
@@ -18,17 +56,18 @@ class Auth extends MyRest {
         //validate form input
         $this->bf_form_validation->set_rules('name', 'name', 'required|callback__alpha_dash_space|max_length[80]|xss_clean');
         $this->bf_form_validation->set_rules('logintype', 'logintype', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
-        
 
         $this->bf_form_validation->set_rules('pushToken', 'push token', 'required|min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('udid', 'udid', 'required|min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('device', 'device', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
+        $this->bf_form_validation->set_rules('dob', 'Date of Birth', 'trim|xss_clean|valid_date[y-m-d,-]');
+        $this->bf_form_validation->set_rules('gender', 'Gender', 'trim|min_length[1]|max_length[1]|numeric|xss_clean');
 
         $logintype = (int) $this->input->post('logintype');
 
         $update = false;
 
-        
+
 
         $additional_data = array('users_logintype' => $logintype, 'users_mobile' => isset($_POST['mobileNo']) ? $_POST['mobileNo'] : '');
 
@@ -37,22 +76,31 @@ class Auth extends MyRest {
 
             $this->bf_form_validation->set_rules('socialId', 'Social Id', 'trim|required|xss_clean');
             $this->bf_form_validation->set_rules('image', 'Image', 'trim|required|xss_clean');
-
+            
             $this->bf_form_validation->set_rules('email', 'email', 'required|valid_email|xss_clean');
-            $this->bf_form_validation->set_rules('mobileNo', 'Mobile No', 'required|min_length[10]|max_length[10]|numeric|xss_clean');
+
+            if ($logintype == 1 && isset($_POST['socialId']))
+                $where = array('qyura_userSocial.userSocial_fbId' => $_POST['socialId']);
+            if ($logintype == 2 && isset($_POST['socialId']))
+                $where = array('qyura_userSocial.userSocial_gpId' => $_POST['socialId']);
+
+            $userCheck = $this->ion_auth_api->getSocialData($where);
+
+            if (!$userCheck)
+                $this->bf_form_validation->set_rules('mobileNo', 'Mobile No', 'required|min_length[10]|max_length[10]|numeric|xss_clean');
         } else {
             $this->bf_form_validation->set_rules('password', 'password', 'required|min_length[' . $this->config->item('min_password_length', 'auth_conf_api') . ']|max_length[' . $this->config->item('max_password_length', 'auth_conf_api') . ']|xss_clean');
             $this->bf_form_validation->set_rules('email', 'email', 'required|valid_email|is_unique[qyura_users.users_email,qyura_users.users_deleted=0]|max_length[255]|xss_clean');
             $this->bf_form_validation->set_rules('mobileNo', 'Mobile No', 'required|is_unique[qyura_users.users_mobile,qyura_users.users_deleted=0]|min_length[10]|max_length[10]|numeric|xss_clean');
         }
 
-        $this->profImgPath = realpath( FCPATH.'assets/proImg').'/';
-        $mobile = isset($_POST['mobileNo']) ? $this->input->post('mobileNo'): '';
+        $this->profImgPath = realpath(FCPATH . 'assets/proImg') . '/';
+        $mobile = isset($_POST['mobileNo']) ? $this->input->post('mobileNo') : '';
 
         if ($this->bf_form_validation->run($this) == true) {
             if (isset($_POST['email']))
                 $email = $this->email = strtolower($this->input->post('email'));
-            
+
             $password = $this->input->post('password');
             $username = explode('@', $email);
             $username = $this->username = $username[0];
@@ -61,9 +109,9 @@ class Auth extends MyRest {
 
 
                 if ($this->config->item('identity', 'auth_conf_api') == 'users_username') {
-                    $identity = $userDetail =  $this->ion_auth_api->where('qyura_users.users_username', $email)->where('qyura_users.users_deleted', 0)->users()->row();
+                    $identity = $userDetail = $this->ion_auth_api->where('qyura_users.users_username', $email)->where('qyura_users.users_deleted', 0)->users()->row();
                 } else {
-                    $identity = $userDetail = $this->ion_auth_api->where('qyura_users.users_email', $email)->where('qyura_users.users_deleted', 0)->or_where('qyura_users.users_mobile',$mobile)->users()->row();
+                    $identity = $userDetail = $this->ion_auth_api->where('qyura_users.users_email', $email)->where('qyura_users.users_deleted', 0)->or_where('qyura_users.users_mobile', $mobile)->users()->row();
                 }
 
                 $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
@@ -117,37 +165,51 @@ class Auth extends MyRest {
                         }
                     }
 
-                   
+
+
+                    if ($identity->patientImg == null || $identity->patientImg == '' || $identity->patientImg == 'assets/proImg/') {
+                        $img = isset($_POST['image']) ? createImage($this->input->post('image'), $this->profImgPath) : false;
+                        $image_name = $img ? $img : '';
+                        $userPatient['patientDetails_patientImg'] = $image_name;
+                    }
                     
-                    if ($identity->patientImg == null || $identity->patientImg == '' || $identity->patientImg == 'assets/proImg/')
-                    {
-                        $img =  isset($_POST['image']) ? createImage($this->input->post('image'),$this->profImgPath) : false;
-                        $image_name = $img ? $img :'';
+                    if ($identity->dob == null || $identity->dob == '' || $identity->dob == 0) {
+                        $dob = isset($_POST['dob']) ? strtotime($this->input->post('dob')): '';
+                        $userPatient['patientDetails_dob'] = $dob;
+                    }
+                    
+                    if ($identity->gender == null || $identity->gender == '' || $identity->gender == 0) {
+                        $gender = isset($_POST['gender']) ? $this->input->post('gender'): '';
+                        $userPatient['patientDetails_gender'] = $gender;
+                    }
+                    
+                    if ($identity->patientImg == null || $identity->patientImg == '' || $identity->patientImg == 'assets/proImg/') {
+                        $img = isset($_POST['image']) ? createImage($this->input->post('image'), $this->profImgPath) : false;
+                        $image_name = $img ? $img : '';
                         $userPatient['patientDetails_patientImg'] = $image_name;
                     }
 
                     $userPatient['modifyTime'] = time();
 
-                    if ($identity->patientName == null || $identity->patientName == '' )
+                    if ($identity->patientName == null || $identity->patientName == '')
                         $userPatient['patientDetails_patientName'] = isset($_POST['name']) ? $this->input->post('name') : '';
 
                     $this->db->update('qyura_patientDetails', $userPatient, array('patientDetails_usersId' => $identity->users_id));
-                    
-                    
+
+
 
                     $update = $this->db->affected_rows() == 1;
-                    
-                    $userDetail = $this->getUserDetailByIdentity($email,$mobile);
-                    
-                    if($userDetail->users_otpActive == 0)
+
+                    $userDetail = $this->getUserDetailByIdentity($email, $mobile);
+
+                    if ($userDetail->users_otpActive == 0)
                         $message = 'Thank You! Please check your SMS to activate your account';
                     else
                         $message = 'Thank You! You have successfully login';
 
-                    $response = array('status' => TRUE, 'message' => $message ,'userDetail' => $userDetail);
-                    
+                    $response = array('status' => TRUE, 'message' => $message, 'userDetail' => $userDetail);
+
                     $this->response($response, 200);
-                    
                 }
                 elseif ($logintype) {
                     $password = null;
@@ -169,15 +231,15 @@ class Auth extends MyRest {
                     }
 
                     $this->insertUserProfile($users['id']);
-                
-                    $userDetail = $this->getUserDetailByIdentity($email,$mobile);
 
-                    if($userDetail->users_otpActive == 0)
+                    $userDetail = $this->getUserDetailByIdentity($email, $mobile);
+
+                    if ($userDetail->users_otpActive == 0)
                         $message = 'Thank You! Please check your SMS to activate your account';
                     else
                         $message = 'Thank You! You have successfully login';
-                    $response = array('status' => TRUE, 'message' => $message,'userDetail' => $userDetail);
-                    
+                    $response = array('status' => TRUE, 'message' => $message, 'userDetail' => $userDetail);
+
                     $this->response($response, 200);
                 }
             }
@@ -186,6 +248,7 @@ class Auth extends MyRest {
             $response = array('status' => FALSE, 'message' => $message);
             $this->response($response, 400);
         }
+
         if ($this->bf_form_validation->run($this) == true && !$update) {
             //check to see if we are creating the user
             //redirect them back to the admin page
@@ -193,148 +256,142 @@ class Auth extends MyRest {
                 $password = $users = $this->ion_auth_api->register($username, $password, $email, $additional_data);
             if ($users) {
                 $this->insertUserProfile($users['id']);
-                
+
                 $this->insertSocialProfile($users['id']);
 
-                $userDetail = $this->getUserDetailByIdentity($email,$mobile);
-                
-                $response = array('status' => TRUE, 'message' => 'Thank You! Please check your email or SMS to activate your account','userDetail'=>$userDetail);
+                $userDetail = $this->getUserDetailByIdentity($email, $mobile);
+
+                $response = array('status' => TRUE, 'message' => 'Thank You! Please check your email or SMS to activate your account', 'userDetail' => $userDetail);
                 $this->response($response, 200);
             } else {
                 $response = array('status' => FALSE, 'message' => $this->ion_auth_api->errors());
                 $this->response($response, 400);
             }
-        } 
+        }
     }
-    
-    function getUserDetailByIdentity($email='',$mobile='')
-    {
-        $userDetail  = $this->ion_auth_api->where('qyura_users.users_email', $email)->where('qyura_users.users_deleted', 0)->or_where('qyura_users.users_mobile',$mobile)->users()->row();
-                    
-                    unset($userDetail->users_password);
-                    unset($userDetail->users_salt);
-                    unset($userDetail->users_activationCode);
-                    unset($userDetail->users_forgottenPasswordCode);
-                    unset($userDetail->users_forgottenPasswordTime);
-                    unset($userDetail->users_rememberCode);
-                    unset($userDetail->users_lastLogin);
-                    unset($userDetail->creationTime);
-                    unset($userDetail->modifyTime);
-                    unset($userDetail->status);
-                    unset($userDetail->id);
-                    
-                if ($userDetail->pushToken == null)
-                    $userDetail->pushToken = '';
 
-                if ($userDetail->device == null)
-                    $userDetail->device = '';
+    function getUserDetailByIdentity($email = '', $mobile = '') {
+        $userDetail = $this->ion_auth_api->where('qyura_users.users_email', $email)->where('qyura_users.users_deleted', 0)->or_where('qyura_users.users_mobile', $mobile)->users()->row();
+        
+        
 
-                if ($userDetail->gpId == null)
-                    $userDetail->gpId = '';
+        unset($userDetail->users_password);
+        unset($userDetail->users_salt);
+        unset($userDetail->users_activationCode);
+        unset($userDetail->users_forgottenPasswordCode);
+        unset($userDetail->users_forgottenPasswordTime);
+        unset($userDetail->users_rememberCode);
+        unset($userDetail->users_lastLogin);
+        unset($userDetail->creationTime);
+        unset($userDetail->modifyTime);
+        unset($userDetail->status);
+        unset($userDetail->id);
 
-                if ($userDetail->fbId == null)
-                    $userDetail->fbId = '';
-                
+        if ($userDetail->pushToken == null)
+            $userDetail->pushToken = '';
+
+        if ($userDetail->device == null)
+            $userDetail->device = '';
+
+        if ($userDetail->gpId == null)
+            $userDetail->gpId = '';
+
+        if ($userDetail->fbId == null)
+            $userDetail->fbId = '';
+
         return $userDetail;
     }
-            
-    function activeOTP_post()
-    {
+
+    function activeOTP_post() {
         //$this->bf_form_validation->set_rules('mobileNo', 'mobileNo', 'required|min_length[10]|max_length[10]|numeric|xss_clean');
         $this->bf_form_validation->set_rules('userId', 'user id', 'required|numeric');
         $this->bf_form_validation->set_rules('code', 'OTP Code', 'required|numeric|min_length[5]|max_length[5]|xss_clean');
-        
+
         $this->bf_form_validation->set_rules('pushToken', 'push token', 'min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('udid', 'udid', 'min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('device', 'device', 'min_length[1]|max_length[1]|numeric|xss_clean');
-        
+
         if ($this->bf_form_validation->run($this) === FALSE) {
             $message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
             $this->response($response, 400);
-        }
-        else{
-            $userId = isset($_POST['userId'])?$this->input->post('userId'):'';
-            $otpCode = isset($_POST['code'])?$this->input->post('code'):'';
-            
+        } else {
+            $userId = isset($_POST['userId']) ? $this->input->post('userId') : '';
+            $otpCode = isset($_POST['code']) ? $this->input->post('code') : '';
+
             $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
             $userSocial['userSocial_udid'] = isset($_POST['udid']) ? $this->input->post('udid') : '';
             $userSocial['userSocial_device'] = isset($_POST['device']) ? $this->input->post('device') : '';
-            
+
             $result = $this->ion_auth_api->otp_activate($userId, $otpCode);
-            
-            if($result)
-            {
-                
+
+            if ($result) {
+
                 //$this->db->update('qyura_userSocial', $userSocial, array('userSocial_usersId' => $identity->users_id));
                 $response = array('status' => TRUE, 'message' => $this->ion_auth_api->messages(), 'otpStaus' => $result);
                 $this->response($response, 200);
-            }
-            else {
-                
-                $response = array('status' => FALSE, 'message' =>  $this->ion_auth_api->errors());
+            } else {
+
+                $response = array('status' => FALSE, 'message' => $this->ion_auth_api->errors());
                 $this->response($response, 401);
             }
         }
     }
 
-    function resendOtp_post()
-    {
+    function resendOtp_post() {
         $this->bf_form_validation->set_rules('userId', 'user id', 'required|numeric');
-        
+
         $this->bf_form_validation->set_rules('pushToken', 'push token', 'min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('udid', 'udid', 'min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('device', 'device', 'min_length[1]|max_length[1]|numeric|xss_clean');
-        
+
         if ($this->bf_form_validation->run($this) === FALSE) {
             $message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
             $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
             $this->response($response, 400);
-        }
-        else{
-            
-            $userId = isset($_POST['userId'])?$this->input->post('userId'):'';
-            
-            
+        } else {
+
+            $userId = isset($_POST['userId']) ? $this->input->post('userId') : '';
+
+
             $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
             $userSocial['userSocial_udid'] = isset($_POST['udid']) ? $this->input->post('udid') : '';
             $userSocial['userSocial_device'] = isset($_POST['device']) ? $this->input->post('device') : '';
-            
+
             $result = $this->ion_auth_api->otpCreate($userId);
-            
-            if($result)
-            {
+
+            if ($result) {
                 //$this->db->update('qyura_userSocial', $userSocial, array('userSocial_usersId' => $identity->users_id));
                 $response = array('status' => TRUE, 'message' => $this->ion_auth_api->messages());
                 $this->response($response, 200);
-            }
-            else {
-                
-                $response = array('status' => FALSE, 'message' =>  $this->ion_auth_api->errors());
+            } else {
+
+                $response = array('status' => FALSE, 'message' => $this->ion_auth_api->errors());
                 $this->response($response, 401);
             }
         }
-        
-        
     }
-    
+
     public function insertUserProfile($users_id, $data = null) {
+
         
         $profData = array(
             'patientDetails_patientName' => $this->input->post('name'),
             'patientDetails_usersId' => $users_id,
-            'patientDetails_unqId' => 'PNT'.random_string('alnumnew',6),
+            'patientDetails_dob'=> isset($_POST['dob']) ? strtotime($this->input->post('dob')): '',
+            'patientDetails_gender'=> isset($_POST['gender']) ? $this->input->post('gender'): '',
+            'patientDetails_unqId' => 'PNT' . random_string('alnumnew', 6),
             'creationTime' => time()
         );
-        
-        $img =  isset($_POST['image']) ? createImage($this->input->post('image'),$this->profImgPath) : false;
-        $image_name = $img ? $img :'';
+
+        $img = isset($_POST['image']) ? createImage($this->input->post('image'), $this->profImgPath) : false;
+        $image_name = $img ? $img : '';
         $profData['patientDetails_patientImg'] = $image_name;
 
         if ($data != null && is_array($data))
             $profData = array_merge($profData, $data);
 
-       
+
         return $this->ion_auth_api->setPatientProf($profData);
     }
 
@@ -370,7 +427,11 @@ class Auth extends MyRest {
         //validate form input
         $this->bf_form_validation->set_rules('identity', 'Identity', 'required|xss_clean');
         $this->bf_form_validation->set_rules('password', 'Password', 'required|xss_clean');
-
+        
+        $this->bf_form_validation->set_rules('pushToken', 'push token', 'required|min_length[8]|max_length[255]|xss_clean');
+        $this->bf_form_validation->set_rules('udid', 'udid', 'required|min_length[8]|max_length[255]|xss_clean');
+        $this->bf_form_validation->set_rules('device', 'device', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
+        
         if ($this->bf_form_validation->run($this) == true) {
             //check to see if the user is logging in
             //check for "remember me"
@@ -380,17 +441,25 @@ class Auth extends MyRest {
                 //if the login is successful
                 //redirect them back to the home page
                 //$this->session->set_flashdata('message', $this->ion_auth_api->messages());
-                
+
                 $userDetail = $this->userLoginDetail();
+                
+                $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
+                $userSocial['userSocial_udid'] = isset($_POST['udid']) ? $this->input->post('udid') : '';
+                $userSocial['userSocial_device'] = isset($_POST['device']) ? $this->input->post('device') : '';
+                $usersData['users_logintype'] = 0;
+                
+                $this->db->update('qyura_users', $usersData, array('users_id' => $userDetail->users_id));
+                
                 $response = array('status' => TRUE, 'message' => $this->ion_auth_api->messages(), 'userDetail' => $userDetail);
                 $this->response($response, 200);
             } else {
                 //if the login was un-successful
                 //redirect them back to the login page
                 //$this->session->set_flashdata('message', $this->ion_auth_api->errors());
-                
+
                 $userDetail = $this->userLoginDetail();
-                $response = array('status' => FALSE, 'userDetail'=>$userDetail, 'message' => $this->ion_auth_api->errors());
+                $response = array('status' => FALSE, 'userDetail' => $userDetail, 'message' => $this->ion_auth_api->errors());
                 $this->response($response, 400);
             }
         } else {
@@ -403,29 +472,27 @@ class Auth extends MyRest {
         }
     }
 
-    
-    function userLoginDetail()
-    {
+    function userLoginDetail() {
         $userDetail = $this->ion_auth_api->login_user_data($this->input->post('identity'), $this->input->post('password'));
-        
-        if($userDetail){
-        if ($userDetail->pushToken == null)
-            $userDetail->pushToken = '';
 
-        if ($userDetail->device == null)
-            $userDetail->device = '';
+        if ($userDetail) {
+            if ($userDetail->pushToken == null)
+                $userDetail->pushToken = '';
 
-        if ($userDetail->gpId == null)
-            $userDetail->gpId = '';
+            if ($userDetail->device == null)
+                $userDetail->device = '';
 
-        if ($userDetail->fbId == null)
-            $userDetail->fbId = '';
-        return $userDetail;
+            if ($userDetail->gpId == null)
+                $userDetail->gpId = '';
+
+            if ($userDetail->fbId == null)
+                $userDetail->fbId = '';
+            return $userDetail;
         }
-        
+
         return new stdClass();
     }
-    
+
     //activate the user
 
     function activate_get($id = null, $code = false) {
@@ -548,7 +615,7 @@ class Auth extends MyRest {
         $this->bf_form_validation->set_rules('udid', 'udid', 'required|min_length[8]|max_length[255]|xss_clean');
         $this->bf_form_validation->set_rules('device', 'device', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
         $this->bf_form_validation->set_rules('notification', 'notification', 'required|min_length[1]|max_length[1]|numeric|xss_clean');
-        
+
 
         if (isset($_POST['userId'])) {
             $user = $this->ion_auth_api->user($_POST['userId'])->row();
@@ -556,7 +623,7 @@ class Auth extends MyRest {
         }
 
         //update the password if it was posted
-        if (isset($_POST['pwIsUpdate'])) {
+        if (isset($_POST['pwIsUpdate']) && $_POST['pwIsUpdate']) {
             $this->bf_form_validation->set_rules('password', 'password', 'required|min_length[' . $this->config->item('min_password_length', 'auth_conf_api') . ']|max_length[' . $this->config->item('max_password_length', 'auth_conf_api') . ']|xss_clean');
         }
 
@@ -568,40 +635,46 @@ class Auth extends MyRest {
             if (isset($_POST['mobileNo']))
                 $data['users_mobile'] = $this->input->post('mobileNo');
 
-           
+
             //update the password if it was posted
             if (isset($_POST['pwIsUpdate']) && $_POST['pwIsUpdate'] == 1 && $this->input->post('password')) {
                 $passwordData = $this->ion_auth_api->createPassword($this->input->post('password'));
-                
-                $data = array_merge($data,$passwordData);
+
+                $data = array_merge($data, $passwordData);
             }
-            
+
             //check to see if we are updating the user
             if ($this->ion_auth_api->update($user->users_id, $data)) {
-                
-                
+
+
                 if (isset($_POST['lname']))
                     $patientData['patientDetails_pLastName'] = $this->input->post('lname');
 
                 if (isset($_POST['name']))
                     $patientData['patientDetails_patientName'] = $this->input->post('name');
+                
+                if (isset($_POST['dob']))
+                    $patientData['patientDetails_dob'] = $this->input->post('dob');
+                
+                if (isset($_POST['gender']))
+                    $patientData['patientDetails_gender'] = $this->input->post('gender');
 
                 $patientData['modifyTime'] = time();
 
                 //check to see if we are updating the patient
-                
+
                 if ($this->ion_auth_api->patientUpdate($user->users_id, $patientData)) {
-                   
-                        $userSocial['userSocial_notification'] = isset($_POST['notification']) ? $this->input->post('notification') : '';
-                        $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
-                        $userSocial['userSocial_udid'] = isset($_POST['udid']) ? $this->input->post('udid') : '';
-                        $userSocial['userSocial_device'] = isset($_POST['device']) ? $this->input->post('device') : '';
-                        $userSocial['modifyTime'] = time();
-                        
-                        $this->db->update('qyura_userSocial', $userSocial, array('userSocial_usersId' => $user->users_id));
-                        
-                        $update = $this->db->affected_rows() == 1;
-                    
+
+                    $userSocial['userSocial_notification'] = isset($_POST['notification']) ? $this->input->post('notification') : '';
+                    $userSocial['userSocial_pushToken'] = isset($_POST['pushToken']) ? $this->input->post('pushToken') : '';
+                    $userSocial['userSocial_udid'] = isset($_POST['udid']) ? $this->input->post('udid') : '';
+                    $userSocial['userSocial_device'] = isset($_POST['device']) ? $this->input->post('device') : '';
+                    $userSocial['modifyTime'] = time();
+
+                    $this->db->update('qyura_userSocial', $userSocial, array('userSocial_usersId' => $user->users_id));
+
+                    $update = $this->db->affected_rows() == 1;
+
                     $response = array('status' => TRUE, 'message' => $this->ion_auth_api->messages());
                     $this->response($response, 200);
                 } else {
@@ -628,12 +701,11 @@ class Auth extends MyRest {
         if ($this->config->item('identity', 'auth_conf_api') == 'users_username') {
             $this->bf_form_validation->set_rules('identity', $this->lang->line('forgot_password_username_identity_label'), 'required|xss_clean');
         } else {
-            
-            if(isset($_POST['identity']) && is_numeric($_POST['identity']) )
+
+            if (isset($_POST['identity']) && is_numeric($_POST['identity']))
                 $this->bf_form_validation->set_rules('identity', 'Mobile No', 'required|min_length[10]|max_length[10]|numeric|xss_clean');
-            else    
-            $this->bf_form_validation->set_rules('identity', $this->lang->line('forgot_password_validation_email_label'), 'required|valid_email|xss_clean');
-            
+            else
+                $this->bf_form_validation->set_rules('identity', $this->lang->line('forgot_password_validation_email_label'), 'required|valid_email|xss_clean');
         }
 
 
@@ -645,12 +717,12 @@ class Auth extends MyRest {
             $this->response($response, 400);
         } else {
             // get identity from username or email
-            
-            
+
+
             if ($this->config->item('identity', 'auth_conf_api') == 'users_username') {
-                $identity = $this->ion_auth_api->where('users_username', strtolower($this->input->post('email')))->where('users_deleted',0)->users()->row();
+                $identity = $this->ion_auth_api->where('users_username', strtolower($this->input->post('email')))->where('users_deleted', 0)->users()->row();
             } else {
-                $identity = $this->ion_auth_api->where('users_email', strtolower($this->input->post('identity')))->where('users_deleted',0)->or_where('qyura_users.users_mobile',$this->input->post('identity'))->users()->row();
+                $identity = $this->ion_auth_api->where('users_email', strtolower($this->input->post('identity')))->where('users_deleted', 0)->or_where('qyura_users.users_mobile', $this->input->post('identity'))->users()->row();
             }
             if (empty($identity)) {
 

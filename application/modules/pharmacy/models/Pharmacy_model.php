@@ -5,6 +5,15 @@ class Pharmacy_model extends CI_Model {
         parent::__construct();
     }
     
+     function fetchCountry() {
+        $this->db->select('country_id,country');
+        $this->db->from('qyura_country');
+        $this->db->order_by("country", "asc");
+        return $this->db->get()->result();
+    }
+
+   
+    
     function fetchStates() {
         $this->db->select('state_id,state_statename');
         $this->db->from('qyura_state');
@@ -20,6 +29,7 @@ class Pharmacy_model extends CI_Model {
         $this->db->order_by("city_name","asc");
         return $this->db->get()->result();
     }
+    
     function fetchEmail($email,$usersId = NULL){
        $this->db->select('users_email');
         $this->db->from('qyura_users');
@@ -54,7 +64,7 @@ class Pharmacy_model extends CI_Model {
         return  $insert_id;
     }
     function fetchpharmacyData($condition = NULL){
-         $this->db->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name, (CASE pharmacy_type  WHEN  1 THEN "Medicine" WHEN 2 THEN "Homyopathic" WHEN  3 THEN "Herbal" END) as pharmacy_type, pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn, (CASE pharmacy_mmbrTyp WHEN 1 THEN "Life Time" WHEN 2 THEN "Health Club" END) AS pharmacy_mmbrTyp ,usr.users_id,usr.users_email, (CASE pharmacy_27Src WHEN 0 THEN "No" WHEN 1 THEN "Yes"  END) as pharmacy_27Src ,pharmacy.pharmacy_lat,pharmacy.pharmacy_long,pharmacy.pharmacy_background_img');
+         $this->db->select('pharmacy.pharmacy_id,pharmacy.pharmacy_usersId,City.city_name,pharmacy.pharmacy_name, (CASE pharmacy_type  WHEN  1 THEN "Medicine" WHEN 2 THEN "Homyopathic" WHEN  3 THEN "Herbal" END) as pharmacy_type, pharmacy.pharmacy_address,pharmacy.pharmacy_phn,pharmacy.pharmacy_img,pharmacy.pharmacy_cntPrsn, (CASE pharmacy_mmbrTyp WHEN 1 THEN "Life Time" WHEN 2 THEN "Health Club" END) AS pharmacy_mmbrTyp ,usr.users_id,usr.users_email, (CASE pharmacy_27Src WHEN 0 THEN "No" WHEN 1 THEN "Yes"  END) as pharmacy_27Src ,pharmacy.pharmacy_lat,pharmacy.pharmacy_long,pharmacy_zip,pharmacy_countryId,pharmacy_stateId,pharmacy_cityId,pharmacy_background_img');
         $this->db->from('qyura_pharmacy AS pharmacy');
         $this->db->join('qyura_city AS City','City.city_id = pharmacy.pharmacy_cityId','left');
         $this->db->join('qyura_users AS usr','usr.users_id = pharmacy.pharmacy_usersId','left');
@@ -119,7 +129,7 @@ class Pharmacy_model extends CI_Model {
               $this->datatables->add_column('pharmacy_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'pharmacy_address');
        
          $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="pharmacy/detailPharmacy/$1">View Detail</a> <a href="#"  class="btn btn-success waves-effect waves-light m-b-5 applist-btn hide">Edit Detail</a>', 'pharmacy_id');
-
+         $this->datatables->order_by("pharmacy.creationTime");
         return $this->datatables->generate(); 
         // echo $this->datatables->last_query();
 
@@ -127,7 +137,7 @@ class Pharmacy_model extends CI_Model {
     
      function createCSVdata($where){
         $imgUrl = base_url() . 'assets/pharmacyImages/thumb/original/';
-         $this->db->select('pharmacy_img,pharmacy_name,city_name,SUBSTRING(pharmacy_phn, 1, CHAR_LENGTH(pharmacy_phn)-1)AS phone,pharmacy_address');
+         $this->db->select('pharmacy_img,pharmacy_name,city_name,pharmacy_phn,pharmacy_address');
         $this->db->from('qyura_pharmacy');
         $this->db->join('qyura_city','city_id = pharmacy_cityId','left');
         foreach($where as $key=>$val){
@@ -141,17 +151,14 @@ class Pharmacy_model extends CI_Model {
         }
     
         $data= $this->db->get(); 
-       // echo $this->db->last_query(); exit;
         $result= array();
-       // echo "<pre>";print_r($result);echo"</pre>";
-       //exit;
-        //echo $this->db->last_query();
+
         $i=1;
         foreach($data->result() as $key=>$val){
             $result[$i]['pharmacy_img'] = $imgUrl.$val->pharmacy_img;
             $result[$i]['pharmacy_name'] = $val->pharmacy_name;
             $result[$i]['city_name'] = $val->city_name;
-            $result[$i]['phone'] = $val->phone;
+            $result[$i]['phone'] = $val->pharmacy_phn;
             $result[$i]['pharmacy_address'] = $val->pharmacy_address;
            $i++;
         }
@@ -159,8 +166,9 @@ class Pharmacy_model extends CI_Model {
         
       }
       
+      
       function fetchTableData($select = array(),$tableName,$condition = array(),$notIn = array(),$fieldName =''){
-        $this->db->select(implode(",",$select));
+       $this->db->select(implode(",",$select));
         $this->db->from($tableName);
         foreach($condition as $key=>$val){
             $this->db->where($key, $val); 
@@ -168,9 +176,7 @@ class Pharmacy_model extends CI_Model {
         if(!empty($notIn))
             $this->db->where_not_in($fieldName,$notIn);
         $data= $this->db->get(); 
-      
-     return $data->result();
-      
+        return $data->result();
     }
 }   
 

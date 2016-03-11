@@ -76,6 +76,44 @@ if ( ! function_exists('dateFormate'))
     }
 }
 
+
+if ( ! function_exists('getStatus'))
+{
+    function getStatus($status)
+    {
+      return  isset($status) && $status == 1 ? 'Active' : 'Deactive';
+        
+    }
+}
+
+if ( ! function_exists('getOppStatus'))
+{
+    function getOppStatus($status)
+    {
+      return  isset($status) && $status == 0 ? 'Enable' : 'Disable';
+        
+    }
+}
+
+
+if ( ! function_exists('getGender'))
+{
+    function getGender($gender)
+    {
+      if($gender == 'M'){
+          return 'Male';
+      }elseif($gender == 'F'){
+          return 'Female';
+      }elseif($gender == 'O'){
+          return 'Other';
+      }
+        
+    }
+}
+ //   function deg2rad($deg) {
+  //      return $deg * (pi()/180);
+  //  }
+
 if ( ! function_exists('dateFormateConvert'))
 {
     function dateFormateConvert($strToTime)
@@ -109,5 +147,6 @@ if ( ! function_exists('isUnique'))
         return $default.$random;
     }
 }
+
 
     ?>

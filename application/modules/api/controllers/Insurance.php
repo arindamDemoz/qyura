@@ -165,7 +165,7 @@ class Insurance extends MyRest {
             $userId = isset($_POST['userId']) ? $this->input->post('userId') : '';
 
             $option = array(
-                'select' => 'qyura_patientDetails.patientDetails_patientName,userInsurance_id as insurance_id ,userInsurance_usersId as usersId,userInsurance_insuranceId as insuranceId, userInsurance_familyId as familyId, userInsurance_insuranceNo as insuranceNo, userInsurance_expDate as expDate,qyura_familyRelation.relation_type, CASE 
+                'select' => 'qyura_patientDetails.patientDetails_patientName,qyura_insurance.insurance_id,userInsurance_id,userInsurance_usersId as usersId,userInsurance_insuranceId as insuranceId, userInsurance_familyId as familyId, userInsurance_insuranceNo as insuranceNo, userInsurance_expDate as expDate,qyura_familyRelation.relation_type, CASE 
  WHEN (`userInsurance_familyId` = 0 ) 
  THEN
       "self"
@@ -193,9 +193,11 @@ class Insurance extends MyRest {
             
             if ($myInsurances) {
                 $finalResult = array();
-                $aoClumns = array("insurance_id", "usersId", "familyId", "insuranceNo", "expDate", "relation", "name","insurance_Name");
+                $aoClumns = array("userInsuranceId","insurance_id", "usersId", "familyId", "insuranceNo", "expDate", "relation", "name","insurance_Name");
                 foreach ($myInsurances as $myInsurance) {
                     $finalTemp = array();
+                    
+                    $finalTemp[] = isset($myInsurance->userInsurance_id) ? $myInsurance->userInsurance_id : "";
                     $finalTemp[] = isset($myInsurance->insurance_id) ? $myInsurance->insurance_id : "";
                     $finalTemp[] = isset($myInsurance->usersId) ? $myInsurance->usersId : "";
                     $finalTemp[] = isset($myInsurance->familyId) ? $myInsurance->familyId : "";

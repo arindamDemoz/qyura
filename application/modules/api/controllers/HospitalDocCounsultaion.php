@@ -17,11 +17,12 @@ class HospitalDocCounsultaion extends MyRest {
         
        // $this->form_validation->set_rules('lat', 'Lat', 'xss_clean|trim|required|decimal');
        // $this->form_validation->set_rules('long', 'Long', 'xss_clean|trim|required|decimal');
-        $this->form_validation->set_rules('hospitalUserId','Hospital User Id','xss_clean|numeric|required|trim');
-        $this->form_validation->set_rules('specialityid', 'Speciality Id', 'xss_clean|trim|numeric|required');
-        $this->form_validation->set_rules('notin', 'Not In', 'xss_clean|trim|required');
+        $this->bf_form_validation->set_rules('hospitalUserId','Hospital User Id','xss_clean|numeric|required|trim');
+        $this->bf_form_validation->set_rules('specialityid', 'Speciality Id', 'xss_clean|trim|numeric|required');
+        $this->bf_form_validation->set_rules('notin', 'Not In', 'xss_clean|trim|required');
+        $this->bf_form_validation->set_rules('search ', 'Search Keyword', 'xss_clean|trim');
         
-        if ($this->form_validation->run($this) == FALSE) {
+        if ($this->bf_form_validation->run($this) == FALSE) {
             // setup the input
             $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
             $this->response($response, 400);
@@ -32,8 +33,13 @@ class HospitalDocCounsultaion extends MyRest {
             $specialityId = $this->input->post('specialityid');
             $notIn = isset($_POST['notin']) && $_POST['notin'] != 0 ? $this->input->post('notin') : '';
             $notIn = explode(',', $notIn);
+            
+            // search
+            $search = isset($_POST['search']) && $_POST['search'] != ''  ? $this->input->post('search') : NULL;
+            
+            
             $response['colName'] = array("id", "name", "exp", "imUrl", "rating", "consFee", "speciality", "degree", "lat", "long", "isEmergency", "userId");
-            $consultantList = $this->hospitalDocCounsultaion_model->getConsultantList($notIn,$hospitalUserId,$specialityId);
+            $consultantList = $this->hospitalDocCounsultaion_model->getConsultantList($notIn,$hospitalUserId,$specialityId, $search);
             if ($consultantList) {
                 $response['consultantList'] = $consultantList;
                 $response['status'] = TRUE;
@@ -48,10 +54,10 @@ class HospitalDocCounsultaion extends MyRest {
     }
     
     function hospitalTimeSlot_post() {
-        $this->form_validation->set_rules('hospitalId','Hospital Id','xss_clean|numeric|required|trim');
+        $this->bf_form_validation->set_rules('hospitalId','Hospital Id','xss_clean|numeric|required|trim');
        // $this->form_validation->set_rules('specialityid', 'Speciality Id', 'xss_clean|trim|numeric|required');
-        $this->form_validation->set_rules('doctorUserId', 'Doctor UserId', 'xss_clean|numeric|required|trim');
-         if ($this->form_validation->run($this) == FALSE) {
+        $this->bf_form_validation->set_rules('doctorUserId', 'Doctor UserId', 'xss_clean|numeric|required|trim');
+         if ($this->bf_form_validation->run($this) == FALSE) {
             // setup the input
             $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
             $this->response($response, 400);

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="assets/images/fevicon-m.ico" rel="shortcut icon">
-    <title>Pharmacy Details</title>
+    <title>Hospital Detail</title>
     <link href="assets/css/framework.css" rel="stylesheet">
     <link href="assets/css/datepicker.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
@@ -152,7 +152,7 @@
             </div>
         </div>
         <!-- Top Bar End -->
-         <!-- Left Sidebar Start -->
+        <!-- Left Sidebar Start -->
         <div class="left side-menu">
             <div class="sidebar-inner slimscrollleft">
                 <!--- Divider -->
@@ -373,16 +373,23 @@
                                     <div class="bg-picture text-center">
                                         <div class="bg-picture-overlay"></div>
                                         <div class="profile-info-name">
+                                            <!-- Img -->
                                             <div class='pro-img'>
-                                                <!-- image -->
-                                              <img src="assets/images/p-appolo.png"  alt="profile-image">
+                                                <img src="assets/images/p-appolo.png" alt="profile-image" class="logo-img">
+                                                <article class="logo-up" style="display:none">
+                                                    <div class="fileUpload btn btn-sm btn-upload logo-Upload">
+                                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                                        <input id="uploadBtn" type="file" class="upload" />
+                                                    </div>
+                                                </article>
                                                 <!-- description div -->
                                                 <div class='pic-edit'>
-                                                    <h3><a href="#" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
+                                                    <h3><a id="picEdit" class="pull-center cl-white" title="Edit Logo"><i class="fa fa-pencil"></i></a></h3>
+                                                    <h3><a id="picEditClose" class="pull-center cl-white" title="Edit Logo"  style="display:none;"><i class="fa fa-times"></i></a></h3>
                                                 </div>
-                                                <!-- end description div -->
-                                            </div>
 
+                                            </div>
+                                            <!-- Img -->
                                             <h3 class="text-white">Apollo Pharmacies</h3>
                                             <h4>ABC Road Sector-12, Indraprastha<br/>New Delhi-100123</h4>
 
@@ -394,19 +401,19 @@
                                 </aside>
                                 <section class="clearfix hospitalBtn">
                                     <div class="col-md-12">
-                                        <a href="#" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="modal" data-target="#changeBg" class="pull-right cl-white" title="Edit Background"><i class="fa fa-pencil"></i></a>
 
                                     </div>
 
                                 </section>
-                               <!-- Pharmacy Section Starts -->
-                                
+                                <!-- Pharmacy Section Starts -->
+
                                 <article class="col-md-8 m-t-50">
                                     <aside class="clearfix amb-detail">
-                                     <h4>Pharmacy Detail
-                                     <a id="edit" href="#" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
+                                        <h4>Pharmacy Detail
+                                     <a id="edit" class="pull-right cl-pencil"><i class="fa fa-pencil"></i></a>
                                     </h4>
-                                    <hr/>
+                                        <hr/>
                                     </aside>
 
                                     <!--Pharmacy Detail Starts -->
@@ -444,7 +451,7 @@
                                         </div>
                                     </section>
                                     <!-- Pharmacy Deatail Ends -->
-                                    
+
                                     <!-- Pharmacy Edit Ends -->
                                     <section id="editdetail" style="display:none">
                                         <div class="clearfix m-t-20 p-b-20 doctor-description">
@@ -458,75 +465,69 @@
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Pharmacy Type :</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <select class="selectpicker" data-width="100%" name="membership">
-                                                        <option value="1" selected>Medicine</option>
-                                                        <option value="2">Homyopathic</option>
-                                                         <option value="3">Herbal</option>
+                                                        <option value="" selected>Medicine</option>
+                                                        <option value="">Homyopathic</option>
+                                                        <option value="">Herbal</option>
                                                     </select>
                                                 </div>
                                             </article>
                                             <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Address:</label>
-                                              <div class="col-md-8 col-sm-8">
-                                            <aside class="row">
-                                                <div class="col-md-6 col-sm-6">
-                                                    <select class="selectpicker" data-width="100%" name="pharmacy_countryId" id="pharmacy_countryId">
-                                                               <option value=''>Select Country</option>
-                                                                <option value="1">INDIA</option>
-                                                    </select>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <aside class="row">
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <select class="selectpicker" data-width="100%" name="country">
+                                                                <option>Select Country</option>
+                                                                <option selected>India</option>
+                                                                <option>Shrilanka</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 m-t-xs-10">
+                                                            <select class="selectpicker" data-width="100%" name="state">
+                                                                <option>Select State</option>
+                                                                <option selected>Maharashtra</option>
+                                                                <option>Oddisa</option>
+                                                            </select>
+                                                        </div>
+                                                    </aside>
+                                                    <aside class="row m-t-10">
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <select class="selectpicker" data-width="100%" name="city">
+                                                                <option>Select City</option>
+                                                                <option selected>Mumbai</option>
+                                                                <option>Delhi</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 m-t-xs-10">
+                                                            <input type="text" class="form-control" id="zip" name="zip" value="400080" />
+                                                        </div>
+                                                    </aside>
+                                                    <div class="clearfix m-t-10">
+                                                        <input type="text" class="form-control" id="address" name="address" value="Siddharth Nagar, Mulund West " />
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                    <select class="selectpicker" data-width="100%" name="state">
-                                                        <option>Select State</option>
-                                                        <option selected>Maharashtra</option>
-                                                        <option>Oddisa</option>
-                                                    </select>
-                                                </div>
-                                            </aside>
-                                            <!--<aside class="row m-t-10">
-                                                <div class="col-md-6 col-sm-6">
-                                                    <select class="selectpicker" data-width="100%" name="city">
-                                                        <option>Select City</option>
-                                                        <option selected>Mumbai</option>
-                                                        <option>Delhi</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                    <input type="text" class="form-control" id="zip" name="zip" value="400080" />
-                                                </div>
-                                            </aside>-->
-                                            <div class="clearfix m-t-10">
-                                           <textarea class="form-control" id="geocomplete" name="pharmacy_address" type="text" ><?php if(isset($pharmacyData[0]->pharmacy_address)){ echo $pharmacyData[0]->pharmacy_address; }?></textarea>
-                                           <label class="error" > <?php echo form_error("pharmacy_address"); ?></label>
-                                        </div>
-                                        </div>
                                             </article>
-                                            <article class="clearfix m-b-10 ">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                    <?php 
-                                                                    $explodes= explode('|',$pharmacyData[0]->pharmacy_phn); 
-                                                                    for($i= 0; $i< count($explodes)-1;$i++){
-                                                                    $moreExpolde = explode(' ',$explodes[$i]);?>
-                                                                    
-                                                                    
-                                                                    <aside class="row">
-                                                                        <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12">
-                                                                            <select class="selectpicker" data-width="100%" name="pre_number[]">
-                                                                                <option value="91" <?php if($moreExpolde[0] == '91'){ echo 'selected';}?>>+91</option>
-                                                                                <option value="1" <?php if($moreExpolde[0] == '1'){ echo 'selected';}?>>+1</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-10 m-t-xs-10">
-                                                                            <input type="text" class="form-control" name="pharmacy_phn[]" id="pharmacy_phn<?php echo $i;?>" placeholder="9837000123" value="<?php echo $moreExpolde[1];?>" maxlength="10" onblur="checkNumber(<?php echo $i;?>)"/>
-                                                                        </div>
-                                                                       
-                                                                    </aside>
-                                                                    <br />
-                                                                    <?php $moreExpolde ='';}?>
-                                                               
-                                                                    <p class="m-t-10">* If it is landline, include Std code with number </p>
-                                                                </div>
-                                                            </article>
+                                            <article class="clearfix m-b-10">
+                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Number:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <aside class="row">
+                                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                                            <select class="selectpicker" data-width="100%">
+                                                                <option selected>+91</option>
+                                                                <option>+1</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-3 col-xs-12 m-t-xs-10">
+                                                            <input type="text" class="form-control" name="mobile" id="mobile" value="731" />
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-10 m-t-xs-10">
+                                                            <input type="tel" class="form-control" name="mobile" id="mobile" value="7000123" onkeypress="return isNumberKey(event)" />
+                                                        </div>
+
+                                                    </aside>
+
+                                                </div>
+                                            </article>
                                             <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Mobile Number:</label>
                                                 <div class="col-md-8 col-sm-8">
@@ -538,49 +539,45 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
-                                                            <input type="text" class="form-control" name="mobile" id="mobile" value="9837000123" />
+                                                            <input type="tel" class="form-control" name="mobile" id="mobile" value="9837000123" onkeypress="return isNumberKey(event)" />
                                                         </div>
 
 
                                                     </aside>
                                                 </div>
                                             </article>
-
                                             <article class="clearfix m-b-10">
-                                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person:</label>
-                                                                <div class="col-md-8 col-sm-8">
-                                                                 
-                                                                    <input class="form-control" id="pharmacy_cntPrsn" name="pharmacy_cntPrsn" type="text" value="<?php if(isset($pharmacyData[0]->pharmacy_cntPrsn)){ echo $pharmacyData[0]->pharmacy_cntPrsn; }?>">
-                                                               <label class="error" > <?php echo form_error("pharmacy_cntPrsn"); ?></label>
-                                                               </div>
-                                                            </article>
-
+                                                <label for="cemail" class="control-label col-md-4 col-sm-4">Contact Person Name:</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input class="form-control" id="contactPerson" name="contactPerson" type="text" required="" value="Mayank Jain">
+                                                </div>
+                                            </article>
                                             <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Membership Type:</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                     <select class="selectpicker" data-width="100%" name="pharmacy_mmbrTyp" id="pharmacy_mmbrTyp">
-                                                <option value="1">Life Time</option>
-                                                <option value="2">Health Club</option>
-                                            </select>
+                                                    <select class="selectpicker" data-width="100%" name="membership">
+                                                        <option value=" " selected>Life Time</option>
+                                                        <option value="">Health Club</option>
+                                                    </select>
                                                 </div>
                                             </article>
                                             <article class="clearfix m-b-10">
                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">24/7 Service - Yes/No :</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <aside class="radio radio-info radio-inline">
-                                                       <input type="radio" id="isEmergency_yes" value="1" name="isEmergency" checked>
-                                                <label for="inlineRadio1"> Yes</label>
+                                                        <input type="radio" id="inlineRadio1" value=" " name="services" checked>
+                                                        <label for="inlineRadio1"> Yes</label>
                                                     </aside>
                                                     <aside class="radio radio-info radio-inline">
-                                                        <input type="radio" id="isEmergency_no" value="option2" name="isEmergency">
-                                                <label for="inlineRadio2"> No</label>
+                                                        <input type="radio" id="inlineRadio2" value="option2" name="services">
+                                                        <label for="inlineRadio2"> No</label>
                                                     </aside>
                                                 </div>
                                             </article>
                                             <article class="clearfix ">
-                                              <div class="col-md-12 m-t-20 m-b-20">
-                                                <button type="button" class="btn btn-success waves-effect waves-light pull-right" onclick="return validationPharmacy();">Update</button>
-                                              </div>
+                                                <div class="col-md-12 m-t-20 m-b-20">
+                                                    <button type="button" class="btn btn-success waves-effect waves-light pull-right">Update</button>
+                                                </div>
                                             </article>
 
                                         </div>
@@ -588,11 +585,11 @@
                                     <!-- Pharmacy Edit Ends -->
 
                                 </article>
-                            <!-- Pharmacy Section Ends -->
+                                <!-- Pharmacy Section Ends -->
 
 
-                    </div>
-                    </section>
+                        </div>
+                        </section>
                 </div>
 
                 <!-- container -->
@@ -606,110 +603,57 @@
     </div>
     <!-- END wrapper -->
 
+    <!--Change Logo-->
+    <div id="changeBg" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Change Background</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <img src="assets/images/hospital.jpg" class="img-responsive center-block" />
+                        <form class="form-horizontal">
+
+                            <article class="form-group m-lr-0 ">
+                                <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Background :</label>
+                                <div class="col-md-8 col-sm-8 text-right">
+                                    <input disabled="disabled" class="showUpload" id="uploadFileP">
+                                    <div class="fileUpload btn btn-sm btn-upload">
+                                        <span><i class="fa fa-cloud-upload fa-3x"></i></span>
+                                        <input type="file" class="upload" id="uploadBtnP">
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="clearfix m-t-20">
+                                <button type="button" class="btn btn-primary pull-right waves-effect waves-light bg-btn m-r-20">Upload</button>
+                            </article>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+    <!-- /Change Logo -->
 
 
 
 
 
-   <script>
+
+    <script>
         var resizefunc = [];
     </script>
-     <script src="<?php echo base_url();?>assets/js/jquery-1.8.2.min.js"> </script>
-    <script src="<?php echo base_url();?>assets/js/framework.js"> </script>
-        <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js">
+    <script src="assets/js/framework.js">
     </script>
-     <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-
-    <script type="text/javascript" src="https://www.google.com/jsapi">
+    <script src="assets/js/bootstrap-datepicker.js">
     </script>
-    
-   <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
-
-    <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
-    <script>
-         var urls = "<?php echo base_url()?>";
-         $(function(){
-        $("#geocomplete").geocomplete({
-          map: ".map_canvas",
-          details: "form",
-          types: ["geocode", "establishment"],
-        });
-
-        $("#find").click(function(){
-          $("#geocomplete").trigger("geocode");
-        });
-      });
-      
-       function validationPharmacy(){
-           
-       //$("form[name='bloodDetail']").submit();
-        var check= /^[a-zA-Z\s]+$/;
-        var numcheck=/^[0-9]+$/;
-        var emails = $.trim($('#users_email').val());
-        var cpname = $.trim($('#pharmacy_cntPrsn').val());
-        
-       
-            if($.trim($('#pharmacy_name').val()) === ''){
-                $('#pharmacy_name').addClass('bdr-error');
-                
-            }
-          
-            if($.trim($('#geocomplete').val()) === ''){
-               $("#geocomplete").addClass('bdr-error');
-               
-            }
-             if(!check.test(cpname)){
-                $('#pharmacy_cntPrsn').addClass('bdr-error');
-                
-            }
-            
-            if( emails !== ''){
-                check_email(emails);
-            }
-            
-            return false;
-            
-        }
-        
-        function checkNumber(id){
-            var phone = $.trim($('#'+'pharmacy_phn'+id).val());
-            if(!($.isNumeric(phone))){
-             $('#'+'pharmacy_phn'+id).addClass('bdr-error');
-         }
-        }
-        
-        function checkEmailFormat(){
-                var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-                var email = $('#users_email').val();
-                if(email!==''){
-                    if (!filter.test(email)){
-                       $('#users_email').addClass('bdr-error');
-                    }
-            }
-        } 
-        
-        function check_email(myEmail){
-            var user_table_id = $('#user_tables_id').val();
-           $.ajax({
-               url : urls + 'index.php/pharmacy/check_email',
-               type: 'POST',
-              data: {'users_email' : myEmail,'user_table_id' : user_table_id },
-              success:function(datas){
-                 // console.log(datas);
-                  if(datas == 0){
-                   $("form[name='pharmacyDetail']").submit();
-                   return true;
-              }
-              else {
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
-               
-               return false;
-              }
-              } 
-           });
-        }
-         
+    <script src="assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+    <script src="assets/js/pages/pharmacy-detail.js" type="text/javascript">
     </script>
 
 </body>

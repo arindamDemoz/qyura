@@ -111,12 +111,13 @@ class Hospital_model extends CI_Model {
     function fetchHospitalData($conditionId = NULL){
        $this->db->select('Hos.hospital_id,Hos.hospital_zip,Hos.hospital_usersId,Hos.hospital_name,Hos.hospital_phn,Hos.hospital_address,City.city_name,Hos.hospital_img,Hos.hospital_cntPrsn,usr.users_email,Hos.hospital_lat,Hos.hospital_long,usr.users_id,
         Hos.hospital_countryId,Hos.hospital_stateId,Hos.hospital_cityId,Hos.isEmergency,Blood.bloodBank_name,Blood.bloodBank_phn
-        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn,usr.users_mobile,Hos.hospital_mmbrTyp,Hos.hospital_background_img');
+        , Pharmacy.pharmacy_name,Pharmacy.pharmacy_phn,Hos.hospital_type,Hos.hospital_dsgn,usr.users_mobile,Hos.hospital_mmbrTyp,Hos.hospital_background_img,Ambu.ambulance_name,Ambu.ambulance_phn');
      $this->db->from('qyura_hospital AS Hos');
      $this->db->join('qyura_city AS City','City.city_id = Hos.hospital_cityId','left');
       $this->db->join('qyura_users AS usr','usr.users_id = Hos.hospital_usersId','left');
       $this->db->join('qyura_bloodBank AS Blood','Blood.users_id = Hos.hospital_usersId','left');
       $this->db->join('qyura_pharmacy AS Pharmacy','Pharmacy.pharmacy_usersId = Hos.hospital_usersId','left');
+      $this->db->join('qyura_ambulance AS Ambu','Ambu.ambulance_usersId = Hos.hospital_usersId','left');
         //$this->db->join('qyura_usersRoles AS Roles','Roles.usersRoles_userId = Hos.hospital_usersid','left'); // changed
          if($conditionId){
             $this->db->where(array('Hos.hospital_id'=> $conditionId));
@@ -126,7 +127,7 @@ class Hospital_model extends CI_Model {
        $this->db->order_by("Hos.creationTime", "desc"); 
       $data= $this->db->get(); 
      return $data->result();
-      //echo $this->db->last_query(); exit;
+     // echo $this->db->last_query(); exit;
       //echo "<pre>";print_r($data);echo "</pre>";
       //exit;
     }
@@ -179,7 +180,7 @@ class Hospital_model extends CI_Model {
         
        $this->datatables->add_column('hospital_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'hospital_img');
        
-       $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
+       $this->datatables->add_column('hospital_address', '$1 </br><a  href="hospital/map/$2" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address,hospital_id');
        
       $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
         $this->datatables->order_by("Hos.creationTime"); 

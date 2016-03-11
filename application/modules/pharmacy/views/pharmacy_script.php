@@ -1,16 +1,25 @@
+<style type="text/css">
+    #pharmacy_datatable_filter
+    {
+        display:none;
+    }
+</style>
+
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
-<?php 
+<?php $check= 0; 
+
 $check= 0; 
 if(isset($pharmacyId) && !empty($pharmacyId)){
     $check = $pharmacyId; 
+
 }?>
 
 
 <script src="<?php echo base_url(); ?>assets/cropper/cropper.js"></script>
 
-<script src="<?php echo base_url(); ?>assets/js/table2excel.js"></script>
+<!--<script src="<?php echo base_url(); ?>assets/js/table2excel.js"></script> -->
 
 <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
     </script>
@@ -41,7 +50,7 @@ if(isset($pharmacyId) && !empty($pharmacyId)){
     <script type="text/javascript" src="http://localhost/qyura/assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script type="text/javascript" src="http://localhost/qyura/assets/vendor/x-editable/jquery.xeditable.js"> </script>
     <!--<script type= 'text/javascript' src="<?php echo base_url(); ?>assets/js/jquery.dataTables.js"></script>-->
-      <script src="<?php echo base_url();?>assets/js/pages/blood-detail.js">
+      
     </script>
     <script> var pharmacyId = <?php echo $check;?> </script>
     <script>
@@ -56,9 +65,6 @@ $('.selectpicker').selectpicker({
 </script>
     
     <script>
-        var urls = "<?php echo base_url()?>";
-         var j = 1;
-         var pharmacyId = "<?php echo $check?>";
          $(function(){
 
         $("#geocomplete").geocomplete({
@@ -91,7 +97,8 @@ $('.selectpicker').selectpicker({
                   return true;
               }
           }
-        
+        var urls = "<?php echo base_url()?>";
+         var j = 1;
          
         function fetchCity(stateId) {    
            
@@ -131,54 +138,61 @@ $('.selectpicker').selectpicker({
         var phn= $.trim($('#pharmacy_phn1').val());
         var myzip = $.trim($('#pharmacy_zip').val());
         var cityId =$.trim($('#pharmacy_cityId').val());
-        var stateIds = $.trim($('#StateId').val());
-        //var status =1;
+        var stateIds = $.trim($('#pharmacy_stateId').val());
+        var status =1;
     //debugger;
    
             if($('#pharmacy_name').val()==''){
                 $('#pharmacy_name').addClass('bdr-error');
                 $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_name').focus();
             }
            if($('#pharmacy_type').val()==''){
                 $('#pharmacy_type').addClass('bdr-error');
                 $('#error-pharmacy_type').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_type').focus();
             }
             if($.trim($('#pharmacy_countryId').val()) == ''){
                 $('#pharmacy_countryId').addClass('bdr-error');
                 $('#error-pharmacy_countryId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_countryId').focus();
             }
-           if(!$.isNumeric(stateIds)){
+           if(stateIds === ''){
                // console.log("in state");
                 $('#pharmacy_stateId').addClass('bdr-error');
                 $('#error-pharmacy_stateId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_stateId').focus();
             }
-            if(!$.isNumeric(cityId)){
+            if(cityId === ''){
                 $('#pharmacy_cityId').addClass('bdr-error');
                 $('#error-pharmacy_cityId').fadeIn().delay(3000).fadeOut('slow');
-               // status= 0;
+                status= 0;
                // $('#hospital_cityId').focus();
             }
            
-            if(!$.isNumeric(myzip)){
+            /*if(!$.isNumeric(myzip)){
                 
                 $('#pharmacy_zip').addClass('bdr-error');
                 $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
+                // $('#hospital_zip').focus();
+            } */
+            if(myzip.length < 6){
+                
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip_long').fadeIn().delay(3000).fadeOut('slow');
+                status= 0;
                 // $('#hospital_zip').focus();
             } 
 
             if($("input[name='pharmacy_address']" ).val()==''){
                 $('#pharmacy_address').addClass('bdr-error');
                 $('#error-pharmacy_address').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                // $('#hospital_address').focus();
             }
             
@@ -186,34 +200,47 @@ $('.selectpicker').selectpicker({
             if(!$.isNumeric(phn)){
                 $('#pharmacy_phn1').addClass('bdr-error');
                 $('#error-pharmacy_phn1').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                 // $('#hospital_phn').focus();
             }
             
             if(!check.test(cpname)){
                 $('#pharmacy_cntPrsn').addClass('bdr-error');
                 $('#error-pharmacy_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status= 0;
                 // $('#hospital_cntPrsn').focus();
             }
            
             if($('#pharmacy_mmbrTyp').val()==''){
                 $('#pharmacy_mmbrTyp').addClass('bdr-error');
                 $('#error-pharmacy_mmbrTyp').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
+                status = 0;
                // $('#hospital_mmbrType').focus();
             }
-            if($('#users_email').val()==''){
+            if($('#users_email').val()===''){
                 $('#users_email').addClass('bdr-error');
                 $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
                // $('#users_email').focus();
             }
-            if(emails !=''){
-              check_email(emails);
-              return false;
+            
+             if(myzip .length < 6){
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
+                status= 0;
             }
+            
+            /* if(status == 0){
+              return false;
+            }else{
+              return true;
+            } */
+        if(emails != '' &&  status == 1){
+            check_email(emails);
             return false;
-        //debugger;
+        }   
+        return false;
+        
         }
 
 
@@ -224,10 +251,16 @@ $('.selectpicker').selectpicker({
         var numcheck=/^[0-9]+$/;
         var emails = $.trim($('#users_email').val());
         var cpname = $.trim($('#pharmacy_cntPrsn').val());
+        var myzip = $.trim($('#pharmacy_zip').val());
+        var phn= $.trim($('#pharmacy_phn1').val());
+        var myzip = $.trim($('#pharmacy_zip').val());
+        var cityId =$.trim($('#pharmacy_cityId').val());
+        var stateIds = $.trim($('#StateId').val());
         var status = 1;
        
             if($.trim($('#pharmacy_name').val()) === ''){
                 $('#pharmacy_name').addClass('bdr-error');
+                $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
           
@@ -241,6 +274,13 @@ $('.selectpicker').selectpicker({
             }
 
             if( emails !== '' && checkUpdateEmailFormat(emails)){
+                status = 0;
+            }
+            
+            
+             if(myzip .length < 6){
+                $('#pharmacy_zip').addClass('bdr-error');
+                $('#error-pharmacy_zip').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
             
@@ -297,51 +337,49 @@ $('.selectpicker').selectpicker({
                    $("form[name='pharmacyForm']").submit();
                    return true;
               }
-              else {
+              else if(datas == 1) {
                         $('#users_email').addClass('bdr-error');
                     $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
                    return false;
                   }
+                else{
+                    $('#users_email_status').val(datas);
+                    $("form[name='pharmacyForm']").submit();
+                     return true;
+                }
               } 
            });
         }  
         
          $(document).ready(function () {
+            // 
                 var oTable = $('#pharmacy_datatable').DataTable({
                     "processing": true,
-                    "serverSide": true,
+                    "bServerSide": true,
+                   // "searching": true,
                     "bLengthChange": false,
-                    "bFilter": false,
-                    "iDisplayStart ": 10,
-                    "iDisplayLength" : 12,
-                     dom: 'Bfrtip',
-                     "buttons": [
-                        {
-                            extend: 'collection',
-                            text: 'Export',
-                            buttons: [
-                                'copy',
-                                'excel',
-                                'csv',
-                                'pdf',
-                                'print'
-                            ]
-                        }
-                        ],
+                    "bProcessing": true,
+                    "iDisplayLength": 10,
+                    "bPaginate": true,
+                    "sPaginationType": "full_numbers",
+                    "columnDefs": [{
+                    "targets": [0, 5],
+                    "orderable": false
+                }],
                      "columns": [
-                        {"data": "pharmacy_img"},
+                        {"data": "pharmacy_img","searchable": false, "order": false,orderable: false, width: "8%" },
                         {"data": "pharmacy_name"},
                         {"data": "city_name"},
                         {"data": "pharmacy_phn"},
                         {"data": "pharmacy_address"},
-                        {"data": "view"},
+                        {"data": "view","searchable": false, "order": false,orderable: false, width: "8%"},
                     ],
                     
                     "ajax": {
                         "url": "<?php echo site_url('pharmacy/getPharmacyDl'); ?>",
                         "type": "POST", 
                         "data": function ( d ) {
-                                         d.cityId = $("#pharmacy_cityId").val();
+                                    d.cityId = $("#pharmacy_cityId").val();
                                          d.name = $("#search").val();
                                          if($("#pharmacy_stateId").val() != ' '){
                                          d.hosStateId = $("#pharmacy_stateId").val();
@@ -355,7 +393,7 @@ $('.selectpicker').selectpicker({
                         oTable.draw();
                   } );
                      $('#search').on('keyup', function() {
-                        oTable.draw();
+                        oTable.search($(this).val()).draw() ;
                   } );
                 
             });
@@ -457,8 +495,8 @@ $("#picEditClose").click(function () {
              }
           });
      }  
-     
-     function changebackgroundImage(id){
+
+      function changebackgroundImage(id){
            $.ajax({
             url: urls + 'index.php/pharmacy/getBackgroundImage/'+id, // Url to which the request is send
             type: "POST",            
@@ -532,6 +570,15 @@ function imageIsLoaded(e) {
     $('#previewing').attr('width', '500px');
     $('#previewing').attr('height', '230px');
 }
+});
+
+$("#edit").click(function () {
+ $("#detail").toggle();
+    $("#newDetail").toggle();
+});
+$("#editdetail").click(function () {
+    $("#detail").toggle();
+    $("#newDetail").toggle();
 });
  </script>   
 

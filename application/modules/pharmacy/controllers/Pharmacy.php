@@ -14,17 +14,13 @@ class Pharmacy extends MY_Controller {
         $data = array();
        $data['allStates'] = $this->Pharmacy_model->fetchStates();
        $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData();
-       //print_r($data['pharmacyData']);
-       //exit;
-       
-       // $this->load->view('pharmacyListing',$data);
+       $data['pharmacyId'] = 0;
         $data['title'] = 'All Pharmacy';
         $this->load->super_admin_template('pharmacyListing', $data,'pharmacy_script');
    }
     function getPharmacyDl(){
 
-       
-        echo $this->Pharmacy_model->fetchPharmacyDataTables();
+      echo $this->Pharmacy_model->fetchPharmacyDataTables();
  
    }
    function addPharmacy(){
@@ -37,6 +33,10 @@ class Pharmacy extends MY_Controller {
    function detailPharmacy($pharmacyId=''){
        $data = array();
         $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($pharmacyId);
+        $data['allCountry'] = $this->Pharmacy_model->fetchCountry();
+        $data['allCities'] = $this->Pharmacy_model->fetchCity($data['pharmacyData'][0]->pharmacy_stateId);
+        $data['allStates'] = $this->Pharmacy_model->fetchStates($data['pharmacyData'][0]->pharmacy_stateId);
+
         $data['pharmacyId'] = $pharmacyId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
@@ -60,14 +60,14 @@ class Pharmacy extends MY_Controller {
   function SavePharmacy(){
      // print_r($_POST);exit;
       	$this->load->library('form_validation');
-        $this->bf_form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim');
+        $this->bf_form_validation->set_rules('pharmacy_name', 'Pharmacy Name', 'required|trim|required');
       
         $this->bf_form_validation->set_rules('pharmacy_countryId', 'Pharmacy Country', 'required|trim');
         $this->bf_form_validation->set_rules('pharmacy_stateId', 'Pharmacy StateId', 'required|trim');
         $this->bf_form_validation->set_rules('pharmacy_cityId', 'Pharmacy City', 'required|trim');
         
         //$this->bf_form_validation->set_rules('pharmacy_phn[]', 'Pharmacy Mobile No', 'required|trim');
-       $this->bf_form_validation->set_rules('pharmacy_zip','Pharmacy Zip', 'required|trim');
+       $this->bf_form_validation->set_rules('pharmacy_zip','Pharmacy Zip', 'required|trim|min_length[6]|max_length[6]');
        $this->bf_form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
        $this->bf_form_validation->set_rules('pharmacy_address','Pharmacy Address','required|trim');
    
@@ -75,8 +75,6 @@ class Pharmacy extends MY_Controller {
       $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
        
         if ($this->bf_form_validation->run() === FALSE) {
-          //echo validation_errors();
-          //exit;
              $data = array();
              $data['allStates'] = $this->Pharmacy_model->fetchStates();
              $this->load->super_admin_template('addPharmacy', $data,'pharmacy_script');
@@ -107,8 +105,11 @@ class Pharmacy extends MY_Controller {
                  
                   $finalNumber = '';
                 for($i= 0;$i < count($pharmacy_phn) ;$i++) {
-                    if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') {
-                       $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|'; 
+                    if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') { 
+                       if($i == count($pharmacy_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i];
+                       else        
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|';
                     }
                     
                 }
@@ -142,12 +143,18 @@ class Pharmacy extends MY_Controller {
                     'pharmacy_type'  => $this->input->post('pharmacyType') 
                         
                     );
+                    $users_email_status = $this->input->post('users_email_status');
+                    if($users_email_status == ''){
                     $users_email = $this->input->post('users_email');
                     $pharmacyInsert = array(
                    'users_email' => $users_email,
                    'users_ip_address' => $this->input->ip_address(),
-                );
-                    $pharmacy_usersId = $this->Pharmacy_model->insertPharmacyUser($pharmacyInsert);
+                   'creationTime' => strtotime(date("Y-m-d H:i:s"))
+                    );
+                        $pharmacy_usersId = $this->Pharmacy_model->insertPharmacyUser($pharmacyInsert);
+                    }else {
+                        $pharmacy_usersId = $users_email_status;
+                    }
                     if($pharmacy_usersId) {
 
                       $insertusersRoles = array(
@@ -166,7 +173,24 @@ class Pharmacy extends MY_Controller {
                    redirect('pharmacy/addPharmacy');
          }
   }  
- 
+  function uploadImages ($imageName,$folderName,$newName){
+             $path = realpath(FCPATH.'assets/'.$folderName.'/');
+                 $config['upload_path'] = $path;
+            //echo $config['upload_path']; 
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '5000';
+		$config['max_width']  = '1024';
+		$config['max_height']  = '768';
+                $config['file_name'] = $newName;
+                
+               
+		$this->load->library('upload', $config);
+               $this->upload->initialize($config);
+               $this->upload->do_upload($imageName);
+               $this->upload->display_errors();
+               return TRUE;
+
+    }
     
   function getImageBase64Code($img)
     {
@@ -176,7 +200,7 @@ class Pharmacy extends MY_Controller {
         $data = base64_decode($img);
         return $data;
     }
-    function check_email(){
+    /*function check_email(){
         $user_table_id = '';
         $users_email = $this->input->post('users_email');
         if(isset($_POST['user_table_id'])){
@@ -184,6 +208,31 @@ class Pharmacy extends MY_Controller {
         }
         $email = $this->Pharmacy_model->fetchEmail($users_email,$user_table_id);
         echo $email;
+        exit;
+    }*/
+    function check_email(){
+       $user_table_id = '';
+        $users_email = $this->input->post('users_email');
+        if(isset($_POST['user_table_id'])){
+          $user_table_id = $this->input->post('user_table_id');
+        }
+        $email = $this->Pharmacy_model->fetchEmail($users_email,$user_table_id);
+       
+        if($email == 1)
+        echo $email;
+        else{
+            $select = array('users_id');
+            $where = array('users_email'=> $users_email,
+                'users_deleted'=>0);
+            $return = $this->Pharmacy_model->fetchTableData($select,'qyura_users',$where);
+            $data = 0;
+            if(!empty($return)){
+                $data = $return[0]->users_id;
+                echo $data;
+            }else{
+                echo $data;
+            }
+        }
         exit;
     }
     function saveDetailPharmacy($pharmacyId){
@@ -193,13 +242,25 @@ class Pharmacy extends MY_Controller {
         $this->bf_form_validation->set_rules('pharmacy_address', 'Pharmacy Address', 'required|trim');
         $this->bf_form_validation->set_rules('users_email','Users Email','required|valid_email|trim');
         $this->bf_form_validation->set_rules('pharmacy_cntPrsn', 'Pharmacy Contact Person', 'required|trim');
+
+        
+         $this->bf_form_validation->set_rules('pharmacy_countryId', 'Country Name', 'required|trim');
+         $this->bf_form_validation->set_rules('pharmacy_stateId', 'State Name', 'required|trim');
+         $this->bf_form_validation->set_rules('pharmacy_cityId', 'City Name', 'required|trim');
+         $this->bf_form_validation->set_rules('pharmacy_zip', 'Zip Code', 'required|trim|max_length[6]|min_length[6]');
         if ($this->bf_form_validation->run() === FALSE) {
-             $data = array();
-             $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($pharmacyId);
-               $data['pharmacyId'] = $pharmacyId;
-               $data['showStatus'] = 'block';
-               $data['detailShow'] = 'none';
-             $this->load->view('pharmacyDetail',$data);
+        $data = array();
+        $data['pharmacyData'] = $this->Pharmacy_model->fetchpharmacyData($pharmacyId);
+        $data['allCountry'] = $this->Pharmacy_model->fetchCountry();
+        $data['allCities'] = $this->Pharmacy_model->fetchCity($data['pharmacyData'][0]->pharmacy_stateId);
+        $data['allStates'] = $this->Pharmacy_model->fetchStates($data['pharmacyData'][0]->pharmacy_stateId);
+
+        $data['pharmacyId'] = $pharmacyId;
+        $data['showStatus'] = 'none';
+        $data['detailShow'] = 'block';
+        $data['title'] = 'Pharmacy Detail';
+      //  $this->load->view('pharmacyDetail',$data);
+        $this->load->super_admin_template('pharmacyDetail', $data,'pharmacy_script');
              
          }
          else{
@@ -210,12 +271,20 @@ class Pharmacy extends MY_Controller {
                   $finalNumber = '';
                 for($i= 0;$i < count($pharmacy_phn) ;$i++) {
                     if($pharmacy_phn[$i] != '' && $pre_number[$i] !='') {
-                       $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|'; 
+                       
+                       if($i == count($pharmacy_phn)-1)
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i];
+                       else        
+                          $finalNumber .= $pre_number[$i].' '.$pharmacy_phn[$i].'|';
                     }
                 } 
                 
                 $updatePharmacy = array(
                   'pharmacy_name'=>  $this->input->post('pharmacy_name'),
+                   'pharmacy_cityId'=>  $this->input->post('pharmacy_cityId'),
+                    'pharmacy_countryId'=>  $this->input->post('pharmacy_countryId'),
+                    'pharmacy_stateId'=>  $this->input->post('pharmacy_stateId'),
+                    'pharmacy_zip'=>  $this->input->post('pharmacy_zip'),
                   'pharmacy_type'=> $this->input->post('pharmacy_type'),
                      'pharmacy_address' =>  $this->input->post('pharmacy_address'),
                      'pharmacy_phn' => $finalNumber,
@@ -320,30 +389,8 @@ class Pharmacy extends MY_Controller {
         return True;
         exit;
     }
-    
-    function uploadImages($imageName, $folderName, $newName) {
-        $path = realpath(FCPATH . 'assets/' . $folderName . '/');
-        $config['upload_path'] = $path;
-        //echo $config['upload_path']; 
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['max_size'] = '1024';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '540';
-        $config['file_name'] = $newName;
 
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload($imageName)) {
 
-            $data ['error'] = $this->upload->display_errors();
-            $data ['status'] = 0;
-            return $data;
-        } else {
-            $data['imageData'] = $this->upload->data();
-            $data ['status'] = 1;
-            return $data;
-        }
-    }
 
   function pharmacyBackgroundUpload($pharmacyId) {
           if (isset($_FILES["file"]["name"])) {
@@ -353,12 +400,11 @@ class Pharmacy extends MY_Controller {
             $imageName = "pharmacy";
             $newfilename = "" . $imageName . "_" . $microtime . '.' . end($temp);
             $uploadData = $this->uploadImages('file', 'pharmacyImages', $newfilename);
-            if ($uploadData['status']) {
+            if ($uploadData) {
                 $imageName = $uploadData['imageData']['file_name'];
 
-                    $data = array('pharmacy_background_img' => $imageName);
+                    $data = array('pharmacy_background_img' => $newfilename);
                     $where = array('pharmacy_id' => $pharmacyId);
-             
                 $response = $this->Pharmacy_model->UpdateTableData($data,$where,'qyura_pharmacy');
                 if ($response) {
                     $result = array('status' => 200, 'messsage' => "successfully update image");

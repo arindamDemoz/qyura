@@ -24,6 +24,9 @@ class DiagonsticCenterApi extends MyRest {
         $this->form_validation->set_rules('isHealtPkg', 'Is Health Package', 'xss_clean|trim|numeric|required');
         $this->form_validation->set_rules('isConsulting', 'Is Consultaion', 'xss_clean|trim|numeric|required');
         $this->form_validation->set_rules('notin', 'Not in', 'xss_clean|trim|required');
+        $this->bf_form_validation->set_rules('userId', 'User Id', 'xss_clean|trim');
+        $this->bf_form_validation->set_rules('search', 'Search Keyword', 'xss_clean|trim');
+        $this->bf_form_validation->set_rules('cityId', 'cityId', 'xss_clean|trim|numeric|is_natural_no_zero');
 
         if ($this->form_validation->run() == FALSE) {
             // setup the input
@@ -34,11 +37,18 @@ class DiagonsticCenterApi extends MyRest {
             
             
             $lat = isset($_POST['lat']) ? $this->input->post('lat') : '';
-            $long = isset($_POST['long']) ? $this->input->post('long') : '';      
+            $long = isset($_POST['long']) ? $this->input->post('long') : '';    
+            
+            $userId = isset($_POST['userId']) && $_POST['userId'] != null && $_POST['userId'] !=0 ? $this->input->post('userId') : 0;
+             
             $isemergency = isset($_POST['isemergency'])  ? $this->input->post('isemergency') : NULL;  
             
             $notIn = isset($_POST['notin']) && $_POST['notin'] != 0 ? $_POST['notin'] : '';
             $notIn = explode(',', $notIn);
+            
+            $search = isset($_POST['search']) && $_POST['search'] != ''  ? $this->input->post('search') : NULL; 
+            //city
+            $cityId = isset($_POST['cityId']) ? $this->input->post('cityId') : NULL;
              
             // filtration parameter
             $radius = isset($_POST['radius']) ? $this->input->post('radius') : 5;
@@ -47,7 +57,7 @@ class DiagonsticCenterApi extends MyRest {
             $isConsulting = isset($_POST['isConsulting'])  ? $this->input->post('isConsulting') : NULL; 
 
 
-            $response['data'] = $this->diagonsticCenter_models->diaginsticList($lat,$long,$notIn,$isemergency,$radius,$rating,$isHealtPkg, $isConsulting);
+            $response['data'] = $this->diagonsticCenter_models->diaginsticList($lat,$long,$notIn,$isemergency,$radius,$rating,$isHealtPkg, $isConsulting, $userId,$search,$cityId);
             
             $option = array('table'=>'diagnostic','select'=>'diagnostic_id');
             $deleted = $this->singleDelList($option);
@@ -69,6 +79,40 @@ class DiagonsticCenterApi extends MyRest {
         }
     }
 
+      function diagnosticTimeSlot_post() {
+        $this->bf_form_validation->set_rules('diagnosticId','diagnosticId','xss_clean|numeric|required|trim');
+        if ($this->bf_form_validation->run($this) == FALSE) {
+            $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
+            $this->response($response, 400);
+        } else {
+            $centerTimeSlot = $this->input->post('diagnosticId');
+            $options = array(
+                'table' => 'qyura_diagnosticCenterTimeSlot',
+                'where' => array('qyura_diagnosticCenterTimeSlot.diagnosticCenterTimeSlot_deleted' => 0,'qyura_diagnosticCenterTimeSlot.diagnosticCenterTimeSlot_diagnosticId' => $centerTimeSlot),
+            );
+            $centerTimeSlotArray = $this->common_model->customGet($options);
+            $response = array();
+            if(isset($centerTimeSlotArray) && $centerTimeSlotArray != NULL){
+                foreach ($centerTimeSlotArray as $diagnosticTime){
+		    $timeSlot = array();
+                    $timeSlot[] = $diagnosticTime->diagnosticCenterTimeSlot_id;
+                    $timeSlot[] = $diagnosticTime->diagnosticCenterTimeSlot_startTime;
+                    $timeSlot[] = $diagnosticTime->diagnosticCenterTimeSlot_endTime;
+                    $timeSlot[] = getSession($diagnosticTime->diagnosticCenterTimeSlot_sessionType);
+                    $response[] = $timeSlot;
+                }
+            }
+	    $columns = array('d_timeSlotid','d_startTime','d_endTime','d_sessionType');
+            
+            if (!empty($response) && $response != NULL ) {
+                $response = array('status' => TRUE, 'message' => 'success', 'data' => $response,'columns'=>$columns);
+                $this->response($response, 200);
+            } else {
+                $response = array('status' => FALSE, 'message' => 'There is no time slot yet!' );
+                $this->response($response, 400);
+            }
+        }
+    }
 
       function diagonsticdetail_post() {
       $this->form_validation->set_rules('diagonsticId','Diagonstic Id','xss_clean|numeric|required|trim');

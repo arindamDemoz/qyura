@@ -12,6 +12,41 @@ class HospitalApi extends MyRest {
         $this->load->model(array('hospital_model'));
     }
 
+    function hospitalTimeSlot_post() {
+        $this->bf_form_validation->set_rules('hospitalId','hospitalId','xss_clean|numeric|required|trim');
+        if ($this->bf_form_validation->run($this) == FALSE) {
+            $response = array('status' => FALSE, 'message' => $this->validation_post_warning());
+            $this->response($response, 400);
+        } else {
+            $hospitalId = $this->input->post('hospitalId');
+            $options = array(
+                'table' => 'qyura_hospitalTimeSlot',
+                'where' => array('qyura_hospitalTimeSlot.hospitalTimeSlot_deleted' => 0,'qyura_hospitalTimeSlot.hospitalTimeSlot_hospitalId' => $hospitalId),
+            );
+            $hospitalTimeSlot = $this->common_model->customGet($options);
+             $response = array();
+            if(isset($hospitalTimeSlot) && $hospitalTimeSlot != NULL){
+                foreach ($hospitalTimeSlot as $hospitalTime){
+		    $timeSlot = array();
+                    $timeSlot[] = $hospitalTime->hospitalTimeSlot_id;
+                    $timeSlot[] = $hospitalTime->hospitalTimeSlot_startTime;
+                    $timeSlot[] = $hospitalTime->hospitalTimeSlot_endTime;
+                    $timeSlot[] = getSession($hospitalTime->hospitalTimeSlot_sessionType);
+                    $response[] = $timeSlot;
+                }
+            }
+            
+	    $columns = array('h_timeSlotid','h_startTime','h_endTime','h_sessionType');
+            if (!empty($response) && $response != NULL ) {
+                $response = array('status' => TRUE, 'message' => ' Time Slot!', 'data' => $response,'columns'=>$columns);
+                $this->response($response, 200);
+            } else {
+                $response = array('status' => FALSE, 'message' => 'There is no time slot yet!' );
+                $this->response($response, 400);
+            }
+        }
+    }
+
     function hospitallist_post() {
 
 
@@ -24,6 +59,9 @@ class HospitalApi extends MyRest {
         $this->bf_form_validation->set_rules('isHealtPkg', 'Is Health Package', 'xss_clean|trim|numeric|required');
         $this->bf_form_validation->set_rules('rating', 'Rating', 'xss_clean|trim|numeric|required');
         $this->bf_form_validation->set_rules('notin', 'Not In', 'xss_clean|trim|required');
+        $this->bf_form_validation->set_rules('userId', 'User Id', 'xss_clean|trim');
+        $this->bf_form_validation->set_rules('search ', 'Search Keyword', 'xss_clean|trim');
+        $this->bf_form_validation->set_rules('cityId', 'cityId', 'xss_clean|trim|numeric|is_natural_no_zero');
 
         if ($this->bf_form_validation->run($this) == FALSE) {
             // setup the input
@@ -34,10 +72,17 @@ class HospitalApi extends MyRest {
 
 
             $lat = isset($_POST['lat']) ? $this->input->post('lat') : '';
-            $long = isset($_POST['long']) ? $this->input->post('long') : '';      
+            $long = isset($_POST['long']) ? $this->input->post('long') : '';
+            $userId = isset($_POST['userId']) && $_POST['userId'] != null && $_POST['userId'] !=0 ? $this->input->post('userId') : 0;
 
             $notIn = isset($_POST['notin']) && $_POST['notin'] != 0 ? $this->input->post('notin') : '';
             $notIn = explode(',', $notIn);
+            
+            // search
+            $search = isset($_POST['search']) && $_POST['search'] != ''  ? $this->input->post('search') : NULL; 
+            //city
+            $cityId = isset($_POST['cityId']) ? $this->input->post('cityId') : NULL;
+            
             
             $isemergency = isset($_POST['isemergency'])  ? $this->input->post('isemergency') : NULL; 
             
@@ -48,7 +93,7 @@ class HospitalApi extends MyRest {
             $isInsurance = isset($_POST['isInsurance'])  ? $this->input->post('isInsurance') : NULL; 
             $isHealtPkg = isset($_POST['isHealtPkg'])  ? $this->input->post('isHealtPkg') : NULL; 
             
-            $response['data'] = $this->hospital_model->getHospitalList($lat,$long,$notIn,$isemergency,$radius,$isAmbulance,$isInsurance,  $isHealtPkg, $rating);
+            $response['data'] = $this->hospital_model->getHospitalList($lat,$long,$notIn,$isemergency,$radius,$isAmbulance,$isInsurance,  $isHealtPkg, $rating, $userId, $search,$cityId);
             
             $option = array('table'=>'hospital','select'=>'hospital_id');
             $deleted = $this->singleDelList($option);

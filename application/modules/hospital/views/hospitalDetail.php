@@ -229,7 +229,34 @@
                                                             </section>
                                                             
                                                         </aside>
-                                                             <?php } ?>
+                                                             <?php } if(!empty($hospitalData[0]->ambulance_phn)){ ?>
+                                                            
+                                                            <aside class="clearfix m-t-20 setting">
+                                                            <h4>Ambulance Detail
+                                                           
+                                                              </h4>
+                                                            <hr/>
+                                                            <section id="detailpharma">
+                                                                <article class="clearfix m-b-10">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                    <p class="col-md-8 col-sm-8 t-xs-left"><?php echo $hospitalData[0]->ambulance_name;?></p>
+                                                                </article>
+
+                                                                <article class="clearfix m-b-10 ">
+                                                                    <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                    <aside class="col-md-8 col-sm-8 t-xs-left">
+                                                                         <?php 
+                                                                    $ambulance_explode= explode('|',$hospitalData[0]->ambulance_phn); 
+                                                                    for($i= 0; $i< count($ambulance_explode);$i++){?>
+                                                                    <p>+<?php echo $ambulance_explode[$i];?></p>
+                                                                   
+                                                                    <?php }?>
+                                                                    </aside>
+                                                                </article>
+                                                            </section>
+                                                            
+                                                        </aside>
+                                                             <?php } ?>   
                                                         </aside>
                                                         
                                                         <!--edit-->
@@ -410,6 +437,63 @@
                                                             </article>
                                                            </section>
                                     
+                                                          <article class="clearfix">
+                                                                        <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">Ambulance Availablity </label>
+                                                                        <div class="col-md-8 col-xs-3">
+                                                                            <aside class="checkbox checkbox-success m-t-5">
+                                                                                <input type="checkbox" id="ambulancebtn" name="ambulance_chk" value="1">
+                                                                                <label>
+
+                                                                                </label>
+                                                                            </aside>
+                                                                        </div>
+                                                                    </article>
+                                                                    
+                                                                    <section id="ambulancedetail" style="display:none">
+                                                                
+                                                                        <article class="clearfix m-b-10">
+                                                                       <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
+                                                                       <div class="col-md-8 col-sm-8">
+                                                                           <input class="form-control" name="ambulance_name" id="ambulance_name" type="text" value="<?php if(isset($hospitalData[0]->ambulance_name)){ echo $hospitalData[0]->ambulance_name; } ?>">
+                                                                           <div>
+                                                                   </article>
+                                                                       <article class="clearfix m-b-10 ">
+                                                                       <label for="cemail" class="control-label col-md-4 col-sm-4">Phone Numbers :</label>
+                                                                       <div class="col-md-8 col-sm-8">
+                                                                            <?php 
+                                                                            if($hospitalData[0]->ambulance_phn != ''){
+                                                                                $ambulanceExplode= explode('|',$hospitalData[0]->ambulance_phn); 
+                                                                                for($i= 0; $i< count($ambulanceExplode);$i++){
+                                                                                $more_ambulance = explode(' ',$ambulanceExplode[$i]);?>
+                                                                           <aside class="row">
+                                                                               <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                                   <select class="selectpicker" data-width="100%" name="preambuNo[]" id="preambuNo<?php echo ($i+1);?>">
+                                                                                    <option value="91" <?php if($more_ambulance[0] == '91'){ echo 'selected';}?>>+91</option>
+                                                                                    <option value="1" <?php if($more_ambulance[0] == '1'){ echo 'selected';}?>>+1</option>
+                                                                                   </select>
+                                                                               </div>
+                                                                               <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
+                                                                                   <input type="text" class="form-control" name="ambulance_phn[]" id="ambulance_phn<?php echo ($i+1);?>" value ="<?php echo $more_ambulance[1]; ?>" placeholder="9837000123" onkeypress="return isNumberKey(event)" maxlength="10" />
+                                                                               </div>
+
+                                                                           </aside>
+                                                                            <?php $more_ambulance = ''; } } else {?>
+                                                                                <aside class="row">
+                                                                               <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                                   <select class="selectpicker" data-width="100%" name="preambuNo[]" id="preambuNo1">
+                                                                                    <option value="91" >+91</option>
+                                                                                    <option value="1" >+1</option>
+                                                                                   </select>
+                                                                               </div>
+                                                                               <div class="col-md-9 col-sm-9 col-xs-10 m-t-xs-10">
+                                                                                   <input type="teL" class="form-control" name="ambulance_phn[]" id="ambulance_phn1" value ="" placeholder="9837000123" onkeypress="return isNumberKey(event)" maxlength="10"/>
+                                                                               </div>
+
+                                                                           </aside>
+                                                                            <?php } ?>
+                                                                       </div>
+                                                                   </article>
+                                                                  </section>  
                                                             
                                                            <article class="clearfix">
                                                                         <label class="control-label col-md-4 col-sm-4 col-xs-9" for="cname">24x7 Emergency </label>
@@ -461,6 +545,9 @@
                                                                <?php if($hospitalData[0]->bloodBank_name != '' OR $hospitalData[0]->bloodBank_phn != ''){ ?>
                                                                 <input name="bloodbank_status" id="bloodbank_status" type="hidden" value="<?php echo $hospitalData[0]->bloodBank_name;?>">
                                                             <?php } ?>  
+                                                                <?php if($hospitalData[0]->ambulance_name != '' OR $hospitalData[0]->ambulance_phn != ''){ ?>
+                                                                <input name="ambulance_status" id="ambulance_status" type="hidden" value="<?php echo $hospitalData[0]->ambulance_name;?>">
+                                                            <?php } ?> 
                                                              </fieldset>  
                                                         </form>  
                                                         

@@ -9,7 +9,7 @@
                     <div class="clearfix">
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">Ambulance Provider Detail</h3>
-                            <a href="all-ambulance-provider.html" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
+                            <a href="<?php echo site_url('ambulance');?>" class="btn btn-appointment btn-back waves-effect waves-light pull-right"><i class="fa fa-angle-left"></i> Back</a>
 
                         </div>
                     </div>
@@ -199,7 +199,7 @@
                                                             </select>
                                                         </div> -->
                                                         <div class="col-md-9 col-sm-9 col-xs-12 m-t-xs-10">
-                                                            <input type="text" class="form-control" name="users_mobile" id="users_mobile" value="<?php if(isset($ambulanceData[0]->users_mobile)){ echo $ambulanceData[0]->users_mobile;}?>" onkeypress="return isNumberKey(event)"/>
+                                                            <input type="text" class="form-control" name="users_mobile" id="users_mobile" maxlength="10" value="<?php if(isset($ambulanceData[0]->users_mobile)){ echo $ambulanceData[0]->users_mobile;}?>" onkeypress="return isNumberKey(event)"/>
                                                             <label class="error" > <?php echo form_error("users_mobile"); ?></label>   
                                                              <label class="error" style="display:none;" id="error-users_mobile"> please enter mobile number</label>          
                                                         </div>

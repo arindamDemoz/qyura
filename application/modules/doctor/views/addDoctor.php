@@ -1,352 +1,4 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="<?php echo base_url();?>assets/images/fevicon-m.ico" rel="shortcut icon">
-    <title>Add New Doctor</title>
-    <link href="<?php echo base_url();?>assets/css/framework.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/css/datepicker.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/css/custom-g.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/css/custom-r.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
-    <link href="<?php echo base_url();?>assets/vendor/select2/select2.css" rel="stylesheet" type="text/css" />
-    <link href="<?php echo base_url();?>assets/css/responsive-r.css" rel="stylesheet" />
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <![endif]-->
-    <script src="<?php echo base_url();?>assets/js/modernizr.min.js"></script>
-</head>
-
-<body class="fixed-left">
-    <!-- Begin page -->
-    <div id="wrapper">
-        <!-- Top Bar Start -->
-        <div class="topbar">
-            <!-- Logo -->
-            <div class="topbar-left">
-
-
-            </div>
-            <!-- Button mobile view to collapse sidebar menu -->
-            <div class="navbar navbar-default" role="navigation">
-                <div class="container row">
-                    <div class="clearfix">
-                        <div class="pull-left">
-                            <div class="mlogo visible-xs visible-sm"><a href="#"><i class="md"></i></a></div>
-
-                            <div class="hidden-xs hidden-sm">
-                                <a class="logo" href="#"><img src="<?php echo base_url();?>assets/images/qyura-f-l.png"></a>
-
-                                <button class="button-menu-mobile open-left"><i class="fa fa-bars"></i></button> <span class="clearfix"></span>
-                            </div>
-
-                            <button class="button-menu-mobile open-left hidden-lg hidden-md"><i class="fa fa-bars"></i></button> <span class="clearfix"></span>
-                        </div>
-
-                        <form class="navbar-form pull-left visible-md" role="search">
-                            <div class="form-group">
-                                <input class="form-control search-bar" placeholder="Type here for search..." type="text">
-                            </div>
-                            <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right pull-right">
-                            <li class="dropdown">
-                                <a aria-expanded="true" class="dropdown-toggle profile" data-toggle="dropdown" href=""><img alt="user-img" class="img-circle" src="<?php echo base_url();?>assets/images/users/avatar-1.jpg"> Ramesh K
-                                    <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-face-unlock"></i> Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-settings"></i> Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-lock"></i> Lock screen</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)"><i class=
-                                    "md md-settings-power"></i> Logout</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown hidden-xs">
-                                <a aria-expanded="true" class="dropdown-toggle waves-effect waves-light" data-target="#" data-toggle="dropdown" href="#"><i class="md md-notifications"></i>
-                           <span class=
-                              "badge badge-xs badge-danger">3</span></a>
-                                <ul class="dropdown-menu dropdown-menu-lg">
-                                    <li class="text-center notifi-title">
-                                        Notification
-                                    </li>
-                                    <li class="list-group">
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-user-plus fa-2x text-info">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        New user registered
-                                                    </div>
-                                                    <p class="m-0"><small>You have
-                                             10 unread messages</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-diamond fa-2x text-primary">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        New settings
-                                                    </div>
-                                                    <p class="m-0"><small>There are
-                                             new settings
-                                             available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <em class="fa fa-bell-o fa-2x text-danger">
-                                          </em>
-                                                </div>
-                                                <div class="media-body clearfix">
-                                                    <div class="media-heading">
-                                                        Updates
-                                                    </div>
-                                                    <p class="m-0"><small>There are
-                                             <span class=
-                                                "text-primary">2</span> new
-                                             updates available</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="list-group-item" href="javascript:void(0);"><small>See
-                                 all notifications</small></a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <!-- <li class="hidden-xs">
-                           <a href="#" class="right-bar-toggle waves-effect waves-light"><i class="md md-settings"></i></a>
-                           </li> -->
-                            <li class="hidden-xs hidden-sm">
-                                <a class="waves-effect waves-light" href="#" id="btn-fullscreen"><i class=
-                              "md md-crop-free"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- nav-collapse -->
-                </div>
-            </div>
-        </div>
-        <!-- Top Bar End -->
-        <!-- Left Sidebar Start -->
-        <div class="left side-menu">
-            <div class="sidebar-inner slimscrollleft">
-                <!--- Divider -->
-                <div id="sidebar-menu">
-                    <ul>
-                        <li>
-                            <a href="dashboard.html" class="waves-effect"><i class="ion-ios7-keypad-outline"></i><span>Dashboard</span></a>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-hospital-o"></i> 
-                            <span>Hospitals</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/hospital">All Hospitals</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/hospital/addHospital">Add New Hospital</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-plus-square"></i> 
-                            <span>Diagnostic Centres</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/diagnostic">All Diag Centres</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/diagnostic/addDiagnostic">Add New Diag Centre</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-heartbeat"></i> 
-                            <span>Blood Banks</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/bloodbank">All Blood Banks</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/bloodbank/Addbloodbank">Add New Blood Bank</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-medkit"></i> 
-                            <span>Pharmacies</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy">All Pharmacies</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/pharmacy/addPharmacy">Add New Pharmacies</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-ambulance"></i> 
-                            <span>Ambulance Providr</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/ambulance">All Ambulance Providers</a></li>
-                                <li><a href="<?php echo base_url();?>index.php/ambulance/addAmbulance">Add Ambulance Provider</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect active" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>Doctors</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="<?php echo base_url();?>index.php/doctor">All Doctors</a></li>
-                                <li class="active"><a href="<?php echo base_url();?>index.php/doctor/addDoctor">Add New Doctor</a></li>
-                                <li><a href="#">Schedule & Availability</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>MI Appointments</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Appointments</a></li>
-                                <li><a href="all-appointment.html">All Appointments</a></li>
-                                <li><a href="addappointment.html">Add New Appointment</a></li>
-                                <li><a href="upload-reports.html">Upload Test Reports</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-stethoscope"></i> 
-                            <span>Dr. Appointments</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Appointments</a></li>
-                                <li><a href="doctor-appointments.html">All Appointments</a></li>
-                                <li><a href="add-doctor-appointment.html">Add New Appointment</a></li>
-
-                            </ul>
-                        </li>
-
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="ion-clipboard"></i> 
-                            <span>Quotations</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Pending Quotation Req.</a></li>
-                                <li><a href="quotelist.html">All Quotation Requests</a></li>
-                                <li><a href="send-quote.html">Send a Quote</a></li>
-                                <li><a href="quote-history.html">Quotation History</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Healthcare Packag.</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="health-packages.html">Healthcare Package</a></li>
-                                <li><a href="add-health-package.html">Add New Package</a></li>
-                                <li><a href="health-package-booking.html">Package Booking</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-newspaper-o"></i><span>Medicart</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="medicart-offer-list.html">Medicart Offers</a></li>
-                                <li><a href="medicart-booking.html">Booking Requests</a></li>
-                                <li><a href="medicart-enquiry.html">Enquiries</a></li>
-                                <li><a href="add-medicat-offer.html">Add New Offer</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="call-tracking.html" class="waves-effect"><i class="ion-ios7-telephone-outline"></i><span>Call Tracking</span></a>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="md md-account-circle"></i><span>User Management</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="all-user.html">User List</a></li>
-                                <li><a href="add-user.html">Add New User</a></li>
-                            </ul>
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-star-o"></i><span>Rate & Reviews</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="review-management.html">All Reviews</a></li>
-                                <li><a href="#">Ratings</a></li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="#" class="waves-effect"><i class="fa fa-star-o"></i><span>Favorited By</span></a>
-                        </li>
-                        <li>
-                            <a href="#" class="waves-effect"><i class="fa fa-bar-chart-o"></i><span>App Analytics</span></a>
-
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="md md-trending-up"></i><span>Finance</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Finacial Accounts</a></li>
-                                <li><a href="#">Invoice List</a></li>
-                                <li><a href="#">Payment Transactions</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Promo Coupons</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Coupons List</a></li>
-                                <li><a href="#">Create a Coupon</a></li>
-                            </ul>
-                        </li>
-
-
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Sponsor Health Tips</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="#">All Healthtip Offers</a></li>
-                                <li><a href="#">Healthtip Bookings</a></li>
-                                <li><a href="#">Healthtip Messages</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="#"><i class="fa fa-list-alt"></i><span>Reporting</span></a>
-                        </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-gift"></i> <span>Master</span><span class="pull-right"><i class="md md-add"></i></span></a>
-                            <ul class="list-unstyled">
-                                <li><a href="specialities.html">Specialities</a></li>
-                                <li><a href="diagnostics.html">Diagnostics</a></li>
-                                <li><a href="degrees.html">Doctor Degrees</a></li>
-                                <li><a href="#">Memberships</a></li>
-                                <li><a href="#">Transaction Configuration</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="#"><i class="fa fa-cog"></i><span>Settings</span></a>
-                        </li>
-
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <!-- Left Sidebar End -->
         <!-- Start right Content here -->
         <div class="content-page">
             <!-- Start content -->
@@ -365,7 +17,7 @@
                             </div>
                         </div>
                         <div class="map_canvas"></div>
-                        <form class="cmxform form-horizontal tasi-form" id="doctorForm" method="post" action="<?php echo site_url('doctor/saveDoctor'); ?>" novalidate="novalidate" name="doctorForm" enctype="multipart/form-data">
+                        <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" method="post" action="<?php echo site_url('doctor/saveDoctor'); ?>" novalidate="novalidate" name="doctorForm" enctype="multipart/form-data">
                             <input type="hidden" name="ProfessionalExpCount" id="ProfessionalExpCount" value="1" />
                             <!-- Left Section Start -->
                             <section class="col-md-6 detailbox">
@@ -378,12 +30,12 @@
                                         <article class="form-group m-lr-0 ">
                                             <label for="doctors_unqId" class="control-label col-md-4 col-sm-4">Doctor Id :</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input class="form-control disabled" id="doctors_unqId" name="doctors_unqId" type="disabled" required="" aria-required="true" placeholder="ACM304" readonly="readonly">
+                                                <input class="form-control disabled" id="doctors_unqId" name="doctors_unqId" type="disabled" required="" aria-required="true" placeholder="ACM304" readonly="readonly" value="<?php echo set_value('doctors_unqId'); ?>">
                                                  <label class="error" > <?php echo form_error("doctors_unqId"); ?></label>
                                             </div>
                                         </article>
 
-                                        <article class="form-group m-lr-0 ">
+                                        <!--<article class="form-group m-lr-0 ">
                                             <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Doctor Photo :</label>
                                             <div class="col-md-8 col-sm-8 text-right">
                                                 <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x"></i></label>
@@ -391,12 +43,24 @@
                                                 <label class="error" > <?php echo form_error("doctors_img"); ?></label>
                                                 <label class="error" > <?php echo $this->session->flashdata('valid_upload'); ?></label>
                                             </div>
-                                        </article>
+                                        </article>-->
+                                        <article class="form-group m-lr-0 ">
+                                        <label class="control-label col-md-4 col-sm-4" for="cemail">Upload Logo :</label>
+                                        <div class="col-md-8 col-sm-8 text-right">
+                                            <label for="file-input"><i style="border:1px solid #777777; padding:10px;" class="fa fa-cloud-upload fa-3x avatar-view"></i></label>
+<!--                                            <input type="file" style="display:none;" class="no-display" id="file-input" name="bloodBank_photo">-->
+                                            <!-- <input type="file" style="display:none;" class="no-display avatar-view" id="file-input11" name="bloodBank_photo"> -->
+                                            
+                                           <!-- <label class="error" > <?php // echo form_error("bloodBank_photo"); ?></label> -->
+                                            <label class="error" > <?php echo $this->session->flashdata('valid_upload'); ?></label>
+                                            <img src="<?php echo base_url('assets/images/noImage.png'); ?>" width="70" height="65" class="image-preview-show"/>
+                                        </div>
+                                    </article>
 
                                         <article class="form-group m-lr-0">
                                             <label for="" class="control-label col-md-4 col-sm-4">First Name :</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input class="form-control " id="doctors_fName" type="text" name="doctors_fName" required="">
+                                                <input class="form-control " id="doctors_fName" type="text" name="doctors_fName" value="<?php echo set_value('doctors_fName'); ?>">
                                                  <label class="error" style="display:none;" id="error-doctors_fName"> Please enter doctor's First name</label>
                                                 <label class="error" > <?php echo form_error("doctors_fName"); ?></label>
                                             </div>
@@ -405,7 +69,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="" class="control-label col-md-4 col-sm-4">Last Name :</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input class="form-control " id="doctors_lName" type="text" name="doctors_lName" required="" />
+                                                <input class="form-control " id="doctors_lName" type="text" name="doctors_lName" value="<?php echo set_value('doctors_lName'); ?>" />
                                                 <label class="error" style="display:none;" id="error-doctors_lName"> Please enter doctor's Last name</label>
                                                 <label class="error" > <?php echo form_error("doctors_lName"); ?></label>
                                             </div>
@@ -415,7 +79,7 @@
                                             <label for="cname" class="control-label col-md-4 col-sm-4">Date of Birth :</label>
                                             <div class="col-md-8 col-sm-8">
                                                 <div class="input-group">
-                                                    <input class="form-control pickDate" placeholder="dd/mm/yyyy" id="doctors_dob" type="text" name="doctors_dob">
+                                                    <input class="form-control pickDate" placeholder="dd/mm/yyyy" id="doctors_dob" type="text" name="doctors_dob" value="<?php echo set_value('doctors_dob'); ?>">
                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                      <label class="error" style="display:none;" id="error-doctors_dob"> Please enter doctor's DOB</label>
                                                      <label class="error" > <?php echo form_error("doctors_dob"); ?></label>
@@ -458,10 +122,10 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 m-t-xs-10">
-                                                        <input type="text" class="form-control" name="midNumber[]" id="midNumber1" placeholder="731" maxlength="3" onblur="checkNumber('midNumber',1)" />
+                                                        <input type="text" class="form-control" name="midNumber[]" id="midNumber1" placeholder="731" maxlength="3" onblur="checkNumber('midNumber',1)" onkeypress="return isNumberKey(event)" />
                                                     </div>
                                                     <div class="col-md-4 col-sm-4 col-xs-10 m-t-xs-10 ">
-                                                        <input type="text" class="form-control" name="doctors_phn[]" id="doctors_phn1" maxlength="8" placeholder="7000123" onblur="checkNumber('doctors_phn',1)" />
+                                                        <input type="text" class="form-control" name="doctors_phn[]" id="doctors_phn1" maxlength="8" placeholder="7000123" onblur="checkNumber('doctors_phn',1)" onkeypress="return isNumberKey(event)" />
                                                     </div>
                                                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 m-t-xs-10"><a onclick="addPhoneNumber()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a></div>
                                                         
@@ -486,7 +150,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-10 m-t-xs-10">
-                                                        <input type="text" class="form-control" name="doctors_mobile[]" id="doctors_mobile1" placeholder="9837000123" onblur="checkNumber('doctors_mobile',1)" maxlength="10" />
+                                                        <input type="text" class="form-control" name="doctors_mobile[]" id="doctors_mobile1" placeholder="9837000123" onblur="checkNumber('doctors_mobile',1)" maxlength="10" onkeypress="return isNumberKey(event)" />
                                                     </div>
                                                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 m-t-xs-10"><a  onclick="addMobileNumber()"><i class="fa fa-plus-circle fa-2x m-t-5 label-plus"></i></a></div>
                                                     
@@ -540,8 +204,8 @@
                                                         <label class="error" > <?php echo form_error("doctors_cityId"); ?></label>
                                                     </div>
                                                     <div class="col-md-6 col-sm-6 m-t-xs-10">
-                                                        <input type="text" class="form-control" id="doctors_pinn" name="doctors_pinn" placeholder="700001" maxlength="13" />
-                                                        <label class="error" style="display:none;" id="error-doctors_pinn"> please select a pin number</label>
+                                                        <input type="text" class="form-control" id="doctors_pinn" name="doctors_pinn" placeholder="700001" maxlength="6" onkeypress="return isNumberKey(event)" value="<?php echo set_value('doctors_pinn'); ?>" />
+                                                        <label class="error" style="display:none;" id="error-doctors_pinn"> Zip code should be numeric and 6 digit long</label>
                                                         <label class="error" > <?php echo form_error("doctors_pinn"); ?></label>
                                                     </div>
                                                 </aside>
@@ -550,7 +214,7 @@
 
                                         <article class="form-group m-lr-0">
                                             <div class="col-md-8 col-md-offset-4 col-sm-8 col-sm-offset-4">
-                                                <input type="text" class="form-control" id="geocomplete" name="doctor_addr" placeholder="209, ABC Road, near XYZ Building " />
+                                                <input type="text" class="form-control" id="geocomplete" name="doctor_addr" placeholder="209, ABC Road, near XYZ Building " value="<?php echo set_value('doctor_addr'); ?>" />
                                                 <label class="error" style="display:none;" id="error-doctor_addr"> please select a pin number</label>
                                                   <label class="error" > <?php echo form_error("doctor_addr"); ?></label>
                                             </div>
@@ -558,7 +222,7 @@
                                         <article class="form-group m-lr-0">
                                             <label for="" class="control-label col-md-4 col-sm-4">Consultation Fee :</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input class="form-control" id="doctors_consultaionFee" name="doctors_consultaionFee" type="text" required="" />
+                                                <input class="form-control" id="doctors_consultaionFee" name="doctors_consultaionFee" type="text" onkeypress="return isNumberKey(event)" value="<?php echo set_value('doctors_consultaionFee'); ?>"/>
                                                 <label class="error" style="display:none;" id="error-doctors_consultaionFee"> please enter fees</label>
                                                 <label class="error" > <?php echo form_error("doctors_consultaionFee"); ?></label>
                                             </div>
@@ -778,17 +442,18 @@
                                             <article class="form-group m-lr-0">
                                                 <label for="cname" class="control-label col-md-4 col-sm-4">Registered Email Id:</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()"/>
+                                                    <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" value="<?php echo set_value('users_email'); ?>" onblur="checkEmailFormat()"/>
                                                     <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                                     <!--<label class="error" style="display:none;" id="error-users_email_check"> Email Already Exists!</label>-->
                                                     <label class="error" > <?php echo form_error("users_email"); ?></label>
+                                                    <input type="hidden" class="form-control" id="users_email_status" name="users_email_status" value="" />
                                                 </div>
                                             </article>
 
                                             <article class="form-group m-lr-0">
                                                 <label for="cname" class="control-label col-md-4  col-sm-4">Registered Mobile no. :</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <input type="text" class="form-control" id="users_mobile" name="users_mobile" placeholder="8880007755" maxlength="10" onblur="checkNumber('users_mobile','')"/>
+                                                    <input type="text" class="form-control" id="users_mobile" name="users_mobile" placeholder="8880007755" maxlength="10" value="<?php echo set_value('users_mobile'); ?>" onblur="checkNumber('users_mobile','')" onkeypress="return isNumberKey(event)"/>
                                                     <label class="error" style="display:none;" id="error-users_mobile"> please enter your mobile number properly</label>
                                                     <label class="error" > <?php echo form_error("users_mobile"); ?></label>
                                                 </div>
@@ -834,6 +499,9 @@
                             <input name="lng" type="hidden" value="">
 
                           </fieldset>
+                            <div id="upload_modal_form">
+                                <?php $this->load->view('upload_crop_modal');?>
+                            </div>
                         </form>
 
                     </div>
@@ -849,362 +517,5 @@
                 <!-- container -->
             </div>
             <!-- content -->
-            <footer class="footer text-right">
-                2015 © Qyura.
-            </footer>
-        </div>
-        <!-- End Right content here -->
-    </div>
-    <!-- END wrapper -->
 
-
-
-
-    <script>
-      /*  $('.selectpicker').selectpicker({
-            style: 'btn-info',
-            size: "auto",
-            width: "100%"
-        });*/
-    </script>
-
-    <script>
-        var resizefunc = [];
-    </script>
-    <script src="<?php echo base_url();?>assets/js/jquery-1.8.2.min.js">
-    </script>
-    <script src="<?php echo base_url();?>assets/js/framework.js">
-    </script>
-    <script src="<?php echo base_url();?>assets/js/bootstrap-datepicker.js">
-    </script>
-    <script src="<?php echo base_url();?>assets/vendor/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript">
-    </script>
-    <script src="<?php echo base_url();?>assets/js/pages/add-doctor.js" type="text/javascript"></script>
-    <!--<script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>-->
-    <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>
-    
-     <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
-  
-    <script src="<?php echo base_url(); ?>assets/js/jquery.geocomplete.min.js"></script>
-     <script>
-         
-         $(function(){
-        $("#geocomplete").geocomplete({
-           map: ".map_canvas",
-          details: "form",
-          types: ["geocode", "establishment"],
-        });
-
-        $("#find").click(function(){
-           $("#geocomplete").trigger("geocode");
-        });
-      });
-        
-      
-       $(".select2").select2({
-            width: '100%'
-        });
-
-      $(".bs-select").select2({ placeholder: "Select a Speciality",
-          allowClear: true
-      });
-     
-    </script>
-    <script>
-     var urls = "<?php echo base_url()?>";
-         var j = 1;
-         var k = 1;
-         var counts = 1;
-         var countsAccademic = 1;
-        function fetchCity(stateId) {    
-           
-           $.ajax({
-               url : urls + 'index.php/doctor/fetchCity',
-               type: 'POST',
-              data: {'stateId' : stateId},
-              success:function(datas){
-               // console.log(datas);
-                  $('#doctors_cityId').html(datas);
-                  $('#doctors_cityId').selectpicker('refresh');
-                  $('#StateId').val(stateId);
-              }
-           });
-           
-        }
-        
-        function addMobileNumber(){
-                j = parseInt(j+1);
-                $('#multipleMobile').append('<div id='+j+'><article class="form-group m-lr-0"><label for="cname" class="control-label col-md-4 col-sm-4"></label><div class="col-md-8 col-sm-8"><aside class="row"> <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><select class="selectpicker" data-width="100%" name="preMobileNumber[]" id=preMobileNumber'+j+'><option value="91">+91</option><option value="1">+1</option></select></div><div class="col-lg-7 col-md-7 col-sm-7 col-xs-10 m-t-xs-10"><input type="text" class="form-control" name="doctors_mobile[]" id=doctors_mobile'+j+' placeholder="9837000123" maxlength="10" onblur=checkNumber("doctors_mobile",'+j+') /></div></aside><br /> <aside class="checkbox checkbox-success"><input type="checkbox" value="1" id="checkbox'+j+'" name="checkbox'+j+'"><label for="checkbox3">Make this number primary</label></aside></div></article></div>');
-                $('#preMobileNumber'+j).selectpicker('refresh');
-        }
-        function addPhoneNumber(){
-            k = parseInt(k+1);
-            $('#multiplePhoneNumber').append('<div id=phoneDiv'+k+'<article class="form-group m-lr-0"><label for="cname" class="control-label col-md-4 col-sm-4"></label><div class="col-md-8 col-sm-8"><aside class="row"><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><select class="selectpicker" data-width="100%" name="preNumber[]" id=preNumber'+k+'><option value=91>+91</option><option value=1>+1</option> </select></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 m-t-xs-10"> <input type="text" class="form-control" name="midNumber[]" id=midNumber'+k+' placeholder="731" maxlength="3" onblur=checkNumber("midNumber",'+k+') /></div> <div class="col-md-4 col-sm-4 col-xs-10 m-t-xs-10 "><input type="text" class="form-control" name="doctors_phn[]" id=doctors_phn'+k+' placeholder="7000123" maxlength="8" onblur=checkNumber("doctors_phn",'+k+') /></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 m-t-xs-10"></div></aside></div></article></div>');
-             $('#preNumber'+k).selectpicker('refresh');
-       }  
-       
-       function checkNumber(inputName,ids){
-           
-           var mobileNumber = 0;
-           if(ids != '')
-            mobileNumber = $('#'+inputName+ids).val();
-           else
-            mobileNumber = $('#'+inputName).val();   
-            // alert(mobileNumber);
-           if(!$.isNumeric(mobileNumber)){
-                
-                if(ids != ''){
-                   $('#'+inputName+ids).addClass('bdr-error');
-                    $('#'+inputName+ids).val('');
-               }
-                 else {
-                    $('#'+inputName).addClass('bdr-error');
-                    $('#'+inputName).val('');
-                }
-               // $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
-                // $('#hospital_phn').focus();
-            }
-       }
-       function validationDoctor(){
-      // $("form[name='doctorForm']").submit();
-        var check= /^[a-zA-Z\s]+$/;
-        var numcheck=/^[0-9]+$/;
-        var doctors_fName = $.trim($('#doctors_fName').val());
-        var doctors_lName = $.trim($('#doctors_lName').val());
-        var emails = $.trim($('#users_email').val());
-        var doctorSpecialities_specialitiesId = $.trim($('#doctorSpecialities_specialitiesId').val());  
-        var midNumber1 = $('#midNumber1').val();
-        var doctors_phn1= $('#doctors_phn1').val();
-        var doctors_mobile1 = $('#doctors_mobile1').val();
-        var doctors_pinn = $.trim($('#doctors_pinn').val());
-        var doctors_cityId =$.trim($('#doctors_cityId').val());
-        var doctors_stateId = $.trim($('#doctors_stateId').val());
-        var doctors_consultaionFee = $.trim($('#doctors_consultaionFee').val());
-        var pswd = $.trim($("#users_password").val());
-        var cnfpswd = $.trim($("#cnfPassword").val());
-        var users_mobile = $.trim($('#users_mobile').val());
-       
-
-            if(doctors_fName === ''){
-                $('#doctors_fName').addClass('bdr-error');
-                $('#error-doctors_fName').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_name').focus();
-            }
-             
-           if(doctors_lName === ''){
-                $('#doctors_lName').addClass('bdr-error');
-                $('#error-doctors_lName').fadeIn().delay(3000).fadeOut('slow');
-               // status= 0;
-               // $('#hospital_type').focus();
-            }
-           
-            if($('#doctors_dob').val() === ''){
-                $('#doctors_dob').addClass('bdr-error');
-                $('#error-doctors_dob').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_countryId').focus();
-            }
-             
-           if(doctorSpecialities_specialitiesId === ''){
-               // console.log("in state");
-                $('#s2id_autogen1').addClass('bdr-error');
-                $('#error-doctorSpecialities_specialitiesId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_stateId').focus();
-            }
-            
-            if(!$.isNumeric(midNumber1) && !$.isNumeric(doctors_phn1) ){
-                $('#doctors_phn1').addClass('bdr-error');
-                $('#midNumber1').addClass('bdr-error');
-                $('#error-doctors_phn1').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_cityId').focus();
-            }
-            if(!$.isNumeric(doctors_mobile1) ){
-                $('#doctors_mobile1').addClass('bdr-error');
-                $('#error-doctors_mobile1').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_cityId').focus();
-            }
-             if(doctors_stateId === ''){
-                $('#doctors_stateId').addClass('bdr-error');
-                $('#error-doctors_stateId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-            
-            }
-            if(doctors_cityId === ''){
-                $('#doctors_cityId').addClass('bdr-error');
-                $('#error-doctors_cityId').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               
-            }
-            if(!$.isNumeric(doctors_pinn)){
-                
-                $('#doctors_pinn').addClass('bdr-error');
-                $('#error-doctors_pinn').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-                // $('#hospital_zip').focus();
-            } 
-             if($("#geocomplete" ).val() === ''){
-                $('#geocomplete').addClass('bdr-error');
-                $('#error-doctor_addr').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-               // $('#hospital_address').focus();
-            }
-             if(!$.isNumeric(doctors_consultaionFee)){
-                $('#doctors_consultaionFee').addClass('bdr-error');
-                $('#error-doctors_consultaionFee').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-                // $('#hospital_phn').focus();
-            }
-            if($('#doctorAcademic_degreeId1').val() === ''){
-                 $('#doctorAcademic_degreeId1').addClass('bdr-error');
-                $('#error-doctorAcademic_degreeId1').fadeIn().delay(3000).fadeOut('slow');
-            }
-             if($('#doctorSpecialities_specialitiesCatId1').val() === ''){
-                 $('#doctorSpecialities_specialitiesCatId1').addClass('bdr-error');
-                $('#error-doctorSpecialities_specialitiesCatId1').fadeIn().delay(4000).fadeOut('slow');
-            }
-             if($('#professionalExp_end1').val() === ''){
-                 $('#professionalExp_end1').addClass('bdr-error');
-                $('#error-professionalExp_end1').fadeIn().delay(4000).fadeOut('slow');
-            }
-             if($('#professionalExp_start1').val() === ''){
-                 $('#professionalExp_start1').addClass('bdr-error');
-                $('#error-professionalExp_start1').fadeIn().delay(4000).fadeOut('slow');
-            }
-              if($('#HospitalSpecialityId').val() === ''){
-                 $('#HospitalSpecialityId').addClass('bdr-error');
-                $('#error-HospitalSpecialityId').fadeIn().delay(4000).fadeOut('slow');
-            }
-            if($('#specialityDropdown1').val() === ''){
-                $('#specialityDropdown1').addClass('bdr-error');
-                $('#error-specialityDropdown1').fadeIn().delay(4000).fadeOut('slow');
-            }
-            if(emails === ''){
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email').fadeIn().delay(4000).fadeOut('slow');
-               //$('#users_email').focus();
-            }
-            if(!$.isNumeric(users_mobile)){
-                $('#users_mobile').addClass('bdr-error');
-                $('#error-users_mobile').fadeIn().delay(3000).fadeOut('slow');
-                //status= 0;
-                // $('#hospital_phn').focus();
-            }
-          
-            if(pswd.length < 6){
-                $('#users_password').addClass('bdr-error');
-                $('#error-users_password').fadeIn().delay(3000).fadeOut('slow');
-               // $('#users_password').focus();
-            }
-            if(cnfpswd == ''){
-                $('#cnfPassword').addClass('bdr-error');
-                $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#cnfpassword').focus();
-            }
-           
-            if(pswd != cnfpswd){
-                $('#cnfPassword').addClass('bdr-error');
-                $('#error-cnfPassword_check').fadeIn().delay(3000).fadeOut('slow');
-                
-               // $('#cnfpassword').focus();
-            }
-           
-            
-        
-            if(emails !=''){
-              check_email(emails);
-              return false;
-            }
-            return false;
-            
-        }
-        
-         function check_email(myEmail){
-             
-           $.ajax({
-               url : urls + 'index.php/doctor/check_email',
-               type: 'POST',
-              data: {'users_email' : myEmail},
-              success:function(datas){
-                  console.log(datas);
-                  if(datas == 0){
-                   $("form[name='doctorForm']").submit();
-                   return true;
-              }
-              else {
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email_check').fadeIn().delay(3000).fadeOut('slow');;
-               // $('#users_email').focus();
-               return false;
-              }
-              } 
-           });
-        }
-         
-     function checkEmailFormat(){
-                var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-                var email = $('#users_email').val();
-                if(email!==''){
-                    if (!filter.test(email)){
-                        
-                       $('#users_email').addClass('bdr-error');
-                         $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');;
-                        // $('#users_email').focus();
-
-                    }
-            }
-        } 
-        function fetchHospitalSpeciality(hospitalId, numbers){
-             $.ajax({
-               url : urls + 'index.php/doctor/fetchHospitalSpeciality',
-               type: 'POST',
-              //data: {'hospitalId' : hospitalId},
-              data: {'hospitalId' : hospitalId},
-              success:function(datas){
-                  //console.log(datas);
-                  $('#specialityDropdown'+numbers).html(datas);
-                 // $('#specialityDropdown'+numbers).select2('refresh');
-                  
-              } 
-           });
-        }
-        
-        function multipleProfessionalExp() {
-            counts = parseInt(counts) + 1;
-            var ids = counts;
-             var hospitalData = $('#HospitalSpecialityId').html();
-           
-               $('#parentDIV').append('<div id=child'+ids+'><article class="form-group m-lr-0"><label for="cname" class="control-label col-md-4">Duration:</label><div class="col-md-8"><aside class="row"><div class="col-lg-6 col-md-12 col-sm-6"><div class="input-group"><input class="form-control pickDate" placeholder="dd/mm/yyyy" id=professionalExp_start'+ids+' type="text" name=professionalExp_start'+ids+ '><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></div><div class="col-lg-6 col-md-12 col-sm-6 m-t-md-15 m-t-xs-10"><div class="input-group"><input class="form-control pickDate" placeholder="dd/mm/yyyy" id=professionalExp_end'+ids+' type="text" name=professionalExp_end'+ids+ '><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></div></aside></div></article><article class="form-group m-lr-0"><div class="col-md-8 col-md-offset-4"><select class="select2" data-width="100%" onchange="fetchHospitalSpeciality(this.value,'+ids+')" id=professionalExp_hospitalId'+ids+' name=professionalExp_hospitalId'+ids+'>'+hospitalData+'</select></div></article><article class="form-group m-lr-0 "><div class="col-md-8 col-md-offset-4"><select  multiple="" class="bs-select form-control-select2 " data-width="100%" name=doctorSpecialities_specialitiesId'+ids+'[] id=specialityDropdown'+ids+' data-size="4"></select></div></article></div>');
-               $('#professionalExp_hospitalId'+ids).select2({
-                    width: '100%'
-                    });
-          
-                  $('#specialityDropdown'+ids).select2({ placeholder: "Select a Speciality",
-                    allowClear: true
-                });
-               $('#professionalExp_start'+ids).datepicker();
-               $('#professionalExp_end'+ids).datepicker();
-               
-             $('#ProfessionalExpCount').val(counts);   
-      }
-      
-      function multipleAcademic(){
-          countsAccademic = parseInt(countsAccademic) + 1;
-           var divIds = countsAccademic;
-           var degreeData = $('#doctorAcademic_degreeId1').html();
-           var specialitiesData = $('#doctorSpecialities_specialitiesCatId1').html();
-           $('#parentDegreeDiv').append('<div id=childDegreeDiv'+divIds+'><aside class="row"><div class="col-md-6 col-sm-6"><select class="selectpicker" data-width="100%" data-size="4" name="doctorAcademic_degreeId[]">'+degreeData+'</select></div><div class="col-md-6 col-sm-6 m-t-xs-10"><select class="selectpicker" data-width="100%" data-size="4" name="doctorSpecialities_specialitiesCatId[]">'+specialitiesData+'</select></div></aside></div><br />');
-           $('.selectpicker').selectpicker({
-            width: "100%"
-        })
-    
-    }
-    </script>    
-
-</body>
-
-</html>
+   

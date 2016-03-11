@@ -12,8 +12,6 @@ if(isset($hospitalId) && !empty($hospitalId)){
     $check = $hospitalId; 
 }?>
 
-?>
-
 <link href="<?php echo base_url();?>assets/cropper/cropper.min.css" rel="stylesheet">
 <!--<link href="<?php echo base_url();?>assets/vendor/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />-->
 <link href="<?php echo base_url();?>assets/cropper/main.css" rel="stylesheet">
@@ -45,8 +43,40 @@ if($current != 'detailHospital'):?>
     
     <script src="<?php echo base_url();?>assets/vendor/select2/select2.min.js" type="text/javascript"></script>  
 
+    
+    <?php if(isset($mapData) && !empty($mapData)){
+        $lat = $mapData[0]->hospital_lat;
+        $lang = $mapData[0]->hospital_long;
+        $imgUrl = (!empty($mapData[0]->ambulance_img)) ? base_url().'/assets/hospitalsImages/thumb/thumb_50/'.$mapData[0]->hospital_img : base_url().'/assets/images/pins/Contact.png';
+           
+        $templates = '<img src="'.$imgUrl.'" /><h2 class="text-success">'.ucwords($mapData[0]->hospital_name).'</h2><b>'.$mapData[0]->hospital_address.'</b>';
+    ?>
+    
+  <script>
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 18,
+      center: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lang;?>),
+        map: map,
+        icon: '<?php echo base_url();?>assets/images/pins/q2.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent('<?php echo $templates;?>');
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+  
+ </script>
+<?php } ?>
     <script>
-        var resizefunc = [];
         var hospitalId = <?php echo $check;?> 
         
         
@@ -127,7 +157,7 @@ function fetchCity(stateId) {
                   } );
                      $('#search').on('keyup', function() {
                         //oTable.draw();
-                         oTable.columns( 5 ).search($(this).val()).draw() ;
+                         oTable.search($(this).val()).draw() ;
                         
                   } );
 
@@ -144,7 +174,11 @@ function fetchCity(stateId) {
 		        $("#bloodbankbtn").trigger("click");
 		        if(pharmacy_status != '')
 		        $("#pharmacybtn").trigger("click");
-		         
+		         var ambulance_status = ''; 
+                         ambulance_status = $.trim($('#ambulance_status').val());
+                         if(ambulance_status != '')
+		        $("#ambulancebtn").trigger("click");
+                        
 		         loadSpeciality();
 		          loadDiagonastic();    
                 $("#edit").click(function () {
