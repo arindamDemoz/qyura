@@ -37,7 +37,7 @@
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-4 col-sm-4">Hospital Name :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input class="form-control" id="hospital_name" name="hospital_name" type="text" required="">
+                                            <input class="form-control" id="hospital_name" name="hospital_name" type="text" value="<?php echo set_value('hospital_name'); ?>">
                                             <label class="error" style="display:none;" id="error-hospital_name"> please enter hospital name</label>
                                             <label class="error" > <?php echo form_error("hospital_name"); ?></label>
                                         </div>
@@ -110,7 +110,7 @@
                                                     <label class="error" style="display:none;" id="error-hospital_cityId"> please select a city</label>
                                                 </div>
                                                 <div class="col-md-6 col-sm-6 m-t-xs-10"> 
-                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" onkeypress="return isNumberKey(event)" maxlength="6" minlength="6" />
+                                                    <input type="text" class="form-control" id="hospital_zip" name="hospital_zip" placeholder="700001" onkeypress="return isNumberKey(event)" maxlength="6" value="<?php echo set_value('hospital_zip'); ?>" />
                                                     <label class="error" style="display:none;" id="error-hospital_zip"> please enter a zip code</label>
                                                     <label class="error" style="display:none;" id="error-hospital_zip_check">Please enter numeric digits only!</label>
                                                     <label class="error" style="display:none;" id="error-hospital_zip_long"> zip code should be 6 digit long</label>
@@ -122,7 +122,7 @@
 
                                     <article class="form-group m-lr-0">
                                         <div class="col-md-8  col-sm-8 col-sm-offset-4">
-                                            <input type="text" class="form-control" id="geocomplete" name="hospital_address" placeholder="209, ABC Road, near XYZ Building " />
+                                            <input type="text" class="form-control" id="geocomplete" name="hospital_address" placeholder="209, ABC Road, near XYZ Building " value="<?php echo set_value('hospital_address'); ?>" />
                                             <label class="error" style="display:none;" id="error-hospital_address"> please enter an address</label>
                                             <label class="error" > <?php echo form_error("hospital_address"); ?></label>
                                         </div>
@@ -173,7 +173,7 @@
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-4  col-sm-4">Contact Person :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input class="form-control" id="hospital_cntPrsn" name="hospital_cntPrsn" type="text" required="">
+                                            <input class="form-control" id="hospital_cntPrsn" name="hospital_cntPrsn" type="text" value="<?php echo set_value('hospital_cntPrsn'); ?>">
                                             <label class="error" style="display:none;" id="error-hospital_cntPrsn"> please enter the name of a contact person</label>
    <label class="error" style="display:none;" id="error-hospital_cntPrsn_check">please enter characters only!</label>
                                             <label class="error" > <?php echo form_error("hospital_cntPrsn"); ?></label>
@@ -182,7 +182,7 @@
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-4 col-sm-4">Designation :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input class="form-control" id="hospital_dsgn" name="hospital_dsgn" type="text" required="">
+                                            <input class="form-control" id="hospital_dsgn" name="hospital_dsgn" type="text" value="<?php echo set_value('hospital_dsgn'); ?>">
                                             <label class="error" style="display:none;" id="error-hospital_dsgn"> please enter a designation</label>
 <label class="error" style="display:none;" id="error-hospital_dsgn_check">please enter only charcters!</label>
                                             <label class="error" > <?php echo form_error("hospital_dsgn"); ?></label>
@@ -203,7 +203,7 @@
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">About Us :</label>
                                         <div class="col-md-8  col-sm-8">
-                                           <textarea class="form-control" name="hospital_aboutUs" id="hospital_aboutUs"  value=""> </textarea>
+                                           <textarea class="form-control" name="hospital_aboutUs" id="hospital_aboutUs"  value=""><?php echo set_value('hospital_aboutUs'); ?> </textarea>
                                             <label class="error" > <?php echo form_error("hospital_aboutUs"); ?></label>
                                             <label class="error" style="display:none;" id="error-hospital_aboutUs"> Please write about the hospital!</label>
                                            
@@ -501,7 +501,7 @@
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Registered Email Id:</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" />
+                                            <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" value="<?php echo set_value('hospital_aboutUs'); ?>" />
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
@@ -512,7 +512,7 @@
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Registered Mobile no. :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input type="text" class="form-control" id="hospital_mblNo" name="hospital_mblNo" placeholder="8880007755" maxlength="10" onkeypress="return isNumberKey(event)" />
+                                            <input type="text" class="form-control" id="hospital_mblNo" name="hospital_mblNo" placeholder="8880007755" maxlength="10" onkeypress="return isNumberKey(event)" value="<?php echo set_value('hospital_mblNo'); ?>" />
                                             <label class="error" style="display:none;" id="error-hospital_mblNo"> please enter your mobile number</label>
                                         <label class="error" style="display:none;" id="error-hospital_mblNo_check">please enter digits only!</label>
                                             <label class="error" > <?php echo form_error("hospital_mblNo"); ?></label>

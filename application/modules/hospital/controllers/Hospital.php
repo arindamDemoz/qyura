@@ -45,10 +45,8 @@ class Hospital extends MY_Controller {
    }
    function detailHospital($hospitalId=''){
        $data = array();
-      // echo $hospitalId;exit;
-        $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
-       // print_r($data);exit;
-        $data['allCountry'] = $this->Hospital_model->fetchCountry();
+      $data['hospitalData'] = $this->Hospital_model->fetchHospitalData($hospitalId);
+       $data['allCountry'] = $this->Hospital_model->fetchCountry();
         $data['hospitalId'] = $hospitalId;
         $data['showStatus'] = 'none';
         $data['detailShow'] = 'block';
@@ -62,7 +60,7 @@ class Hospital extends MY_Controller {
                     )
                 );
         $data['AlltimeSlot'] = $this->Hospital_model->customGet($option);
-       // print_r($data);
+      
         $data['gallerys'] = $this->Hospital_model->customGet(array('table'=>'qyura_hospitalImages','where'=>array('hospitalImages_hospitalId'=>$hospitalId,'hospitalImages_deleted'=>0)));
         if(!empty($data['insurance'])){
             foreach ($data['insurance'] as $key => $val){
@@ -71,9 +69,7 @@ class Hospital extends MY_Controller {
         }
     
         $data['allInsurance']  = $this->Hospital_model->fetchAllInsurance($insurance_condition);
-        //print_r($data['allInsurance']);
-       // exit;
-        
+      
        // $this->load->super_admin_template('hospitalDetail', $data, 'bloodBankScript');
         //$this->load->view('hospitalDetail',$data);
         $data['title'] = 'Hospital Detail';
@@ -219,10 +215,9 @@ class Hospital extends MY_Controller {
    }
    function addInsurance(){
       $hospitalId = $this->input->post('hospitalInsuranceId');
-      // echo $hospitalId;
+     
        $insurances = $this->input->post('insurances');
-     // print_r($insurances);
-       if(!empty($insurances)){
+     if(!empty($insurances)){
            foreach($insurances as $key => $val){
                $insurancesData = array(
                   'hospitalInsurance_hospitalId' => $hospitalId ,
@@ -301,11 +296,14 @@ class Hospital extends MY_Controller {
        $this->bf_form_validation->set_rules('users_password', 'Password', 'trim|required|matches[cnfPassword]');
         $this->bf_form_validation->set_rules('cnfPassword', 'Password Confirmation', 'trim|required');
        
-       // $this->bf_form_validation->set_rules('hospital_mmbrTyp', 'Membership Type', 'required|xss_clean|trim');
+      
        // if (empty($_FILES['hospital_img']['name']))
         // {
            //  $this->bf_form_validation->set_rules('hospital_img', 'File', 'required');
       //  }
+        if (empty($_FILES['avatar_file']['name'])) {
+            $this->bf_form_validation->set_rules('avatar_file', 'File', 'required');
+        }
          if ($this->bf_form_validation->run() === FALSE) {
              $data = array();
              $data['allStates'] = $this->Hospital_model->fetchStates();
@@ -361,6 +359,7 @@ class Hospital extends MY_Controller {
                 $hospital_cityId = $this->input->post('hospital_cityId');
                 $hospital_mblNo = $this->input->post('hospital_mblNo');
                 $hospital_aboutUs = $this->input->post('hospital_aboutUs');
+                $hospital_zip = $this->input->post('hospital_zip');
                 $isEmergency =0;
                 if(isset($_POST['isEmergency']))
                    $isEmergency  = $_POST['isEmergency'];
@@ -381,7 +380,8 @@ class Hospital extends MY_Controller {
                    'hospital_mblNo' => $hospital_mblNo,
                     'hospital_lat' => $this->input->post('lat'),
                     'hospital_long' => $this->input->post('lng'),
-                    'isEmergency' => $isEmergency
+                    'isEmergency' => $isEmergency,
+                    'hospital_zip' => $hospital_zip
                 );
                 $users_email_status = $this->input->post('users_email_status');
             if($users_email_status == ''){
@@ -397,9 +397,11 @@ class Hospital extends MY_Controller {
               
                  
                $hospital_usersId = $this->Hospital_model->inserHospitalUser($hospitalInsert);
+               $usersRoles_parentId = 0;
             }
             else {
                 $hospital_usersId = $users_email_status;
+                $usersRoles_parentId = $users_email_status;
             }
                if($hospital_usersId) {
                    
@@ -408,7 +410,7 @@ class Hospital extends MY_Controller {
                   $insertusersRoles = array(
                       'usersRoles_userId' => $hospital_usersId,
                       'usersRoles_roleId' => 1,
-                      'usersRoles_parentId' => 0,
+                      'usersRoles_parentId' => $usersRoles_parentId,
                       'creationTime' => strtotime(date("Y-m-d H:i:s"))
                   );
                   $this->Hospital_model->insertUsersRoles($insertusersRoles);
@@ -474,12 +476,14 @@ class Hospital extends MY_Controller {
                             'stateId' => $hospital_stateId,
                             'cityId' => $hospital_cityId,
                            'bloodBank_add' => $hospital_address,
-                           'inherit_status' => 1
+                           'inherit_status' => 1,
+                           'bloodBank_zip' => $hospital_zip
                        );
                       $bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
                       if($bloodBankId) {
                                 $insertusersRoles = array(
-                               'usersRoles_userId' => $bloodBankId,
+                              // 'usersRoles_userId' => $bloodBankId, // As per Mahipal's suggetion
+                               'usersRoles_userId' => $hospital_usersId,
                                'usersRoles_roleId' => 2,
                                'usersRoles_parentId' => $hospital_usersId,
                                'creationTime' => strtotime(date("Y-m-d H:i:s"))
@@ -550,13 +554,15 @@ class Hospital extends MY_Controller {
                             'pharmacy_stateId' => $hospital_stateId,
                             'pharmacy_cityId' => $hospital_cityId,
                             'pharmacy_address' => $hospital_address,
-                            'inherit_status' => 1
+                            'inherit_status' => 1,
+                            'pharmacy_zip' => $hospital_zip
                        );
                       $pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
                       
                        if($pharmacyId) {
                                 $insertusersRoles2 = array(
-                               'usersRoles_userId' => $pharmacyId,
+                              // 'usersRoles_userId' => $pharmacyId,// As per Mahipal's suggetion
+                               'usersRoles_userId' => $hospital_usersId,
                                'usersRoles_roleId' => 5,
                                'usersRoles_parentId' => $hospital_usersId,
                                'creationTime' => strtotime(date("Y-m-d H:i:s"))
@@ -611,12 +617,14 @@ class Hospital extends MY_Controller {
                             'ambulance_stateId' => $hospital_stateId,
                             'ambulance_cityId' => $hospital_cityId,
                            'ambulance_address' => $hospital_address,
-                           'inherit_status' => 1
+                           'inherit_status' => 1,
+                           'ambulance_zip' => $hospital_zip
                        );
                       $ambulanceId = $this->Hospital_model->insertAmbulance($ambulanceDetail);
                       if($ambulanceId) {
                                 $insertusersRoles3 = array(
-                               'usersRoles_userId' => $ambulanceId,
+                               //'usersRoles_userId' => $ambulanceId,// As per Mahipal's suggetion
+                               'usersRoles_userId' => $hospital_usersId,
                                'usersRoles_roleId' => 8,
                                'usersRoles_parentId' => $hospital_usersId,
                                'creationTime' => strtotime(date("Y-m-d H:i:s"))
@@ -795,7 +803,7 @@ class Hospital extends MY_Controller {
                            $conditionsSecond = array();
                             $conditionsSecond['hospital_usersId'] = $this->input->post('user_tables_id');
                             $conditionsSecond['hospital_deleted'] = 0;
-                            $selectSecond = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                            $selectSecond = array('hospital_countryId,hospital_stateId,hospital_cityId,hospital_zip');
                            $bloodBankResult  = $this->Hospital_model->fetchTableData($selectSecond,'qyura_hospital',$conditionsSecond);
                            $bloodBankDetail['countryId'] = $bloodBankResult[0]->hospital_countryId;
                            $bloodBankDetail['stateId'] = $bloodBankResult[0]->hospital_stateId;
@@ -803,6 +811,7 @@ class Hospital extends MY_Controller {
                            $bloodBankDetail['users_id']= $this->input->post('user_tables_id');
                            $bloodBankDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
                             $bloodBankDetail['inherit_status']= 1;
+                            $bloodBankDetail['bloodBank_zip']= $bloodBankResult[0]->hospital_zip;
                             $bloodBankId = $this->Hospital_model->insertBloodbank($bloodBankDetail);
                             
                             $conditions = array();
@@ -890,7 +899,7 @@ class Hospital extends MY_Controller {
                            $pharmacyConditions = array();
                             $pharmacyConditions['hospital_usersId'] = $this->input->post('user_tables_id');
                             $pharmacyConditions['hospital_deleted'] = 0;
-                            $pharmacySelect = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                            $pharmacySelect = array('hospital_countryId,hospital_stateId,hospital_cityId,hospital_zip');
                            $pharmacyResult  = $this->Hospital_model->fetchTableData($pharmacySelect,'qyura_hospital',$pharmacyConditions);
                            $pharmacyDetail['pharmacy_countryId'] = $pharmacyResult[0]->hospital_countryId;
                            $pharmacyDetail['pharmacy_stateId'] = $pharmacyResult[0]->hospital_stateId;
@@ -898,6 +907,7 @@ class Hospital extends MY_Controller {
                            $pharmacyDetail['inherit_status'] = 1;
                            $pharmacyDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
                            $pharmacyDetail['pharmacy_usersId'] = $this->input->post('user_tables_id');
+                           $pharmacyDetail['pharmacy_zip'] = $pharmacyResult[0]->hospital_zip;
                            $pharmacyId = $this->Hospital_model->insertPharmacy($pharmacyDetail);
                        }    
                       
@@ -959,7 +969,7 @@ class Hospital extends MY_Controller {
                            $ambulanceConditions = array();
                             $ambulanceConditions['hospital_usersId'] = $this->input->post('user_tables_id');
                             $ambulanceConditions['hospital_deleted'] = 0;
-                            $ambulanceSelect = array('hospital_countryId,hospital_stateId,hospital_cityId');
+                            $ambulanceSelect = array('hospital_countryId,hospital_stateId,hospital_cityId,hospital_zip');
                            $ambulanceResult  = $this->Hospital_model->fetchTableData($ambulanceSelect,'qyura_hospital',$ambulanceConditions);
                            $ambulanceDetail['ambulance_countryId'] = $ambulanceResult[0]->hospital_countryId;
                            $ambulanceDetail['ambulance_stateId'] = $ambulanceResult[0]->hospital_stateId;
@@ -967,6 +977,7 @@ class Hospital extends MY_Controller {
                            $ambulanceDetail['inherit_status'] = 1;
                            $ambulanceDetail['creationTime']= strtotime(date("Y-m-d H:i:s"));
                            $ambulanceDetail['ambulance_usersId'] = $this->input->post('user_tables_id');
+                            $ambulanceDetail['ambulance_zip'] = $ambulanceResult[0]->hospital_zip;
                            $ambulanceId = $this->Hospital_model->insertAmbulance($ambulanceDetail);
                        }    
                       

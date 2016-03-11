@@ -152,15 +152,17 @@ class Pharmacy extends MY_Controller {
                    'creationTime' => strtotime(date("Y-m-d H:i:s"))
                     );
                         $pharmacy_usersId = $this->Pharmacy_model->insertPharmacyUser($pharmacyInsert);
+                        $usersRoles_parentId = 0;
                     }else {
                         $pharmacy_usersId = $users_email_status;
+                        $usersRoles_parentId = $users_email_status;
                     }
                     if($pharmacy_usersId) {
 
                       $insertusersRoles = array(
                       'usersRoles_userId' => $pharmacy_usersId,
                       'usersRoles_roleId' => 5,
-                      'usersRoles_parentId' => 0,
+                      'usersRoles_parentId' => $usersRoles_parentId,
                       'creationTime' => strtotime(date("Y-m-d H:i:s"))
                   );
 

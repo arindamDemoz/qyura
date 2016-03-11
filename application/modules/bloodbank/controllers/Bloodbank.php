@@ -182,16 +182,18 @@ class Bloodbank extends MY_Controller {
                 'creationTime' => strtotime(date("Y-m-d H:i:s"))
             );
                 $bloodbank_usersId = $this->Bloodbank_model->insertBloodBankUser($bloodBankInsert);
+                $usersRoles_parentId = 0;
             }
             else {
                 $bloodbank_usersId = $users_email_status;
+                $usersRoles_parentId = $users_email_status;
             }
             if ($bloodbank_usersId) {
 
                 $insertusersRoles = array(
                     'usersRoles_userId' => $bloodbank_usersId,
                     'usersRoles_roleId' => 2,
-                    'usersRoles_parentId' => 0,
+                    'usersRoles_parentId' => $usersRoles_parentId,
                     'creationTime' => strtotime(date("Y-m-d H:i:s"))
                 );
                 $this->Bloodbank_model->insertUsersRoles($insertusersRoles);

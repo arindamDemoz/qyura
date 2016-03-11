@@ -220,19 +220,22 @@ class Ambulance extends MY_Controller {
             $ambulanceInsert = array(
                 'users_email' => $users_email,
                 'users_ip_address' => $this->input->ip_address(),
-                'users_mobile' => $this->input->post('users_mobile')
+                'users_mobile' => $this->input->post('users_mobile'),
+                'creationTime' => strtotime(date("Y-m-d H:i:s"))
             );
             $ambulance_usersId = $this->Ambulance_model->insertAmbulanceUser($ambulanceInsert);
+            $usersRoles_parentId = 0;
             }
             else {
                 $ambulance_usersId = $users_email_status;
+                $usersRoles_parentId = $users_email_status;
             }
             if ($ambulance_usersId) {
 
                 $insertusersRoles = array(
                     'usersRoles_userId' => $ambulance_usersId,
                     'usersRoles_roleId' => 8,
-                    'usersRoles_parentId' => 0,
+                    'usersRoles_parentId' => $usersRoles_parentId,
                     'creationTime' => strtotime(date("Y-m-d H:i:s"))
                 );
 

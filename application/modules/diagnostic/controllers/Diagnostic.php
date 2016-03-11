@@ -223,16 +223,18 @@ class Diagnostic extends MY_Controller {
             );
 
             $diagnostic_usersId = $this->diagnostic_model->insertDiagnosticUser($diagnosticInsert);
+            $usersRoles_parentId = 0;
             }
             else {
                 $diagnostic_usersId = $users_email_status;
+                $usersRoles_parentId = $users_email_status;
             }
             if ($diagnostic_usersId) {
 
                 $insertusersRoles = array(
                     'usersRoles_userId' => $diagnostic_usersId,
                     'usersRoles_roleId' => 3,
-                    'usersRoles_parentId' => 0,
+                    'usersRoles_parentId' => $usersRoles_parentId,
                     'creationTime' => strtotime(date("Y-m-d H:i:s"))
                 );
                 $this->diagnostic_model->insertUsersRoles($insertusersRoles);
