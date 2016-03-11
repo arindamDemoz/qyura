@@ -34,7 +34,7 @@ function getYearBtTwoDate($datetime1,$datetime2){
  }
  
    function getDoctorAvailibilitySession($number){
-     $session = array('Morning','Afternoon','Evening');
+     $session = array('Morning','Afternoon','Evening','Night');
      return $session[$number];
   }
   
@@ -66,6 +66,21 @@ if ( ! function_exists('createImage'))
 }
 
 
+if ( ! function_exists('replaceStr'))
+{
+    function replaceStr($str="", $repTo = NULL,$repWith = NULL)
+    {
+        if($repTo != NULL && $repWith != NULL && $str != ''){ 
+            $str = str_replace($repTo, $repWith, $str);
+            
+            return $str;
+        }else{
+            return FALSE;    
+        }
+    }
+}
+
+
 if ( ! function_exists('dateFormate'))
 {
     function dateFormate($strToTime)
@@ -73,6 +88,64 @@ if ( ! function_exists('dateFormate'))
         
         return date("m  D, Y g:i A",$strToTime);
         //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
+
+
+if ( ! function_exists('dateFormateConvert'))
+{
+    function dateFormateConvert($strToTime)
+    {
+        
+        return date("M d, Y",$strToTime);
+        //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
+
+if ( ! function_exists('checkStatus'))
+{
+    function checkStatus($status)
+    {
+        if($status == 1){
+            return "Active";
+        }else{
+            return "Inactive";
+        }
+        
+        //return date("Y-m-d H:i:s",$strToTime);
+    }
+}
+
+if ( ! function_exists('isUnique'))
+{
+    function isUnique()
+    {
+        $default = "QYURA";
+        $random = rand(0,999);
+        return $default.$random;
+    }
+}
+
+if ( ! function_exists('getSession'))
+{
+    function getSession($timeSlot){
+        switch ($timeSlot) {
+            case 0:
+                $session = "Morning";
+                break;
+            case 1:
+                $session = "Afternoon";
+                break;
+            case 2:
+                $session = "Evening";
+                break;
+            case 3:
+                $session = "Night";
+                break;
+            default:
+                $session = "Session is not aloated";
+        }
+        return $session;
     }
 }
 
@@ -110,43 +183,64 @@ if ( ! function_exists('getGender'))
         
     }
 }
- //   function deg2rad($deg) {
-  //      return $deg * (pi()/180);
-  //  }
 
-if ( ! function_exists('dateFormateConvert'))
+if ( ! function_exists('isConvertDays'))
 {
-    function dateFormateConvert($strToTime)
+    function isConvertDays($days = '')
     {
         
-        return date("M d, Y",$strToTime);
-        //return date("Y-m-d H:i:s",$strToTime);
+    $convert = $days; // days you want to convert
+
+    $years = ($convert / 365) ; // days / 365 days
+    $years = floor($years); // Remove all decimals
+
+    $month = ($convert % 365) / 30.5; // I choose 30.5 for Month (30,31) ;)
+    $month = floor($month); // Remove all decimals
+
+    $days = ($convert % 365) % 30.5; // the rest of days
+
+    if(!empty($years)){
+        return $years.' years '.$month.' month '.$days.' days';
+    }elseif(!empty($month)){
+      return $month.' month '.$days.' days';  
+    }else{
+       return $days.' days'; 
+    }
+
     }
 }
 
-if ( ! function_exists('checkStatus'))
+if ( ! function_exists('isTimeCalculate'))
 {
-    function checkStatus($status)
+    function isTimeCalculate($times = '')
     {
-        if($status == 1){
-            return "Active";
+        
+        
+        $currenttime = strtotime(date('H:i:s'));
+        $time = strtotime($times);
+        $totalMin = round(abs($time - $currenttime) / 60,2);
+        if($totalMin > 1){
+        $format = '%2d Hours %02d Minutes';
+            $hours = floor($totalMin / 60);
+            $minutes = ($totalMin % 60);
+            
+            return sprintf($format, $hours, $minutes);  
+         
         }else{
-            return "Inactive";
+            return "0 Hours";
         }
-        
-        //return date("Y-m-d H:i:s",$strToTime);
+
     }
 }
 
-if ( ! function_exists('isUnique'))
+if ( ! function_exists('isStr'))
 {
-    function isUnique()
+    function isStr($text = '')
     {
-        $default = "QYURA";
-        $random = rand(0,999);
-        return $default.$random;
+        
+        
+      return substr($text,0,150);
+
     }
 }
-
-
     ?>
