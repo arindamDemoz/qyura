@@ -1,7 +1,11 @@
 <style type="text/css">
-    #datatable_bloodbank_filter
+    #datatable_cms_filter
     {
         display:none;
+    }
+    .error p
+    {
+        color:#EF5350;
     }
 </style>
 
@@ -28,10 +32,13 @@ if($current == 'detailBloodBank'):?>
      * @description get records in listing using datatables
      */
     $(document).ready(function () {
-        var oTable = $('#datatable_bloodbank').DataTable({
+        var oTable = $('#datatable_cms').DataTable({
             "processing": true,
             "bServerSide": true,
-           // "searching": true,
+            "columnDefs": [{
+                    "targets": [0,1,2],
+                    "orderable": false
+                }],
             "bLengthChange": false,
             "bProcessing": true,
             "iDisplayLength": 10,
@@ -42,75 +49,36 @@ if($current == 'detailBloodBank'):?>
              "columns": [
                 {"data": "cms_title"},
                 {"data": "cms_description"},
-               
-               {"data": "view" ,'searchable' : false},
+                {"data": "view" ,"searchable": false, "order": false},
             ],
         });
-
-     
        
     });
   
-   function validationBloodbank(){
+   function validationCms(){
        
-       //$("form[name='bloodDetail']").submit();
-        var check= /^[a-zA-Z\s]+$/;
-        var numcheck=/^[0-9]+$/;
-        var emails = $.trim($('#users_email').val());
-        var cpname = $.trim($('#bloodBank_cntPrsn').val())
-        
-        var phn= $.trim($('#bloodBank_phn1').val());
-        var myzip = $.trim($('#bloodBank_zip').val());
-        var cityId =$.trim($('#cityId').val());
-        var stateIds = $.trim($('#StateId').val());
-        var bloodBank_mblNo = $.trim($('#bloodBank_mblNo').val());
-        var status = 1;
+       var RegExpression = /^[a-zA-Z\s]+$/;
+       var status=1;
        
-             if($('#bloodBank_name').val()==''){
-                $('#bloodBank_name').addClass('bdr-error');
-                $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
+             if($('#cms_title').val()==''){
+                $('#cms_title').addClass('bdr-error');
+                $('#error-cms_title').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
-            if($('#geocomplete').val()==''){
-                $('#geocomplete').addClass('bdr-error');
-                $('#error-bloodBank_add').fadeIn().delay(3000).fadeOut('slow');
+            else if($('.summernote').val()==''){
+                $('.summernote').addClass('bdr-error');
+                $('#error-cms_description').fadeIn().delay(3000).fadeOut('slow');
+                status = 0;
+                
+            }else if(!RegExpression.test($('#cms_title').val())){
+                $('#cms_title').addClass('bdr-error');
+                $('#error-cms_title').fadeIn().delay(3000).fadeOut('slow');
                 status = 0;
             }
-            
-              
-//            if(!$.isNumeric(phn)){
-//                $('#bloodBank_phn1').addClass('bdr-error');
-//                $('#error-bloodBank_phn').fadeIn().delay(3000).fadeOut('slow');
-//                // $('#hospital_phn').focus();
-//                status = 0;
-//            }
-              var emailCheck =  checkEmailFormat();
-             
-              
-            if($('#users_email').val()==''){
-                $('#users_email').addClass('bdr-error');
-                $('#error-users_email').fadeIn().delay(3000).fadeOut('slow');
-               
-               status = 0;
+            if(status == 1){
+                return true;
             }
-             if(!check.test(cpname)){
-                $('#bloodBank_cntPrsn').addClass('bdr-error');
-                $('#error-bloodBank_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
-                status = 0; 
-            }
-                if(!emailCheck){
-                    status = 0;  
-              }
-       
-            if( emails != '' && status == 1){
-                check_email_detail(emails);
-               
-            }
-            
-        
-            
-            return false;
-            
+            return false; 
         }
     
 </script>

@@ -15,7 +15,7 @@ class Cms extends MY_Controller {
     function index() {
         $data = array();
 
-        $data['title'] = 'CMS';
+        $data['title'] = 'Content Management System';
         $this->load->super_admin_template('cmsList', $data, 'cmsScript');
     }  
     
@@ -27,18 +27,18 @@ class Cms extends MY_Controller {
      */
     function addcms() {
         $data = array();
-        $data['title'] = 'Add CMS';
+        $data['title'] = 'Add Content Management System';
         $this->load->super_admin_template('addcms', $data, 'cmsScript');
     }
     
      function savecms() {
 
         //validate form input
-        $this->form_validation->set_rules('cms_title', 'CMS Title', 'required|is_unique[cms.cms_title]');
-        $this->form_validation->set_rules('cms_description', 'CMS Description', 'required|trim');
+        $this->bf_form_validation->set_rules('cms_title', 'CMS Title', 'required|is_unique[cms.cms_title]');
+        $this->bf_form_validation->set_rules('cms_description', 'CMS Description', 'required|trim');
 
 
-        if ($this->form_validation->run() == true) {
+        if ($this->bf_form_validation->run() == true) {
 
                     $title = $this->input->post('cms_title');
                     $code = str_replace(' ', '_', trim($title));
@@ -58,19 +58,16 @@ class Cms extends MY_Controller {
                     );
                     $insert = $this->cms_model->customInsert($options);
                     if($insert){
-                        print_r($insert);
-                        echo "insert"; exit;
-                        //$responce = array('status' => 1, 'msg' => $this->lang->line("success"), 'lId' => $insert);
+                        $this->session->set_flashdata('message','Data insert successfully !');
+                        redirect('cms');
                     }else{
-                        echo "not insert"; exit;
-//                        $error = array("TopErrorAdd" => $this->lang->line("saveErrorMsg"));
-//                        $responce = array('status' => 0, 'isAlive' => TRUE, 'errors' => $error);
+                       $this->session->set_flashdata('message','Sorry! an error occured.Try again.');
+                       redirect('cms');
                     }
 
         } else {
-            echo "insert error"; exit;
-//            $error = ajax_validation_errors();
-//            $responce = array('status' => 0, 'isAlive' => TRUE, 'errors' => $error);
+            $data['title'] = 'Add Content Management System';
+            $this->load->super_admin_template('addcms', $data, 'cmsScript');
         }
 
        // echo json_encode($responce);
@@ -118,8 +115,8 @@ class Cms extends MY_Controller {
         );
 
         $data['resultRows'] = $this->cms_model->customGet($option);
-
-       $this->load->super_admin_template('editcms', $data, 'cmsScript');
+        $data['title'] = 'Edit Details';
+        $this->load->super_admin_template('editcms', $data, 'cmsScript');
     }
 
      /**
@@ -129,12 +126,11 @@ class Cms extends MY_Controller {
      * @access public
      */
     function updatecms() {
-
-        //validate form input
-      $this->form_validation->set_rules('cms_title', 'CMS Title', 'required');
-        $this->form_validation->set_rules('cms_description', 'CMS Description', 'required');
-        if ($this->form_validation->run() == true) {
-            $whereId = $this->input->post('cms_id');
+       $whereId = $this->input->post('cms_id');
+       $this->bf_form_validation->set_rules('cms_title', 'CMS Title', 'required');
+        $this->bf_form_validation->set_rules('cms_description', 'CMS Description', 'required');
+        if ($this->bf_form_validation->run() == true) {
+          
            
              $where = array('cms_id' => $whereId);
                   $title = $this->input->post('cms_title');
@@ -152,21 +148,29 @@ class Cms extends MY_Controller {
                 );
                 $update = $this->cms_model->customUpdate($options);
                 if ($update) {
-                    print_r($update);
-                    echo "update"; exit;
-                   // $responce = array('status' => 1, 'isAlive' => TRUE, 'msg' => $this->lang->line("success"), 'lId' => $update);
+                   $this->session->set_flashdata('message','Data updated successfully !');
+                   redirect('cms');
+
                 } else {
-                    echo "not update"; exit;
-                   // $error = array("TopErrorAdd" => $this->lang->line("saveErrorMsg"));
-                   // $responce = array('status' => 0, 'isAlive' => TRUE, 'errors' => $error);
+                   $this->session->set_flashdata('message','Data updated successfully !');
+                   redirect('cms');
+                   
                 }
         } else {
-            echo "validation false"; exit;
-//            $error = ajax_validation_errors();
-//            $responce = array('status' => 0, 'isAlive' => TRUE, 'errors' => $error);
+            $where = array('deleted' => 0, 'cms_id' => $whereId);
+            $tbl = 'cms';
+            $option = array(
+                'select' => '*',
+                'where' => $where,
+                'table' => $tbl,
+                'single' => true
+            );
+
+            $data['resultRows'] = $this->cms_model->customGet($option);
+            $data['title'] = 'Edit Details';
+            $this->load->super_admin_template('editcms', $data, 'cmsScript');
+
         }
-      echo "error"; exit;
-//        echo json_encode($responce);
     }
     
     function getcmsdetail(){

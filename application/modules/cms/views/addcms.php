@@ -6,16 +6,19 @@
                 <div class="container">
 
                     <div class="clearfix">
-                        <div class="col-md-12 text-success">
-                            <?php echo $this->session->flashdata('message'); ?>
-                         </div>
+                          <?php if(!empty($this->session->flashdata('message'))){?>
+                            <div class="alert alert-success"><?php echo $this->session->flashdata('message');?></div>
+                                <?php }?>
+                           <?php if(!empty($this->session->flashdata('error'))){?>
+                            <div class="alert alert-danger"><?php echo $this->session->flashdata('error');?></div>
+                                <?php }?>
                         <div class="col-md-12">
                             <h3 class="pull-left page-title">Add New CMS</h3>
 
                         </div>
                     </div>
                     <div class="map_canvas"></div>
-                    <form class="cmxform form-horizontal tasi-form avatar-form" name="submitForm" method="post" action="<?php echo site_url(); ?>/cms/savecms"  enctype="multipart/form-data" >
+                    <form class="cmxform form-horizontal tasi-form" name="submitForm" method="post" action="<?php echo site_url(); ?>/cms/savecms"  enctype="multipart/form-data" >
                       
                       
                         <!-- Left Section Start -->
@@ -29,8 +32,8 @@
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-3 col-sm-3">CMS Title :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input class="form-control" id="bloodBank_name" name="cms_title" type="text" required="" maxlength="30" value="<?php echo set_value('cms_title'); ?>">
-                                            <label class="error" style="display:none;" id="error-bloodBank_name"> please enter CMS Title</label>
+                                            <input class="form-control" id="cms_title" name="cms_title" type="text" required="" maxlength="30" value="<?php echo set_value('cms_title'); ?>">
+                                            <label class="error" style="display:none;" id="error-cms_title"> please enter title only alphabetically</label>
                                             <label class="error" > <?php echo form_error("cms_title"); ?></label>
                                         </div>
                                     </article>
@@ -43,8 +46,8 @@
                                         <div class="col-md-8 col-sm-8">
               <textarea  class="summernote form-control" rows="9" name="cms_description"><?php echo set_value('cms_description'); ?></textarea>
                                             
-                                            <label class="error" style="display:none;" id="error-bloodBank_name"> please enter CMS Description</label>
-                                            <label class="error" > <?php echo form_error("cms_title"); ?></label>
+                                            <label class="error" style="display:none;" id="error-cms_description"> please enter description</label>
+                                            <label class="error" > <?php echo form_error("cms_description"); ?></label>
                                         </div>
                                     </article>
                                 </div>
@@ -60,11 +63,8 @@
 
                         <section class="clearfix ">
                             <div class="col-md-12 m-t-20 m-b-20">
-                                <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
-                                <div>
-                                     <button type="submit"  class="btn btn-primary">Submit</button>
-<!--                                    <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" onclick="return validationBloodbankAdd()" value="Submit" />-->
-				</div>
+                                    <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" onclick="return validationCms()" value="Submit" />
+				
                             </div>
 
                         </section>

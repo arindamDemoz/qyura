@@ -273,15 +273,21 @@
                                 <li><a href="add-user.html">Add New User</a></li>
                             </ul>
                         </li>
-                        <li class="has_sub">
-                            <a class="waves-effect" href="#"><i class="fa fa-star-o"></i><span>Rate & Reviews</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                         <li class="has_sub ">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'reviews'):echo"active";endif;?>" href="#"><i class="fa fa-star-o"></i><span>Rate & Reviews</span><span class="pull-right"><i class="md md-add"></i></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="review-management.html">All Reviews</a></li>
+                                <li class="<?php if($this->router->fetch_class() == 'reviews'):echo"active";endif;?>"><a href="<?php echo site_url('reviews');?>">All Reviews</a></li>
                                 <li><a href="#">Ratings</a></li>
                             </ul>
                         </li>
-                        <li>
-                            <a href="#" class="waves-effect"><i class="fa fa-star-o"></i><span>Favorited By</span></a>
+   <li class="has_sub ">
+                            <a class="waves-effect <?php if($this->router->fetch_class() == 'cms'):echo"active";endif;?>" href="#"><i class="fa fa-file"></i><span>CMS</span><span class="pull-right"><i class="md md-add"></i></span></a>
+                            <ul class="list-unstyled">
+                                <li class="<?php if($this->router->fetch_class() == 'cms'):echo"active";endif;?>"><a href="<?php echo site_url('cms');?>">All CMS</a></li>
+                            </ul>
+                        </li>
+                        <li class="<?php if($this->router->fetch_class() == 'favouriteby'):echo"active";endif;?>">
+                            <a href="<?php echo base_url();?>index.php/favouriteby" class="waves-effect"><i class="fa fa-star-o"></i><span>Favorited By</span></a>
                         </li>
                         <li>
                             <a href="#" class="waves-effect"><i class="fa fa-bar-chart-o"></i><span>App Analytics</span></a>

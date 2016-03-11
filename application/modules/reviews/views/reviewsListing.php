@@ -41,7 +41,7 @@
                                    
                                 </aside>
                                 <aside class="col-md-3 col-sm-3 pull-right">
-                                      <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit" onclick="createCSV()">Export</button>
+                                      <button class="btn btn-appointment waves-effect waves-light m-l-10 pull-right" type="submit">Export</button>
                                 </aside>
                                 <div id="date_error" class="error col-md-5 col-md-offset-3"></div>
  

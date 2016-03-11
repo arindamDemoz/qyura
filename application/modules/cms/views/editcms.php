@@ -14,6 +14,12 @@
 
                         </div>
                     </div>
+                     <?php if(!empty($this->session->flashdata('message'))){?>
+                            <div class="alert alert-success"><?php echo $this->session->flashdata('message');?></div>
+                                <?php }?>
+                           <?php if(!empty($this->session->flashdata('error'))){?>
+                            <div class="alert alert-danger"><?php echo $this->session->flashdata('error');?></div>
+                                <?php }?>
                     <div class="map_canvas"></div>
                     <form class="cmxform form-horizontal tasi-form avatar-form" id="submitForm" name="submitForm" method="post" action="<?php echo site_url(); ?>/cms/updatecms" novalidate="novalidate" enctype="multipart/form-data" >
                       
@@ -29,8 +35,8 @@
                                     <article class="form-group m-lr-0 ">
                                         <label for="cemail" class="control-label col-md-3 col-sm-3">CMS Title :</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input class="form-control" id="bloodBank_name" name="cms_title" type="text" required="" maxlength="30" value="<?php echo $resultRows->cms_title; ?>">
-                                            <label class="error" style="display:none;" id="error-bloodBank_name"> please enter CMS Title</label>
+                                            <input class="form-control" id="cms_title" name="cms_title" type="text" required="" maxlength="30" value="<?php echo $resultRows->cms_title; ?>" readonly="">
+                                            <label class="error" style="display:none;" id="error-cms_title"> please enter CMS Title</label>
                                             <label class="error" > <?php echo form_error("cms_title"); ?></label>
                                         </div>
                                     </article>
@@ -43,8 +49,8 @@
                                         <div class="col-md-8 col-sm-8">
               <textarea  class="summernote form-control" rows="9" name="cms_description"><?php echo $resultRows->cms_description; ?></textarea>
                                             
-                                            <label class="error" style="display:none;" id="error-bloodBank_name"> please enter CMS Description</label>
-                                            <label class="error" > <?php echo form_error("cms_title"); ?></label>
+                                            <label class="error" style="display:none;" id="error-cms_description"> please enter  description</label>
+                                            <label class="error" > <?php echo form_error("cms_description"); ?></label>
                                         </div>
                                     </article>
                                 </div>
@@ -57,20 +63,13 @@
 
 
                         <section class="clearfix ">
-<!--                            <div class="col-md-12 m-t-20 m-b-20">-->
-                                
-                                <div>
-                                    <button type="submit"  class="btn btn-primary waves-effect pull-right">Update</button>   
-                                    <button class="btn btn-danger waves-effect pull-right" type="button">Reset</button>
-				</div>
-<!--                            </div>-->
+ <div class="col-md-12 m-t-20 m-b-20">
+                                    <input class="btn btn-success waves-effect waves-light pull-right m-r-20" type="submit" onclick="return validationCms()" value="Update" />
+				
+                            </div>
 
                         </section>
-                        
 
-                        <div id="upload_modal_form">
-                            <?php $this->load->view('upload_crop_modal');?>
-                        </div>
                     </form>
 
                 </div>

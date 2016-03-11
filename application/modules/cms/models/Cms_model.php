@@ -153,7 +153,7 @@ class Cms_model extends CI_Model {
         
 
        
-      //$this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="cms/cmsView/$1">View</a>', 'cms_id');
+  $this->datatables->add_column('cms_description', '$1', 'isStr(cms_description)');
         
       $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="cms/editView/$1">Edit</a>', 'cms_id');
 //     
