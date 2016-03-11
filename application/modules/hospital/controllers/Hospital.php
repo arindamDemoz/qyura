@@ -1672,4 +1672,14 @@ class Hospital extends MY_Controller {
         }
         exit;
     }
+     function map($id){
+        
+            $table = 'qyura_hospital';
+            $select = array('hospital_lat,hospital_long,hospital_address,hospital_name,hospital_img');
+            $where = array('hospital_id' => $id);
+      
+        $data['mapData'] = $this->Hospital_model->fetchTableData($select,'qyura_hospital',$where);
+        $data['title'] = 'Hospital Map';
+        $this->load->super_admin_template('map', $data, 'hospitalScript');
+    }
 }

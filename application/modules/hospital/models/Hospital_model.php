@@ -180,7 +180,7 @@ class Hospital_model extends CI_Model {
         
        $this->datatables->add_column('hospital_img', '<img class="img-responsive" height="80px;" width="80px;" src='.$imgUrl.'>', 'hospital_img');
        
-       $this->datatables->add_column('hospital_address', '$1 </br><a  href="view-map.html" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address');
+       $this->datatables->add_column('hospital_address', '$1 </br><a  href="hospital/map/$2" class="btn btn-info btn-xs waves-effect waves-light" target="_blank">View Map</a>', 'hospital_address,hospital_id');
        
       $this->datatables->add_column('view', '<a class="btn btn-warning waves-effect waves-light m-b-5 applist-btn" href="hospital/detailHospital/$1">View Detail</a>', 'hospital_id');
         $this->datatables->order_by("Hos.creationTime"); 
