@@ -65,6 +65,8 @@
                                             
                                            <!-- <label class="error" > <?php // echo form_error("bloodBank_photo"); ?></label> -->
                                             <label class="error" > <?php echo $this->session->flashdata('valid_upload'); ?></label>
+                                            <label class="error" > <?php echo form_error("avatar_file"); ?></label>
+                                            
                                             <img src="<?php echo base_url('assets/images/noImage.png'); ?>" width="70" height="65" class="image-preview-show"/>
                                         </div>
                                     </article>
@@ -501,7 +503,7 @@
                                     <article class="form-group m-lr-0">
                                         <label for="cname" class="control-label col-md-4 col-sm-4">Registered Email Id:</label>
                                         <div class="col-md-8 col-sm-8">
-                                            <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" value="<?php echo set_value('hospital_aboutUs'); ?>" />
+                                            <input type="email" class="form-control" id="users_email" name="users_email" placeholder="abc@gmail.com" onblur="checkEmailFormat()" value="<?php echo set_value('users_email'); ?>" />
                                             <label class="error" style="display:none;" id="error-users_email"> please enter Email id Properly</label>
                                             <label class="error" style="display:none;" id="error-users_email_check"> Email Already Exits!</label>
                                             <label class="error" > <?php echo form_error("users_email"); ?></label>
@@ -557,10 +559,10 @@
                         
                             <fieldset>
                             
-                            <input name="lat" type="hidden" value="" />
+                            <input name="lat" type="hidden" value="<?php echo set_value('lat'); ?>" />
 
                            <!-- <label>Longitude</label> -->
-                            <input name="lng" type="hidden" value="" />
+                            <input name="lng" type="hidden" value="<?php echo set_value('lng'); ?>" />
 
                           </fieldset>
                          <div id="upload_modal_form">

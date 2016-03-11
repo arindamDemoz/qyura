@@ -551,7 +551,7 @@ function addAwards(){
     if(!check.test(bbankname)){
     $('#bloodBank_name').addClass('bdr-error');
     $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
-    // $('#bloodBank_name').focus();
+    $('#bloodBank_name').val('');
     }
 }
    function bbphone(){
@@ -570,7 +570,7 @@ function addAwards(){
         if(!check.test(pharname)){
         $('#pharmacy_name').addClass('bdr-error');
         $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
-        // $('#pharmacy_name').focus();
+        $('#pharmacy_name').val('');
 }
 }
    function phphone(){
@@ -589,7 +589,7 @@ function addAwards(){
         if(!check.test(amname)){
         $('#ambulance_name').addClass('bdr-error');
         $('#error-ambulance_name').fadeIn().delay(3000).fadeOut('slow');
-        // $('#pharmacy_name').focus();
+        $('#pharmacy_name').val('');
 }
 }
    function amphone(){
@@ -739,6 +739,43 @@ function addAwards(){
                 
                // $('#cnfpassword').focus();
             }
+            if($('#bloodbank').is(":checked")){
+               if($('#bloodBank_name').val() === ''){
+                   $('#bloodBank_name').addClass('bdr-error');
+                    $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#bloodBank_phn1').val() === ''){
+                    $('#bloodBank_phone').addClass('bdr-error');
+                    $('#error-bloodBank_phone').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
+            }   
+            
+            if($('#pharmacy').is(":checked")){
+               if($('#pharmacy_name').val() === ''){
+                   $('#pharmacy_name').addClass('bdr-error');
+                    $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#pharmacy_phn1').val() === ''){
+                    $('#pharmacy_phn1').addClass('bdr-error');
+                    $('#error-pharmacy_phn1').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
+            }
+            if($('#ambulance').is(":checked")){
+               if($('#ambulance_name').val() === ''){
+                   $('#ambulance_name').addClass('bdr-error');
+                    $('#error-ambulance_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#ambulance_phn1').val() === ''){
+                    $('#ambulance_phn1').addClass('bdr-error');
+                    $('#error-ambulance_phn1').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
+            }  
                //debugger;
         if(emails !='' &&  status == 1){
               check_email(emails);
