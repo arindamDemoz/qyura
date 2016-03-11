@@ -269,6 +269,7 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Hospital Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="hospital_name" name="hospital_name" type="text" value="<?php echo $hospitalData[0]->hospital_name;?>">
+                                                                    <label class="error" style="display:none;" id="error-hospital_name"> please enter hospital name</label>
                                                                     <label class="error" > <?php echo form_error("hospital_name"); ?></label>
                                                                 </div>
                                                             </article>
@@ -288,7 +289,8 @@
                                                     
                                             <div class="clearfix m-t-10">
                                                 <textarea class="form-control" id="geocomplete" name="hospital_address" type="text" ><?php if(isset($hospitalData[0]->hospital_address)){ echo $hospitalData[0]->hospital_address; }?></textarea>
-                                               <label class="error" > <?php echo form_error("hospital_address"); ?></label>
+                                               <label class="error" style="display:none;" id="error-geocomplete"> please enter an address</label>
+                                                <label class="error" > <?php echo form_error("hospital_address"); ?></label>
                                             </div>
                                         </div>
                                                         </article>
@@ -338,6 +340,7 @@
                                                                        <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
                                                                        <div class="col-md-8 col-sm-8">
                                                                            <input class="form-control" name="bloodBank_name" id="bloodBank_name" type="text" value="<?php if(isset($hospitalData[0]->bloodBank_name)){ echo $hospitalData[0]->bloodBank_name; } ?>">
+                                                                            <label class="error" style="display:none;" id="error-bloodBank_name"> please Check your BloodBank name</label>
                                                                            <div>
                                                                    </article>
                                                                        <article class="clearfix m-b-10 ">
@@ -374,6 +377,7 @@
 
                                                                            </aside>
                                                                             <?php } ?>
+                                                                           <label class="error" style="display:none;" id="error-bloodBank_phone"> please Check your BloodBank Phone</label>
                                                                        </div>
                                                                    </article>
                                                                   </section>
@@ -396,6 +400,7 @@
                                                                 <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="pharmacy_name" name="pharmacy_name" type="text" value="<?php if(isset($hospitalData[0]->pharmacy_name)){ echo $hospitalData[0]->pharmacy_name; } ?>" >
+                                                                    <label class="error" style="display:none;" id="error-pharmacy_name"> please Check your Pharmacy Name</label>
                                                                     <div>
                                                             </article>
                                                                  
@@ -433,6 +438,7 @@
 
                                                                     </aside>
                                                                     <?php }?>
+                                                                    <label class="error" style="display:none;" id="error-pharmacy_phn1"> please Check your Pharmacy Phone</label>
                                                                 </div>
                                                             </article>
                                                            </section>
@@ -455,6 +461,7 @@
                                                                        <label for="cemail" class="control-label col-md-4 col-sm-4">Name :</label>
                                                                        <div class="col-md-8 col-sm-8">
                                                                            <input class="form-control" name="ambulance_name" id="ambulance_name" type="text" value="<?php if(isset($hospitalData[0]->ambulance_name)){ echo $hospitalData[0]->ambulance_name; } ?>">
+                                                                          <label class="error" style="display:none;" id="error-ambulance_name"> please Check your Ambulance Name</label>
                                                                            <div>
                                                                    </article>
                                                                        <article class="clearfix m-b-10 ">
@@ -491,6 +498,7 @@
 
                                                                            </aside>
                                                                             <?php } ?>
+                                                                           <label class="error" style="display:none;" id="error-ambulance_phn1"> please Check your Ambulance Phone</label>
                                                                        </div>
                                                                    </article>
                                                                   </section>  
@@ -513,6 +521,7 @@
                                                                  
                                                                     <input class="form-control" id="hospital_cntPrsn" name="hospital_cntPrsn" type="text" value="<?php if(isset($hospitalData[0]->hospital_cntPrsn)){ echo $hospitalData[0]->hospital_cntPrsn; }?>">
                                                            <label class="error" > <?php echo form_error("hospital_cntPrsn"); ?></label>
+                                                           <label class="error" style="display:none;" id="error-hospital_cntPrsn"> please enter the name of a contact person</label>
                                                            </div>    
                                                             </article>
                                                           <article class="clearfix m-b-10">
@@ -520,6 +529,7 @@
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input class="form-control" id="hospital_dsgn" name="hospital_dsgn" type="text" value="<?php if(isset($hospitalData[0]->hospital_dsgn)){ echo $hospitalData[0]->hospital_dsgn; }?>">
                                                                     <label class="error" > <?php echo form_error("hospital_dsgn"); ?></label>
+                                                                    <label class="error" style="display:none;" id="error-hospital_dsgn"> please enter a designation</label>
                                                                     <div>
                                                             </article>
                                                           

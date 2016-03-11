@@ -841,29 +841,68 @@ function addAwards(){
         var check= /^[a-zA-Z\s]+$/;
         var numcheck=/^[0-9]+$/;
         var cpname = $('#hospital_cntPrsn').val(); 
-        //var emails = $.trim($('#users_email').val());
+        var hospital_dsgn = $.trim($('#hospital_dsgn').val());
         var status = 1;
        
          if($.trim($('#hospital_name').val()) === ''){
                 $('#hospital_name').addClass('bdr-error');
+                $('#error-hospital_name').fadeIn().delay(3000).fadeOut('slow');
                 status=0;
             }
           
             if($.trim($('#geocomplete').val()) === ''){
                $("#geocomplete").addClass('bdr-error');
+               $('#error-geocomplete').fadeIn().delay(3000).fadeOut('slow');
                status=0;
             }
              if(!check.test(cpname)){
                 $('#hospital_cntPrsn').addClass('bdr-error');
+                 $('#error-hospital_cntPrsn').fadeIn().delay(3000).fadeOut('slow');
+                status=0;
+            }
+            if(!check.test(hospital_dsgn)){
+                $('#hospital_dsgn').addClass('bdr-error');
+                 $('#error-hospital_dsgn').fadeIn().delay(3000).fadeOut('slow');
                 status=0;
             }
             
-            /*if($.trim($('#pharmacy_phn1').val()) === ''){
-                $('#pharmacy_phn1').addClass('bdr-error');
-                status=0;
+            if($('#bloodbankbtn').is(":checked")){
+               if($('#bloodBank_name').val() === ''){
+                   $('#bloodBank_name').addClass('bdr-error');
+                    $('#error-bloodBank_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#bloodBank_phn1').val() === ''){
+                    $('#bloodBank_phone').addClass('bdr-error');
+                    $('#error-bloodBank_phone').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
+            }   
+            
+            if($('#pharmacybtn').is(":checked")){
+               if($('#pharmacy_name').val() === ''){
+                   $('#pharmacy_name').addClass('bdr-error');
+                    $('#error-pharmacy_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#pharmacy_phn1').val() === ''){
+                    $('#pharmacy_phn1').addClass('bdr-error');
+                    $('#error-pharmacy_phn1').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
             }
-          
-*/
+            if($('#ambulancebtn').is(":checked")){
+               if($('#ambulance_name').val() === ''){
+                   $('#ambulance_name').addClass('bdr-error');
+                    $('#error-ambulance_name').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }
+               if($('#ambulance_phn1').val() === ''){
+                    $('#ambulance_phn1').addClass('bdr-error');
+                    $('#error-ambulance_phn1').fadeIn().delay(3000).fadeOut('slow');
+                    status = 0;
+               }    
+            }  
             if(status ==0)
             return false;
         else
